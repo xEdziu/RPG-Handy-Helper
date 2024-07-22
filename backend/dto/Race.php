@@ -3,17 +3,13 @@
 namespace rpg\DTO;
 
 use rpg\DTO\Perk;
-
-enum RaceName {
-    case Czlowiek;
-    case Elf;
-    case Krasnolud;
-    case Niziolek;
-}
+use rpg\DTO\enums\RaceName;
+use rpg\DTO\enums\PerkName;
+use rpg\DTO\enums\PerkType;
 
 abstract class Race {
-    protected RaceName $name;
-    protected array $defaultPerks;
+    public RaceName $name;
+    public array $defaultPerks;
 
     public function __construct(RaceName $name) {
         $this->name = $name;
