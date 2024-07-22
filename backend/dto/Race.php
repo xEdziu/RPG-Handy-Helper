@@ -11,7 +11,7 @@ enum RaceName {
     case Niziolek;
 }
 
-class Race {
+abstract class Race {
     private RaceName $name;
     private array $defaultPerks;
 
@@ -38,85 +38,13 @@ class Race {
         $this->setupDefaultPerks();
     }
 
-    private function setupDefaultPerks(){
-        switch($this->name){
-            case RaceName::Czlowiek:
-                $perks[PerkName::WalkaWrecz] = 20;
-                $perks[PerkName::UmiejetnosciStrzeleckie] = 20;
-                $perks[PerkName::Krzepa] = 20;
-                $perks[PerkName::Odpornosc] = 20;
-                $perks[PerkName::Zrecznosc] = 20;
-                $perks[PerkName::Inteligencja] = 20;
-                $perks[PerkName::SilaWoli] = 20;
-                $perks[PerkName::Oglada] = 20;
-                $perks[PerkName::Akcja] = 1;
-                $perks[PerkName::Zywotnosc] = 11;
-                $perks[PerkName::Sila] = $perks[PerkName::Krzepa] % 10;
-                $perks[PerkName::Wytrzymalosc] = $perks[PerkName::Odpornosc] % 10;
-                $perks[PerkName::Szybkosc] = 4;
-                $perks[PerkName::PunktyObledu] = 0;
-                $perks[PerkName::PunktyPrzeznaczenia] = 3;
-                $perks[PerkName::PunktySzczescia] = 3;
-                break;
-            case RaceName::Elf:
-                $perks[PerkName::WalkaWrecz] = 30;
-                $perks[PerkName::UmiejetnosciStrzeleckie] = 20;
-                $perks[PerkName::Krzepa] = 20;
-                $perks[PerkName::Odpornosc] = 30;
-                $perks[PerkName::Zrecznosc] = 10;
-                $perks[PerkName::Inteligencja] = 20;
-                $perks[PerkName::SilaWoli] = 20;
-                $perks[PerkName::Oglada] = 20;
-                $perks[PerkName::Akcja] = 1;
-                $perks[PerkName::Zywotnosc] = 10;
-                $perks[PerkName::Sila] = $perks[PerkName::Krzepa] % 10;
-                $perks[PerkName::Wytrzymalosc] = $perks[PerkName::Odpornosc] % 10;
-                $perks[PerkName::Szybkosc] = 5;
-                $perks[PerkName::PunktyObledu] = 0;
-                $perks[PerkName::PunktyPrzeznaczenia] = 2;
-                $perks[PerkName::PunktySzczescia] = 2;
-                break;
-            case RaceName::Krasnolud:
-                $perks[PerkName::WalkaWrecz] = 30;
-                $perks[PerkName::UmiejetnosciStrzeleckie] = 20;
-                $perks[PerkName::Krzepa] = 20;
-                $perks[PerkName::Odpornosc] = 30;
-                $perks[PerkName::Zrecznosc] = 10;
-                $perks[PerkName::Inteligencja] = 20;
-                $perks[PerkName::SilaWoli] = 20;
-                $perks[PerkName::Oglada] = 10;
-                $perks[PerkName::Akcja] = 1;
-                $perks[PerkName::Zywotnosc] = 12;
-                $perks[PerkName::Sila] = $perks[PerkName::Krzepa] % 10;
-                $perks[PerkName::Wytrzymalosc] = $perks[PerkName::Odpornosc] % 10;
-                $perks[PerkName::Szybkosc] = 3;
-                $perks[PerkName::PunktyObledu] = 0;
-                $perks[PerkName::PunktyPrzeznaczenia] = 2;
-                $perks[PerkName::PunktySzczescia] = 2;
-                break;
-            case RaceName::Niziolek:
-                $perks[PerkName::WalkaWrecz] = 10;
-                $perks[PerkName::UmiejetnosciStrzeleckie] = 30;
-                $perks[PerkName::Krzepa] = 10;
-                $perks[PerkName::Odpornosc] = 10;
-                $perks[PerkName::Zrecznosc] = 30;
-                $perks[PerkName::Inteligencja] = 20;
-                $perks[PerkName::SilaWoli] = 20;
-                $perks[PerkName::Oglada] = 30;
-                $perks[PerkName::Akcja] = 1;
-                $perks[PerkName::Zywotnosc] = 9;
-                $perks[PerkName::Sila] = $perks[PerkName::Krzepa] % 10;
-                $perks[PerkName::Wytrzymalosc] = $perks[PerkName::Odpornosc] % 10;
-                $perks[PerkName::Szybkosc] = 4;
-                $perks[PerkName::PunktyObledu] = 0;
-                $perks[PerkName::PunktyPrzeznaczenia] = 2;
-                $perks[PerkName::PunktySzczescia] = 2;
-                break;
-            default:
-                break;
-        }
-    }
-    
+    /**
+     * A function to set up the default perks of a race
+     *
+     * @return void
+     */
+    abstract public function setupDefaultPerks() : void;
+
     /**
      * Function to get the name of the race
      *
