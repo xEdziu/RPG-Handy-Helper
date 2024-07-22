@@ -116,11 +116,21 @@ class Race {
                 break;
         }
     }
-
+    
+    /**
+     * Function to get the name of the race
+     *
+     * @return RaceName
+     */
     public function getName(): RaceName {
         return $this->name;
     }
-
+    
+    /**
+     * Function to get the default perks of the race
+     *
+     * @return array
+     */
     public function getDefaultPerks(): array {
         return $this->defaultPerks;
     }
