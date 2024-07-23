@@ -1,0 +1,118 @@
+/* Font config */
+
+@import url('https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.andika-regular {
+  font-family: "Andika", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.andika-bold {
+  font-family: "Andika", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.andika-regular-italic {
+  font-family: "Andika", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.andika-bold-italic {
+  font-family: "Andika", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Actual CSS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #070d29;
+}
+
+body {
+    padding-left: 7rem;
+}
+
+header {
+    text-transform: uppercase;
+    color: whitesmoke;
+}
+
+h1{
+    margin-top: 1em;
+    font-size: 4.4em;
+    line-height: 1.1em;
+    letter-spacing: 0.12em;
+}
+
+h3{
+    margin-top: 0.5em;
+    letter-spacing: 0.1em;
+}
+
+main {
+    margin-top: 2em;
+}
+
+.linkBtn{
+    margin: 1em 0.5em 0.1em 0em;
+    font-size: 1em;
+    padding: 0.8em;
+    color: #12E1B9;
+    border-color:#12E1B9;
+    border: 0.05em solid;
+    width: 15em;
+    text-align: left;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+}
+
+.linkBtn:hover {
+    color: #ed1e46;
+    transform: scale(1.02);
+    transition: 0.4s;
+}
+
+
+.linkBtn::after {
+    content: '⫸';
+    float: right;
+    right: 1em;
+    color: inherit;
+}
+
+footer{
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+h2{
+    margin-top: 0.5em;
+}
+
+h2, p{
+    color: #12E1B9;
+    font-size: 1em;
+}
+
+.personalLink {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.personalLink:hover {
+    transition: 0.4s;
+    color: #ed1e46;
+}
+
+.personalLink:visited {
+    color: inherit;
+}
