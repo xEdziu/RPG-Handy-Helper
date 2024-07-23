@@ -1,8 +1,8 @@
 <?php
-namespace rpg\races;
+namespace backend\races;
 
-use rpg\DTO\Race;
-use rpg\DTO\enums\PerkName;
+use backend\DTO\Race;
+use backend\DTO\enums\PerkName;
 
 class Dwarf extends Race
 {

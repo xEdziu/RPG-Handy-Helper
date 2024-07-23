@@ -1,12 +1,12 @@
 <?php
 
-namespace rpg\DTO;
+namespace backend\DTO;
 
-use rpg\DTO\Perk;
-use rpg\DTO\enums\PerkName;
-use rpg\DTO\Race;
-use rpg\DTO\Proffesion;
-use rpg\DTO\enums\Sex;
+use backend\DTO\Perk;
+use backend\DTO\enums\PerkName;
+use backend\DTO\Race;
+use backend\DTO\Proffesion;
+use backend\DTO\enums\Sex;
 
 class Player {
     private string $name;

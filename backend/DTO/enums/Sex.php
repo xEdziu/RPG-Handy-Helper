@@ -1,6 +1,6 @@
 <?php
 
-namespace rpg\DTO\enums;
+namespace backend\DTO\enums;
 
 enum Sex {
     case Male;

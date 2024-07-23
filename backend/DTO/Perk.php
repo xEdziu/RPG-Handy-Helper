@@ -1,9 +1,9 @@
 <?php
 
-namespace rpg\DTO;
+namespace backend\DTO;
 
-use rpg\DTO\enums\PerkName;
-use rpg\DTO\enums\PerkType;
+use backend\DTO\enums\PerkName;
+use backend\DTO\enums\PerkType;
 
 class Perk {
     private PerkType $type;

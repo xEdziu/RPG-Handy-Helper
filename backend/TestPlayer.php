@@ -1,12 +1,11 @@
 <?php
-namespace rpg;
 
 require_once __DIR__ . '/Autoloader.php';
 
-use rpg\DTO\Player;
-use rpg\DTO\enums\RaceName;
-use rpg\DTO\enums\Sex;
-use rpg\races\Human;
+use backend\DTO\Player;
+use backend\DTO\enums\RaceName;
+use backend\DTO\enums\Sex;
+use backend\races\Human;
 
 $janek = new Player(
     "Jan",
