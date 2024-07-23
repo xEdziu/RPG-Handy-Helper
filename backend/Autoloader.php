@@ -2,7 +2,7 @@
 
 class Autoloader {
     public static function load($className) {
-        $path = str_replace(['\\', 'rpg\\'], [DIRECTORY_SEPARATOR, ''], $className) . '.php';
+        $path = str_replace(['\\', 'backend\\'], [DIRECTORY_SEPARATOR, ''], $className) . '.php';
         $fullPath = __DIR__ . DIRECTORY_SEPARATOR . $path;
         
         if (file_exists($fullPath)) {
