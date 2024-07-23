@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^(www.)?rpg.webace-group.dev [NC]
+RewriteRule ^(index\.html)?$ /frontend/index.html [R=301,L]

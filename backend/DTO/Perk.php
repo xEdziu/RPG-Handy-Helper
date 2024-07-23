@@ -2,29 +2,8 @@
 
 namespace rpg\DTO;
 
-enum PerkType {
-    case Main;
-    case Secondary;
-}
-
-enum PerkName {
-    case WalkaWrecz;
-    case UmiejetnosciStrzeleckie;
-    case Krzepa;
-    case Odpornosc;
-    case Zrecznosc;
-    case Inteligencja;
-    case SilaWoli;
-    case Oglada;
-    case Akcja;
-    case Zywotnosc;
-    case Sila;
-    case Wytrzymalosc;
-    case Szybkosc;
-    case PunktyObledu;
-    case PunktyPrzeznaczenia;
-    case PunktySzczescia;
-}
+use rpg\DTO\enums\PerkName;
+use rpg\DTO\enums\PerkType;
 
 class Perk {
     private PerkType $type;

@@ -3,13 +3,10 @@
 namespace rpg\DTO;
 
 use rpg\DTO\Perk;
+use rpg\DTO\enums\PerkName;
 use rpg\DTO\Race;
 use rpg\DTO\Proffesion;
-
-enum Sex {
-    case Male;
-    case Female;
-}
+use rpg\DTO\enums\Sex;
 
 class Player {
     private string $name;
@@ -25,8 +22,9 @@ class Player {
     private string $hairColor;
     private string $starSign;
     private string $specialMarks;
-    private Proffesion $currentProffesion;
-    private Proffesion $previousProffesion;
+    //tutaj w dwóch kolejnych będzie trzeba zmienić na Proffesion
+    private string $currentProffesion;
+    private string $previousProffesion;
     private array $perks;
 
     public function __construct(
@@ -43,8 +41,8 @@ class Player {
         string $hairColor,
         string $starSign,
         string $specialMarks,
-        Proffesion $currentProffesion,
-        Proffesion $previousProffesion
+        string $currentProffesion,
+        string $previousProffesion
     ) {
         $this->name = $name;
         $this->surname = $surname;
@@ -182,7 +180,7 @@ class Player {
      *
      * @return Proffesion
      */
-    public function getCurrentProffesion(): Proffesion {
+    public function getCurrentProffesion(): string {
         return $this->currentProffesion;
     }
     
@@ -191,7 +189,7 @@ class Player {
      *
      * @return Proffesion
      */
-    public function getPreviousProffesion(): Proffesion {
+    public function getPreviousProffesion(): string {
         return $this->previousProffesion;
     }
     
@@ -282,7 +280,7 @@ class Player {
      * @return string
      */
     public function __toString(): string {
-        return $this->name . ' ' . $this->surname . ' (' . $this->race->getName() . ')';
+        return $this->name . ' ' . $this->surname . ' (' . $this->race->getName()->name . ')';
     }
     
     /**
