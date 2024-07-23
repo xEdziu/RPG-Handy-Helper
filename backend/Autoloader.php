@@ -2,14 +2,18 @@
 
 class Autoloader {
     public static function load($className) {
-        $path = str_replace(['\\', 'backend\\'], [DIRECTORY_SEPARATOR, ''], $className) . '.php';
+
+        // Usuń tylko pierwszy wystąpienie 'backend' i zamień namespace na odpowiadającą strukturę katalogów
+        $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+        $path = preg_replace('/^backend\\' . DIRECTORY_SEPARATOR . '/', '', $path) . '.php';
+
         $fullPath = __DIR__ . DIRECTORY_SEPARATOR . $path;
         
         if (file_exists($fullPath)) {
             require_once $fullPath;
-            echo "Loaded: " . $fullPath . "\n"; // Debugging line
+            echo "Loaded: " . $fullPath . "<br>\n"; // Debugging line
         } else {
-            echo "File not found: " . $fullPath . "\n";
+            echo "File not found: " . $fullPath . "<br>\n";
         }
     }
 }
