@@ -23,3 +23,52 @@
   font-weight: 700;
   font-style: italic;
 }
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #070d29;
+}
+
+body{
+  color:whitesmoke;
+  margin-top: 5em;
+  
+}
+main{
+  border: 0.1em;
+  border-color: grey;
+  border-style: solid;
+  width:40em;
+  display: flex;
+  border-radius: 1em;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+
+header{
+  color:whitesmoke;
+  text-align: center;
+}
+h2{
+  text-align: center;
+}
+
+label{
+  font-size: 1.4em;
+}
+input{
+  padding: 0.5em;
+  width: 120%;
+  border-radius: 0.5em;
+  color: green;
+  font-size: 1em;
+}
+.checkbtn{
+
+}
