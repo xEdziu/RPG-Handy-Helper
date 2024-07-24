@@ -7,25 +7,25 @@
     <title>Logowanie</title>
 </head>
 <body>
-    <header class="andika-bold">
-        <h1>RPG Handy Helper</h1>
-    </header>
+    <h1 class="andika-bold">RPG Handy Helper</h1>
     <main>
         <h2>Log in to your account</h2> <br>
         <form action="">
-                <label for="nickname">Nickname:</label> <br>
-                <input type="text" placeholder="Enter Username" name="nickname" required> <br>
-                <label for="password">Password:</label> <br>
-                <input type="password" placeholder="Enter Password" name="password" required> <br>
-                <button type="submit">Login</button>
-            <label>
-                <input type="checkbox" name="remember" class="checkbtn">Remember me <br>
-            </label>
-                <button type="button" class="cancelbtn">Cancel</button>
-            <a href="">Forgot password?</a>
-            Don't have an account? <a href="">Register it here</a> 
+            <label for="nickname">Nickname:</label> 
+            <input type="text" placeholder="Enter Username" name="nickname" required maxlength="42" class="container"> 
+            <label for="password">Password:</label> 
+            <input type="password" placeholder="Enter Password" name="password" required maxlength="42" class="container">
+            <button type="submit">Login</button> <br>
+            <div class="checkandforgot">
+                <label class="checkbtn">
+                    <input type="checkbox" checked="checked">
+                    <span class="checkmark">Remember me?</span>
+                </label>
+                <span class="forgor">Forgot password? &nbsp;</span><a href=""> Click here</a>
+            </div>
         </form>
     </main>
+    <h1 class="registerlink">Don't have an account? <a href="register.html">Register it here</a> </h1>
 </body>
 
 

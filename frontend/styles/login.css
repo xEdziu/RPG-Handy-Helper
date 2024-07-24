@@ -33,25 +33,26 @@
 
 body{
   color:whitesmoke;
-  margin-top: 5em;
+  margin-top: 2em;
   
 }
 main{
   border: 0.1em;
   border-color: grey;
   border-style: solid;
-  width:40em;
-  display: flex;
+  width:35em;
+  display: block;
   border-radius: 1em;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: center;
   align-content: center;
   margin-left: auto;
   margin-right: auto;
+  padding: 1em;
   
 }
 
-header{
+h1{
   color:whitesmoke;
   text-align: center;
 }
@@ -61,14 +62,47 @@ h2{
 
 label{
   font-size: 1.4em;
+  display: block;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
 }
-input{
+.container{
   padding: 0.5em;
-  width: 120%;
+  width: 100%;
   border-radius: 0.5em;
   color: green;
   font-size: 1em;
+  margin-bottom: 0.1em;
+  margin-top: 0.1em;
 }
-.checkbtn{
+.checkandforgot{
+  color:pink;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1em;
+}
+.forgor{
+  margin-left: auto;
+}
+.checkbtn {
+  display: flex;
+}
 
+.checkmark {
+  margin-left: 0.5em;
+}
+button{
+  color: white;
+  display: inline;
+  width: 100%;
+  padding: 0.8em;
+  color: #12E1B9;
+  border-color:#12E1B9;
+  border: 0.05em solid;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.registerlink{
+  font-size: 1.4em;
+  margin-top: 1em;
 }
