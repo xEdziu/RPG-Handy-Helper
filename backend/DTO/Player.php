@@ -1,12 +1,12 @@
 <?php
 
-namespace rpg\DTO;
+namespace Eddy\RpgHandyHelper\DTO;
 
-use rpg\DTO\Perk;
-use rpg\DTO\enums\PerkName;
-use rpg\DTO\Race;
-use rpg\DTO\Proffesion;
-use rpg\DTO\enums\Sex;
+use Eddy\RpgHandyHelper\DTO\Perk;
+use Eddy\RpgHandyHelper\DTO\enums\PerkName;
+use Eddy\RpgHandyHelper\DTO\Race;
+use Eddy\RpgHandyHelper\DTO\Proffesion;
+use Eddy\RpgHandyHelper\DTO\enums\Sex;
 
 class Player {
     private string $name;

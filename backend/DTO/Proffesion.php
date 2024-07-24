@@ -1,6 +1,6 @@
 <?php
 
-namespace rpg\DTO\Proffesion;
+namespace Eddy\RpgHandyHelper\DTO\Proffesion;
 
 class Proffesion {
     private string $name;

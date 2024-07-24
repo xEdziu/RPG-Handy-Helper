@@ -1,8 +1,8 @@
 <?php
-namespace rpg\races;
+namespace Eddy\RpgHandyHelper\races;
 
-use rpg\DTO\Race;
-use rpg\DTO\enums\PerkName;
+use Eddy\RpgHandyHelper\DTO\Race;
+use Eddy\RpgHandyHelper\DTO\enums\PerkName;
 
 class Elf extends Race
 {
