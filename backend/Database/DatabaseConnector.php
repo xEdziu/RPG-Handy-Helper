@@ -30,13 +30,14 @@ class DatabaseConnector {
 
     public function __construct() {
         try {
-            $this->host = getenv('DB_HOST');
-            $this->database = getenv('DB_NAME');
-            $this->username = getenv('DB_USER');
-            $this->password = getenv('DB_PASS');
+            $this->host = $_ENV['DB_HOST'];
+            $this->database = $_ENV['DB_NAME'];
+            $this->username = $_ENV['DB_USER'];
+            $this->password = $_ENV['DB_PASS'];
             $this->db = new mysqli($this->host, $this->username, $this->password, $this->database);
         } catch (mysqli_sql_exception $e) {
             echo "Connection failed: " . $e->getMessage();
+
         }
     }
     
@@ -51,6 +52,8 @@ class DatabaseConnector {
     }
 
     public function __destruct() {
-        $this->db->close();
+        if ($this->db) {
+            $this->db->close();
+        }
     }
 }
