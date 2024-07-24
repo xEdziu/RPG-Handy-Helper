@@ -1,0 +1,18 @@
+{
+    "name": "eddy/rpg-handy-helper",
+    "description": "RPG Handy Helper for GameMasters",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Eddy\\RpgHandyHelper\\": "backend/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adrian Goral",
+            "email": "adrian.goral@gmail.com"
+        }
+    ],
+    "require": {}
+}
