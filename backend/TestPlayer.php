@@ -1,6 +1,6 @@
 <?php
 
-require 'vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 use Eddy\RpgHandyHelper\DTO\Player;
 use Eddy\RpgHandyHelper\DTO\enums\RaceName;
