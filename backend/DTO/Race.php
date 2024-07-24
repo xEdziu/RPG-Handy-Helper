@@ -1,11 +1,11 @@
 <?php
 
-namespace backend\DTO;
+namespace Eddy\RpgHandyHelper\DTO;
 
-use backend\DTO\Perk;
-use backend\DTO\enums\RaceName;
-use backend\DTO\enums\PerkName;
-use backend\DTO\enums\PerkType;
+use Eddy\RpgHandyHelper\DTO\Perk;
+use Eddy\RpgHandyHelper\DTO\enums\RaceName;
+use Eddy\RpgHandyHelper\DTO\enums\PerkName;
+use Eddy\RpgHandyHelper\DTO\enums\PerkType;
 
 abstract class Race {
     public RaceName $name;

@@ -1,11 +1,11 @@
 <?php
 
-require_once __DIR__ . '/Autoloader.php';
+require 'vendor/autoload.php';
 
-use backend\DTO\Player;
-use backend\DTO\enums\RaceName;
-use backend\DTO\enums\Sex;
-use backend\races\Human;
+use Eddy\RpgHandyHelper\DTO\Player;
+use Eddy\RpgHandyHelper\DTO\enums\RaceName;
+use Eddy\RpgHandyHelper\DTO\enums\Sex;
+use Eddy\RpgHandyHelper\races\Human;
 
 $janek = new Player(
     "Jan",

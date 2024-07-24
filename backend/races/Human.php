@@ -1,8 +1,8 @@
 <?php
-namespace backend\races;
+namespace Eddy\RpgHandyHelper\races;
 
-use backend\DTO\Race;
-use backend\DTO\enums\PerkName;
+use Eddy\RpgHandyHelper\DTO\Race;
+use Eddy\RpgHandyHelper\DTO\enums\PerkName;
 
 class Human extends Race
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\DTO\enums;
+namespace Eddy\RpgHandyHelper\DTO\enums;
 
 enum RaceName {
     case Czlowiek;

@@ -1,9 +1,9 @@
 <?php
 
-namespace backend\DTO;
+namespace Eddy\RpgHandyHelper\DTO;
 
-use backend\DTO\enums\PerkName;
-use backend\DTO\enums\PerkType;
+use Eddy\RpgHandyHelper\DTO\enums\PerkName;
+use Eddy\RpgHandyHelper\DTO\enums\PerkType;
 
 class Perk {
     private PerkType $type;

@@ -12,6 +12,10 @@
         {
             "name": "Adrian Goral",
             "email": "adrian.goral@gmail.com"
+        },
+        {
+            "name": "Mateusz Zubrzycki",
+            "email": "matiz_z@go2.pl"
         }
     ],
     "require": {}

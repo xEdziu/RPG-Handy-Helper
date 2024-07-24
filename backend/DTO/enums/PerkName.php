@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\DTO\enums;
+namespace Eddy\RpgHandyHelper\DTO\enums;
 
 enum PerkName {
     case WalkaWrecz;
