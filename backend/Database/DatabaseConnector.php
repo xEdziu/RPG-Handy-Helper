@@ -55,39 +55,59 @@ class DatabaseConnector {
         return htmlspecialchars(strip_tags($input));
     }
     
+    
     /**
-     * Function to setup tables in the database,
-     * if they do not exist
+     * A function to check if migration table exists and create it if it doesn't
+     * then checks every if every table has been created and creates them if they haven't
      *
-     * @return array containing the status, message and error code
+     * @return array containing the status of the database setup: status, message, error_code
      */
-    private function databaseSetup() {
+    private function databaseSetup() : array {
         $response = [
             "status" => "success",
             "message" => "Database setup successful",
             "error_code" => 0
         ];
+
         try {
-            $this->db->query("CREATE TABLE IF NOT EXISTS `Users` (
-                `id` int AUTO_INCREMENT NOT NULL UNIQUE,
-                `email` varchar(255) NOT NULL UNIQUE,
-                `username` varchar(255) NOT NULL UNIQUE,
-                `password` varchar(500) NOT NULL,
-                `hash` varchar(2000) NOT NULL,
-                `active` int NOT NULL DEFAULT '0',
-                `name` varchar(255) NOT NULL,
-                `surname` varchar(255) NOT NULL,
-                `discord_tag` varchar(255) UNIQUE,
-                PRIMARY KEY (`id`)
-            )");
-        } catch (mysqli_sql_exception $e) {
-            $error = "Error creating table: " . $e->getMessage();
+            // Check if the migrations table exists
+            $result = $this->db->query("SHOW TABLES LIKE 'migrations'");
+            if ($result->num_rows == 0) {
+                // Create migrations table
+                $this->db->query("CREATE TABLE `migrations` (
+                    `id` int AUTO_INCREMENT PRIMARY KEY,
+                    `migration` varchar(255) NOT NULL,
+                    `batch` int NOT NULL
+                )");
+            }
+
+            // Check if the Users table migration has been run
+            $result = $this->db->query("SELECT * FROM `migrations` WHERE `migration` = 'create_users_table'");
+            if ($result->num_rows == 0) {
+                // Create Users table
+                $this->db->query("CREATE TABLE IF NOT EXISTS `Users` (
+                    `id` int AUTO_INCREMENT NOT NULL UNIQUE,
+                    `email` varchar(255) NOT NULL UNIQUE,
+                    `username` varchar(255) NOT NULL UNIQUE,
+                    `password` varchar(500) NOT NULL,
+                    `hash` varchar(2000) NOT NULL,
+                    `active` int NOT NULL DEFAULT '0',
+                    `name` varchar(255) NOT NULL,
+                    `surname` varchar(255) NOT NULL,
+                    `discord_tag` varchar(255) UNIQUE
+                )");
+
+                // Insert migration record
+                $this->db->query("INSERT INTO `migrations` (`migration`, `batch`) VALUES ('create_users_table', 1)");
+            }
+        } catch (\Exception $e) {
             $response = [
                 "status" => "error",
-                "message" => $error,
+                "message" => "Database setup failed: " . $e->getMessage(),
                 "error_code" => 1
             ];
         }
+
         return $response;
     }
 
