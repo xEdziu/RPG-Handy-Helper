@@ -20,11 +20,9 @@ class User{
     private ?string $discordTag;
     private DatabaseConnector $connector;
     
-    public function __construct(int $id, string $email, string $username,
+    public function __construct(string $email, string $username,
      string $password, string $hash, int $active, string $name, string $surname,
      ?string $discordTag){
-
-        $this->id = $id;
         $this->email = $email;
         $this->username = $username;
         $this->password = $password;
@@ -36,9 +34,51 @@ class User{
         $this->connector = new DatabaseConnector();
     }
 
-
-    //TODO: Add a function similar to get a user by their email and by username @Zuber
     
+    /**
+     * Function to create a user in the database
+     *
+     * @return array containing the status of the operation: status, message, error_code
+     */
+    public function createUser(): array {
+        $response = [
+            "status" => "error",
+            "message" => "Error saving user",
+            "error_code" => 500
+        ];
+        try {
+            $query = $this->connector->db->prepare("INSERT INTO Users
+             (email, username, password, hash, active, name, surname, discord_tag)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $query->bind_param("ssssisss", $this->email, $this->username,
+             $this->password, $this->hash, $this->active, $this->name, $this->surname, $this->discordTag);
+        } catch (mysqli_sql_exception $e) {
+            $response = [
+                "status" => "error",
+                "message" => "Error: " . $e->getMessage(),
+                "error_code" => 500
+            ];
+            return $response;
+        }
+
+        $query->execute();
+
+        if ($query->affected_rows == 0) {
+            $response["message"] = "Error saving user: " . $query->error;
+            return $response;
+        }
+
+        $response = [
+            "status" => "success",
+            "message" => "User saved successfully",
+            "error_code" => 200
+        ];
+        return $response;
+    }
+
+
+    //TODO: Add a similar function to get a user by their email and by username @Zuber (two separate functions)
+
     /**
      * Function to get a user by their id
      *
@@ -75,6 +115,8 @@ class User{
         return new User($user["id"], $user["email"], $user["username"], $user["password"],
          $user["hash"], $user["active"], $user["name"], $user["surname"], $user["discord_tag"]);
     }
+
+    //TODO: Add a function to check if a user exists by their email or username @Zuber (one function for both)
     
     /**
      * Function to get update a user in the database
