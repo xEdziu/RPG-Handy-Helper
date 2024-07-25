@@ -49,12 +49,18 @@ class DatabaseConnector {
      * Function to sanitize user input, to prevent SQL injection
      *
      * @param  string $input
-     * @return string
+     * @return string sanitized input
      */
     public static function sanitizeString(string $input): string {
         return htmlspecialchars(strip_tags($input));
     }
-
+    
+    /**
+     * Function to setup tables in the database,
+     * if they do not exist
+     *
+     * @return array containing the status, message and error code
+     */
     private function databaseSetup() {
         $response = [
             "status" => "success",
