@@ -4,9 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles/login.css">
-    <title>Logowanie</title>
+    <title>Register</title>
 </head>
 <body>
-    <h1>test</h1>
+    <h1>RPG Handy Helper</h1>
+    <main>
+        <h2>Register your account</h2>
+        <form action="">
+            <label for="nickname">Nickname:</label>
+            <input type="text" placeholder="Enter Nickname" class="container" maxlength="42" name="nickname">
+            <label for="email">Email address:</label>
+            <input type="text" placeholder="Enter email address" class="container" name="email">
+            <label for="emailrepeat">Repeat your email address:</label>
+            <input type="text" placeholder="Enter email address" class="container" name="emailrepeat">
+            <label for="password">Password:</label>
+            <input type="password" placeholder="Enter passowrd" class="container" name="password">
+            <label for="passowrdrepeat">Repeat your passowrd:</label>
+            <input type="password" placeholder="Repeat password" class="container" name="passowrdrepeat">
+            <button type="submit">Register</button>
+        </form>
+        <h1 class="loginlink">Already have an account? <a href="login.html">Login here</a> </h1>
+    </main>
 </body>
 </html>
