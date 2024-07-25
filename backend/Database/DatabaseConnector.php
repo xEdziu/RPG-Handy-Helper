@@ -36,8 +36,12 @@ class DatabaseConnector {
             $this->username = $_ENV['DB_USER'];
             $this->password = $_ENV['DB_PASS'];
             $this->db = new mysqli($this->host, $this->username, $this->password, $this->database);
+            $response = $this->databaseSetup();
+            if ($response["status"] === "error") {
+                $response["message"];
+            }
         } catch (mysqli_sql_exception $e) {
-            die("Connection failed: " . $e->getMessage());
+            echo "Connection failed: " . $e->getMessage();
         }
     }
     
@@ -49,6 +53,36 @@ class DatabaseConnector {
      */
     public static function sanitizeString(string $input): string {
         return htmlspecialchars(strip_tags($input));
+    }
+
+    private function databaseSetup() {
+        $response = [
+            "status" => "success",
+            "message" => "Database setup successful",
+            "error_code" => 0
+        ];
+        try {
+            $this->db->query("CREATE TABLE IF NOT EXISTS `Users` (
+                `id` int AUTO_INCREMENT NOT NULL UNIQUE,
+                `email` varchar(255) NOT NULL UNIQUE,
+                `username` varchar(255) NOT NULL UNIQUE,
+                `password` varchar(500) NOT NULL,
+                `hash` varchar(2000) NOT NULL,
+                `active` int NOT NULL DEFAULT '0',
+                `name` varchar(255) NOT NULL,
+                `surname` varchar(255) NOT NULL,
+                `discord_tag` varchar(255) UNIQUE,
+                PRIMARY KEY (`id`)
+            )");
+        } catch (mysqli_sql_exception $e) {
+            $error = "Error creating table: " . $e->getMessage();
+            $response = [
+                "status" => "error",
+                "message" => $error,
+                "error_code" => 1
+            ];
+        }
+        return $response;
     }
 
     public function __destruct() {
