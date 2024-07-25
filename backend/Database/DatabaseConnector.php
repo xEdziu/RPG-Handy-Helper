@@ -13,7 +13,8 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../../");
 try {
     $dotenv->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
-    echo "Error loading .env file: " . $e->getMessage();
+    $error = "Error loading .env file: " . $e->getMessage();
+    die($error);
 }
 
 //TODO: Remove this in production
@@ -36,8 +37,7 @@ class DatabaseConnector {
             $this->password = $_ENV['DB_PASS'];
             $this->db = new mysqli($this->host, $this->username, $this->password, $this->database);
         } catch (mysqli_sql_exception $e) {
-            echo "Connection failed: " . $e->getMessage();
-
+            die("Connection failed: " . $e->getMessage());
         }
     }
     
