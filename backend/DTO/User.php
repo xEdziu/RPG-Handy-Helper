@@ -37,7 +37,8 @@ class User{
     }
 
 
-    //TODO: Add a function similar to get a user by their email and username @Zuber
+    //TODO: Add a function similar to get a user by their email and by username @Zuber
+    
     /**
      * Function to get a user by their id
      *
@@ -74,6 +75,49 @@ class User{
         return new User($user["id"], $user["email"], $user["username"], $user["password"],
          $user["hash"], $user["active"], $user["name"], $user["surname"], $user["discord_tag"]);
     }
+    
+    /**
+     * Function to get update a user in the database
+     *
+     * @return array containing the status of the update: status, message, error_code
+     */
+    public function updateUser(): array {
+        $response = [
+            "status" => "error",
+            "message" => "User not found",
+            "error_code" => 404
+        ];
+        try {
+            $query = $this->connector->db->prepare("UPDATE Users SET email = ?,
+             username = ?, password = ?, hash = ?, active = ?, name = ?,
+              surname = ?, discord_tag = ? WHERE id = ?");
+            $query->bind_param("ssssisssi",
+             $this->email, $this->username, $this->password, $this->hash,
+             $this->active, $this->name, $this->surname, $this->discordTag, $this->id);
+        } catch (mysqli_sql_exception $e) {
+            $response = [
+                "status" => "error",
+                "message" => "Error: " . $e->getMessage(),
+                "error_code" => 500
+            ];
+            return $response;
+        }
+
+        $query->execute();
+
+        if ($query->affected_rows == 0) {
+            return $response;
+        }
+
+        $response = [
+            "status" => "success",
+            "message" => "User updated successfully",
+            "error_code" => 200
+        ];
+        return $response;
+    }
+
+    //TODO: @ZuberRS Add a function to delete a user by their id or email, similar to the update function
     
     /**
      * Get the Id of the user
@@ -150,7 +194,7 @@ class User{
     /**
      * Get the discord tag of the user
      *
-     * @return string
+     * @return string|null The discord tag or null if it doesn't exist
      */
     public function getDiscordTag(): ?string {
         return $this->discordTag;
@@ -160,7 +204,7 @@ class User{
     /**
      * Set the Id of the user
      *
-     * @param  mixed $id
+     * @param  int $id
      * @return void
      */
     public function setId(int $id): void {
@@ -170,7 +214,7 @@ class User{
     /**
      * Set the email of the user
      *
-     * @param  mixed $email
+     * @param  string $email
      * @return void
      */
     public function setEmail(string $email): void {
@@ -180,7 +224,7 @@ class User{
     /**
      * Set the username of the user
      *
-     * @param  mixed $username
+     * @param  string $username
      * @return void
      */
     public function setUsername(string $username): void {
@@ -190,7 +234,7 @@ class User{
     /**
      * Set the password of the user
      *
-     * @param  mixed $password
+     * @param  string $password
      * @return void
      */
     public function setPassword(string $password): void {
@@ -200,7 +244,7 @@ class User{
     /**
      * Set the hash of the user
      *
-     * @param  mixed $hash
+     * @param  string $hash
      * @return void
      */
     public function setHash(string $hash): void {
@@ -210,7 +254,7 @@ class User{
     /**
      * Set the active status of the user
      *
-     * @param  mixed $active
+     * @param  int $active
      * @return void
      */
     public function setActive(int $active): void {
@@ -220,7 +264,7 @@ class User{
     /**
      * Set the name of the user
      *
-     * @param  mixed $name
+     * @param  string $name
      * @return void
      */
     public function setName(string $name): void {
@@ -230,7 +274,7 @@ class User{
     /**
      * Set the surname of the user
      *
-     * @param  mixed $surname
+     * @param  string $surname
      * @return void
      */
     public function setSurname(string $surname): void {
@@ -240,7 +284,7 @@ class User{
     /**
      * Set the discord tag of the user
      *
-     * @param  mixed $discordTag
+     * @param  string $discordTag
      * @return void
      */
     public function setDiscordTag(?string $discordTag): void {
