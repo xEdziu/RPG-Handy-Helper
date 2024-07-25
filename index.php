@@ -13,7 +13,7 @@
     </header>
     <main class="andika-regural">
         <button class="linkBtn" onclick="location.href='html/login.html'">Login</button>
-        <button class="linkBtn" onclick="location.href='register.html'">Register</button>
+        <button class="linkBtn" onclick="location.href='html/register.html'">Register</button>
         <br>
         <button class="linkBtn" onclick="location.href='about.html'">Learn more</button>
         <button class="linkBtn" onclick="location.href='demo.html'">Demo campaign</button>
