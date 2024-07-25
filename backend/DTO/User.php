@@ -2,7 +2,13 @@
 
 namespace Eddy\RpgHandyHelper\DTO;
 
+require __DIR__ . "/../../vendor/autoload.php";
+
+use Eddy\RpgHandyHelper\Database\DatabaseConnector;
+use mysqli_sql_exception;
+
 class User{
+
     private int $id;
     private string $email; 
     private string $username;
@@ -12,6 +18,7 @@ class User{
     private string $name;
     private string $surname;
     private ?string $discordTag;
+    private DatabaseConnector $connector;
     
     public function __construct(int $id, string $email, string $username,
      string $password, string $hash, int $active, string $name, string $surname,
@@ -26,6 +33,46 @@ class User{
         $this->name = $name;
         $this->surname = $surname;
         $this->discordTag = $discordTag;
+        $this->connector = new DatabaseConnector();
+    }
+
+
+    //TODO: Add a function similar to get a user by their email and username @Zuber
+    /**
+     * Function to get a user by their id
+     *
+     * @param  int $id The id of the user
+     * @return User|array The user object or an array with an error message
+     */
+    public static function getUserById(int $id): User|array {
+        $response = [
+            "status" => "error",
+            "message" => "User not found",
+            "error_code" => 404
+        ];
+        $connector = new DatabaseConnector();
+        try {
+            $query = $connector->db->prepare("SELECT * FROM Users WHERE id = ?");
+            $query->bind_param("i", $id);
+        } catch (mysqli_sql_exception $e) {
+            $response = [
+                "status" => "error",
+                "message" => "Error: " . $e->getMessage(),
+                "error_code" => 500
+            ];
+            return $response;
+        }
+
+        $query->execute();
+
+        $result = $query->get_result();
+        if ($result->num_rows == 0) {
+            return $response;
+        }
+
+        $user = $result->fetch_assoc();
+        return new User($user["id"], $user["email"], $user["username"], $user["password"],
+         $user["hash"], $user["active"], $user["name"], $user["surname"], $user["discord_tag"]);
     }
     
     /**
@@ -199,5 +246,6 @@ class User{
     public function setDiscordTag(?string $discordTag): void {
         $this->discordTag = $discordTag;
     }
+
 
 }
