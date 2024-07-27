@@ -24,7 +24,7 @@
         <p><a class="personalLink" href="https://github.com/xEdziu">Adrian Goral</a>, Mateusz Zubrzycki</p>
     </footer>
     <div class="popup" id="cookies">
-    <span class="pinfo andika-regular" >RPG Handy Helper uses cookie files in order to work properly [&nbsp 
+    <span class="pinfo andika-regular" >RPG Handy Helper uses cookies in order to work properly [&nbsp 
         <a href="https://allaboutcookies.org/what-is-a-cookie" class="pinfo andika-regular">More Informations</a>&nbsp]
     </span>
     <span class="pbtn andika-regular" id="cdis">I Agree</span>
