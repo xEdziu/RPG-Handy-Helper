@@ -127,6 +127,7 @@ h2, p{
     color:#070d29;
     display:flex;
     align-content: space-between;
+    transition: 1s ease-in-out;
     
 
 }
