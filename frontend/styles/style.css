@@ -116,3 +116,35 @@ h2, p{
 .personalLink:visited {
     color: inherit;
 }
+/* kod do cookies popup */
+.popup{
+    z-index: 99999;
+    margin-bottom:5px;
+    margin-left: auto;
+    margin-right: 10%;
+    padding: 20px;
+    background: #12E1B9;
+    color:#070d29;
+    display:flex;
+    align-content: space-between;
+    
+
+}
+.pinfo{
+    flex: 1 1 auto;
+    justify-content: left;
+    align-content: center;
+    background-color: transparent;
+}
+.pbtn{
+    padding:10px 20px;
+    cursor: pointer;
+    background: #070d29;
+    color: #12E1B9;
+    display:flex;
+    align-items: center;
+    border-radius: 0.3rem;
+    margin-left: 15px;
+    justify-content: end;
+
+}

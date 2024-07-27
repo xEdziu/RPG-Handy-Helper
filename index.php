@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="frontend/styles/style.css">
     <title>RPG Handy Helper</title>
 </head>
 <body>
@@ -23,5 +23,11 @@
         <p>Wiktor Siepka, Mateusz Andrzejewski</p>
         <p><a class="personalLink" href="https://github.com/xEdziu">Adrian Goral</a>, Mateusz Zubrzycki</p>
     </footer>
+    <div class="popup">
+    <span class="pinfo andika-regular" >RPG Handy Helper uses cookie files in order to work properly [&nbsp 
+        <a href="" class="pinfo andika-regular">More Informations</a>&nbsp]
+    </span>
+    <span class="pbtn andika-regular">I Agree</span>
+</div>
 </body>
 </html>
