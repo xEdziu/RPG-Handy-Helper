@@ -20,23 +20,28 @@
     </main>
     <footer class="andika-regular">
         <h2>Authors:</h2>
-        <p>Wiktor Siepka, Mateusz Andrzejewski</p>
+        <p>Wiktor Siepka, Mateusz Andrzejewski, Szymon Nowicki</p>
         <p><a class="personalLink" href="https://github.com/xEdziu">Adrian Goral</a>, Mateusz Zubrzycki</p>
     </footer>
     <div class="popup" id="cookies">
     <span class="pinfo andika-regular" >RPG Handy Helper uses cookie files in order to work properly [&nbsp 
-        <a href="" class="pinfo andika-regular">More Informations</a>&nbsp]
+        <a href="https://allaboutcookies.org/what-is-a-cookie" class="pinfo andika-regular">More Informations</a>&nbsp]
     </span>
     <span class="pbtn andika-regular" id="cdis">I Agree</span>
 </div>
+</body>
 <script>
     document.addEventListener('DOMContentLoaded', (event)=> {
-            document.getElementById("cookies").style.bottom="0";
-        });
-    document.getElementById("cdis").onclick= function(){
-        document.getElementById("cookies").style.display="none";
-        };
+        let cookies=localStorage.getItem("cookies");
+        let popup= document.getElementById("cookies");
+        if(cookies != 1){
+            popup.style.display="flex";
+            document.getElementById("cdis").onclick= function(){
+                popup.style.display="none";
+                localStorage.setItem("cookies",1)
+            };
+        }   
+    });
+    
 </script>
-</body>
-
 </html>

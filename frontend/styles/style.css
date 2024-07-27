@@ -116,6 +116,7 @@ h2, p{
 .personalLink:visited {
     color: inherit;
 }
+
 /* kod do cookies popup */
 .popup{
     z-index: 99999;
@@ -131,12 +132,14 @@ h2, p{
     
 
 }
+
 .pinfo{
     flex: 1 1 auto;
     justify-content: left;
     align-content: center;
     background-color: transparent;
 }
+
 .pbtn{
     padding:10px 20px;
     cursor: pointer;
@@ -148,4 +151,15 @@ h2, p{
     margin-left: 15px;
     justify-content: end;
 
+}
+
+.pbtn:hover{
+    transition: 0.5s;
+    color:#ed1e46;
+
+
+}
+
+#cookies{
+    display:none;
 }
