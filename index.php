@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/style.css">
     <title>RPG Handy Helper</title>
+    <link rel="icon" type="image/x-icon" href="/frontend/img/dark-bg-ico.ico">
 </head>
 <body>
     <header class="andika-bold">
