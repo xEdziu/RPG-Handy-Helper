@@ -9,12 +9,12 @@
 </head>
 <body>
     <header class="andika-bold">
-        <h1>RPG Handy<br>Helper</h1>
+        <h1><a href="/index.php" class="link">RPG Handy<br>Helper</a></h1> 
         <h3>A tool for your campaigns</h3>
     </header>
     <main class="andika-regural">
-        <button class="linkBtn" onclick="location.href='html/login.html'">Login</button>
-        <button class="linkBtn" onclick="location.href='html/register.html'">Register</button>
+        <button class="linkBtn" onclick="location.href='frontend/html/login.html'">Login</button>
+        <button class="linkBtn" onclick="location.href='frontend/html/register.html'">Register</button>
         <br>
         <button class="linkBtn" onclick="location.href='about.html'">Learn more</button>
         <button class="linkBtn" onclick="location.href='demo.html'">Demo campaign</button>
