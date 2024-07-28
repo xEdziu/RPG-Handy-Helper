@@ -6,7 +6,8 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use function Eddy\RpgHandyHelper\Mail\Templates\activationAccount;
+
+require_once __DIR__ . '/templates/activationAccount.php';
 
 use Dotenv;
 
@@ -30,14 +31,14 @@ class Mailer {
             ini_set('display_errors', 0);
             $this->mail = new PHPMailer(false);
             $this->mail->SMTPDebug = 0;
-            $this->url = "rpg.webace-group.dev/";
+            $this->url = "https://rpg.webace-group.dev/";
         } else {
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
             $this->mail = new PHPMailer(true);
             $this->mail->SMTPDebug = 3;
             $this->mail->Debugoutput = 'html';
-            $this->url = "localhost:8000/";
+            $this->url = "http://localhost:8000/";
         }
         $this->mail->CharSet = "UTF-8";
         $this->mail->SMTPAuth = TRUE;
