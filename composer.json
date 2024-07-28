@@ -18,5 +18,7 @@
             "email": "matiz_z@go2.pl"
         }
     ],
-    "require": {}
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
 }
