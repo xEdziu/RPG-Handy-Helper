@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.andika-regular {
+    font-family: "Andika", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .andika-bold {
+    font-family: "Andika", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .andika-regular-italic {
+    font-family: "Andika", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  .andika-bold-italic {
+    font-family: "Andika", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #070d29;
+}
+
+body{
+    color:whitesmoke;
+    margin-top: 2em;
+    
+  }
+
+  h1{
+    color:whitesmoke;
+    text-align: center;
+  }
+
+  p{
+    margin-top: 2em;
+    color:whitesmoke;
+    text-align: center;
+  }
