@@ -23,6 +23,7 @@ class User{
     public function __construct(string $email, string $username,
      string $password, string $hash, int $active, string $name, string $surname,
      ?string $discordTag){
+        $this->id = 0;        
         $this->email = $email;
         $this->username = $username;
         $this->password = $password;
@@ -77,7 +78,89 @@ class User{
     }
 
 
-    //TODO: Add a similar function to get a user by their email and by username @Zuber (two separate functions)
+    /**
+     * Function to get a user by their email
+     *
+     * @param  string $email
+     * @return User|array
+     */
+    public static function getUserByEmail(string $email): User|array {
+        $response = [
+            "status" => "error",
+            "message" => "User not found",
+            "error_code" => 404
+        ];
+        $connector = new DatabaseConnector();
+        try{
+            $query = $connector->db->prepare("SELECT * FROM Users WHERE email = ?");
+            $query->bind_param("s", $email);
+        } catch (mysqli_sql_exception $e) {
+            $response = [
+                "status" => "error",
+                "message" => "Error: " . $e->getMessage(),
+                "error_code" => 500
+            ];
+            return $response;
+        }
+        
+        $query->execute();
+
+        $result = $query->get_result();
+        if ($result->num_rows == 0) {
+            return $response;
+        }
+
+        $user = $result->fetch_assoc();
+        $toReturn = new User($user["email"], $user["username"], $user["password"],
+         $user["hash"], $user["active"], $user["name"], $user["surname"], $user["discord_tag"]);
+
+        $toReturn->setId($user["id"]);
+
+        return $toReturn;
+    }
+
+
+    /**
+     * Function to get a user by their username
+     * 
+     * @param  string $username
+     * @return User|array
+     */
+    public static function getUserByUsername(string $username): User|array {
+        $response = [
+            "status" => "error",
+            "message" => "User not found",
+            "error_code" => 404
+        ];
+        $connector = new DatabaseConnector();
+        try{
+            $query = $connector->db->prepare("SELECT * FROM Users WHERE username = ?");
+            $query->bind_param("s", $username);
+        } catch (mysqli_sql_exception $e) {
+            $response = [
+                "status" => "error",
+                "message" => "Error: " . $e->getMessage(),
+                "error_code" => 500
+            ];
+            return $response;
+        }
+        
+        $query->execute();
+
+        $result = $query->get_result();
+        if ($result->num_rows == 0) {
+            return $response;
+        }
+
+        $user = $result->fetch_assoc();
+        $toReturn = new User($user["email"], $user["username"], $user["password"],
+         $user["hash"], $user["active"], $user["name"], $user["surname"], $user["discord_tag"]);
+
+        $toReturn->setId($user["id"]);
+
+        return $toReturn;
+    }
+
 
     /**
      * Function to get a user by their id
@@ -112,12 +195,46 @@ class User{
         }
 
         $user = $result->fetch_assoc();
-        return new User($user["id"], $user["email"], $user["username"], $user["password"],
+        $toReturn = new User($user["email"], $user["username"], $user["password"],
          $user["hash"], $user["active"], $user["name"], $user["surname"], $user["discord_tag"]);
+
+        $toReturn->setId($user["id"]);
+
+        return $toReturn;
     }
 
-    //TODO: Add a function to check if a user exists by their email or username @Zuber (one function for both)
     
+    /**
+     * Function to check if user exists
+     *
+     * @param  string $probe
+     * @return bool
+     */
+    public static function userExists(string $probe): bool {
+        $connector = new DatabaseConnector();
+
+        try{
+            $query = $connector->db->prepare("SELECT * FROM Users WHERE email = ?  OR username = ?");
+            $query->bind_param("s", $probe);
+        } catch (mysqli_sql_exception $e) {
+            $response = [
+                "status" => "error",
+                "message" => "Error: " . $e->getMessage(),
+                "error_code" => 500
+            ];
+            return $response;
+        }
+
+        $query->execute();
+
+        $result = $query->get_result();
+        if ($result->num_rows == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Function to get update a user in the database
      *
@@ -159,7 +276,62 @@ class User{
         return $response;
     }
 
-    //TODO: @ZuberRS Add a function to delete a user by their id or email, similar to the update function
+        
+        
+    /**
+     * Function to delete a user from the database by email or id
+     *
+     * @param  int|string $probe
+     * @return array
+     */
+    public static function deleteUser(int|string $probe): array {
+        $response = [
+            "status" => "error",
+            "message" => "User not found",
+            "error_code" => 404
+        ];
+
+        $connector = new DatabaseConnector();
+
+        try{
+            if(gettype($probe) == "integer"){
+                $query = $connector->db->prepare("DELETE FROM Users WHERE id = ?" );
+                $query->bind_param("i", $probe);
+            } else if (gettype($probe) == "string"){
+                $query = $connector->db->prepare("DELETE FROM Users WHERE email = ?" );
+                $query->bind_param("s", $probe);
+            } else {
+                $response = [
+                    "status" => "error",
+                    "message" => "Incorrect probe type",
+                    "error_code" => 400
+                ];
+                return $response;
+            }
+            
+        } catch (mysqli_sql_exception $e) {
+            $response = [
+                "status" => "error",
+                "message" => "Error: " . $e->getMessage(),
+                "error_code" => 500
+            ];
+            return $response;
+        }
+
+        $query->execute();
+
+        if ($query->affected_rows == 0) {
+            return $response;
+        }
+
+        $response = [
+            "status" => "success",
+            "message" => "User deleted successfully",
+            "error_code" => 200
+        ];
+        return $response;
+    }
+
     
     /**
      * Get the Id of the user
