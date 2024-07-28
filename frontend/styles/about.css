@@ -43,7 +43,11 @@ body{
   }
 
   p{
-    margin-top: 2em;
+    border: 1em;
+    font-size: 1.4em;
+    margin: 1em;
+    padding: 2em;
     color:whitesmoke;
-    text-align: center;
+    text-align: center, justify;
+    
   }
