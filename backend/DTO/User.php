@@ -210,12 +210,12 @@ class User{
      * @param  string $probe
      * @return bool
      */
-    public static function userExists(string $probe): bool {
+    public static function userExists(string $probe): bool|array {
         $connector = new DatabaseConnector();
 
         try{
-            $query = $connector->db->prepare("SELECT * FROM Users WHERE email = ?  OR username = ?");
-            $query->bind_param("s", $probe);
+            $query = $connector->db->prepare("SELECT * FROM Users WHERE email = ? OR username = ?");
+            $query->bind_param("ss", $probe, $probe);
         } catch (mysqli_sql_exception $e) {
             $response = [
                 "status" => "error",
@@ -320,7 +320,7 @@ class User{
 
         $query->execute();
 
-        if ($query->affected_rows == 0) {
+        if ($query->affected_rows == 0 || $query->affected_rows == "") {
             return $response;
         }
 
@@ -332,7 +332,7 @@ class User{
         return $response;
     }
 
-    
+
     /**
      * Get the Id of the user
      *
