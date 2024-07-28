@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles/login.css">
-    <title>Reset your password</title>
+    <title>Reset password | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
 </head>
 <body>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
         <label for="newpassword" class="andika-bold">Your new password:</label>
-        <input type="password" name="newpassword" maxlength="42" placeholder="Enter your new passowrd" class="container">
+        <input type="password" name="newpassword" maxlength="42" placeholder="Enter your new passowrd" class="container" required>
         <label for="resetrepeatpassword" class="andika-bold">Repeat your password:</label>
-        <input type="password" name="resetrepeatpassword" maxlength="42" placeholder="Repeat your new passowrd" class="container">
+        <input type="password" name="resetrepeatpassword" maxlength="42" placeholder="Repeat your new passowrd" class="container" required>
         <button type="submit">Reset</button>
         <h1 class="andika-bold registerlink"><a href="/index.php" class="register">Temporary link for going back.</a></h1>
     </main>

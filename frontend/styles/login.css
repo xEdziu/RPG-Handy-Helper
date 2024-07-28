@@ -125,7 +125,11 @@ button{
 }
 
 button:hover{
-  background-color: #10b191;
+  background-color: #070d29;
+  color: #12E1B9;
+  transform:scale(1.02);
+  transition: .8s;
+  border-color: #12E1B9;
 }
 
 .registerlink{

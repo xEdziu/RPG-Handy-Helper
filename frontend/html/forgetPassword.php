@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles/login.css">
-    <title>Reset your password</title>
+    <title>Reset password | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
 </head>
 <body>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
         <form action="">
-            <label for="resetemail" class="andika-bold">Forgot your password? Give us your email address and we will send you a link to reset your password!</label>
-            <input type="text" placeholder="Enter email" name="resetemail" class="container">
+            <label for="resetemail" class="andika-bold">Forgot your password? Don't worry, we will send you a link to reset it!</label>
+            <input type="text" placeholder="Enter email" name="resetemail" class="container"required>
             <button type="submit">Submit</button>
         </form>
-        <h1 class="andika-bold registerlink">Temporary Link for password reset site <a href="resetyourpasswordactual.html" class="register">here</a></h1>
+        <h1 class="andika-bold registerlink">Temporary Link for password reset site <a href="resetPassword.php" class="register">here</a></h1>
     </main>
 </body>
 </html>
