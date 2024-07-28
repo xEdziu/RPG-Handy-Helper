@@ -32,77 +32,122 @@
 }
 
 body{
-  color:whitesmoke;
-  margin-top: 2em;
-  
+  color:#f3f4f4;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  height: 100vh; 
+  margin: 0;
+  flex-direction: column; 
 }
 main{
+  
   border: 0.1em;
-  border-color: grey;
+  border-color: #313131;
   border-style: solid;
   width:35em;
-  display: block;
+  display: flex;
   border-radius: 1em;
   flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  margin-left: auto;
-  margin-right: auto;
+  align-content: space-around;
   padding: 1em;
+  background-color: #252525;
   
 }
 
 h1{
-  color:whitesmoke;
+  color:#f3f4f4;
   text-align: center;
+  margin-bottom: 0.6em;
+  font-size: 2.5em;
+}
+.link{
+  color:#f3f4f4;
+  text-decoration: none;
 }
 h2{
+  background-color: transparent;
+  font-size: 1.8em;
+  color:#f3f4f4;
   text-align: center;
 }
 
+form{
+  background-color: transparent;
+}
 label{
   font-size: 1.4em;
-  display: block;
   margin-top: 0.25em;
-  margin-bottom: 0.25em;
+  background-color: transparent;
 }
 .container{
-  padding: 0.5em;
+  padding: 0.7em;
   width: 100%;
   border-radius: 0.5em;
-  color: green;
   font-size: 1em;
-  margin-bottom: 0.1em;
-  margin-top: 0.1em;
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+  color: #f3f4f4;
+  background-color: #313131;
 }
 .checkandforgot{
-  color:pink;
   display: flex;
   justify-content: space-between;
-  font-size: 1em;
-}
-.forgor{
-  margin-left: auto;
-}
-.checkbtn {
-  display: flex;
+  font-size: 1.2em;
+  background-color: transparent;
+  margin-top: .7em;
 }
 
-.checkmark {
-  margin-left: 0.5em;
+.checkboxandmark, .checkmarktext, .forgor, .forgorpswlink{
+  background-color: transparent;
 }
+
+
+.forgor{
+  color: #f3f4f4;
+}
+
 button{
-  color: white;
+  font-size: 1.2em;
+  color: #070d29;
   display: inline;
   width: 100%;
   padding: 0.8em;
-  color: #12E1B9;
   border-color:#12E1B9;
+  border-radius: 0.5em;
   border: 0.05em solid;
   margin-top: 1em;
   margin-bottom: 1em;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background-color: #12E1B9;
 }
+
+button:hover{
+  background-color: #10b191;
+}
+
 .registerlink{
-  font-size: 1.4em;
   margin-top: 1em;
+  font-size: 1.4em;
+  background-color: transparent;
+}
+
+.forgorpswlink{
+  color:#12E1B9;
+  text-decoration: none;
+}
+.forgorpswlink:hover{
+  text-decoration: underline;
+}
+
+.register{
+  color: #12E1B9;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.register:hover{
+  text-decoration: underline;
 }

@@ -8,25 +8,26 @@
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
 </head>
 <body>
-    <h1 class="andika-bold">RPG Handy Helper</h1>
+    <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
-        <h2>Log in to your account</h2> <br>
+        <h2 class="andika-bold">Log in to your account</h2> <br>
         <form action="">
-            <label for="nickname">Nickname:</label> 
-            <input type="text" placeholder="Enter Username" name="nickname" required maxlength="42" class="container"> 
-            <label for="password">Password:</label> 
+            <label for="nickname" class="andika-bold">Nickname:</label> 
+            <input type="text" placeholder="Enter Username" name="nickname" required maxlength="42" class="container" > 
+            <label for="password" class="andika-bold">Password:</label> 
             <input type="password" placeholder="Enter Password" name="password" required maxlength="42" class="container">
-            <button type="submit">Login</button> <br>
+            <button type="submit" class="loginbtn">Log in</button> <br>
             <div class="checkandforgot">
-                <label class="checkbtn">
+                <div class = checkboxandmark>
                     <input type="checkbox" checked="checked">
-                    <span class="checkmark">Remember me?</span>
-                </label>
-                <span class="forgor">Forgot password? &nbsp;</span><a href="resetpassword.html"> Click here</a>
+                    <span class="andika-bold checkmarktext">Remember me? </span>
+                </div>
+                <div class="andika-bold forgor"><a href="resetpassword.html" class="forgorpswlink">Forgot password?</a></div>
             </div>
         </form>
+        <h1 class="andika-bold registerlink">Don't have an account? <a href="register.html" class="register">Register here</a> </h1>
     </main>
-    <h1 class="registerlink">Don't have an account? <a href="register.html">Register it here</a> </h1>
+
 </body>
 
 

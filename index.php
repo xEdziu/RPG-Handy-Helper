@@ -9,7 +9,7 @@
 </head>
 <body>
     <header class="andika-bold">
-        <h1>RPG Handy<br>Helper</h1>
+        <h1><a href="/index.php" class="link">RPG Handy<br>Helper</a></h1> 
         <h3>A tool for your campaigns</h3>
     </header>
     <main class="andika-regural">
