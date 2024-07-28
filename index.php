@@ -9,9 +9,14 @@
 </head>
 <body>
     <header class="andika-bold">
+        <div class="logo">
         <h1><a href="/index.php" class="link">RPG Handy<br>Helper</a></h1> 
         <h3>A tool for your campaigns</h3>
+        </div>
+        <img src="/frontend/img/dark-bg-ico.svg" alt="swords">
     </header>
+   
+    
     <main class="andika-regural">
         <button class="linkBtn" onclick="location.href='frontend/html/login.html'">Login</button>
         <button class="linkBtn" onclick="location.href='frontend/html/register.html'">Register</button>

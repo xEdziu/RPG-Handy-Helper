@@ -36,10 +36,17 @@
 }
 
 body {
-    padding-left: 7rem;
+    display: flex;
+    flex-direction: column;
+    
 }
 
+
+
 header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
     text-transform: uppercase;
     color: whitesmoke;
 }
@@ -56,6 +63,8 @@ h1{
     text-decoration: none;
 }
 
+
+
 h3{
     margin-top: 0.5em;
     letter-spacing: 0.1em;
@@ -63,6 +72,15 @@ h3{
 
 main {
     margin-top: 2em;
+}
+
+img{
+    order:2;
+    height: 20em;
+    width: 20em;
+    position: flex;
+    margin-top: 2.4em;
+
 }
 
 .linkBtn{
@@ -81,14 +99,16 @@ main {
 }
 
 .linkBtn:hover {
-    color: #ed1e46;
+    color: #070d29;
+    background-color: #12E1B9;
     transform: scale(1.02);
-    transition: 0.4s;
+    transition: 0.8s;
 }
 
 
 .linkBtn::after {
-    content: '⫸';
+    content: '➢';
+    font-size:1.2em;
     float: right;
     right: 1em;
     color: inherit;
