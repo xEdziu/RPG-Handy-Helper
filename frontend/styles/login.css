@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+
 .andika-regular {
   font-family: "Andika", sans-serif;
   font-weight: 400;
@@ -31,15 +32,18 @@
     background-color: #070d29;
 }
 
-body{
+body, html{
   color:#f3f4f4;
   display: flex; 
   justify-content: center; 
   align-items: center; 
-  height: 100vh; 
   margin: 0;
-  flex-direction: column; 
+  flex-direction: column;
+  max-height: 2000px;
+  min-height: 100vh;
+
 }
+
 main{
   
   border: 0.1em;
@@ -79,16 +83,6 @@ label{
   font-size: 1.4em;
   margin-top: 0.25em;
   background-color: transparent;
-}
-.container{
-  padding: 0.7em;
-  width: 100%;
-  border-radius: 0.5em;
-  font-size: 1em;
-  margin-bottom: 1em;
-  margin-top: 0.5em;
-  color: #f3f4f4;
-  background-color: #313131;
 }
 .checkandforgot{
   display: flex;
@@ -154,4 +148,36 @@ button:hover{
 
 .register:hover{
   text-decoration: underline;
+}
+
+.container{
+  padding: 0.7em;
+  width: 100%;
+  border-radius: 0.5em;
+  font-size: 1em;
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+  color: #f3f4f4;
+  background-color: #313131;
+  display: inline;
+}
+
+.inputbox{
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  color: #f3f4f4;
+  background-color: #313131;
+  border-color: #f3f4f4;
+  border: 1em;
+  border-radius: 0.5em;
+}
+.inputbox .container{
+  border: none;
+  outline: none;
+}
+.closedeye{
+  width: 8%;
+  height: 8%;
+  background-color: transparent;
 }

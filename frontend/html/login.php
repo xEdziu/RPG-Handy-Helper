@@ -14,8 +14,11 @@
         <form action="">
             <label for="nickname" class="andika-bold">Nickname:</label> 
             <input type="text" placeholder="Enter Username" name="nickname" required maxlength="42" class="container" required> 
-            <label for="password" class="andika-bold">Password:</label> 
-            <input type="password" placeholder="Enter Password" name="password" required maxlength="42" class="container"required>
+            <label for="password" class="andika-bold">Password: </label>
+            <div class="inputbox">
+                <input class="container" type="password" placeholder="Enter Password" name="password" required maxlength="42" required>
+                <img src="..\img\closedeye.png" class="closedeye" alt="chuj">
+            </div> 
             <button type="submit" class="loginbtn">Log in</button> <br>
             <div class="checkandforgot">
                 <div class = checkboxandmark>
