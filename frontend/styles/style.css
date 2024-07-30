@@ -26,7 +26,6 @@
   font-style: italic;
 }
 
-/* Actual CSS */
 
 * {
     margin: 0;
@@ -35,27 +34,86 @@
     background-color: #070d29;
 }
 
-body {
+.content-wrapper{
     display: flex;
     flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    height: 100vh;
+    
+
+}
+
+@media screen and (min-width: 1024px) {
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items:center ;
+    
+
+}
+.column1{   
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: first baseline;
+}
+
+.column2{
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    
+}
+}
+
+@media screen and (max-width: 1024px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items:center ;
+        
+    
+    }
+    .column1{   
+        order: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: first baseline;
+    }
+    }
+    .column2{
+        order:1;
+        display: flex;
+        flex-direction: column;
+        
+    }
+    
+
+
+header {
+    display: flex;
+    text-transform: uppercase;
+    color: whitesmoke;
+    margin-bottom: 0.5em;
     
 }
 
 
 
-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    text-transform: uppercase;
-    color: whitesmoke;
-}
-
 h1{
-    margin-top: 1em;
-    font-size: 4.4em;
+    font-size: 5em;
     line-height: 1.25em;
     letter-spacing: 0.12em;
+
+}
+
+h3{
+    margin-top: 0.5em;
+    letter-spacing: 0.1em;
+    font-size: 1.8em;
 }
 
 .link{
@@ -65,27 +123,24 @@ h1{
 
 
 
-h3{
-    margin-top: 0.5em;
-    letter-spacing: 0.1em;
-}
-
 main {
+    display: flex;
+    flex-direction: column;
     margin-top: 2em;
+    
 }
 
-img{
-    order:2;
-    height: 20em;
-    width: 20em;
-    position: flex;
-    margin-top: 2.4em;
-
+.buttons1, .buttons2, .buttons3{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    
 }
 
 .linkBtn{
-    margin: 1em 0.5em 0.1em 0em;
-    font-size: 1em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
     padding: 0.8em;
     color: #12E1B9;
     border-color:#12E1B9;
@@ -114,9 +169,18 @@ img{
     color: inherit;
 }
 
+
+
+img{
+    width: 30em;
+    height: 30em;
+}
+
 footer{
+    align-self: center;
     margin-top: 3em;
     margin-bottom: 3em;
+    
 }
 
 h2{
