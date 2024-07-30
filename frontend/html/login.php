@@ -12,11 +12,11 @@
 <body>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
-        <h2 class="andika-bold">Log in to your account</h2> <br>
+        <h2 class="andika-bold">Log in to your account</h2>
         <form action="" id="loginForm">
             <label for="nickname" class="andika-bold req">Nickname:</label>
             <div class="inputbox">
-                <input type="text" placeholder="Enter Username" name="nickname" required>
+                <input type="text" placeholder="Enter Username" name="nickname" id="nickname" required>
             </div> 
             <label for="password" class="andika-bold req">Password: </label>
             <div class="inputbox">
@@ -26,7 +26,7 @@
             <button type="submit" class="loginbtn">Log in</button> <br>
             <div class="checkandforgot">
                 <div class = checkboxandmark>
-                    <input type="checkbox" checked="checked">
+                    <input type="checkbox" checked="checked" id="checkbox">
                     <span class="andika-bold checkmarktext">Remember me? </span>
                 </div>
                 <div class="andika-bold forgor"><a href="forgetPassword.php" class="forgorpswlink">Forgot password?</a></div>

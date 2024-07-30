@@ -15,7 +15,7 @@
         <form action="" id="forgetForm">
             <label for="resetemail" class="andika-bold">Forgot your password? Don't worry, we will send you a link to reset it!</label>
             <div class=inputbox>
-                <input type="text" placeholder="Enter email" name="resetemail" autocomplete="off" required>
+                <input type="text" placeholder="Enter email" name="resetemail" id="resetemail" autocomplete="off" required>
             </div>
             <button type="submit">Submit</button>
         </form>

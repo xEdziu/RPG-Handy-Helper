@@ -16,11 +16,11 @@
         <form action="" id="registerForm">
             <label for="nickname" class="andika-bold req">Nickname:</label>
             <div class="inputbox">
-                <input type="text" placeholder="Enter Nickname" maxlength="42" name="nickname" required autocomplete="off">
+                <input type="text" placeholder="Enter Nickname" maxlength="42" name="nickname" id="nickname" required autocomplete="off">
             </div>
             <label for="email" class="andika-bold req">Email address:</label>
             <div class="inputbox">
-                <input type="text" placeholder="Enter email address" name="email" required autocomplete="off">
+                <input type="text" placeholder="Enter email address" name="email" id="email" required autocomplete="off">
             </div>
             <label for="password" class="andika-bold req">Password:</label>
             <div class="inputbox">
@@ -34,15 +34,15 @@
             </div>
             <label for="name" class="andika-bold req">Name:</label>
             <div class="inputbox">
-                <input type="text" placeholder="Enter Name" maxlength="42" name="name" required autocomplete="off">
+                <input type="text" placeholder="Enter Name" maxlength="42" name="name" id="name" required autocomplete="off">
             </div>
             <label for="surname" class="andika-bold req">Surname:</label>
             <div class="inputbox">
-                <input type="text" placeholder="Enter Surname" maxlength="42" name="surname" required autocomplete="off">
+                <input type="text" placeholder="Enter Surname" maxlength="42" name="surname" id="surname" required autocomplete="off">
             </div>
             <label for="discord" class="andika-bold">Discord Tag:</label>
             <div class="inputbox">
-                <input type="text" placeholder="Enter Discord Tag" maxlength="42" name="discord" autocomplete="off"> 
+                <input type="text" placeholder="Enter Discord Tag" maxlength="42" name="discord" id="discord" autocomplete="off"> 
             </div>
             
             <button type="submit">Register</button>
