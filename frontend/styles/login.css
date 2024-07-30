@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+
+.andika-regular {
+  font-family: "Andika", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.andika-bold {
+  font-family: "Andika", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.andika-regular-italic {
+  font-family: "Andika", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.andika-bold-italic {
+  font-family: "Andika", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #070d29;
+}
+
+body, html{
+  color:#f3f4f4;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  margin: 0;
+  flex-direction: column;
+  max-height: 2000px;
+  min-height: 100vh;
+
+}
+
+main{
+  
+  border: 0.1em;
+  border-color: #313131;
+  border-style: solid;
+  width:35em;
+  display: flex;
+  border-radius: 1em;
+  flex-direction: column;
+  align-content: space-around;
+  padding: 1em;
+  background-color: #252525;
+  margin-bottom: 5em;
+  
+}
+.forgetlabeltext{
+  margin-bottom: 1em;
+  background: transparent;
+}
+h1{
+  color:#f3f4f4;
+  text-align: center;
+  margin-bottom: 0.6em;
+  font-size: 2.5em;
+  margin-top: 1em;
+}
+.link{
+  color:#f3f4f4;
+  text-decoration: none;
+}
+h2{
+  background-color: transparent;
+  font-size: 1.8em;
+  color:#f3f4f4;
+  text-align: center;
+}
+
+form{
+  background-color: transparent;
+}
+label{
+  font-size: 1.4em;
+  margin-top: 0.25em;
+  background-color: transparent;
+}
+.req::before{
+  content: "*";
+  color:#12E1B9;
+  font-size: 0.9em;
+}
+.checkandforgot{
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2em;
+  background-color: transparent;
+  margin-top: .7em;
+}
+
+.checkboxandmark, .checkmarktext, .forgor, .forgorpswlink{
+  background-color: transparent;
+}
+
+
+.forgor{
+  color: #f3f4f4;
+}
+
+button{
+  font-size: 1.2em;
+  color: #070d29;
+  display: inline;
+  width: 100%;
+  padding: 0.8em;
+  border-color:#12E1B9;
+  border-radius: 0.5em;
+  border: 0.05em solid;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background-color: #12E1B9;
+}
+
+button:hover{
+  background-color: #070d29;
+  color: #12E1B9;
+  transition: .2s;
+  border-color: #12E1B9;
+}
+
+.registerlink{
+  margin-top: 1em;
+  font-size: 1.4em;
+  background-color: transparent;
+}
+
+.forgorpswlink{
+  color:#12E1B9;
+  text-decoration: none;
+}
+.forgorpswlink:hover{
+  text-decoration: underline;
+}
+
+.register{
+  color: #12E1B9;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.register:hover{
+  text-decoration: underline;
+}
+
+.container{
+  padding: 0.7em;
+  width: 100%;
+  border-radius: 0.5em;
+  font-size: 1em;
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+  color: #f3f4f4;
+  background-color: #313131;
+  display: inline;
+}
+
+.inputbox{
+  padding: 0.5em;
+  width: 100%;
+  height: 3.3em;
+  border-radius: 0.5em;
+  font-size: 1em;
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+  background-color: #313131;
+  display: flex;
+  align-content: center;
+}
+.inputbox input{
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0;
+  width: 100%;
+  font-size: 1.2em;
+}
+input{
+  color: #12E1B9;
+}
+
+.closedeye{
+  width: 6%;
+  height: auto;
+  background-color: transparent;
+  margin-left: 0.5em;
+  margin-right: auto;
+  align-content: center;
+  cursor: pointer;
+}
