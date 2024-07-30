@@ -8,8 +8,12 @@
     <title>Register | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
     <script defer src="../js/togglePassword.js"></script>
+    <script defer src="../js/changeColorTheme.js"></script>
 </head>
-<body>
+<body class="darkMode"> 
+    <nav>
+        <img src="\frontend\img\light-theme.svg" alt="Icon" class="toggleicon" id="toggle-icon" onclick="changeColorTheme('toggle-icon')">
+    </nav>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
         <h2 class="andika-bold">Register your account</h2>
