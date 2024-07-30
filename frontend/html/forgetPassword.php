@@ -13,7 +13,7 @@
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
         <form action="" id="forgetForm">
-            <label for="resetemail" class="andika-bold">Forgot your password? Don't worry, we will send you a link to reset it!</label>
+            <label for="resetemail" class="andika-bold"><p class="forgetlabeltext">Forgot your password? Don't worry, we will send you a link to reset it!</p></label>
             <div class=inputbox>
                 <input type="text" placeholder="Enter email" name="resetemail" id="resetemail" autocomplete="off" required>
             </div>

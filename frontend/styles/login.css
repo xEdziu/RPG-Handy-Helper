@@ -59,7 +59,10 @@ main{
   margin-bottom: 5em;
   
 }
-
+.forgetlabeltext{
+  margin-bottom: 1em;
+  background: transparent;
+}
 h1{
   color:#f3f4f4;
   text-align: center;
