@@ -56,6 +56,7 @@ main{
   align-content: space-around;
   padding: 1em;
   background-color: #252525;
+  margin-bottom: 5em;
   
 }
 
@@ -64,6 +65,7 @@ h1{
   text-align: center;
   margin-bottom: 0.6em;
   font-size: 2.5em;
+  margin-top: 1em;
 }
 .link{
   color:#f3f4f4;
@@ -126,8 +128,7 @@ button{
 button:hover{
   background-color: #070d29;
   color: #12E1B9;
-  transform:scale(1.02);
-  transition: .8s;
+  transition: .2s;
   border-color: #12E1B9;
 }
 
@@ -170,7 +171,7 @@ button:hover{
 .inputbox{
   padding: 0.5em;
   width: 100%;
-  height: 5vh;
+  height: 3.3em;
   border-radius: 0.5em;
   font-size: 1em;
   margin-bottom: 1em;
