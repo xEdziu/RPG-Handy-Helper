@@ -6,18 +6,21 @@
     <link rel="stylesheet" href="../styles/login.css">
     <title>Login | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
+    <script defer src="../js/togglePassword.js"></script>
 </head>
 <body>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
         <h2 class="andika-bold">Log in to your account</h2> <br>
-        <form action="">
-            <label for="nickname" class="andika-bold">Nickname:</label> 
-            <input type="text" placeholder="Enter Username" name="nickname" required maxlength="42" class="container" required> 
-            <label for="password" class="andika-bold">Password: </label>
+        <form action="" id="loginForm">
+            <label for="nickname" class="andika-bold req">Nickname:</label>
             <div class="inputbox">
-                <input class="container" type="password" placeholder="Enter Password" name="password" required maxlength="42" required>
-                <img src="..\img\closedeye.png" class="closedeye" alt="chuj">
+                <input type="text" placeholder="Enter Username" name="nickname" required autocomplete="off">
+            </div> 
+            <label for="password" class="andika-bold req">Password: </label>
+            <div class="inputbox">
+                <input type="password" placeholder="Enter Password" name="password" required autocomplete="off" id="password">
+                <img src="\frontend\img\cyan-hidden.svg" class="closedeye" alt="Image" id="eyeIcon-password" onclick="switchVisibility('password','eyeIcon-password')" >
             </div> 
             <button type="submit" class="loginbtn">Log in</button> <br>
             <div class="checkandforgot">
@@ -32,6 +35,5 @@
     </main>
 
 </body>
-
 
 </html>

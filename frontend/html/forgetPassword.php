@@ -11,9 +11,11 @@
 <body>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
-        <form action="">
+        <form action="" id="forgetForm">
             <label for="resetemail" class="andika-bold">Forgot your password? Don't worry, we will send you a link to reset it!</label>
-            <input type="text" placeholder="Enter email" name="resetemail" class="container"required>
+            <div class=inputbox>
+                <input type="text" placeholder="Enter email" name="resetemail" autocomplete="off" required>
+            </div>
             <button type="submit">Submit</button>
         </form>
         <h1 class="andika-bold registerlink">Temporary Link for password reset site <a href="resetPassword.php" class="register">here</a></h1>
