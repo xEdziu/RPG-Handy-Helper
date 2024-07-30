@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles/login.css">
+    <link rel="stylesheet" href="../styles/main.css">
     <title>Login | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
     <script defer src="../js/togglePassword.js"></script>
@@ -15,11 +16,11 @@
         <form action="" id="loginForm">
             <label for="nickname" class="andika-bold req">Nickname:</label>
             <div class="inputbox">
-                <input type="text" placeholder="Enter Username" name="nickname" required autocomplete="off">
+                <input type="text" placeholder="Enter Username" name="nickname" required>
             </div> 
             <label for="password" class="andika-bold req">Password: </label>
             <div class="inputbox">
-                <input type="password" placeholder="Enter Password" name="password" required autocomplete="off" id="password">
+                <input type="password" placeholder="Enter Password" name="password" required id="password">
                 <img src="\frontend\img\cyan-hidden.svg" class="closedeye" alt="Image" id="eyeIcon-password" onclick="switchVisibility('password','eyeIcon-password')" >
             </div> 
             <button type="submit" class="loginbtn">Log in</button> <br>
