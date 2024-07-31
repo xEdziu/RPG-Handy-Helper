@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <title>Reset password | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>

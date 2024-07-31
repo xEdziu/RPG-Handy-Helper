@@ -8,6 +8,7 @@
     <title>Login | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
     <script defer src="../js/togglePassword.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>

@@ -8,6 +8,8 @@
     <title>Register | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
     <script defer src="../js/togglePassword.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
 </head>
 <body>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
@@ -50,5 +52,93 @@
         <h1 class="andika-bold registerlink">Already have an account? <a href="login.php" class="register">Login here</a> </h1>
     </main>
 </body>
+<script>
+    const register = document.getElementById("registerForm");
+    register.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let recaptcha = false;
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM', {action: 'submit'}).then(function (token) {
+                const dataR = new FormData();
+                dataR.append("token", token);
+                fetch("/backend/api/v1/auth/recaptcha.php", {
+                    method: "POST",
+                    body: dataR
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.success)
+                            recaptcha = true;
+                    })
+                     .then(() => {
+                         if (recaptcha) {
+                             registerUser();
+                        } else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Błąd',
+                                text: 'Recaptcha się nie powiodła',
+                                footer: 'Botom wstęp wzbroniony!'
+                            })
+                        }
+                    })
+            });
+        });
+
+        function registerUser() {
+            const formData = new FormData();
+            const inputs = document.getElementById("registerForm").elements;
+            const inputNickname = inputs["nickname"].value;
+            const inputPassword = inputs["password"].value;
+            const inputEmail = inputs["email"];
+            const inputPasswordRepeat = inputs["passwordrepeat"].value;
+            const inputName = inputs["name"];
+            const inputSurname = inputs["surname"];
+            const inputDiscord = inputs["discord"];
+            if(inputPassword != inputPasswordRepeat){
+                Swal.fire({
+                    title: "The Internet?",
+                    text: "That thing is still around?",
+                    icon: "warning",
+                    footer: "test"
+                });
+            }
+            // fetch("../../api/auth/register.php", {
+            //     method: "POST",
+            //     body: formData
+            // })
+            //     .then(
+            //         Swal.fire({
+            //             icon: 'info',
+            //             title: 'Proszę czekać',
+            //             text: 'Trwa rejestracja...',
+            //             allowOutsideClick: false,
+            //             allowEscapeKey: false,
+            //             allowEnterKey: false,
+            //             showConfirmButton: false,
+            //             timer: 5000
+            //         })
+            //     )
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         Swal.fire({
+            //             icon: data.icon,
+            //             title: data.title,
+            //             text: data.message,
+            //             footer: data.footer
+            //         })
+            //             .then(() => {
+            //                 if (data.icon == "success") {
+            //                     window.location.href = "signin.php";
+            //                 }
+            //             });
+            //     })
+            //     .catch(error => {
+            //         console.error(error);
+            //     });
+        }
+    });
+</script>
 
 </html>
