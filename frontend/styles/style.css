@@ -210,8 +210,9 @@ h2, p{
 .popup{
     z-index: 99999;
     margin-bottom:5px;
-    margin-left: auto;
+    margin-left: 9.5%;
     margin-right: 10%;
+    margin-top: auto;
     padding: 20px;
     background: #12E1B9;
     color:#070d29;
