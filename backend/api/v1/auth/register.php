@@ -223,5 +223,17 @@ if (is_array($user)){
             "code" => 613,
         ]
     ];
+    die(json_encode($response));
 }
 
+$mail = new Mailer();
+for ($i = 0; $i < 3; $i++) {
+    $response = [];
+    $response = $mail->sendActivationMail($user->getEmail(), $user->getHash());
+    if ($response['data']['code'] === 0) {
+        break;
+    }
+}
+
+unset($_SESSION['csrf_token']);
+die(json_encode($response));
