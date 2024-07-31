@@ -109,6 +109,7 @@ $_SESSION['csrf_token'] = $csrf_token;
             const formData = new FormData();
             const inputs = document.getElementById("registerForm").elements;
             const inputNickname = inputs["nickname"].value;
+            const inputCsrftoken = inputs["csrf_token"].value;
             const inputPassword = inputs["password"].value;
             const inputEmail = inputs["email"];
             const inputPasswordRepeat = inputs["passwordrepeat"].value;
