@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="frontend/styles/style.css">
     <title>RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="/frontend/img/dark-bg-ico.ico">
+    <script src="/frontend/js/script.js" defer></script>
 </head>
 
 <body>
@@ -53,7 +54,7 @@
         </span>
         <span class="pbtn andika-regular" id="cdis">I Agree</span>
     </div>
-    
+
     <footer class="andika-regular">
             <!-- <h2>Authors:</h2> -->
             <!-- <p>Wiktor Siepka, Mateusz Andrzejewski, Szymon Nowicki, <a class="personalLink" href="https://github.com/xEdziu">Adrian Goral</a>, Mateusz Zubrzycki</p> -->
@@ -61,18 +62,4 @@
         </footer>
 
 </body>
-<script>
-    document.addEventListener('DOMContentLoaded', (event)=> {
-        let cookies=localStorage.getItem("cookies");
-        let popup= document.getElementById("cookies");
-        if(cookies != 1){
-            popup.style.display="flex";
-            document.getElementById("cdis").onclick= function(){
-                popup.style.display="none";
-                localStorage.setItem("cookies",1)
-            };
-        }   
-    });
-    
-</script>
 </html>
