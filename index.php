@@ -41,18 +41,21 @@
             </div>
         </div>
 
-        <!-- <footer class="andika-regular">
-            <h2>Authors:</h2>
-            <p>Wiktor Siepka, Mateusz Andrzejewski, Szymon Nowicki, <a class="personalLink" href="https://github.com/xEdziu">Adrian Goral</a>, Mateusz Zubrzycki</p>
-        </footer> -->
+       
 
-        <div class="popup" id="cookies">
+        
+    </div>
+    <footer class="andika-regular">
+            <!-- <h2>Authors:</h2> -->
+            <!-- <p>Wiktor Siepka, Mateusz Andrzejewski, Szymon Nowicki, <a class="personalLink" href="https://github.com/xEdziu">Adrian Goral</a>, Mateusz Zubrzycki</p> -->
+            <p>© <?php echo date("Y"); ?> RPG Handy Helper. All rights reserved.</p>
+        </footer>
+    <div class="popup" id="cookies">
             <span class="pinfo andika-regular" >RPG Handy Helper uses cookies in order to work properly [&nbsp 
                 <a href="https://allaboutcookies.org/what-is-a-cookie" class="pinfo andika-regular">More Informations</a>&nbsp]
             </span>
             <span class="pbtn andika-regular" id="cdis">I Agree</span>
         </div>
-    </div>
 
 </body>
 <script>
