@@ -216,4 +216,5 @@ nav{
   width: 4%;
   height: auto;
   margin-right: 1em;
+  cursor: pointer;
 }

@@ -1,23 +1,27 @@
 function changeColorTheme(themeIconId, eyeClass){
-    let x = document.getElementById(themeIconId);
-    let eyes = document.getElementsByClassName(eyeClass);
-    document.body.classList.toggle("darkMode");
-    // You shouldn't have let me cook (it was my first time with js okay plz dont judge)
-    for (let i = 0; i < eyes.length; i++) {
-        let eye = eyes[i];
-        if(!document.body.classList.contains("darkMode")){
-            x.src = "/frontend/img/dark-theme.svg";
-            if(eye.src.indexOf("cyan-hidden.svg") !== -1)
-                eye.src = "/frontend/img/red-hidden.svg";
-            else if(eye.src.indexOf("cyan-shown.svg") !== -1)
-                eye.src = "/frontend/img/red-shown.svg";
+    const body = document.body;
+    body.classList.toggle('darkMode');
+    const icons = document.querySelectorAll('.toggleicon, .closedeye');
+
+    icons.forEach(icon => {
+        const iconName = icon.src.split('/').pop();
+
+        if (icon.classList.contains('toggleicon')) {
+            if (iconName === 'light-theme.svg') {
+                icon.src = "../img/dark-theme.svg";
+            } else {
+                icon.src = "../img/light-theme.svg";
+            }
+        } else if (icon.classList.contains('closedeye')) {
+            if (iconName === 'cyan-hidden.svg') {
+                icon.src = "../img/red-hidden.svg";
+            } else if (iconName === 'cyan-shown.svg') {
+                icon.src = "../img/red-shown.svg";
+            } else if (iconName === 'red-hidden.svg') {
+                icon.src = "../img/cyan-hidden.svg";
+            } else if (iconName === 'red-shown.svg') {
+                icon.src = "../img/cyan-shown.svg";
+            }
         }
-        else{
-            x.src = "/frontend/img/light-theme.svg";
-            if(eye.src.indexOf("red-shown.svg") !== -1)
-                eye.src = "/frontend/img/cyan-shown.svg";
-            else if(eye.src.indexOf("red-hidden.svg") !== -1)
-                eye.src = "/frontend/img/cyan-hidden.svg";
-        }
-    }
+    });
 }
