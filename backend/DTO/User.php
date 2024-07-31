@@ -50,10 +50,10 @@ class User{
      * @return User
      */
     public static function newUserRegister(
-        string $username,
-        string $email,
-        string $password,
-        string $hash,
+        #[\SensitiveParameter] string $username,
+        #[\SensitiveParameter] string $email,
+        #[\SensitiveParameter] string $password,
+        #[\SensitiveParameter] string $hash,
         string $name,
         string $surname,
         ?string $discordTag
@@ -196,7 +196,7 @@ class User{
      * @param  int $id The id of the user
      * @return User|array The user object or an array with an error message
      */
-    public static function getUserById(int $id): User|array {
+    public static function getUserById(#[\SensitiveParameter] int $id): User|array {
         $response = [
             "status" => "error",
             "message" => "User not found",
