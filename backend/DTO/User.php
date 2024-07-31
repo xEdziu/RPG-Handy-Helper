@@ -37,6 +37,34 @@ class User{
 
     
     /**
+     * Function to create a new user object
+     * from registration form data
+     *
+     * @param  string $username
+     * @param  string $email
+     * @param  string $password
+     * @param  string $hash
+     * @param  string $name
+     * @param  string $surname
+     * @param  string|null $discordTag
+     * @return User
+     */
+    public static function newUserRegister(
+        string $username,
+        string $email,
+        string $password,
+        string $hash,
+        string $name,
+        string $surname,
+        ?string $discordTag
+    ) : User {
+
+        return new User($email, $username, $password, $hash,
+         0, $name, $surname, $discordTag);
+    }
+
+    
+    /**
      * Function to create a user in the database
      *
      * @return array containing the status of the operation: status, message, error_code
@@ -207,7 +235,7 @@ class User{
     /**
      * Function to check if user exists
      *
-     * @param  string $probe
+     * @param  string $probe The email or username to check
      * @return bool
      */
     public static function userExists(string $probe): bool|array {
