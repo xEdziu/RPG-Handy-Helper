@@ -104,6 +104,27 @@ class DatabaseConnector {
                 // Insert migration record
                 $this->db->query("INSERT INTO `migrations` (`migration`, `batch`) VALUES ('create_users_table', 1)");
             }
+
+            // Check if the user_tokens table migration has been run
+            $result = $this->db->query("SELECT * FROM `migrations` WHERE `migration` = 'create_user_tokens_table'");
+            if ($result->num_rows == 0) {
+                // Create user_tokens table
+                $this->db->query("CREATE TABLE IF NOT EXISTS `user_tokens` (
+                    `id` int AUTO_INCREMENT NOT NULL UNIQUE,
+                    `selector` varchar(2000) NOT NULL,
+                    `hashed_validator` varchar(2000) NOT NULL,
+                    `user_id` int NOT NULL,
+                    `expiry` datetime NOT NULL,
+                    PRIMARY KEY (`id`),
+                    FOREIGN KEY (`user_id`)
+                        REFERENCES `Users`(`id`) 
+                        ON DELETE CASCADE
+                )");
+
+                // Insert migration record
+                $this->db->query("INSERT INTO `migrations` (`migration`, `batch`) VALUES ('create_user_tokens_table', 1)");
+            }
+
         } catch (\Exception $e) {
             $response = [
                 "status" => "error",
