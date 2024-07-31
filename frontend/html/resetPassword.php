@@ -13,7 +13,7 @@
 </head>
 <body class="darkMode">
     <nav>
-        <img src="\frontend\img\light-theme.svg" alt="Icon" class="toggleicon" id="toggle-icon" onclick="changeColorTheme('toggle-icon')">
+        <img src="\frontend\img\light-theme.svg" alt="Icon" class="toggleicon" id="toggle-icon" onclick="changeColorTheme('toggle-icon', 'closedeye')">
     </nav>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>

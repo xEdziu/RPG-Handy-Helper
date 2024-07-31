@@ -217,9 +217,3 @@ nav{
   height: auto;
   margin-right: 1em;
 }
-
-@media screen{
-  body{
-    /* height:100vh; */
-  }
-}
