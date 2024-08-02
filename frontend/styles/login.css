@@ -29,33 +29,28 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #070d29;
 }
 
-body, html{
-  color:#f3f4f4;
+body{
+  color:var(--textColor);
   display: flex; 
   justify-content: center; 
   align-items: center; 
   margin: 0;
   flex-direction: column;
-  max-height: 2000px;
-  min-height: 100vh;
-
+  background-color: var(--primaryColor);
 }
 
 main{
-  
-  border: 0.1em;
-  border-color: #313131;
+  border: 0.2em;
+  border-color: var(--borderColor);
   border-style: solid;
   width:35em;
   display: flex;
   border-radius: 1em;
   flex-direction: column;
-  align-content: space-around;
   padding: 1em;
-  background-color: #252525;
+  background-color: var(--formColor);
   margin-bottom: 5em;
   
 }
@@ -64,20 +59,20 @@ main{
   background: transparent;
 }
 h1{
-  color:#f3f4f4;
+  color:var(--textColor);
   text-align: center;
   margin-bottom: 0.6em;
   font-size: 2.5em;
   margin-top: 1em;
 }
 .link{
-  color:#f3f4f4;
+  color:var(--textColor);
   text-decoration: none;
 }
 h2{
   background-color: transparent;
   font-size: 1.8em;
-  color:#f3f4f4;
+  color:var(--textColor);
   text-align: center;
 }
 
@@ -91,7 +86,7 @@ label{
 }
 .req::before{
   content: "*";
-  color:#12E1B9;
+  color:var(--accentColor);
   font-size: 0.9em;
 }
 .checkandforgot{
@@ -108,16 +103,16 @@ label{
 
 
 .forgor{
-  color: #f3f4f4;
+  color: var(--textColor);
 }
 
 button{
   font-size: 1.2em;
-  color: #070d29;
+  color: var(--primaryColor);
   display: inline;
   width: 100%;
   padding: 0.8em;
-  border-color:#12E1B9;
+  border-color:var(--accentColor);
   border-radius: 0.5em;
   border: 0.05em solid;
   margin-top: 1em;
@@ -125,14 +120,14 @@ button{
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  background-color: #12E1B9;
+  background-color: var(--accentColor);
 }
 
 button:hover{
-  background-color: #070d29;
-  color: #12E1B9;
+  background-color: var(--primaryColor);
+  color: var(--accentColor);
   transition: .2s;
-  border-color: #12E1B9;
+  border-color: var(--accentColor);
 }
 
 .registerlink{
@@ -142,7 +137,7 @@ button:hover{
 }
 
 .forgorpswlink{
-  color:#12E1B9;
+  color:var(--accentColor);
   text-decoration: none;
 }
 .forgorpswlink:hover{
@@ -150,7 +145,7 @@ button:hover{
 }
 
 .register{
-  color: #12E1B9;
+  color: var(--accentColor);
   text-decoration: none;
   background-color: transparent;
 }
@@ -159,17 +154,6 @@ button:hover{
   text-decoration: underline;
 }
 
-.container{
-  padding: 0.7em;
-  width: 100%;
-  border-radius: 0.5em;
-  font-size: 1em;
-  margin-bottom: 1em;
-  margin-top: 0.5em;
-  color: #f3f4f4;
-  background-color: #313131;
-  display: inline;
-}
 
 .inputbox{
   padding: 0.5em;
@@ -179,7 +163,7 @@ button:hover{
   font-size: 1em;
   margin-bottom: 1em;
   margin-top: 0.5em;
-  background-color: #313131;
+  background-color: var(--inputBackgroundColor);
   display: flex;
   align-content: center;
 }
@@ -192,7 +176,7 @@ button:hover{
   font-size: 1.2em;
 }
 input{
-  color: #12E1B9;
+  color: var(--accentColor);
 }
 
 .closedeye{
@@ -202,5 +186,35 @@ input{
   margin-left: 0.5em;
   margin-right: auto;
   align-content: center;
+  cursor: pointer;
+}
+/* #8b6914 */
+:root{
+  --primaryColor:#ededed;
+  --accentColor:#ff3131;
+  --textColor:#252525;
+  --inputBackgroundColor:	#d8d6d6;
+  --formColor:#ebecec;
+  --borderColor:#ff3131;
+}
+.darkMode{
+  --primaryColor:#070d29;
+  --accentColor:#12E1B9;
+  --textColor:#f3f4f4;
+  --inputBackgroundColor:#313131;
+  --borderColor:#313131;
+  --formColor:#252525;
+}
+
+nav{
+  display:flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 1em;
+}
+.toggleicon{
+  width: 4%;
+  height: auto;
+  margin-right: 1em;
   cursor: pointer;
 }
