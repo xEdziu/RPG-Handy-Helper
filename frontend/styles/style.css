@@ -38,15 +38,17 @@ body{
     display: flex;
     flex-direction: column;
     align-content: space-between;
+    min-height: 100vh;
 
 }
 
 .content-wrapper{
     display: flex;
     flex-direction: column;
-    align-content: center;
+    align-content: space-around;
     justify-content: center;
-    height: 95vh;
+    flex:1;
+    
     
 
 }
@@ -57,6 +59,7 @@ body{
     flex-direction: row;
     justify-content: space-evenly;
     align-items:center ;
+    margin-top: 0vh;
 }
 
 .column1{   
@@ -98,10 +101,10 @@ body{
 
 
 
-@media screen  and  (max-width: 768px) {
+/* @media screen  and  (max-width: 768px) {
 
     
-}
+} */
 
 @media screen and  (min-width: 768px){
 
@@ -147,9 +150,9 @@ body{
     }
 
     footer{
-        height: 5vh;
         margin-top: auto;
         text-align: center;
+        margin-bottom: 0.5em;
     }
     
     h2{
@@ -177,9 +180,11 @@ body{
 
 .popup{
     display:flex;
+    height: 8vh;
     background: #12E1B9;
     color:#070d29;
     transition: 1s ease-in-out;
+    margin-top: auto;
     padding: 0.8em 1.5em;
     border-radius: 2px;
     margin-bottom: 1em;
