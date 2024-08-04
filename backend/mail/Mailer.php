@@ -8,6 +8,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . '/templates/activationAccount.php';
+require_once __DIR__ . '/templates/renewPassword.php';
 
 use Dotenv;
 
@@ -97,6 +98,49 @@ class Mailer {
                 "data" => [
                     "error" => $e->getMessage(),
                     "code" => 902,
+                ]
+            ];
+        }
+        return $response;
+    }
+
+    public function setPasswordRenewalMail(string $email, string $hash) {
+        try {
+            $this->mail->addAddress($email);
+            $this->mail->Subject = "RPG Handy Helper | Password reset";
+            $this->mail->Body = renewPassword($this->url, $hash);
+            $this->mail->AltBody = "Hi!\n\n You requested a password reset. \n\n To reset your password please click here: \n\n " . $this->url . "backend/api/v1/auth/resetPassword.php?hash=" . $hash;
+            if (!$this->mail->send()) {
+                $response = [
+                    "icon" => "error",
+                    "title" => "We couldn't send the password reset email",
+                    "message" => "Contact the administrator",
+                    "footer" => "Error: 903",
+                    "data" => [
+                        "error" => $this->mail->ErrorInfo,
+                        "code" => 903,
+                    ]
+                ];
+            } else {
+                $response = [
+                    "icon" => "success",
+                    "title" => "We sent you a password reset email",
+                    "message" => "Check your inbox",
+                    "data" => [
+                        "error" => null,
+                        "code" => 0,
+                    ]
+                ];
+            }
+        } catch (Exception $e) {
+            $response = [
+                "icon" => "error",
+                "title" => "We couldn't send the password reset email",
+                "message" => "Contact the administrator",
+                "footer" => "Error: 904",
+                "data" => [
+                    "error" => $e->getMessage(),
+                    "code" => 904,
                 ]
             ];
         }

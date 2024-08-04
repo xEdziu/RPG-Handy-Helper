@@ -193,6 +193,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST'
 
 $username = DatabaseConnector::sanitizeString($_POST['username']);
 $password = DatabaseConnector::sanitizeString($_POST['password']);
-$remember = isset($_POST['remember']) ? true : false;
+$remember = isset($_POST['remember']);
 
 die(json_encode(login($username, $password, $remember)));
