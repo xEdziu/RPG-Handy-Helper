@@ -1,3 +1,21 @@
+<?php
+session_start();
+try {
+    $csrf_token = bin2hex(random_bytes(32));
+} catch (Exception $e) {
+    die(json_encode([
+        "icon" => "error",
+        "title" => "We couldn't register you",
+        "message" => "Contact the administrator",
+        "footer" => "Kod błędu: 1101",
+        "data" => [
+            "error" => "Error during generating CSRF token: " . $e->getMessage(),
+            "code" => 1101,
+        ]
+    ]));
+}
+$_SESSION['csrf_token'] = $csrf_token;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +33,10 @@
     <main>
         <h2 class="andika-bold">Log in to your account</h2>
         <form action="" id="loginForm">
-            <label for="nickname" class="andika-bold req">Nickname:</label>
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token;?>">
+            <label for="username" class="andika-bold req">Username:</label>
             <div class="inputbox">
-                <input type="text" placeholder="Enter Username" name="nickname" id="nickname" required>
+                <input type="text" placeholder="Enter Username" name="username" id="username" required>
             </div> 
             <label for="password" class="andika-bold req">Password: </label>
             <div class="inputbox">
