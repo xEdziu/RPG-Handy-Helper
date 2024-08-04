@@ -201,7 +201,7 @@ function activationAccount(string $url, string $hash): string
     </html>
     ';
 
-    $replacement = $url . "activate/" . $hash;
+    $replacement = $url . "backend/api/v1/auth/activate.php?hash=" . $hash;
     return str_replace("{url}", $replacement, $html);
 
 }
