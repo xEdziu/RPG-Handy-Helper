@@ -230,6 +230,47 @@ class User{
 
         return $toReturn;
     }
+    
+    /**
+     * Function to get a user by their hash
+     *
+     * @param  string $hash
+     * @return User|array The user object or an array with an error message
+     */
+    public static function getUserByHash(string $hash): User|array {
+        $response = [
+            "status" => "error",
+            "message" => "User not found",
+            "error_code" => 404
+        ];
+        $connector = new DatabaseConnector();
+        try {
+            $query = $connector->db->prepare("SELECT * FROM Users WHERE hash = ?");
+            $query->bind_param("s", $hash);
+        } catch (mysqli_sql_exception $e) {
+            $response = [
+                "status" => "error",
+                "message" => "Error: " . $e->getMessage(),
+                "error_code" => 500
+            ];
+            return $response;
+        }
+
+        $query->execute();
+
+        $result = $query->get_result();
+        if ($result->num_rows == 0) {
+            return $response;
+        }
+
+        $user = $result->fetch_assoc();
+        $toReturn = new User($user["email"], $user["username"], $user["password"],
+         $user["hash"], $user["active"], $user["name"], $user["surname"], $user["discord_tag"]);
+
+        $toReturn->setId($user["id"]);
+
+        return $toReturn;
+    }
 
     
     /**
