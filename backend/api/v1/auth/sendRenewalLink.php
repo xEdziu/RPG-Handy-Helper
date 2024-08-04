@@ -12,7 +12,7 @@ session_start();
 
 if (!$_SERVER['REQUEST_METHOD'] == 'POST' || !isset($_POST['csrf_token'])) {
     http_response_code(404);
-    header('Location: ../../../frontend/errors/404.html');
+    header('Location: /errors/404.html');
 }
 
 try {
@@ -31,7 +31,7 @@ try {
 
     if(!hash_equals($_POST['csrf_token'], $_SESSION['csrf_token'])){
         http_response_code(404);
-        header('Location: ../../../frontend/errors/404.html');
+        header('Location: /errors/404.html');
     }
 
 } catch (\Exception $e){
