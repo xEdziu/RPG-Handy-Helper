@@ -1,6 +1,9 @@
 <?php
 
+namespace Eddy\RpgHandyHelper\API;
+
 require __DIR__ . '/../../../vendor/autoload.php';
+
 use Eddy\RpgHandyHelper\DTO\User;
 use Eddy\RpgHandyHelper\DTO\UserToken;
 use Eddy\RpgHandyHelper\Database\DatabaseConnector;
