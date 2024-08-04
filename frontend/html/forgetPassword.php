@@ -1,3 +1,13 @@
+<?php
+session_start();
+try {
+    $csrf = bin2hex(random_bytes(32));
+} catch (Exception $e) {
+    echo "An error occurred. Please try again.";
+    exit;
+}
+$_SESSION['csrf'] = $csrf;
+?>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -14,6 +24,7 @@
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
         <form action="" id="forgetForm">
+            <input type="hidden" name="csrf" value="<?php echo $csrf; ?>">
             <label for="resetemail" class="andika-bold"><p class="forgetlabeltext">Forgot your password? Don't worry, we will send you a link to reset it!</p></label>
             <div class=inputbox>
                 <input type="text" placeholder="Enter email" name="resetemail" id="resetemail" autocomplete="off" required>

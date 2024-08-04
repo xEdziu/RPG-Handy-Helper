@@ -1,3 +1,45 @@
+<?php
+session_start();
+
+require '../../vendor/autoload.php';
+
+use Eddy\RpgHandyHelper\DTO\User;
+use Eddy\RpgHandyHelper\Database\DatabaseConnector;
+
+try {
+    $csrf = bin2hex(random_bytes(32));
+} catch (Exception $e) {
+    echo "An error occurred. Please try again.";
+    exit;
+}
+
+if (empty($_GET['hash'])){
+    http_response_code(302);
+    header("Location: /errors/badActivationLink.html");
+}
+$hash = DatabaseConnector::sanitizeString($_GET['hash']);
+
+try {
+    $user = User::getUserByHash($hash);
+} catch (Exception $e) {
+    http_response_code(500);
+    header("Location: /errors/500.html");
+    exit;
+}
+
+if (is_array($user)){
+    http_response_code(302);
+    header("Location: /errors/badActivationLink.html");
+    exit;
+}
+
+if ($user->getHash() != $hash){
+    http_response_code(302);
+    header("Location: /errors/badActivationLink.html");
+    exit;
+}
+$_SESSION['csrf'] = $csrf;
+?>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -15,6 +57,8 @@
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
         <form action="" id="resetForm">
+        <input type="hidden" name="csrf" value="<?php echo $csrf; ?>">
+        <input type="hidden" name="hash" value="<?php echo $hash; ?>">
         <label for="newpassword" class="andika-bold req">Your new password:</label>
         <div class="inputbox">
             <input type="password" name="newpassword"  placeholder="Enter your new passowrd" autocomplete="off" required id="password">
