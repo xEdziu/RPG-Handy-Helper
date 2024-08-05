@@ -49,7 +49,7 @@
         
     </div>
     <div class="popup" id="cookies">
-        <span class="pinfo andika-regular" >RPG Handy Helper uses cookies in order to work properly [&nbsp 
+        <span class="pinfo andika-regular" >RPG Handy Helper uses cookies in order to work properly <br>[&nbsp 
             <a href="https://allaboutcookies.org/what-is-a-cookie" class="pinfo andika-regular">More Informations</a>&nbsp]
         </span>
         <span class="pbtn andika-regular" id="cdis">I Agree</span>

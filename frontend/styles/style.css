@@ -48,9 +48,6 @@ body{
     align-content: space-around;
     flex:1;
     width: 100%;
-    
-    
-
 }
 
 .container {
@@ -71,33 +68,51 @@ body{
 .column2{
     display: flex;
     flex-direction: column;
-    
 }
 
 main {
     display: flex;
     flex-direction: column;
     margin-top: 2em;
-    
 }
 
 .popup{
     display:flex;
+    position: fixed;
+    z-index: 1;
+    overflow: auto;
+    bottom: 0;
     height: 8vh;
     background: #12E1B9;
     color:#070d29;
     transition: 1s ease-in-out;
     margin-top: auto;
+    margin-bottom: 2em;
     padding: 0.8em 1.5em;
     border-radius: 2px;
-    margin-bottom: 1em;
     margin-left: 14em;
-    margin-right: 14em;
+    margin-right: 14em; 
     align-items: center;
+    align-self: center;
     justify-content: space-evenly;
+    width: 100%
+
 
 }
 
+.pbtn{
+    text-align: center;
+    cursor: pointer;
+    background: #070d29;
+    color: #12E1B9;
+    border-radius: 0.3rem;
+}
+
+.pinfo{
+    background-color: transparent;
+    color:#070d29;
+    
+}
 
 @media screen and  (min-width: 320px){
     .content-wrapper{
@@ -119,7 +134,7 @@ main {
     }
 
     h1{
-        font-size: 2.5em;
+        font-size: 2em;
         line-height: 1.25em;
         letter-spacing: 0.12em;
     }
@@ -127,7 +142,7 @@ main {
     h3{
         margin-top: 0.5em;
         letter-spacing: 0.1em;
-        font-size: 0.9em;
+        font-size: 0.72em;
     }
 
     main{
@@ -166,8 +181,8 @@ main {
     }
 
     img{
-        width: 14em;
-        height: 14em;
+        width: 9em;
+        height: 9em;
     }
 
     footer{
@@ -186,28 +201,30 @@ main {
         font-size: 1em;
     }
 
+    .popup{
+        font-size: 0.5em;
+        max-width: 223.17px; 
+        margin-bottom:2.5em ;  
+    }
 
-.pbtn{
-    padding:10px 20px;
-    cursor: pointer;
-    background: #070d29;
-    color: #12E1B9;
-    display:flex;
-    align-items: center;
-    border-radius: 0.3rem;
-    margin-left: 15px;
-    justify-content: end;
+    .pbtn{
+        cursor: pointer;
+        align-items: center;
+        margin-left: 15px;
+        justify-content: end;
+        padding: 0.5em 1.5em; 
+    
+    }
+    
+    .pinfo{
+        align-content: center;
+        justify-content: space-evenly;
+        align-items: center;
+        text-align: center;
+    }
 
-}
 
 
-
-.pinfo{
-    align-content: center;
-    justify-content: space-evenly;
-    background-color: transparent;
-    color:#070d29;
-}
     
 }
 
@@ -232,7 +249,7 @@ main {
     }
 
     h1{
-        font-size: 3em;
+        font-size: 2.77em;
         line-height: 1.25em;
         letter-spacing: 0.12em;
     }
@@ -240,7 +257,7 @@ main {
     h3{
         margin-top: 0.5em;
         letter-spacing: 0.1em;
-        font-size: 1.08em;
+        font-size: 1em;
     }
 
     main{
@@ -279,8 +296,8 @@ main {
     }
 
     img{
-        width: 14em;
-        height: 14em;
+        width: 13em;
+        height: 13em;
     }
 
     footer{
@@ -299,28 +316,28 @@ main {
         font-size: 1em;
     }
 
+    .popup{
+        font-size: 0.7em;
+        max-width: 313.81px;
+    }
 
-.pbtn{
-    padding:10px 20px;
-    cursor: pointer;
-    background: #070d29;
-    color: #12E1B9;
-    display:flex;
-    align-items: center;
-    border-radius: 0.3rem;
-    margin-left: 15px;
-    justify-content: end;
+    .pbtn{
+        cursor: pointer;
+        align-items: center;
+        margin-left: 15px;
+        justify-content: end;
+    
+    }
+    
+    .pinfo{
+        align-content: center;
+        justify-content: space-evenly;
+        align-items: center;
+        text-align: center;
+    }
 
-}
 
 
-
-.pinfo{
-    align-content: center;
-    justify-content: space-evenly;
-    background-color: transparent;
-    color:#070d29;
-}
     
 }
 
@@ -344,7 +361,7 @@ main {
     }
 
     h1{
-        font-size: 3em;
+        font-size: 3.5em;
         line-height: 1.25em;
         letter-spacing: 0.12em;
     }
@@ -352,7 +369,7 @@ main {
     h3{
         margin-top: 0.5em;
         letter-spacing: 0.1em;
-        font-size: 1.08em;
+        font-size: 1.26em;
     }
 
     main{
@@ -396,7 +413,7 @@ main {
     }
 
     footer{
-        margin-top: auto;
+        margin-top: 1em;
         text-align: center;
         margin-bottom: 0.5em;
         font-size: 0.7em;
@@ -411,27 +428,28 @@ main {
         font-size: 1em;
     }
 
+    .popup{
+        font-size: 1em;
+        max-width: 396.51px;
+        
+    }
 
-.pbtn{
-    padding:10px 20px;
-    cursor: pointer;
-    background: #070d29;
-    color: #12E1B9;
-    display:flex;
-    align-items: center;
-    border-radius: 0.3rem;
-    margin-left: 15px;
-    justify-content: end;
+    .pbtn{
+        cursor: pointer;
+        align-items: center;
+        margin-left: 15px;
+        justify-content: end;
+    
+    }
+    
+    .pinfo{
+        align-content: center;
+        justify-content: space-evenly;
+        align-items: center;
+    }
 
-}
 
 
-.pinfo{
-    align-content: center;
-    justify-content: space-evenly;
-    background-color: transparent;
-    color:#070d29;
-}
     
 }
 
@@ -516,28 +534,29 @@ main {
         font-size: 1em;
     }
 
+    .popup{
+        font-size: 1em;
+        max-width: 566.45px;
+        
+    }
 
-.pbtn{
-    padding:10px 20px;
-    cursor: pointer;
-    background: #070d29;
-    color: #12E1B9;
-    display:flex;
-    align-items: center;
-    border-radius: 0.3rem;
-    margin-left: 15px;
-    justify-content: end;
+    .pbtn{
+        cursor: pointer;
+        align-items: center;
+        margin-left: 15px;
+        justify-content: end;
+    
+    }
+    
+    .pinfo{
+        align-content: center;
+        justify-content: space-evenly;
+        align-items: center;
+        text-align: center;
+    }
 
-}
 
 
-
-.pinfo{
-    align-content: center;
-    justify-content: space-evenly;
-    background-color: transparent;
-    color:#070d29;
-}
     
 }
 
@@ -622,45 +641,28 @@ main {
         font-size: 1em;
     }
 
+    .popup{
+        font-size: 1em;
+        max-width: 1024px;
+        
+    }
 
-.pbtn{
-    padding:10px 20px;
-    cursor: pointer;
-    background: #070d29;
-    color: #12E1B9;
-    display:flex;
-    align-items: center;
-    border-radius: 0.3rem;
-    margin-left: 15px;
-    justify-content: end;
-
-}
-
-.popup{
-    display:flex;
-    height: 8vh;
-    background: #12E1B9;
-    color:#070d29;
-    transition: 1s ease-in-out;
-    margin-top: auto;
-    padding: 0.8em 1.5em;
-    border-radius: 2px;
-    margin-bottom: 1em;
-    margin-left: 14em;
-    margin-right: 14em;
-    align-items: center;
-    justify-content: space-evenly;
-
+    .pbtn{
+        cursor: pointer;
+        align-items: center;
+        margin-left: 15px;
+        justify-content: end;
     
+    }
+    
+    .pinfo{
+        align-content: center;
+        justify-content: space-evenly;
+        align-items: center;
+        text-align: center;
+    }
 
-}
 
-.pinfo{
-    align-content: center;
-    justify-content: space-evenly;
-    background-color: transparent;
-    color:#070d29;
-}
     
 }
 
@@ -745,28 +747,29 @@ main {
         font-size: 1em;
     }
 
+    .popup{
+        font-size: 1em;
+        max-width: 1119px;
+        
+    }
 
-.pbtn{
-    padding:10px 20px;
-    cursor: pointer;
-    background: #070d29;
-    color: #12E1B9;
-    display:flex;
-    align-items: center;
-    border-radius: 0.3rem;
-    margin-left: 15px;
-    justify-content: end;
+    .pbtn{
+        cursor: pointer;
+        align-items: center;
+        margin-left: 15px;
+        justify-content: end;
+    
+    }
+    
+    .pinfo{
+        align-content: center;
+        justify-content: space-evenly;
+        align-items: center;
+        text-align: center;
+    }
 
-}
 
 
-
-.pinfo{
-    align-content: center;
-    justify-content: space-evenly;
-    background-color: transparent;
-    color:#070d29;
-}
     
 }
 
@@ -851,28 +854,28 @@ main {
         font-size: 1em;
     }
 
+    .popup{
+        font-size: 1em;
+        max-width: 1200px;
+        
+    }
 
-.pbtn{
-    padding:10px 20px;
-    cursor: pointer;
-    background: #070d29;
-    color: #12E1B9;
-    display:flex;
-    align-items: center;
-    border-radius: 0.3rem;
-    margin-left: 15px;
-    justify-content: end;
+    .pbtn{
+        cursor: pointer;
+        align-items: center;
+        margin-left: 15px;
+        justify-content: end;
+    
+    }
+    
+    .pinfo{
+        align-content: center;
+        justify-content: space-evenly;
+        align-items: center;
+        text-align: center;
+    }
 
-}
 
-
-
-.pinfo{
-    align-content: center;
-    justify-content: space-evenly;
-    background-color: transparent;
-    color:#070d29;
-}
     
 }
 
