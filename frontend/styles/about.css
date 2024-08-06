@@ -64,9 +64,10 @@ body{
   opacity: 0;
   filter:blur(5px);
   transform: translateX(-100%);
-  transition: all 2s;
+  transition: all 1.5s;
   
 }
+
 
 .show{
   opacity: 1;
@@ -83,3 +84,28 @@ section{
   min-height: 100vh;
 
 }
+.logos{
+  display: flex;
+}
+.logo{
+  background-color: aquamarine;
+  border-radius: auto;
+  padding: 1rem;
+  margin: 0 0.5rem;
+  width: 10rem;
+  height: 10rem;
+
+}
+.logos:nth-child(2){
+  transition-delay: 200ms;
+}
+.logos:nth-child(3){
+transition-delay: 400ms;
+}
+.logos:nth-child(4){
+transition-delay: 600ms;
+}
+.logos:nth-child(5){
+transition-delay: 800ms;
+}
+
