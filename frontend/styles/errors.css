@@ -32,10 +32,10 @@
 }
 
 body{
-    color:whitesmoke;
-    margin-top: 2em;
-    
-  }
+  color:whitesmoke;
+  margin-top: 2em;
+  
+}
 
   h1{
     color:#f3f4f4;
@@ -46,6 +46,11 @@ body{
   .link{
     color:#f3f4f4;
     text-decoration: none;
+    cursor: pointer;
+  }
+  .link:hover{
+    color: #f3f4f4;
+    text-decoration: underline;
   }
 
   p{
@@ -57,6 +62,7 @@ body{
     text-align: center, justify;
     
   }
+  
 
   section{
     display: grid;
@@ -68,15 +74,16 @@ body{
   .left{
     place-items: left;
     align-content: left;
-    width: 200px;
-    height: 200px;
-    
-
+    width: 250px;
+    height: 250px;
 
   }
   
   .center{
     width: 400px;
     height: 400px;
+    
   }
+
+
   
