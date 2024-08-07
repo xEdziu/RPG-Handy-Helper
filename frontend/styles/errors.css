@@ -51,8 +51,8 @@ body{
   p{
     border: 1em;
     font-size: 1.4em;
-    margin: 1em;
-    padding: 2em;
+    margin: 1px;
+    padding: 2px;
     color:whitesmoke;
     text-align: center, justify;
     
@@ -64,3 +64,19 @@ body{
     align-content: center;
     
   }
+
+  .left{
+    place-items: left;
+    align-content: left;
+    width: 200px;
+    height: 200px;
+    
+
+
+  }
+  
+  .center{
+    width: 400px;
+    height: 400px;
+  }
+  
