@@ -31,7 +31,7 @@
                     </div>
                     <div class="buttons3">
                         <button class="linkBtn" onclick="location.href='demo.html'">Demo campaign</button>
-                        <button class="linkBtn" onclick="location.href='demo.html'">Authors</button>
+                        <button class="linkBtn" onclick="location.href='frontend/html/author.html'">Authors</button>
                     </div>
                     
                 </main>
