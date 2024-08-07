@@ -18,8 +18,7 @@ $_SESSION['csrf'] = $csrf;
     <link rel="stylesheet" href="../styles/main.css">
     <title>Reset password | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
-    
-    
+    <script defer src="../js/changeColorTheme.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
