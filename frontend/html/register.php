@@ -26,6 +26,8 @@ $_SESSION['csrf_token'] = $csrf_token;
     <title>Register | RPG Handy Helper</title>
     <link rel="icon" type="image/x-icon" href="../img/dark-bg-ico.ico">
     <script defer src="../js/togglePassword.js"></script>
+    
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
 </head>
