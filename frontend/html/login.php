@@ -29,7 +29,10 @@ $_SESSION['csrf_token'] = $csrf_token;
     <script defer src="../js/changeColorTheme.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+<body class="darkMode">
+    <nav>
+        <img src="\frontend\img\light-theme.svg" alt="Icon" class="toggleicon" id="toggle-icon" onclick="changeColorTheme('toggle-icon', 'closedeye')">
+    </nav>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
         <h2 class="andika-bold">Log in to your account</h2>
@@ -55,7 +58,6 @@ $_SESSION['csrf_token'] = $csrf_token;
         </form>
         <h1 class="andika-bold registerlink">Don't have an account? <a href="register.php" class="register">Register here</a> </h1>
     </main>
-
 </body>
 
 </html>

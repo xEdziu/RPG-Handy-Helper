@@ -54,7 +54,10 @@ $_SESSION['csrf'] = $csrf;
     <script defer src="../js/togglePassword.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+<body class="darkMode">
+    <nav>
+        <img src="\frontend\img\light-theme.svg" alt="Icon" class="toggleicon" id="toggle-icon" onclick="changeColorTheme('toggle-icon', 'closedeye')">
+    </nav>
     <h1 class="andika-bold link"><a href="/index.php" class="link">RPG Handy Helper</a></h1>
     <main>
         <form action="" id="resetForm">
@@ -62,12 +65,12 @@ $_SESSION['csrf'] = $csrf;
         <input type="hidden" name="hash" value="<?php echo $hash; ?>">
         <label for="newpassword" class="andika-bold req">Your new password:</label>
         <div class="inputbox">
-            <input type="password" name="newpassword"  placeholder="Enter your new passowrd" autocomplete="off" required id="password">
+            <input type="password" name="newpassword"  placeholder="Enter your new passoword" autocomplete="off" required id="password">
             <img src="..\img\cyan-hidden.svg" class="closedeye" alt="Image" id="eyeIcon-password" onclick="switchVisibility('password','eyeIcon-password')">
         </div>
         <label for="resetrepeatpassword" class="andika-bold req">Repeat your password:</label>
         <div class=inputbox>
-            <input type="password" name="resetrepeatpassword" placeholder="Repeat your new passowrd" autocomplete="off" required id="passwordrepeat">
+            <input type="password" name="resetrepeatpassword" placeholder="Repeat your new passoword" autocomplete="off" required id="passwordrepeat">
             <img src="..\img\cyan-hidden.svg" class="closedeye" alt="Image" id="eyeIcon-passwordrepeat" onclick="switchVisibility('passwordrepeat','eyeIcon-passwordrepeat')">
         </div>
         <button type="submit">Reset</button>
