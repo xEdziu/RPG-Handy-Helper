@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', (event)=> {
         popup.style.display="flex";
         document.getElementById("cdis").onclick= function(){
             popup.style.display="none";
-            localStorage.setItem("cookies",0)
+            localStorage.setItem("cookies",1)
         };
     }   
 });

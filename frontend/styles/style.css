@@ -203,7 +203,7 @@ main {
 
     .popup{
         font-size: 0.5em;
-        max-width: 223.17px; 
+        max-width: 30em; 
         margin-bottom:2.5em ;  
     }
 
@@ -318,7 +318,7 @@ main {
 
     .popup{
         font-size: 0.7em;
-        max-width: 313.81px;
+        max-width: 30em;
     }
 
     .pbtn{
@@ -429,8 +429,8 @@ main {
     }
 
     .popup{
-        font-size: 1em;
-        max-width: 396.51px;
+        font-size: 0.6em;
+        max-width: 40em;
         
     }
 
@@ -536,7 +536,7 @@ main {
 
     .popup{
         font-size: 1em;
-        max-width: 566.45px;
+        max-width: 35em;
         
     }
 
@@ -568,11 +568,7 @@ main {
     .container {
 
         flex-direction: row;
-        max-width: 1024px;
-        justify-content: center;
-        margin-left: 2em;
-        margin-right: 2em;
-        
+        justify-content: center;   
     }
     
     .column1{   
@@ -627,8 +623,8 @@ main {
     }
 
     img{
-        width: 30em;
-        height: 30em;
+        width: 25em;
+        height: 25em;
     }
 
     footer{
@@ -648,7 +644,7 @@ main {
 
     .popup{
         font-size: 1em;
-        max-width: 960px;
+        max-width: 59em;
         
     }
 
@@ -754,7 +750,7 @@ main {
 
     .popup{
         font-size: 1em;
-        max-width: 1119px;
+        max-width: 65em;
         
     }
 
@@ -861,7 +857,7 @@ main {
 
     .popup{
         font-size: 1em;
-        max-width: 1200px;
+        max-width: 65em;
         
     }
 
