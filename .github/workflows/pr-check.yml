@@ -70,6 +70,7 @@ jobs:
         import org.springframework.context.annotation.Configuration;
         import org.springframework.context.event.ContextRefreshedEvent;
         import org.springframework.context.event.EventListener;
+        import org.springframework.context.ConfigurableApplicationContext;
 
         import java.util.concurrent.Executors;
         import java.util.concurrent.ScheduledExecutorService;
@@ -85,9 +86,10 @@ jobs:
 
             @EventListener
             public void onApplicationEvent(ContextRefreshedEvent event) {
+                ConfigurableApplicationContext context = (ConfigurableApplicationContext) event.getApplicationContext();
                 taskScheduler().schedule(() -> {
                     System.out.println("Shutting down application after 15 seconds");
-                    event.getApplicationContext().close();
+                    context.stop();
                 }, 15, TimeUnit.SECONDS);
             }
         }
