@@ -54,11 +54,21 @@ jobs:
         echo "spring.datasource.url=jdbc:mariadb://localhost:3306/testdb" > src/main/resources/application.properties
         echo "spring.datasource.username=testuser" >> src/main/resources/application.properties
         echo "spring.datasource.password=testpassword" >> src/main/resources/application.properties
-        echo "spring.datasource.driver-class-name=org.mariadb.jdbc.Driver" >> src/main/resources/application.properties
+        echo "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver" >> src/main/resources/application.properties
         echo "spring.jpa.show-sql=true" >> src/main/resources/application.properties
         echo "spring.jpa.hibernate.ddl-auto=create-drop" >> src/main/resources/application.properties
-        echo "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDBDialect" >> src/main/resources/application.properties
+        echo "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect" >> src/main/resources/application.properties
         echo "spring.jpa.properties.hibernate.format_sql=true" >> src/main/resources/application.properties
 
     - name: Build and run application
-      run: mvn spring-boot:run
+      run: mvn spring-boot:run &
+
+    - name: Wait for application to start
+      run: sleep 60
+
+    - name: Verify application is running
+      run: curl -f http://localhost:8080 || exit 1
+
+    - name: Stop application
+      run: |
+        pkill -f 'java -jar'
