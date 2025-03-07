@@ -63,11 +63,8 @@ jobs:
     - name: Build and run application
       run: mvn spring-boot:run &
 
-    - name: Wait for application to shut down
+    - name: Wait for application to start completely
       run: sleep 20
 
     - name: Send test request
       run: curl http://localhost:8080
-
-    - name: Stop application
-      run: kill -STOP $!
