@@ -13,14 +13,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Oracle Java 23
+    - name: Set up Oracle JDK 21
       run: |
         sudo apt update
         sudo apt install -y wget
-        wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.deb
-        sudo dpkg -i jdk-23_linux-x64_bin.deb
-        sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-23.0.2-oracle-x64/bin/java 1
-        sudo update-alternatives --set java /usr/lib/jvm/jdk-23.0.2-oracle-x64/bin/java
+        wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
+        sudo dpkg -i jdk-21_linux-x64_bin.deb
+        sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-21/bin/java 1
+        sudo update-alternatives --set java /usr/lib/jvm/jdk-21/bin/java
 
     - name: Verify Java installation
       run: java -version
