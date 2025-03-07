@@ -30,6 +30,7 @@ public class WebSecurityConfig {
 //                                .requestMatchers("/api/v1/authorized/**").authenticated()
                                 .requestMatchers("/login", "/api/v1/authorized/**").permitAll()
                                 .requestMatchers("/", "/index.html", "/static/**", "/resources/**").permitAll() // Allow access to static resources
+                                .requestMatchers("/actuator/health").permitAll() // Allow access to health check
                                 .anyRequest()
                                 .authenticated()
                 )

@@ -67,7 +67,13 @@ jobs:
       run: sleep 60
 
     - name: Verify application is running
-      run: curl -f http://localhost:8080 || exit 1
+      run: |
+        response=$(curl -s http://localhost:8080/actuator/health)
+        echo "Response: $response"
+        if [[ "$response" != *'"status":"UP"'* ]]; then
+          echo "Application is not running"
+          exit 1
+        fi
 
     - name: Stop application
       run: |
