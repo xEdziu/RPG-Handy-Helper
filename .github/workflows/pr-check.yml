@@ -19,8 +19,8 @@ jobs:
         sudo apt install -y wget
         wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
         sudo dpkg -i jdk-21_linux-x64_bin.deb
-        sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-21/bin/java 1
-        sudo update-alternatives --set java /usr/lib/jvm/jdk-21/bin/java
+        sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-21.0.1-oracle-x64/bin/java 1
+        sudo update-alternatives --set java /usr/lib/jvm/jdk-21.0.1-oracle-x64/bin/java
 
     - name: Verify Java installation
       run: java -version
