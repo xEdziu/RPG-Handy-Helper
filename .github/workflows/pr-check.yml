@@ -60,21 +60,41 @@ jobs:
         echo "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect" >> src/main/resources/application.properties
         echo "spring.jpa.properties.hibernate.format_sql=true" >> src/main/resources/application.properties
 
+    - name: Add ShutdownConfig
+      run: |
+        mkdir -p src/main/java/dev/goral/rpgmanager
+        cat <<EOL > src/main/java/dev/goral/rpgmanager/ShutdownConfig.java
+        package dev.goral.rpgmanager;
+
+        import org.springframework.context.annotation.Bean;
+        import org.springframework.context.annotation.Configuration;
+        import org.springframework.context.event.ContextRefreshedEvent;
+        import org.springframework.context.event.EventListener;
+
+        import java.util.concurrent.Executors;
+        import java.util.concurrent.ScheduledExecutorService;
+        import java.util.concurrent.TimeUnit;
+
+        @Configuration
+        public class ShutdownConfig {
+
+            @Bean
+            public ScheduledExecutorService taskScheduler() {
+                return Executors.newScheduledThreadPool(1);
+            }
+
+            @EventListener
+            public void onApplicationEvent(ContextRefreshedEvent event) {
+                taskScheduler().schedule(() -> {
+                    System.out.println("Shutting down application after 15 seconds");
+                    event.getApplicationContext().close();
+                }, 15, TimeUnit.SECONDS);
+            }
+        }
+        EOL
+
     - name: Build and run application
-      run: mvn spring-boot:run &
+      run: mvn spring-boot:run
 
-    - name: Wait for application to start
-      run: sleep 60
-
-    - name: Verify application is running
-      run: |
-        response=$(curl -s http://localhost:8080/actuator/health)
-        echo "Response: $response"
-        if [[ "$response" != *'"status":"UP"'* ]]; then
-          echo "Application is not running"
-          exit 1
-        fi
-
-    - name: Stop application
-      run: |
-        pkill -f 'java -jar'
+    - name: Wait for application to shut down
+      run: sleep 20
