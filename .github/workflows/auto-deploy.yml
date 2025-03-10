@@ -23,6 +23,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo "SSH Connection Successful!"
           cd /mnt/ssd/RPG-Handy-Helper/
+          echo "Pulling from Git"
+          git pull
           sudo systemctl restart rpg-handy-helper.service
           EOF
 
