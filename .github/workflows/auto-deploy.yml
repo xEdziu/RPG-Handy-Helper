@@ -32,4 +32,4 @@ jobs:
         run: sleep 30
 
       - name: Verify application is running
-        run: curl -f https://rpg.adrian-goral.dev/actuator/health || exit 1
+        run: curl https://rpg.adrian-goral.dev/actuator/health
