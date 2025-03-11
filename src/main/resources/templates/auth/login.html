@@ -23,4 +23,48 @@
 
 <p>Nie masz konta? <a href="/register">Zarejestruj się</a></p>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    //get parameters from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+
+    const toastMixin = Swal.mixin({
+        toast: true,
+        icon: 'success',
+        title: 'General Title',
+        position: 'top-right',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    if (error === 'true') {
+        toastMixin.fire({
+            icon: 'error',
+            title: 'Nieprawidłowe dane'
+        });
+    } else if (error === 'logout') {
+        toastMixin.fire({
+            icon: 'success',
+            title: 'Wylogowano pomyślnie'
+        });
+    }
+    else if (error === 'password') {
+        toastMixin.fire({
+            icon: 'success',
+            title: 'Zaloguj się po zmianie hasła'
+        });
+    }
+    else if (error === 'verify') {
+        toastMixin.fire({
+            icon: 'success',
+            title: 'Konto zostało aktywowane'
+        });
+    }
+</script>
 </html>
