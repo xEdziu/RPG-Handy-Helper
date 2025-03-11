@@ -52,4 +52,16 @@ public class ContentController {
         System.out.println("ContentController: getActivate()");
         return "auth/activate";
     }
+
+    @GetMapping("/forgotPassword")
+    public String getForgotPassword() {
+        System.out.println("ContentController: getForgotPassword()");
+        return "auth/forgotPassword";
+    }
+
+    @GetMapping("/resetPassword")
+    public String getResetPassword() {
+        System.out.println("ContentController: getResetPassword()");
+        return "auth/resetPassword";
+    }
 }

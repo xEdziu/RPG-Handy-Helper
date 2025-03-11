@@ -45,7 +45,7 @@ public class EmailService {
     private String generateActivationEmailTemplate(String url) {
         return """
                 <!DOCTYPE html>
-                <html lang="en">
+                <html lang="pl">
                 <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,5 +72,47 @@ public class EmailService {
                 </body>
                 </html>
                 """.formatted(url);
+    }
+
+    public void sendResetPasswordEmail(User userToUpdate) {
+        String subject = "Resetowanie Hasła | RPG Handy Helper";
+        String resetUrl = baseUrl + "/resetPassword?token=" + userToUpdate.getToken();
+        String htmlContent = generateResetPasswordEmailTemplate(resetUrl);
+
+        sendEmail(userToUpdate.getEmail(), subject, htmlContent);
+    }
+
+    private String generateResetPasswordEmailTemplate(String resetUrl) {
+
+        return """
+                <!DOCTYPE html>
+                <html lang="pl">
+                <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Resetowanie Hasła</title>
+                <style>
+                    body { background-color: #070d29; color: #f3f4f4; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+                    h1 { color: #12e1b9; }
+                    p { font-size: 18px; line-height: 1.5; }
+                    .button {
+                        display: inline-block; background-color: #12e1b9; color: #070d29;
+                        padding: 10px 20px; border-radius: 4px; text-decoration: none;
+                        font-size: 18px; font-weight: bold;
+                    }
+                </style>
+                </head>
+                <body>
+                    <img src="https://github.com/xEdziu/RPG-Handy-Helper/raw/main/banner-rpg.png" alt="Logo" width="500">
+                    <h1>RESETOWANIE HASŁA</h1>
+                    <p>Cześć!</p>
+                    <p>Kości czasami są jak hasła, potrafią się zgubić... Na szczęście hasło można zresetować!</p>
+                    <p>Naciśnij przycisk poniżej, by zresetować hasło.</p>
+                    <p><a href="%s" class="button">RESETUJ</a></p>
+                    <hr>
+                    <p><strong>RPG Handy Helper Team</strong></p>
+                </body>
+                </html>
+                """.formatted(resetUrl);
     }
 }
