@@ -48,6 +48,10 @@ public class RegisterService {
                 throw new IllegalStateException("Ten adres e-mail jest już zarejestrowany.");
             }
 
+            if (!validatePassword(request.getPassword())) {
+                throw new IllegalStateException("Hasło musi zawierać co najmniej 8 znaków, jedną cyfrę, jedną małą literę, jedną dużą literę oraz jeden znak specjalny.");
+            }
+
             String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
             String token = UUID.randomUUID().toString();
 
@@ -61,5 +65,19 @@ public class RegisterService {
             emailService.sendVerificationEmail(newUser); // Wysyłanie maila z tokenem
 
             return CustomReturnables.getOkResponseMap("Konto zostało utworzone. Sprawdź swoją skrzynkę e-mail, aby aktywować konto.");
+    }
+
+    /**
+     * Walidacja hasła
+     * @param password Hasło do walidacji
+     *                 Musi zawierać co najmniej 8 znaków, jedną cyfrę, jedną małą literę, jedną dużą literę oraz jeden znak specjalny
+     * @return bool
+     */
+    private Boolean validatePassword(String password) {
+      return password.length() >= 8 &&
+              password.matches(".*\\d.*") &&
+              password.matches(".*[a-z].*") &&
+              password.matches(".*[A-Z].*") &&
+              password.matches(".*[!@#$%^&*()-+].*");
     }
 }
