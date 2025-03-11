@@ -1,29 +1,40 @@
 package dev.goral.rpgmanager.user;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/authorized")
+@AllArgsConstructor
+@RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
+        return userService.registerUser(
+                userDTO.getUsername(),
+                userDTO.getFirstName(),
+                userDTO.getSurname(),
+                userDTO.getEmail(),
+                userDTO.getPassword()
+        );
     }
 
-    @GetMapping(path = "/user")
-    public List<String> getUserInfo() {
-        return new ArrayList<>(
-                List.of(
-                        "Janek",
-                        "Kowalski",
-                        "Kijowska 2"
-                )
-        );
+    @GetMapping("/confirmEmail")
+    public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
+        return userService.confirmEmail(token);
+    }
+
+    @GetMapping("/authorized/user")
+    public UserDTO getAuthorizedUser() {
+        return userService.getAuthorizedUser();
     }
 }

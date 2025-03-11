@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie</title>
+</head>
+<body>
+<h1>Logowanie</h1>
+
+<form action="/login" method="post">
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">Hasło:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Zaloguj się</button>
+</form>
+
+<p>Lub zaloguj się przez:</p>
+<a href="/oauth2/authorization/discord">Zaloguj przez Discord</a>
+
+<p>Nie masz konta? <a href="/register">Zarejestruj się</a></p>
+</body>
+</html>
