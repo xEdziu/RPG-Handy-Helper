@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import dev.goral.rpgmanager.email.EmailService;
@@ -104,9 +105,21 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDTO getAuthorizedUser() {
-        User foundUser = (User) getAuthentication().getPrincipal();
-        return new UserDTO(foundUser.getUsername(), foundUser.getFirstName(), foundUser.getSurname(), foundUser.getEmail());
+        Object principal = getAuthentication().getPrincipal();
+
+        if (principal instanceof User foundUser) {
+            // Logowanie tradycyjne (e-mail i hasło)
+            return new UserDTO(foundUser.getUsername(), foundUser.getFirstName(), foundUser.getSurname(), foundUser.getEmail());
+        } else if (principal instanceof DefaultOAuth2User oauthUser) {
+            // Logowanie przez Discord OAuth2
+            String email = oauthUser.getAttribute("email");
+            String username = oauthUser.getAttribute("username");
+            return new UserDTO(username, "", "", email); // Discord nie zwraca firstName i surname
+        }
+
+        throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika");
     }
+
 
     private Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
