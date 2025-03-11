@@ -1,0 +1,35 @@
+name: Restart RPG Handy Helper Service
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  restart-service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Restart RPG Handy Helper Service
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "SSH Connection Successful!"
+          cd /mnt/ssd/RPG-Handy-Helper/
+          echo "Pulling from Git"
+          git pull
+          sudo systemctl restart rpg-handy-helper.service
+          EOF
+
+      - name: Wait for application to start
+        run: sleep 30
+
+      - name: Verify application is running
+        run: curl https://rpg.adrian-goral.dev/actuator/health
