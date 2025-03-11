@@ -21,7 +21,7 @@ public class EmailService {
     public void sendVerificationEmail(User user) {
 
         String subject = "Potwierdź swój adres e-mail";
-        String confirmationUrl = baseUrl+"/api/v1/auth/activate?token=" + user.getToken();
+        String confirmationUrl = baseUrl+"/activate?token=" + user.getToken();
         String message = "Kliknij w poniższy link, aby aktywować swoje konto: \n" + confirmationUrl;
 
         sendEmail(user.getEmail(), subject, message);
