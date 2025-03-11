@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejestracja</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<body>
+<h1>Rejestracja</h1>
+
+<form method="post">
+    <label for="username">Nazwa użytkownika:</label>
+    <input type="text" id="username" name="username" required><br>
+
+    <label for="firstName">Imię:</label>
+    <input type="text" id="firstName" name="firstName" required><br>
+
+    <label for="surname">Nazwisko:</label>
+    <input type="text" id="surname" name="surname" required><br>
+
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" name="email" required><br>
+
+    <label for="password">Hasło:</label>
+    <input type="password" id="password" name="password" required><br>
+
+    <label for="passwordConfirm">Potwierdź hasło:</label>
+    <input type="password" id="passwordConfirm" name="passwordConfirm" required><br>
+
+    <button type="submit">Zarejestruj się</button><br>
+</form>
+
+<p>Masz już konto? <a href="/login">Zaloguj się</a></p>
+</body>
+<script>
+    let form = document.querySelector('form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        let formData = new FormData(form);
+        let data = Object.fromEntries(formData);
+
+        //validate data
+        if (data.password !== data.passwordConfirm) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Błąd',
+                text: 'Hasła nie są takie same',
+            });
+            return;
+        }
+
+        fetch('/api/v1/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(
+                Swal.fire({
+                    title: 'Proszę czekać...',
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                })
+            )
+            .then(response => response.json())
+            .then(data => {
+                // check if there is an error = 200 or status != 200
+                if (data.error != 200) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Błąd',
+                        text: data.message,
+                        confirmButtonText: 'Spróbuj ponownie',
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukces',
+                        text: data.message,
+                        confirmButtonText: 'Zaloguj się',
+                    })
+                        .then(() => {
+                            window.location.href = '/login';
+                        });
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+</html>

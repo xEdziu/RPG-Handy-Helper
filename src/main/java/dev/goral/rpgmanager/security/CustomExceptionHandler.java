@@ -23,8 +23,8 @@ public class CustomExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", new Timestamp(new Date().getTime()));
         response.put("message", ex.getMessage());
-        response.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
-        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("description", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.put("error", HttpStatus.BAD_REQUEST.value());
         response.put("uri", request.getDescription(false).substring(4));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -34,8 +34,8 @@ public class CustomExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", new Timestamp(new Date().getTime()));
         response.put("message", ex.getMessage());
-        response.put("error", HttpStatus.NOT_FOUND.getReasonPhrase());
-        response.put("status", HttpStatus.NOT_FOUND.value());
+        response.put("description", HttpStatus.NOT_FOUND.getReasonPhrase());
+        response.put("error", HttpStatus.NOT_FOUND.value());
         response.put("uri", request.getDescription(false).substring(4));
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
@@ -45,8 +45,8 @@ public class CustomExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", new Timestamp(new Date().getTime()));
         response.put("message", ex.getMessage());
-        response.put("error", HttpStatus.FORBIDDEN.getReasonPhrase());
-        response.put("status", HttpStatus.FORBIDDEN.value());
+        response.put("description", HttpStatus.FORBIDDEN.getReasonPhrase());
+        response.put("error", HttpStatus.FORBIDDEN.value());
         response.put("uri", request.getDescription(false).substring(4));
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
@@ -56,8 +56,8 @@ public class CustomExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", new Timestamp(new Date().getTime()));
         response.put("message", ex.getMessage());
-        response.put("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.put("description", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        response.put("error", HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.put("uri", request.getDescription(false).substring(4));
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -67,8 +67,8 @@ public class CustomExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", new Timestamp(new Date().getTime()));
         response.put("message", ex.getMessage());
-        response.put("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.put("description", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        response.put("error", HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.put("uri", request.getDescription(false).substring(4));
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -78,8 +78,8 @@ public class CustomExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", new Timestamp(new Date().getTime()));
         response.put("message", ex.getMessage());
-        response.put("error", HttpStatus.NOT_FOUND.getReasonPhrase());
-        response.put("status", HttpStatus.NOT_FOUND.value());
+        response.put("description", HttpStatus.NOT_FOUND.getReasonPhrase());
+        response.put("error", HttpStatus.NOT_FOUND.value());
         response.put("uri", request.getDescription(false).substring(4));
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }

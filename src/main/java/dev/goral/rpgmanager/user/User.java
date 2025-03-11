@@ -40,11 +40,15 @@ public class User implements UserDetails {
     private String firstName;
     private String surname;
     private String email;
+    private String token;
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
     private Boolean locked = false;
     private Boolean enabled = false;
+    @Enumerated(EnumType.STRING)
+    private OAuthProvider oAuthProvider;
+    private String oAuthId;
     private Timestamp createdAt;
 
     public User(Long id) {
