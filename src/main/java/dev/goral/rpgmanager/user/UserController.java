@@ -12,28 +12,13 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/authorized")
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
-        return userService.registerUser(
-                userDTO.getUsername(),
-                userDTO.getFirstName(),
-                userDTO.getSurname(),
-                userDTO.getEmail(),
-                userDTO.getPassword()
-        );
-    }
 
-    @GetMapping("/confirmEmail")
-    public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
-        return userService.confirmEmail(token);
-    }
-
-    @GetMapping("/authorized/user")
+    @GetMapping("/user")
     public UserDTO getAuthorizedUser() {
         return userService.getAuthorizedUser();
     }

@@ -50,12 +50,15 @@
             return;
         }
 
-        fetch('/api/v1/register', {
+        console.log(JSON.stringify(data))
+
+        fetch('/api/v1/register/signup', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'  ,
             },
             body: JSON.stringify(data),
+
         })
             .then(
                 Swal.fire({
