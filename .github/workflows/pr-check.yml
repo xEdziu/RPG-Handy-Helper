@@ -68,8 +68,9 @@ jobs:
         echo "spring.security.oauth2.client.registration.discord.client-id= ${{ secrets.DISCORD_CLIENT_ID }}" >> src/main/resources/application.properties
         echo "spring.security.oauth2.client.registration.discord.client-secret= ${{ secrets.DISCORD_CLIENT_SECRET }}" >> src/main/resources/application.properties
         echo "spring.security.oauth2.client.registration.discord.scope=identify,email" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.registration.discord.authorization-grant-type=authorization_code" >> src/main/resources/application.properties
         echo "spring.security.oauth2.client.registration.discord.redirect-uri={baseUrl}/login/oauth2/code/discord" >> src/main/resources/application.properties
-        echo "spring.security.oauth2.client.provider.discord.authorization-uri=https://discord.com/api/oauth2/authorize" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.provider.discord.authorization-uri=https://discord.com/oauth2/authorize" >> src/main/resources/application.properties
         echo "spring.security.oauth2.client.provider.discord.token-uri=https://discord.com/api/oauth2/token" >> src/main/resources/application.properties
         echo "spring.security.oauth2.client.provider.discord.user-info-uri=https://discord.com/api/users/@me" >> src/main/resources/application.properties
         echo "spring.security.oauth2.client.provider.discord.user-name-attribute=id" >> src/main/resources/application.properties
