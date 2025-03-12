@@ -59,12 +59,29 @@ jobs:
         echo "spring.jpa.hibernate.ddl-auto=create-drop" >> src/main/resources/application.properties
         echo "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDBDialect" >> src/main/resources/application.properties
         echo "spring.jpa.properties.hibernate.format_sql=true" >> src/main/resources/application.properties
+        echo "spring.mail.host= ${{ secrets.MAIL_HOST }}" >> src/main/resources/application.properties
+        echo "spring.mail.port= ${{ secrets.MAIL_PORT }}" >> src/main/resources/application.properties
+        echo "spring.mail.username= ${{ secrets.MAIL_USERNAME }}" >> src/main/resources/application.properties
+        echo "spring.mail.password= ${{ secrets.MAIL_PASSWORD }}" >> src/main/resources/application.properties
+        echo "spring.mail.properties.mail.smtp.auth= true" >> src/main/resources/application.properties
+        echo "spring.mail.properties.mail.smtp.starttls.enable= true" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.registration.discord.client-id= ${{ secrets.DISCORD_CLIENT_ID }}" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.registration.discord.client-secret= ${{ secrets.DISCORD_CLIENT_SECRET }}" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.registration.discord.scope=identify,email" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.registration.discord.redirect-uri={baseUrl}/login/oauth2/code/discord" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.provider.discord.authorization-uri=https://discord.com/api/oauth2/authorize" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.provider.discord.token-uri=https://discord.com/api/oauth2/token" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.provider.discord.user-info-uri=https://discord.com/api/users/@me" >> src/main/resources/application.properties
+        echo "spring.security.oauth2.client.provider.discord.user-name-attribute=id" >> src/main/resources/application.properties
+        echo "baseUrl=http://localhost:8080" >> src/main/resources/application.properties
+        echo "server.port=8080" >> src/main/resources/application.properties
+        echo "recaptcha.secret-key= ${{ secrets.RECAPTCHA_SECRET }}" >> src/main/resources/application.properties
 
     - name: Build and run application
       run: mvn spring-boot:run &
 
     - name: Wait for application to start completely
-      run: sleep 20
+      run: sleep 60
 
     - name: Send test request
       run: curl http://localhost:8080/actuator/health
