@@ -9,6 +9,7 @@ import dev.goral.rpgmanager.user.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Map;
@@ -41,6 +42,7 @@ public class RegisterService {
         return CustomReturnables.getOkResponseMap("Konto zostało aktywowane. Możesz się teraz zalogować.");
     }
 
+    @Transactional
     public Map<String, Object> register(RegisterRequest request) {
             if (userRepository.findByUsername(request.getUsername()).isPresent()) {
                 throw new IllegalStateException("Nazwa użytkownika jest już zajęta.");
