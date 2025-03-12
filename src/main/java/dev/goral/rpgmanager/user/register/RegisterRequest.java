@@ -15,4 +15,5 @@ public class RegisterRequest {
     private final String surname;
     private final String email;
     private final String password;
+    private final String captcha;
 }

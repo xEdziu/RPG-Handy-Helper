@@ -6,6 +6,7 @@
     <title>Rejestracja</title>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
 <body>
 <h1>Rejestracja</h1>
 
@@ -28,6 +29,8 @@
     <label for="passwordConfirm">Potwierdź hasło:</label>
     <input type="password" id="passwordConfirm" name="passwordConfirm" required><br>
 
+    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
+
     <button type="submit">Zarejestruj się</button><br>
 </form>
 
@@ -36,11 +39,12 @@
 <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', function (event) {
-        event.preventDefault();
+        event.preventDefault(); // Zatrzymanie domyślnego wysyłania formularza
+
         let formData = new FormData(form);
         let data = Object.fromEntries(formData);
 
-        //validate data
+        // Walidacja: sprawdzenie czy hasła są identyczne
         if (data.password !== data.passwordConfirm) {
             Swal.fire({
                 icon: 'error',
@@ -50,49 +54,63 @@
             return;
         }
 
-        console.log(JSON.stringify(data))
+        // **Dodanie reCAPTCHA v3 - Pobranie tokena przed wysłaniem**
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM', { action: 'signup' }).then(function(token) {
+                // Dodanie tokena reCAPTCHA do danych formularza
+                data["captcha"] = token;
 
-        fetch('/api/v1/register/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'  ,
-            },
-            body: JSON.stringify(data),
-
-        })
-            .then(
-                Swal.fire({
-                    title: 'Proszę czekać...',
-                    didOpen: () => {
-                        Swal.showLoading()
-                    }
-                })
-            )
-            .then(response => response.json())
-            .then(data => {
-                // check if there is an error = 200 or status != 200
-                if (data.error != 200) {
+                if (!token) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Błąd',
-                        text: data.message,
-                        confirmButtonText: 'Spróbuj ponownie',
+                        text: 'Nie udało się uzyskać tokena reCAPTCHA. Spróbuj ponownie!',
                     });
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Sukces',
-                        text: data.message,
-                        confirmButtonText: 'Zaloguj się',
-                    })
-                        .then(() => {
-                            window.location.href = '/login';
-                        });
+                    return;
                 }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
+
+                // Wysyłanie formularza do backendu
+                fetch('/api/v1/register/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data),
+                })
+                    .then(
+                        Swal.fire({
+                            title: 'Proszę czekać...',
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        })
+                    )
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error !== 200) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Błąd',
+                                text: data.message,
+                                confirmButtonText: 'Spróbuj ponownie',
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Sukces',
+                                text: data.message,
+                                confirmButtonText: 'Zaloguj się',
+                            }).then(() => {
+                                window.location.href = '/login';
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
             });
+        });
     });
 </script>
+
 </html>
