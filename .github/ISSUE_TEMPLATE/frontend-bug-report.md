@@ -1,7 +1,7 @@
 ---
 name: Frontend Bug Report
 about: Zgłoś błąd po stronie UX/UI aplikacji
-title: "[BUG] | Frontend | <Krótki opis błędu>"
+title: "[BUG] | Frontend | Krótki opis błędu"
 labels: bug, frontend
 assignees: Myjem, PEXEL2002, MANDRW
 

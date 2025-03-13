@@ -26,31 +26,13 @@ public class UserService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
-    }
 
-    /**
-     * Obsługa logowania przez Discord OAuth2
-     */
-    @Transactional
-    public User processOAuthPostLogin(String oauthId, String email, String username) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        User user;
-        if (userOptional.isPresent()) {
-            user = userOptional.get();
-        } else {
-            OAuthProvider discordProvider = OAuthProvider.DISCORD;
-            user = new User();
-            user.setUsername(username);
-            user.setEmail(email);
-            user.setOAuthProvider(discordProvider);
-            user.setOAuthId(oauthId);
-            user.setRole(UserRole.ROLE_USER);
-            user.setEnabled(true);
-            user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            userRepository.save(user);
+        if (user.getPassword() == null) {
+            throw new IllegalStateException("To konto zostało utworzone przez Discord. Musisz najpierw ustawić hasło.");
         }
+
         return user;
     }
 
