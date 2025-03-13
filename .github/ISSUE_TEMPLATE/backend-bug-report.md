@@ -1,7 +1,7 @@
 ---
 name: Backend Bug Report
 about: Zgłoś błąd po stronie serwera w aplikacji
-title: "[BUG] | Backend | <Krótki opis błędu>"
+title: "[BUG] | Backend | Krótki opis błędu"
 labels: backend, bug
 assignees: xEdziu, ZuberRS03
 

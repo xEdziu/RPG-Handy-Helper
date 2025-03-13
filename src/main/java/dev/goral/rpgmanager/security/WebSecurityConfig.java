@@ -33,7 +33,8 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/v1/**").permitAll() // Publicly accessible, no login required
                                 .requestMatchers("/admin", "/admin/**").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/home", "/home/**").hasAuthority("ROLE_USER")
-                                .requestMatchers("/login", "/api/v1/**", "/register").permitAll()
+                                .requestMatchers("/login", "/api/v1/**", "/register", "/activate").permitAll()
+                                .requestMatchers("/forgotPassword", "/resetPassword").permitAll()
                                 .requestMatchers("/", "/index.html", "/static/**", "/resources/**").permitAll() // Allow access to static resources
                                 .requestMatchers("/actuator/health").permitAll() // Allow access to health check
                                 .anyRequest()
@@ -45,10 +46,17 @@ public class WebSecurityConfig {
                         .permitAll()
                         .successHandler(customAuthenticationSuccessHandler) // Custom success handler
                         .failureUrl("/login?error=true")
+                        .failureHandler((_, response, exception) -> {
+                            if (exception.getMessage().equals("User is disabled")) {
+                                response.sendRedirect("/login?error=disabled");
+                            } else {
+                                response.sendRedirect("/login?error=true");
+                            }
+                        })
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout=true")
+                        .logoutSuccessUrl("/login?error=logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )

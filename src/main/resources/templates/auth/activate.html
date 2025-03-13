@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel użytkownika</title>
+</head>
+<body>
+<main></main>
+</body>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        if (!token) {
+            window.location.href = '/register';
+        }
+        const main = document.querySelector('main');
+        //send request to confirm user
+        fetch('/api/v1/register/confirm?token='+token, {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(data => {
+                if(data.error !== 200) {
+                    main.innerHTML = `
+                        <div>
+                            <h1>Błąd</h1>
+                            <p>${data.message}</p>
+                        </div>
+                    `;
+                } else if (data.error === 200){
+                    window.location.href = '/login?error=verify';
+                }
+            });
+    });
+</script>
+</html>
