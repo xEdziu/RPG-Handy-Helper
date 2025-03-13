@@ -75,7 +75,7 @@ public class RegisterService {
      *                 Musi zawierać co najmniej 8 znaków, jedną cyfrę, jedną małą literę, jedną dużą literę oraz jeden znak specjalny
      * @return bool
      */
-    private Boolean validatePassword(String password) {
+    public static Boolean validatePassword(String password) {
       return password.length() >= 8 &&
               password.matches(".*\\d.*") &&
               password.matches(".*[a-z].*") &&

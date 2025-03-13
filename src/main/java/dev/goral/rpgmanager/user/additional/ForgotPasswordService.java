@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static dev.goral.rpgmanager.user.register.RegisterService.validatePassword;
+
 @Service
 @AllArgsConstructor
 public class ForgotPasswordService {
@@ -68,19 +70,5 @@ public class ForgotPasswordService {
         userRepository.save(userToUpdate);
         //return response
         return CustomReturnables.getOkResponseMap("Hasło zostało zmienione.");
-    }
-
-    /**
-     * Walidacja hasła
-     * @param password Hasło do walidacji
-     *                 Musi zawierać co najmniej 8 znaków, jedną cyfrę, jedną małą literę,  jedną dużą literę oraz jeden znak specjalny
-     * @return bool
-     */
-    private Boolean validatePassword(String password) {
-        return password.length() >= 8 &&
-                password.matches(".*\\d.*") &&
-                password.matches(".*[a-z].*") &&
-                password.matches(".*[A-Z].*") &&
-                password.matches(".*[!@#$%^&*()-+].*");
     }
 }

@@ -65,6 +65,11 @@
             icon: 'success',
             title: 'Konto zostało aktywowane'
         });
+    } else if (error === "disabled") {
+        toastMixin.fire({
+            icon: 'warning',
+            title: 'Konto nie zostało aktywowane - może warto sprawdzić maila?'
+        });
     }
 </script>
 </html>

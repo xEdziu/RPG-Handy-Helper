@@ -46,6 +46,13 @@ public class WebSecurityConfig {
                         .permitAll()
                         .successHandler(customAuthenticationSuccessHandler) // Custom success handler
                         .failureUrl("/login?error=true")
+                        .failureHandler((_, response, exception) -> {
+                            if (exception.getMessage().equals("User is disabled")) {
+                                response.sendRedirect("/login?error=disabled");
+                            } else {
+                                response.sendRedirect("/login?error=true");
+                            }
+                        })
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")

@@ -7,9 +7,72 @@
 </head>
 <body>
 <h1>Witaj na swoim koncie!</h1>
-
 <p>Zalogowałeś się pomyślnie.</p>
-
+<br>
+<p>UWAGA: Ten formularz jest do testowania ustawienia hasła, gdy użytkownik zarejestruje się poprzez Discord!</p>
+<p>Jest tutaj tymczasowo, w przyszłości będzie na to osobne miejsce na panelu użytkownika</p>
+<form>
+    <label for="password1">Hasło:</label><br>
+    <input type="password" id="password1" name="password" required><br>
+    <label for="password2">Powtórz Hasło:</label><br>
+    <input type="password" id="password2" name="password" required><br>
+    <button type="submit">Ustaw hasło</button>
+</form>
 <a href="/logout">Wyloguj się</a>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    let form = document.querySelector('form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        let password1 = document.querySelector('#password1').value;
+        let password2 = document.querySelector('#password2').value;
+
+        if (password1 !== password2) {
+            Swal.fire({
+                title: 'Błąd',
+                text: 'Hasła nie są takie same',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            })
+        }
+
+        fetch('/api/v1/authorized/setPassword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                password: password1
+            })
+        })
+            .then(
+                Swal.fire({
+                    title: 'Proszę czekać...',
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                })
+            )
+            .then(response => response.json())
+            .then(data => {
+                if (data.error === 200) {
+                    Swal.fire({
+                        title: 'Sukces',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    })
+                } else {
+                    Swal.fire ({
+                        title: 'Błąd',
+                        text: data.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+    });
+</script>
 </html>
