@@ -4,6 +4,7 @@ import dev.goral.rpgmanager.user.additional.PasswordRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,4 +22,14 @@ public class UserController {
     public Map<String, Object> setPassword(@RequestBody PasswordRequest passwordRequest) {
         return userService.setPassword(passwordRequest.getPassword());
     }
+
+    @GetMapping("/admin/user/all")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+    @PostMapping("/admin/user/create")
+    public Map<String, Object> createUserAdmin(@RequestBody User user) {
+        return userService.createUserAdmin(user);
+    }
+
 }
