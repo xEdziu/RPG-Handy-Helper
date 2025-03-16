@@ -1,5 +1,9 @@
 package dev.goral.rpgmanager.game;
 
+import dev.goral.rpgmanager.game.gameUsers.AddUserToGameRequest;
+import dev.goral.rpgmanager.game.gameUsers.GameUsers;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersDTO;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path = "api/v1/authorized/game")
+@RequestMapping(path = "api/v1/authorized")
 public class GameController {
 
     private final GameService gameService;
@@ -19,26 +23,36 @@ public class GameController {
 
     // ============ User methods ============
 
-    @GetMapping(path = "/{gameId}")
+    @GetMapping(path = "/game/{gameId}")
     public GameDTO getGame(@PathVariable("gameId") Long gameId) {
         return gameService.getGame(gameId);
     }
 
-    @PostMapping(path = "/createGame")
+    @GetMapping(path = "/game/allPlayers/{gameId}")
+    public List<GameUsersDTO> getGamePlayers(@PathVariable("gameId") Long gameId) {
+        return gameService.getGamePlayers(gameId);
+    }
+
+    @PostMapping(path = "/game/create")
     public Map<String, Object> createGame(@RequestBody Game game) {
         return gameService.createGame(game);
     }
 
-    @PutMapping(path = "/updateGame/{gameId}")
+    @PostMapping(path = "/game/addUserToGame")
+    public Map<String, Object> addUserToGame(@RequestBody AddUserToGameRequest request) {
+        return gameService.addUserToGame(request);
+    }
+
+    @PutMapping(path = "/game/updateGame/{gameId}")
     public Map<String, Object> updateGame(@PathVariable("gameId") Long gameId, @RequestBody Game game) {
         return gameService.updateGame(gameId, game);
     }
 
     // ============ Admin methods ============
 
-    @GetMapping(path = "/admin/all")
+    @GetMapping(path = "/admin/game/all")
     public List<GameDTO> getAllGames() {
-        return gameService.getGames();
+        return gameService.getAllGames();
     }
 
 }
