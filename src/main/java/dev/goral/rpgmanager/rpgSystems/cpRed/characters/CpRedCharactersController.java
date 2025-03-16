@@ -1,9 +1,11 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/authorized")
@@ -27,8 +29,13 @@ public class CpRedCharactersController {
     }
 
     @PostMapping(path = "/cpRed/characters/create")
-    public CpRedCharactersDTO createCharacter(@RequestBody CpRedCharactersDTO character) {
+    public Map<String, Object> createCharacter(@RequestBody CpRedCharacters character) {
         return cpRedCharactersService.createCharacter(character);
+    }
+
+    @PostMapping(path = "/cpRed/characters/createNpc")
+    public Map<String, Object>  createCharacterNpc(@RequestBody CpRedCharacters character) {
+        return cpRedCharactersService.createCharacterNpc(character);
     }
 
 }

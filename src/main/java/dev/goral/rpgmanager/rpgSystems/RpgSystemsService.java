@@ -20,7 +20,7 @@ public class RpgSystemsService {
 
     public RpgSystemsDTO getrpgSystemsById(Long rpgSystemsId) {
         RpgSystems rpgSystems = rpgSystemsRepository.findById(rpgSystemsId)
-                .orElseThrow(() -> new ResourceNotFoundException("rpgSystems with id " + rpgSystemsId + " does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("System o id " + rpgSystemsId + " nie istnieje"));
         return new RpgSystemsDTO(rpgSystems.getId(), rpgSystems.getName(), rpgSystems.getDescription());
     }
 
@@ -37,6 +37,6 @@ public class RpgSystemsService {
 
     public Map<String, Object> createRpgSystems(RpgSystems rpgSystems) {
         rpgSystemsRepository.save(rpgSystems);
-        return Map.of("message", "Rpg system created successfully");
+        return Map.of("message", "System dodany pomyślnie");
     }
 }
