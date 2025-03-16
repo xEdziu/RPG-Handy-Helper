@@ -11,6 +11,9 @@ type = 'JSON'
 raw = '''
 {
   "name": "Example Game",
-  "description": "This is an example game description."
+  "description": "This is an example game description.",
+  "rpgSystem": {
+    "id": 1
+  }
 }'''
 ```

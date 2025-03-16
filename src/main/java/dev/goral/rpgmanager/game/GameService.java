@@ -1,6 +1,7 @@
 package dev.goral.rpgmanager.game;
 
 import dev.goral.rpgmanager.game.gameUsers.*;
+import dev.goral.rpgmanager.rpgSystems.RpgSystemsRepository;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
@@ -20,12 +21,14 @@ public class GameService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
     private final GameUsersRepository gameUsersRepository;
+    private final RpgSystemsRepository rpgSystemsRepository;
 
     @Autowired
-    public GameService(GameRepository gameRepository, UserRepository userRepository, GameUsersRepository gameUsersRepository) {
+    public GameService(GameRepository gameRepository, UserRepository userRepository, GameUsersRepository gameUsersRepository, RpgSystemsRepository rpgSystemsRepository) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
         this.gameUsersRepository = gameUsersRepository;
+        this.rpgSystemsRepository = rpgSystemsRepository;
     }
 
     public List<GameDTO> getAllGames() {
@@ -35,7 +38,8 @@ public class GameService {
                         game.getId(),
                         game.getName(),
                         game.getDescription(),
-                        game.getGameMaster().getUsername()
+                        game.getGameMaster().getUsername(),
+                        game.getRpgSystem().getName()
                 ))
                 .collect(Collectors.toList());
     }
@@ -46,7 +50,8 @@ public class GameService {
                         game.getId(),
                         game.getName(),
                         game.getDescription(),
-                        game.getGameMaster().getUsername()
+                        game.getGameMaster().getUsername(),
+                        game.getRpgSystem().getName()
                 ))
                 .orElse(null);
     }
@@ -120,6 +125,7 @@ public class GameService {
         gameToUpdate.setName(game.getName());
         gameToUpdate.setDescription(game.getDescription());
         gameToUpdate.setGameMaster(game.getGameMaster());
+        gameToUpdate.setRpgSystem(game.getRpgSystem());
         gameRepository.save(gameToUpdate);
 
         return CustomReturnables.getOkResponseMap("Gra została zaktualizowana.");

@@ -9,15 +9,18 @@ public class GameDTO {
     private final String name;
     private final String description;
     private final String gameMaster;
+    private final String rpgSystem;
 
     public GameDTO(Long id,
                    String name,
                    String description,
-                   String gameMaster) {
+                   String gameMaster,
+                   String rpgSystem) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.gameMaster = gameMaster;
+        this.rpgSystem = rpgSystem;
     }
 
     @Override
@@ -27,6 +30,7 @@ public class GameDTO {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", gameMaster='" + gameMaster + '\'' +
+                ", rpgSystem='" + rpgSystem + '\'' +
                 '}';
     }
 }

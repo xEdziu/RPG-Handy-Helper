@@ -2,6 +2,7 @@ package dev.goral.rpgmanager.game;
 
 
 import dev.goral.rpgmanager.user.User;
+import dev.goral.rpgmanager.rpgSystems.RpgSystems;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,26 +36,38 @@ public class Game {
     )
     private User gameMaster;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "rpgSystem_id",
+            referencedColumnName = "id",
+            nullable = false
+    )
+    private RpgSystems rpgSystem;
+
 
     public Game() {
     }
 
     public Game(String name,
                 String description,
-                User gameMaster) {
+                User gameMaster,
+                RpgSystems rpgSystem) {
         this.name = name;
         this.description = description;
         this.gameMaster = gameMaster;
+        this.rpgSystem = rpgSystem;
     }
 
     public Game(Long id,
                 String name,
                 String description,
-                User gameMaster) {
+                User gameMaster,
+                RpgSystems rpgSystem) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.gameMaster = gameMaster;
+        this.rpgSystem = rpgSystem;
     }
 
     @Override
@@ -64,6 +77,7 @@ public class Game {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", gameMaster=" + gameMaster +
+                ", rpgSystem=" + rpgSystem +
                 '}';
     }
 }
