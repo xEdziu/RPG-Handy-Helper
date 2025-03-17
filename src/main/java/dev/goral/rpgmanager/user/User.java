@@ -125,3 +125,4 @@ public class User implements UserDetails {
 
 
 }
+//TODO: Dodać obsługę zdjęcia profilowego

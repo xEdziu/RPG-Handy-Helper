@@ -127,6 +127,7 @@ public class GameService {
         return CustomReturnables.getOkResponseMap("Użytkownik został dodany do gry.");
     }
 
+    @Transactional
     public Map<String, Object> updateGame(Long gameId, Game game) {
         Game gameToUpdate = gameRepository.findGameById(gameId).orElse(null);
 
@@ -146,8 +147,21 @@ public class GameService {
             if(!userRepository.existsById(game.getGameMaster().getId())){
                 throw new ResourceNotFoundException("GameMaster o id " + game.getGameMaster().getId() +" nie istnieje.");
             }
+
+            if(!gameUsersRepository.existsByUserIdAndGameId(game.getGameMaster().getId(), gameId)){
+                AddUserToGameRequest addUserToGameRequest = new AddUserToGameRequest();
+                addUserToGameRequest.setUserId(game.getGameMaster().getId());
+                addUserToGameRequest.setGameId(gameId);
+                addUserToGameRequest.setRole(GameUsersRole.GAMEMASTER.toString());
+                addUserToGame(addUserToGameRequest);
+            }
+            Map<String, String> roleUpdateGameMaster = Map.of("role", "GAMEMASTER");
+            Map<String, String> roleUpdatePlayer = Map.of("role", "PLAYER");
+
+            updateGameUserRole(gameUsersRepository.findIdByUserId(game.getGameMaster().getId()), roleUpdateGameMaster);
+            updateGameUserRole(gameUsersRepository.findIdByUserId(gameToUpdate.getGameMaster().getId()), roleUpdatePlayer);
+
             gameToUpdate.setGameMaster(game.getGameMaster());
-            //TODO: Jeśli zmienia się gameMaster to trzeba również go zmienić w tabeli GameUsers
         }
         if (game.getDescription() != null ) {
             gameToUpdate.setDescription(game.getDescription());
@@ -156,6 +170,30 @@ public class GameService {
         gameRepository.save(gameToUpdate);
 
         return CustomReturnables.getOkResponseMap("Gra została zaktualizowana.");
+    }
+
+    public Map<String, Object> updateGameUserRole(Long gameUserId, Map<String, String> request) {
+        String roleStr = request.get("role");
+
+        if (roleStr == null) {
+            throw new IllegalArgumentException("Brak roli w żądaniu.");
+        }
+
+        GameUsersRole role;
+        try {
+            role = GameUsersRole.valueOf(roleStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Niepoprawna rola: " + roleStr);
+        }
+
+        GameUsers gameUserToUpdate = gameUsersRepository.findById(gameUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik gry o podanym ID nie istnieje."));
+
+        gameUserToUpdate.setRole(role);
+        gameUsersRepository.save(gameUserToUpdate);
+
+        return CustomReturnables.getOkResponseMap("Rola użytkownika gry została zaktualizowana.");
+
     }
 
 

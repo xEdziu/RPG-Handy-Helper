@@ -48,6 +48,11 @@ public class GameController {
         return gameService.updateGame(gameId, game);
     }
 
+    @PutMapping(path = "/game/updateGameUserRole/{gameUserId}")
+    public Map<String, Object> updateGameUserRole(@PathVariable("gameUserId") Long gameUserId, @RequestBody Map<String, String> request) {
+        return gameService.updateGameUserRole(gameUserId, request);
+    }
+
     // ============ Admin methods ============
 
     @GetMapping(path = "/admin/game/all")
