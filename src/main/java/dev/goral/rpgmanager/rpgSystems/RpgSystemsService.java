@@ -1,6 +1,7 @@
 package dev.goral.rpgmanager.rpgSystems;
 
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,22 +10,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class RpgSystemsService {
 
-    private RpgSystemsRepository rpgSystemsRepository;
+    private final RpgSystemsRepository rpgSystemsRepository;
 
-    @Autowired
-    public RpgSystemsService(RpgSystemsRepository rpgSystemsRepository) {
-        this.rpgSystemsRepository = rpgSystemsRepository;
-    }
-
-    public RpgSystemsDTO getrpgSystemsById(Long rpgSystemsId) {
+    public RpgSystemsDTO getRpgSystemsById(Long rpgSystemsId) {
         RpgSystems rpgSystems = rpgSystemsRepository.findById(rpgSystemsId)
                 .orElseThrow(() -> new ResourceNotFoundException("System o id " + rpgSystemsId + " nie istnieje"));
         return new RpgSystemsDTO(rpgSystems.getId(), rpgSystems.getName(), rpgSystems.getDescription());
     }
 
-    public List<RpgSystemsDTO> getAllrpgSystems() {
+    public List<RpgSystemsDTO> getAllRpgSystems() {
         return rpgSystemsRepository.findAll()
                 .stream()
                 .map(rpgSystems -> new RpgSystemsDTO(

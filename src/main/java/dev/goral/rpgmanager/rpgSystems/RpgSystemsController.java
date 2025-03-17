@@ -20,13 +20,13 @@ public class RpgSystemsController {
     // ============ User methods ============
 
     @GetMapping(path = "/rpgSystems/{rpgSystemsId}")
-    public RpgSystemsDTO getrpgSystemsById(@PathVariable("rpgSystemsId") Long rpgSystemsId) {
-        return rpgSystemsService.getrpgSystemsById(rpgSystemsId);
+    public RpgSystemsDTO getRpgSystemsById(@PathVariable("rpgSystemsId") Long rpgSystemsId) {
+        return rpgSystemsService.getRpgSystemsById(rpgSystemsId);
     }
 
     @GetMapping(path = "/rpgSystems/all")
-    public List<RpgSystemsDTO> getAllrpgSystems() {
-        return rpgSystemsService.getAllrpgSystems();
+    public List<RpgSystemsDTO> getAllRpgSystems() {
+        return rpgSystemsService.getAllRpgSystems();
     }
 
     // ============ Admin methods ============
