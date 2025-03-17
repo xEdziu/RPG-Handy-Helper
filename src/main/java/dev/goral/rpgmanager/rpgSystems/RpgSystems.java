@@ -11,13 +11,13 @@ import lombok.Setter;
 public class RpgSystems {
     @Id
     @SequenceGenerator(
-            name = "rpgSustems_sequence",
-            sequenceName = "rpgSustems_sequence",
+            name = "rpgSystems_sequence",
+            sequenceName = "rpgSystems_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "rpgSustems_sequence"
+            generator = "rpgSystems_sequence"
     )
     private Long id;
     private String name;
