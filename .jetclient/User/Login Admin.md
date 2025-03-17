@@ -1,5 +1,6 @@
 ```toml
 name = 'Login Admin'
+description = 'loguje na admina'
 method = 'POST'
 url = 'http://localhost:8888/login'
 sortWeight = 3000000

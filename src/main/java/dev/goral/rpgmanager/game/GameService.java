@@ -39,8 +39,8 @@ public class GameService {
                         game.getId(),
                         game.getName(),
                         game.getDescription(),
-                        game.getGameMaster().getUsername(),
-                        game.getRpgSystem().getName()
+                        game.getGameMaster().getId(),
+                        game.getRpgSystem().getId()
                 ))
                 .collect(Collectors.toList());
     }
@@ -51,8 +51,8 @@ public class GameService {
                         game.getId(),
                         game.getName(),
                         game.getDescription(),
-                        game.getGameMaster().getUsername(),
-                        game.getRpgSystem().getName()
+                        game.getGameMaster().getId(),
+                        game.getRpgSystem().getId()
                 ))
                 .orElse(null);
     }
@@ -79,6 +79,13 @@ public class GameService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
+        if(game.getRpgSystem() == null) {
+            throw new IllegalArgumentException("Gra musi mieć przypisany system RPG.");
+        }
+        if(!rpgSystemsRepository.existsById(game.getRpgSystem().getId())){
+            throw new IllegalArgumentException("Podany system RPG nie istnieje.");
+        }
+
         game.setGameMaster(currentUser);
         gameRepository.save(game);
 
@@ -98,8 +105,18 @@ public class GameService {
         Game game = gameRepository.findById(request.getGameId())
                 .orElseThrow(() -> new ResourceNotFoundException("Gra o podanym ID nie istnieje."));
 
-        //TODO: Check if user is already in the game
-        //TODO: Sprwadź czy gm dodaje użytkownika do swojej gry
+        if(gameUsersRepository.existsByUserIdAndGameId(user.getId(), game.getId())) {
+            throw new IllegalArgumentException("Użytkownik jest już w grze.");
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        if (!game.getGameMaster().getId().equals(currentUser.getId())) {
+            throw new IllegalArgumentException("Tylko GameMaster może dodawać użytkowników do swojej gry.");
+        }
 
         GameUsers gameUsers = new GameUsers();
         gameUsers.setUser(user);
@@ -120,17 +137,22 @@ public class GameService {
             if(gameToUpdate.getName().isEmpty()) {
                 throw new IllegalArgumentException("Nazwa gry nie może być pusta.");
             }
+            gameToUpdate.setName(game.getName());
         }
         if (game.getGameMaster() != null ) {
-            if(gameToUpdate.getGameMaster().getUsername().isEmpty()) {
+            if(gameToUpdate.getGameMaster().getId() == null) {
                 throw new IllegalArgumentException("Gra musi mieć GameMastera.");
             }
+            if(!userRepository.existsById(game.getGameMaster().getId())){
+                throw new ResourceNotFoundException("GameMaster o id " + game.getGameMaster().getId() +" nie istnieje.");
+            }
+            gameToUpdate.setGameMaster(game.getGameMaster());
+            //TODO: Jeśli zmienia się gameMaster to trzeba również go zmienić w tabeli GameUsers
+        }
+        if (game.getDescription() != null ) {
+            gameToUpdate.setDescription(game.getDescription());
         }
 
-        gameToUpdate.setName(game.getName());
-        gameToUpdate.setDescription(game.getDescription());
-        gameToUpdate.setGameMaster(game.getGameMaster());
-        gameToUpdate.setRpgSystem(game.getRpgSystem());
         gameRepository.save(gameToUpdate);
 
         return CustomReturnables.getOkResponseMap("Gra została zaktualizowana.");

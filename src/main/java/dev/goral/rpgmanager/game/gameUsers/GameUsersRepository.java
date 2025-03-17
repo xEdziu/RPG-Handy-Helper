@@ -11,4 +11,5 @@ public interface GameUsersRepository extends JpaRepository<GameUsers, Long> {
     Optional<GameUsers> findGameUsersByGame(Game game);
     List<GameUsers> findGameAllUsersByGameId(Long gameId);
 
+    boolean existsByUserIdAndGameId(Long id, Long id1);
 }

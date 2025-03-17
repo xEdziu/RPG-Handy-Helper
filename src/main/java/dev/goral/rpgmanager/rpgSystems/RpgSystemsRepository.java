@@ -8,4 +8,6 @@ import java.util.List;
 @Repository
 public interface RpgSystemsRepository extends JpaRepository<RpgSystems, Long> {
     List<RpgSystems> findByName(String name);
+
+    boolean existsByName(String name);
 }

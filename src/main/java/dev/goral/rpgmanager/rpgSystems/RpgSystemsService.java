@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems;
 
+import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,13 @@ public class RpgSystemsService {
     }
 
     public Map<String, Object> createRpgSystems(RpgSystems rpgSystems) {
+
+        if(rpgSystemsRepository.existsByName(rpgSystems.getName())) {
+            throw new IllegalStateException("System o nazwie " + rpgSystems.getName() + " już istnieje");
+        }
+
         rpgSystemsRepository.save(rpgSystems);
-        return Map.of("message", "System dodany pomyślnie");
+
+        return CustomReturnables.getOkResponseMap("System został dodany");
     }
 }

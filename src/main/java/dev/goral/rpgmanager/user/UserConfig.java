@@ -28,7 +28,7 @@ public class UserConfig {
             admin.setEnabled(true);
 
             User user1 = new User(
-                    "john_doe",
+                    "user1",
                     "John",
                     "Doe",
                     "john.doe@example.com",
@@ -39,7 +39,7 @@ public class UserConfig {
             user1.setEnabled(true);
 
             User user2 = new User(
-                    "jane_smith",
+                    "user2",
                     "Jane",
                     "Smith",
                     "jane.smith@example.com",

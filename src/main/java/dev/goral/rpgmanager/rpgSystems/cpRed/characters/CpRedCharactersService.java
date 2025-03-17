@@ -7,7 +7,6 @@ import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -128,12 +127,15 @@ public class CpRedCharactersService {
             character.getExpAll() == null &&
             character.getExpAvailable() == null &&
             character.getCash() == null &&
-            character.getCharacterPhotoPath() == null) {
+            character.getCharacterPhotoPath() == null &&
+            character.getUser() == null) {
             throw new IllegalStateException("Należy podać jeden z parametrów");
         }
 
         CpRedCharacters cpRedCharacterToUpdate = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje"));
+
+        String cpRedCharacterToUpdateName = cpRedCharacterToUpdate.getName();
 
         if(character.getName() != null) {
             if(cpRedCharacterToUpdate.getName().isEmpty()) {
@@ -187,8 +189,8 @@ public class CpRedCharactersService {
         }
 
         if(character.getUser() != null) {
-            User user = userRepository.findByUsername(character.getUser().getUsername())
-                    .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o nazwie " + character.getUser().getUsername() + " nie istnieje"));
+            User user = userRepository.findById(character.getUser().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o nazwie " + character.getUser().getId() + " nie istnieje"));
             cpRedCharacterToUpdate.setUser(user);
         }
         if(character.getUser() == null) {
@@ -201,7 +203,7 @@ public class CpRedCharactersService {
 
         cpRedCharactersRepository.save(cpRedCharacterToUpdate);
 
-        return CustomReturnables.getOkResponseMap("Postać " + character.getName() + " została zaktualizowana");
+        return CustomReturnables.getOkResponseMap("Postać " + cpRedCharacterToUpdateName + " została zaktualizowana");
     }
 }
 
