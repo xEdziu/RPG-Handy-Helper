@@ -47,7 +47,7 @@ public class CpRedCharacters {
 
     private Integer expAll;
     private Integer expAvailable;
-    private Integer casch;
+    private Integer cash;
     private String characterPhotoPath;
 
     public CpRedCharacters() {}
@@ -60,7 +60,7 @@ public class CpRedCharacters {
                            CpRedCharactersType type,
                            Integer expAll,
                            Integer expAvailable,
-                           Integer casch,
+                           Integer cash,
                            String characterPhotoPath) {
         this.id = id;
         this.game = game;
@@ -70,7 +70,7 @@ public class CpRedCharacters {
         this.type = type;
         this.expAll = expAll;
         this.expAvailable = expAvailable;
-        this.casch = casch;
+        this.cash = cash;
         this.characterPhotoPath = characterPhotoPath;
     }
 
@@ -81,7 +81,7 @@ public class CpRedCharacters {
                            CpRedCharactersType type,
                            Integer expAll,
                            Integer expAvailable,
-                           Integer casch,
+                           Integer cash,
                            String characterPhotoPath) {
         this.id = id;
         this.game = game;
@@ -90,7 +90,7 @@ public class CpRedCharacters {
         this.type = type;
         this.expAll = expAll;
         this.expAvailable = expAvailable;
-        this.casch = casch;
+        this.cash = cash;
         this.characterPhotoPath = characterPhotoPath;
     }
 
@@ -105,7 +105,7 @@ public class CpRedCharacters {
                 ", type=" + type +
                 ", expAll=" + expAll +
                 ", expAvailable=" + expAvailable +
-                ", casch=" + casch +
+                ", cash=" + cash +
                 ", characterPhotoPath='" + characterPhotoPath + '\'' +
                 '}';
     }

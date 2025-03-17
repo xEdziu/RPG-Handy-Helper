@@ -38,4 +38,9 @@ public class CpRedCharactersController {
         return cpRedCharactersService.createCharacterNpc(character);
     }
 
+    @PutMapping(path = "/cpRed/characters/update/{characterId}")
+    public Map<String, Object> updateCharacter(@PathVariable("characterId") Long characterId, @RequestBody CpRedCharacters character) {
+        return cpRedCharactersService.updateCharacter(characterId, character);
+    }
+
 }

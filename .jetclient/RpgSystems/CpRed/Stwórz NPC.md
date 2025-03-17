@@ -17,6 +17,6 @@ raw = '''
   "nickname": "Smasher",
   "expAll": 5000,
   "expAvailable": 0,
-  "casch": 100000
+  "cash": 100000
 }'''
 ```

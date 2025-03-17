@@ -6,6 +6,7 @@ import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -71,6 +72,7 @@ public class GameService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Map<String, Object> createGame(Game game) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -95,6 +97,9 @@ public class GameService {
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o podanym ID nie istnieje."));
         Game game = gameRepository.findById(request.getGameId())
                 .orElseThrow(() -> new ResourceNotFoundException("Gra o podanym ID nie istnieje."));
+
+        //TODO: Check if user is already in the game
+        //TODO: Sprwadź czy gm dodaje użytkownika do swojej gry
 
         GameUsers gameUsers = new GameUsers();
         gameUsers.setUser(user);

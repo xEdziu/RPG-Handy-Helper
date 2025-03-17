@@ -4,9 +4,9 @@
   "settings": {
     "width": 6000,
     "height": 6000,
-    "scrollTop": -948.3351,
-    "scrollLeft": -2953.9246,
-    "zoomLevel": 0.79,
+    "scrollTop": -28,
+    "scrollLeft": -1294.6063,
+    "zoomLevel": 1,
     "show": 431,
     "database": 4,
     "databaseName": "test",
@@ -233,15 +233,15 @@
           "ybrNjYNHJA-pWfKis6FGg"
         ],
         "ui": {
-          "x": 2650.0503,
-          "y": 1868.5544,
+          "x": 2653.3289,
+          "y": 1860.3578,
           "zIndex": 216,
           "widthName": 74,
           "widthComment": 60,
           "color": "#009688"
         },
         "meta": {
-          "updateAt": 1741686559067,
+          "updateAt": 1742213960439,
           "createAt": 1740929985364
         }
       },
@@ -3578,7 +3578,7 @@
       "HcShkaiY_zMyY38bfTRnE": {
         "id": "HcShkaiY_zMyY38bfTRnE",
         "tableId": "2l2hKqpyYF_vA8NRpg0BO",
-        "name": "casch",
+        "name": "cash",
         "comment": "",
         "dataType": "INT",
         "default": "",
@@ -3591,7 +3591,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741007866745,
+          "updateAt": 1742215012994,
           "createAt": 1741007852391
         }
       },
@@ -7104,8 +7104,8 @@
           "columnIds": [
             "8pN68SvZNa0k3b_3WsXLR"
           ],
-          "x": 2650.0503,
-          "y": 1906.5544,
+          "x": 2653.3289,
+          "y": 1898.3578,
           "direction": 1
         },
         "meta": {
@@ -7132,8 +7132,8 @@
           "columnIds": [
             "FhGbAsDnsUTSh-kRvIKt9"
           ],
-          "x": 2650.0503,
-          "y": 1982.5544,
+          "x": 2653.3289,
+          "y": 1974.3578,
           "direction": 1
         },
         "meta": {
@@ -8243,8 +8243,8 @@
           "columnIds": [
             "zl4q3ppz78y9O_zE9_ozg"
           ],
-          "x": 2849.5503,
-          "y": 1868.5544,
+          "x": 2852.8289,
+          "y": 1860.3578,
           "direction": 4
         },
         "end": {
@@ -9908,7 +9908,7 @@
       1741007852390,
       -1,
       {
-        "name": 1741007858315,
+        "name": 1742215012992,
         "dataType": 1741007863565,
         "options(notNull)": 1741007866745
       }

@@ -18,6 +18,6 @@ raw = '''
   "type": "PLAYER",
   "expAll": 1000,
   "expAvailable": 500,
-  "casch": 2000
+  "cash": 2000
 }'''
 ```

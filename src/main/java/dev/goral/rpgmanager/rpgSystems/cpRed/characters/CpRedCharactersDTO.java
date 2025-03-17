@@ -12,7 +12,7 @@ public class CpRedCharactersDTO {
     private final String type;
     private final Integer expAll;
     private final Integer expAvailable;
-    private final Integer casch;
+    private final Integer cash;
 
     public CpRedCharactersDTO(Long id,
                               String game,
@@ -22,7 +22,7 @@ public class CpRedCharactersDTO {
                               String type,
                               Integer expAll,
                               Integer expAvailable,
-                              Integer casch) {
+                              Integer cash) {
         this.id = id;
         this.game = game;
         this.user = user;
@@ -31,7 +31,7 @@ public class CpRedCharactersDTO {
         this.type = type;
         this.expAll = expAll;
         this.expAvailable = expAvailable;
-        this.casch = casch;
+        this.cash = cash;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class CpRedCharactersDTO {
                 ", type='" + type + '\'' +
                 ", expAll=" + expAll +
                 ", expAvailable=" + expAvailable +
-                ", casch=" + casch +
+                ", cash=" + cash +
                 '}';
     }
 }
