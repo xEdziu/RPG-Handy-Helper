@@ -30,8 +30,8 @@ public class CpRedCharactersService {
         return characters.stream().map(character ->
                 new CpRedCharactersDTO(
                         character.getId(),
-                        character.getGame().getName(),
-                        character.getUser() != null ? character.getUser().getUsername() : null,
+                        character.getGame().getId(),
+                        character.getUser() != null ? character.getUser().getId() : null,
                         character.getName(),
                         character.getNickname(),
                         character.getType().name(),
@@ -48,8 +48,8 @@ public class CpRedCharactersService {
             CpRedCharacters cpRedCharacter = character.get();
             return new CpRedCharactersDTO(
                     cpRedCharacter.getId(),
-                    cpRedCharacter.getGame().getName(),
-                    cpRedCharacter.getUser() != null ? cpRedCharacter.getUser().getUsername() : null,
+                    cpRedCharacter.getGame().getId(),
+                    cpRedCharacter.getUser() != null ? cpRedCharacter.getUser().getId() : null,
                     cpRedCharacter.getName(),
                     cpRedCharacter.getNickname(),
                     cpRedCharacter.getType().name(),
@@ -65,8 +65,6 @@ public class CpRedCharactersService {
     public Map<String, Object> createCharacter(CpRedCharacters character) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         Game game = gameRepository.findGameById(character.getGame().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + character.getGame().getId() + " nie została znaleziona."));
@@ -98,7 +96,13 @@ public class CpRedCharactersService {
 
         CpRedCharacters cpRedCharacter = new CpRedCharacters();
         cpRedCharacter.setGame(game);
-        cpRedCharacter.setUser(currentUser);
+        if(character.getType() == CpRedCharactersType.PLAYER) {
+            User currentUser = userRepository.findByUsername(currentUsername)
+                    .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+            cpRedCharacter.setUser(currentUser);
+        } else {
+            cpRedCharacter.setUser(null);
+        }
         cpRedCharacter.setName(character.getName());
         cpRedCharacter.setNickname(character.getNickname());
         cpRedCharacter.setType(character.getType());
@@ -114,54 +118,6 @@ public class CpRedCharactersService {
         cpRedCharactersRepository.save(cpRedCharacter);
 
         return CustomReturnables.getOkResponseMap("Postać " + character.getName() + " została utworzona");
-    }
-
-    //TODO: Połączyć te dwie metody w jedną
-    public Map<String, Object> createCharacterNpc(CpRedCharacters character) {
-        Game game = gameRepository.findGameById(character.getGame().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + character.getGame().getId() + " nie została znaleziona."));
-
-        if(character.getName() == null ||
-                character.getNickname() == null ||
-                character.getExpAll() == null ||
-                character.getExpAvailable() == null ||
-                character.getCash() == null){
-            throw new IllegalStateException("Nie podano wszystkich parametrów");
-        }
-
-        if(character.getExpAll() < 0) {
-            throw new IllegalStateException("Doświadczenie postaci nie może być ujemne");
-        }
-
-        if(character.getExpAvailable() < 0) {
-            throw new IllegalStateException("Dostępne doświadczenie postaci nie może być ujemne");
-        }
-
-        if(character.getCash() < 0) {
-            throw new IllegalStateException("Budżet postaci nie może być ujemny");
-        }
-
-        if(cpRedCharactersRepository.existsByGameIdAndName(game.getId(), character.getName())) {
-            throw new IllegalStateException("Postać o nazwie " + character.getName() + " już istnieje");
-        }
-
-        CpRedCharacters cpRedCharacter = new CpRedCharacters();
-        cpRedCharacter.setGame(game);
-        cpRedCharacter.setName(character.getName());
-        cpRedCharacter.setNickname(character.getNickname());
-        cpRedCharacter.setType(CpRedCharactersType.NPC);
-        cpRedCharacter.setExpAll(character.getExpAll());
-        cpRedCharacter.setExpAvailable(character.getExpAvailable());
-        cpRedCharacter.setCash(character.getCash());
-        if(character.getCharacterPhotoPath() == null) {
-            character.setCharacterPhotoPath("src/main/resources/static/profilePics/cyberpunkDefaultProfilePic.png");
-        } else {
-            character.setCharacterPhotoPath(character.getCharacterPhotoPath());
-        }
-
-        cpRedCharactersRepository.save(cpRedCharacter);
-
-        return CustomReturnables.getOkResponseMap("Postać NPC " + character.getName() + " została utworzona");
     }
 
     public Map<String, Object> updateCharacter(Long characterId, CpRedCharacters character) {
@@ -249,4 +205,3 @@ public class CpRedCharactersService {
     }
 }
 
-//TODO: Przejść na id usera i gry zamiast nazw

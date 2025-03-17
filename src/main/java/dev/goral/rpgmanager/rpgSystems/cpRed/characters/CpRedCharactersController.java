@@ -33,14 +33,11 @@ public class CpRedCharactersController {
         return cpRedCharactersService.createCharacter(character);
     }
 
-    @PostMapping(path = "/cpRed/characters/createNpc")
-    public Map<String, Object>  createCharacterNpc(@RequestBody CpRedCharacters character) {
-        return cpRedCharactersService.createCharacterNpc(character);
-    }
-
     @PutMapping(path = "/cpRed/characters/update/{characterId}")
     public Map<String, Object> updateCharacter(@PathVariable("characterId") Long characterId, @RequestBody CpRedCharacters character) {
         return cpRedCharactersService.updateCharacter(characterId, character);
     }
+
+    //TODO: Dodać opcje kopiowania postaci razem ze statami
 
 }

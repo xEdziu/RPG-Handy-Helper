@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class CpRedCharactersDTO {
     private final Long id;
-    private final String game;
-    private final String user;
+    private final Long gameId;
+    private final Long userId;
     private final String name;
     private final String nickname;
     private final String type;
@@ -15,8 +15,8 @@ public class CpRedCharactersDTO {
     private final Integer cash;
 
     public CpRedCharactersDTO(Long id,
-                              String game,
-                              String user,
+                              Long gameId,
+                              Long userId,
                               String name,
                               String nickname,
                               String type,
@@ -24,8 +24,8 @@ public class CpRedCharactersDTO {
                               Integer expAvailable,
                               Integer cash) {
         this.id = id;
-        this.game = game;
-        this.user = user;
+        this.gameId = gameId;
+        this.userId = userId;
         this.name = name;
         this.nickname = nickname;
         this.type = type;
@@ -38,8 +38,8 @@ public class CpRedCharactersDTO {
     public String toString() {
         return "CpRedCharactersDTO{" +
                 "id=" + id +
-                ", game='" + game + '\'' +
-                ", user='" + user + '\'' +
+                ", game='" + gameId + '\'' +
+                ", user='" + userId + '\'' +
                 ", name='" + name + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", type='" + type + '\'' +
