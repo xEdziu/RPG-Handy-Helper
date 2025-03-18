@@ -13,7 +13,7 @@ public class CpRedCharactersController {
 
     private final CpRedCharactersService cpRedCharactersService;
 
-    @GetMapping(path = "games/cpRed/characters/all")
+    @GetMapping(path = "/games/cpRed/characters/all")
     public List<CpRedCharactersDTO> getAllCharacters() {
         return cpRedCharactersService.getAllCharacters();
     }
