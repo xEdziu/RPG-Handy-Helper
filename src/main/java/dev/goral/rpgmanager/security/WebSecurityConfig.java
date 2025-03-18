@@ -40,10 +40,9 @@ public class WebSecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 )
-                // .csrf(AbstractHttpConfigurer::disable)
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**")  // Wyłączenie CSRF tylko dla API
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF dla formularzy
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers("/api/v1/register/signup")
                 )
                 .formLogin(httpConfig -> httpConfig
                         .loginPage("/login")
