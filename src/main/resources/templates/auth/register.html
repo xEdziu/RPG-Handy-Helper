@@ -37,24 +37,12 @@
 <p>Masz już konto? <a href="/login">Zaloguj się</a></p>
 </body>
 <script>
-    // function getCookie(name) {
-    //     const cookies = document.cookie.split('; ');
-    //     for (let cookie of cookies) {
-    //         const [cookieName, cookieValue] = cookie.split('=');
-    //         if (cookieName === name) {
-    //             return decodeURIComponent(cookieValue);
-    //         }
-    //     }
-    //     return null;
-    // }
     const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
     let form = document.querySelector('form');
     form.addEventListener('submit', function (event) {
         event.preventDefault(); // Zatrzymanie domyślnego wysyłania formularza
-        // const csrfToken = getCookie('XSRF-TOKEN');
         let formData = new FormData(form);
         let data = Object.fromEntries(formData);
-        console.log(csrfToken)
 
         // Walidacja: sprawdzenie, czy hasła są identyczne
         if (data.password !== data.passwordConfirm) {
@@ -72,7 +60,6 @@
                 // Dodanie tokena reCAPTCHA do danych formularza
                 data["captcha"] = token;
                 data["_csrf"] = csrfToken;
-                console.log(data);
                 if (!token) {
                     Swal.fire({
                         icon: 'error',

@@ -11,7 +11,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @AllArgsConstructor
@@ -41,8 +44,9 @@ public class WebSecurityConfig {
                                 .authenticated()
                 )
                 .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/logout") // Wyłączenie CSRF tylko dla logout
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers("/api/v1/register/signup")
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 )
                 .formLogin(httpConfig -> httpConfig
                         .loginPage("/login")
@@ -58,7 +62,7 @@ public class WebSecurityConfig {
                         })
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/login?error=logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
@@ -74,7 +78,8 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .maximumSessions(1)
                 )
-                .authenticationProvider(daoAuthenticationProvider());
+                .authenticationProvider(daoAuthenticationProvider())
+                .addFilterAfter(new CsrfTokenGeneratingFilter(), BasicAuthenticationFilter.class);
 
         return http.build();
     }
