@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JetClientState">
+    <option name="folders">
+      <list>
+        <folderState>
+          <option name="environmentGroups">
+            <list>
+              <environmentGroupState>
+                <option name="name" value="Default" />
+              </environmentGroupState>
+            </list>
+          </option>
+          <option name="folders">
+            <list>
+              <folderState>
+                <option name="id" value="f7586a5b-f6cd-4507-a844-8af5b3bb7ea9" />
+                <option name="name" value="User" />
+                <option name="requests">
+                  <list>
+                    <requestState>
+                      <option name="description" value="Zwraca infrmacje o zalogowanym użytkowniku" />
+                      <option name="id" value="4723f425-dfb5-4036-9ecd-86bed6132e14" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="User info" />
+                      <option name="sortWeight" value="500000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/user" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Zwraca liste wszystkich użytkowników" />
+                      <option name="id" value="ab43790a-aedc-4204-b2c7-81012638c8f4" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="All users for Admin" />
+                      <option name="sortWeight" value="750000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/admin/user/all" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;username&quot;: &quot;nowyUser&quot;,&#10;  &quot;firstName&quot;: &quot;John&quot;,&#10;  &quot;surname&quot;: &quot;Doe&quot;,&#10;  &quot;email&quot;: &quot;nowy.user@example.com&quot;,&#10;  &quot;password&quot;: &quot;securePassword123!&quot;,&#10;  &quot;role&quot;: &quot;ROLE_USER&quot;,&#10;  &quot;oAuthId&quot;: &quot;1234567890&quot;,&#10;  &quot;createdAt&quot;: &quot;2023-10-01T12:00:00Z&quot;&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Dodaje nowego usera " />
+                      <option name="id" value="19d129a1-0727-45a7-b3c8-2a7a9209fa25" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Dodaj użytkowanika for Admin" />
+                      <option name="sortWeight" value="1000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/admin/user/create" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="type" value="FORM_URL_ENCODED" />
+                          <option name="urlEncoded">
+                            <list>
+                              <urlEncodedParameterState>
+                                <option name="key" value="username" />
+                                <option name="value" value="zuber" />
+                              </urlEncodedParameterState>
+                              <urlEncodedParameterState>
+                                <option name="key" value="password" />
+                                <option name="value" value="adminPassword" />
+                              </urlEncodedParameterState>
+                            </list>
+                          </option>
+                        </bodyState>
+                      </option>
+                      <option name="description" value="loguje na admina" />
+                      <option name="id" value="2a438e47-9129-492b-b39a-762372dcdeb1" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Login Admin" />
+                      <option name="sortWeight" value="3000000" />
+                      <option name="url" value="http://localhost:8888/login" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="type" value="FORM_URL_ENCODED" />
+                          <option name="urlEncoded">
+                            <list>
+                              <urlEncodedParameterState>
+                                <option name="key" value="username" />
+                                <option name="value" value="user1" />
+                              </urlEncodedParameterState>
+                              <urlEncodedParameterState>
+                                <option name="key" value="password" />
+                                <option name="value" value="password123" />
+                              </urlEncodedParameterState>
+                            </list>
+                          </option>
+                        </bodyState>
+                      </option>
+                      <option name="description" value="loguje na usera 1" />
+                      <option name="id" value="b1fa2120-3740-441a-9df0-d762924d5d8c" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Login User 1" />
+                      <option name="sortWeight" value="4000000" />
+                      <option name="url" value="http://localhost:8888/login" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="type" value="FORM_URL_ENCODED" />
+                          <option name="urlEncoded">
+                            <list>
+                              <urlEncodedParameterState>
+                                <option name="key" value="username" />
+                                <option name="value" value="user2" />
+                              </urlEncodedParameterState>
+                              <urlEncodedParameterState>
+                                <option name="key" value="password" />
+                                <option name="value" value="password123" />
+                              </urlEncodedParameterState>
+                            </list>
+                          </option>
+                        </bodyState>
+                      </option>
+                      <option name="description" value="loguje na usera 2" />
+                      <option name="id" value="81202818-3edb-4d5b-b2cb-ff725667be01" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Login User 2" />
+                      <option name="sortWeight" value="5000000" />
+                      <option name="url" value="http://localhost:8888/login" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;userPhotoPath&quot;: &quot;/path/to/photo.jpg&quot;  &#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Ustawia ścieżkę do zdjęcia użytkownika" />
+                      <option name="id" value="04b9e863-0f83-4591-abb3-057c175c6f24" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Ustawienie ścieżki do zdjęcia" />
+                      <option name="sortWeight" value="6000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/user/setUserPhoto" />
+                    </requestState>
+                  </list>
+                </option>
+                <option name="sortWeight" value="1000000" />
+              </folderState>
+              <folderState>
+                <option name="id" value="4e8c8900-c542-4afa-8f1f-1da7884d07fd" />
+                <option name="name" value="Game" />
+                <option name="requests">
+                  <list>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description.&quot;,&#10;  &quot;rpgSystem&quot;: {&#10;    &quot;id&quot;: 1&#10;  }&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Tworzy grę, której GM to tworzący użytkownik" />
+                      <option name="id" value="afd7eb11-a228-4cdb-bb17-2f2e0f46b95f" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Stwórz grę" />
+                      <option name="sortWeight" value="1000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/create" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Dodaje użytkownika do gry z odpowiednią rolą" />
+                      <option name="id" value="13983dae-c902-43d1-9f6c-02d951a7a4fe" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Dodaj użytkownika do gry" />
+                      <option name="sortWeight" value="1500000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/addUserToGame" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Wyświatla wszystkie gry" />
+                      <option name="id" value="dc6f4f40-de60-44a4-ad77-bd68c91e01d2" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="All Games for Admin" />
+                      <option name="sortWeight" value="2000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/admin/game/all" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Wypisuje graczy w danej grze" />
+                      <option name="id" value="fffec968-1235-4383-9eb1-f06bea18b450" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Gracze danej gry" />
+                      <option name="sortWeight" value="3000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/allPlayers/1" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 2&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;gameMaster&quot;: {&#10;    id: 2&#10;  }&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Modyfikuje wskazaną grę" />
+                      <option name="id" value="73a53a58-7b67-42d4-b8cd-fc9e1a45452c" />
+                      <option name="method" value="PUT" />
+                      <option name="name" value="Modyfikuj grę" />
+                      <option name="sortWeight" value="4000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGame/1" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{ &#10;  &quot;role&quot;: &quot;SPECTATOR&quot;&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Zmienia rolę użytkownika w grze" />
+                      <option name="id" value="9cda84ef-4a25-44f5-9c88-67e0669fb0ba" />
+                      <option name="method" value="PUT" />
+                      <option name="name" value="Modyfikuj role użytkownika w grze" />
+                      <option name="sortWeight" value="5000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/1" />
+                    </requestState>
+                  </list>
+                </option>
+                <option name="sortWeight" value="2000000" />
+              </folderState>
+              <folderState>
+                <option name="folders">
+                  <list>
+                    <folderState>
+                      <option name="id" value="be9e305b-7eae-442e-9183-34c14c9991a5" />
+                      <option name="name" value="CpRed" />
+                      <option name="requests">
+                        <list>
+                          <requestState>
+                            <option name="body">
+                              <bodyState>
+                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Johnny Silverhand&quot;,&#10;  &quot;nickname&quot;: &quot;Silverhand&quot;,&#10;  &quot;type&quot;: &quot;PLAYER&quot;,&#10;  &quot;expAll&quot;: 1000,&#10;  &quot;expAvailable&quot;: 500,&#10;  &quot;cash&quot;: 2000&#10;}" />
+                                <option name="type" value="JSON" />
+                              </bodyState>
+                            </option>
+                            <option name="description" value="Tworzy nową grywalną postać w systemie cyberpunka" />
+                            <option name="id" value="6fc6c286-01db-4216-9ea8-72e07d1bb0ea" />
+                            <option name="method" value="POST" />
+                            <option name="name" value="Stwórz postać" />
+                            <option name="sortWeight" value="1000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/create" />
+                          </requestState>
+                          <requestState>
+                            <option name="body">
+                              <bodyState>
+                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
+                                <option name="type" value="JSON" />
+                              </bodyState>
+                            </option>
+                            <option name="description" value="Wtorzy postać niegrywalną" />
+                            <option name="id" value="a3844127-40cb-42cf-b4a7-15395f9e8b2f" />
+                            <option name="method" value="POST" />
+                            <option name="name" value="Stwórz NPC" />
+                            <option name="sortWeight" value="2000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/create" />
+                          </requestState>
+                          <requestState>
+                            <option name="description" value="Zwraca wszystkie postacie" />
+                            <option name="id" value="8ada6801-13c6-4264-9050-b2cab8fa11cb" />
+                            <option name="method" value="GET" />
+                            <option name="name" value="All Characters" />
+                            <option name="sortWeight" value="3000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/all" />
+                          </requestState>
+                          <requestState>
+                            <option name="body">
+                              <bodyState>
+                                <option name="raw" value="{&#10;  &quot;user&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
+                                <option name="type" value="JSON" />
+                              </bodyState>
+                            </option>
+                            <option name="description" value="Pozwala na modyfikacje danych postaci" />
+                            <option name="id" value="0a04e0cf-9e18-497f-afa3-8d830117dc72" />
+                            <option name="method" value="PUT" />
+                            <option name="name" value="Modyfikuj postać" />
+                            <option name="sortWeight" value="4000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/1" />
+                          </requestState>
+                          <requestState>
+                            <option name="body">
+                              <bodyState>
+                                <option name="raw" value="{&#10;  &quot;user&quot;: null,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;}" />
+                                <option name="type" value="JSON" />
+                              </bodyState>
+                            </option>
+                            <option name="description" value="Usuwa usera" />
+                            <option name="id" value="8595f81c-9831-4056-b5a8-09c8b3b50d5b" />
+                            <option name="method" value="PUT" />
+                            <option name="name" value="Modyfikuj postać 2" />
+                            <option name="sortWeight" value="5000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/1" />
+                          </requestState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="1000000" />
+                    </folderState>
+                  </list>
+                </option>
+                <option name="id" value="a61d8e4c-aeec-4b8f-9820-0644e0c8ea19" />
+                <option name="name" value="RpgSystems" />
+                <option name="requests">
+                  <list>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Dungeons &amp; Dragons&quot;,&#10;  &quot;description&quot;: &quot;A fantasy tabletop role-playing game.&quot;&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Dodaje nowy system" />
+                      <option name="id" value="aeb3cdfd-d76e-4c2e-ad96-b3346a1f4c2f" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Dodaj system for admin" />
+                      <option name="sortWeight" value="1000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/create" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Zwraca liste wszystkich systemów" />
+                      <option name="id" value="9c4d8a7d-8f5c-4c9e-9721-a56230f32a0b" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="All rpgSystems" />
+                      <option name="sortWeight" value="2000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/all" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Zwraca system o podanym Id" />
+                      <option name="id" value="6d410934-a771-44d4-a679-531f3f24beb9" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="rpgSystem by Id" />
+                      <option name="sortWeight" value="3000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/1" />
+                    </requestState>
+                  </list>
+                </option>
+                <option name="sortWeight" value="3000000" />
+              </folderState>
+            </list>
+          </option>
+          <option name="id" value="8466bebc-89be-4082-a8f4-7567faaeae17" />
+          <option name="name" value="RPG Handy Helper" />
+          <option name="selectedEnvironmentIds">
+            <map>
+              <entry key="default" />
+            </map>
+          </option>
+          <option name="syncProperties">
+            <synchronizationPropertiesState>
+              <option name="autoSync" value="true" />
+              <option name="folderPath" value="E:\studia\sem 6\projekt zespołowy\RPG-Handy-Helper\.jetclient" />
+            </synchronizationPropertiesState>
+          </option>
+        </folderState>
+      </list>
+    </option>
+    <option name="id" value="b9965b61-5999-4417-8e2e-b56ea3ebe2a9" />
+    <option name="version" value="6" />
+  </component>
+</project>
