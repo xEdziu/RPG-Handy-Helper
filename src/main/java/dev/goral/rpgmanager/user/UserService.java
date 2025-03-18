@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -88,6 +89,25 @@ public class UserService implements UserDetailsService {
         }
 
         return CustomReturnables.getOkResponseMap("Hasło zostało ustawione");
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public Map<String, Object> createUserAdmin(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalStateException("Użytkownik o podanym nicku już istnieje.");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalStateException("Użytkownik o podanym emailu już istnieje.");
+        }
+        if (userRepository.findByOAuthId(user.getOAuthId()).isPresent()) {
+            throw new IllegalStateException("Użytkownik o podanym ID OAuth już istnieje.");
+        }
+
+        userRepository.save(user);
+        return CustomReturnables.getOkResponseMap("Użytkownik został utworzony.");
     }
 
 }
