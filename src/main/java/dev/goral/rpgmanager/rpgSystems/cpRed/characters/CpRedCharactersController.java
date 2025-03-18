@@ -28,7 +28,7 @@ public class CpRedCharactersController {
         return cpRedCharactersService.createCharacter(character);
     }
 
-    @PutMapping(path = "games/cpRed/characters/update/{characterId}")
+    @PutMapping(path = "/games/cpRed/characters/update/{characterId}")
     public Map<String, Object> updateCharacter(@PathVariable("characterId") Long characterId, @RequestBody CpRedCharacters character) {
         return cpRedCharactersService.updateCharacter(characterId, character);
     }
