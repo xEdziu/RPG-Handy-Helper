@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,14 +9,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/v1/authorized")
+@AllArgsConstructor
 public class RpgSystemsController {
 
     private final RpgSystemsService rpgSystemsService;
-
-    @Autowired
-    public RpgSystemsController(RpgSystemsService rpgSystemsService) {
-        this.rpgSystemsService = rpgSystemsService;
-    }
 
     // ============ User methods ============
 

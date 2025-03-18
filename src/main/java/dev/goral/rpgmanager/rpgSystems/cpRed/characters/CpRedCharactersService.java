@@ -190,7 +190,7 @@ public class CpRedCharactersService {
 
         if(character.getUser() != null) {
             User user = userRepository.findById(character.getUser().getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o nazwie " + character.getUser().getId() + " nie istnieje"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o id " + character.getUser().getId() + " nie istnieje"));
             cpRedCharacterToUpdate.setUser(user);
         }
         if(character.getUser() == null) {

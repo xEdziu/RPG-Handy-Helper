@@ -2,7 +2,7 @@
 name = 'Stwórz postać'
 description = 'Tworzy nową grywalną postać w systemie cyberpunka'
 method = 'POST'
-url = 'http://localhost:8888/api/v1/authorized/cpRed/characters/create'
+url = 'http://localhost:8888/api/v1/authorized/games/cpRed/characters/create'
 sortWeight = 1000000
 id = '6fc6c286-01db-4216-9ea8-72e07d1bb0ea'
 

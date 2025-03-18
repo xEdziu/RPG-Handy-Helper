@@ -51,6 +51,8 @@ public class User implements UserDetails {
     private String oAuthId;
     private Timestamp createdAt;
 
+    private String userPhotoPath;
+
     public User(Long id) {
         this.id = id;
     }
@@ -125,4 +127,3 @@ public class User implements UserDetails {
 
 
 }
-//TODO: Dodać obsługę zdjęcia profilowego

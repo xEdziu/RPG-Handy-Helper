@@ -91,6 +91,14 @@ public class UserService implements UserDetailsService {
         return CustomReturnables.getOkResponseMap("Hasło zostało ustawione");
     }
 
+    public Map<String, Object> setUserPhoto(String userPhotoPath) {
+        //TODO: Sprawdzić czy ścieżka jest poprawna
+        User user = (User) getAuthentication().getPrincipal();
+        user.setUserPhotoPath(userPhotoPath);
+        userRepository.save(user);
+        return CustomReturnables.getOkResponseMap("Zdjęcie profilowe zostało ustawione.");
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

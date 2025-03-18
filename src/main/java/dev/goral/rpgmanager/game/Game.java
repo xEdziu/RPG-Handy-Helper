@@ -4,14 +4,15 @@ package dev.goral.rpgmanager.game;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.rpgSystems.RpgSystems;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table
 @Getter
 @Setter
-
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Game {
 
     @Id
@@ -44,10 +45,6 @@ public class Game {
     )
     private RpgSystems rpgSystem;
 
-
-    public Game() {
-    }
-
     public Game(String name,
                 String description,
                 User gameMaster,
@@ -56,28 +53,5 @@ public class Game {
         this.description = description;
         this.gameMaster = gameMaster;
         this.rpgSystem = rpgSystem;
-    }
-
-    public Game(Long id,
-                String name,
-                String description,
-                User gameMaster,
-                RpgSystems rpgSystem) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.gameMaster = gameMaster;
-        this.rpgSystem = rpgSystem;
-    }
-
-    @Override
-    public String toString() {
-        return "Game{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", gameMaster=" + gameMaster +
-                ", rpgSystem=" + rpgSystem +
-                '}';
     }
 }

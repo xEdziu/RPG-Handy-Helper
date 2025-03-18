@@ -1,8 +1,12 @@
 package dev.goral.rpgmanager.game;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@AllArgsConstructor
+@ToString
 public class GameDTO {
 
     private final Long id;
@@ -11,26 +15,4 @@ public class GameDTO {
     private final Long gameMasterId;
     private final Long rpgSystemId;
 
-    public GameDTO(Long id,
-                   String name,
-                   String description,
-                   Long gameMasterId,
-                   Long rpgSystemId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.gameMasterId = gameMasterId;
-        this.rpgSystemId = rpgSystemId;
-    }
-
-    @Override
-    public String toString() {
-        return "GameDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", gameMaster='" + gameMasterId + '\'' +
-                ", rpgSystem='" + rpgSystemId + '\'' +
-                '}';
-    }
 }

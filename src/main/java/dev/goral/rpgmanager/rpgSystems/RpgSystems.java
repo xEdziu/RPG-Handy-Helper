@@ -1,13 +1,15 @@
 package dev.goral.rpgmanager.rpgSystems;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class RpgSystems {
     @Id
     @SequenceGenerator(
@@ -23,26 +25,8 @@ public class RpgSystems {
     private String name;
     private String description;
 
-    public RpgSystems() {
-    }
-
     public RpgSystems(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public RpgSystems(Long id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "rpgSystems{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

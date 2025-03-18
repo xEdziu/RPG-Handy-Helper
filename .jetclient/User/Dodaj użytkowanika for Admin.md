@@ -1,5 +1,5 @@
 ```toml
-name = 'Dodaj użytkowanika Admin'
+name = 'Dodaj użytkowanika for Admin'
 description = 'Dodaje nowego usera '
 method = 'POST'
 url = 'http://localhost:8888/api/v1/authorized/admin/user/create'
@@ -10,10 +10,10 @@ id = '19d129a1-0727-45a7-b3c8-2a7a9209fa25'
 type = 'JSON'
 raw = '''
 {
-  "username": "exampleUser",
+  "username": "nowyUser",
   "firstName": "John",
   "surname": "Doe",
-  "email": "john.doe@example.com",
+  "email": "nowy.user@example.com",
   "password": "securePassword123!",
   "role": "ROLE_USER",
   "oAuthId": "1234567890",
