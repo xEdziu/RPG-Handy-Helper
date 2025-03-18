@@ -23,7 +23,7 @@ public class UserController {
         return userService.setPassword(passwordRequest.getPassword());
     }
 
-    @PostMapping("user/setUserPhoto")
+    @PostMapping("/user/setUserPhoto")
     public Map<String, Object> setUserPhoto(@RequestBody String userPhotoPath) {
         return userService.setUserPhoto(userPhotoPath);
     }
