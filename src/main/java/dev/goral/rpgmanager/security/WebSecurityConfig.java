@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 )
-                .csrf(AbstractHttpConfigurer::disable)
+                // .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(httpConfig -> httpConfig
                         .loginPage("/login")
                         .permitAll()
