@@ -4,8 +4,8 @@
   "settings": {
     "width": 6000,
     "height": 6000,
-    "scrollTop": -1225,
-    "scrollLeft": -1647.6063,
+    "scrollTop": 0,
+    "scrollLeft": -4225.787,
     "zoomLevel": 1,
     "show": 431,
     "database": 4,
@@ -428,7 +428,7 @@
           "color": "#FFEB3B"
         },
         "meta": {
-          "updateAt": 1742138635362,
+          "updateAt": 1742322614551,
           "createAt": 1740999306893
         }
       },
@@ -489,7 +489,7 @@
           "color": "#FFEB3B"
         },
         "meta": {
-          "updateAt": 1741644114741,
+          "updateAt": 1742322726679,
           "createAt": 1741002014500
         }
       },
@@ -2679,19 +2679,19 @@
         "id": "WGZ0-UiTVi2Z8-CQpBM3j",
         "tableId": "AS8WSOlSarnaJ6I1nv94Q",
         "name": "character_id",
-        "comment": "id from CP_RED_CHARACTERS_CLASSES",
+        "comment": "id from CP_RED_CHARACTERS",
         "dataType": "INT",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 2,
           "widthName": 66,
-          "widthComment": 213,
+          "widthComment": 161,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741004655561,
+          "updateAt": 1742322728768,
           "createAt": 1741004446729
         }
       },
@@ -2699,19 +2699,19 @@
         "id": "PRiL3BepHKxmUF7gCvifv",
         "tableId": "AS8WSOlSarnaJ6I1nv94Q",
         "name": "class_id",
-        "comment": "id from CP_RED_CHARACTERS",
+        "comment": "id from CP_RED_CLASSES",
         "dataType": "INT",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 2,
           "widthName": 60,
-          "widthComment": 161,
+          "widthComment": 136,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741004671038,
+          "updateAt": 1742322724479,
           "createAt": 1741004536303
         }
       },
@@ -7384,7 +7384,7 @@
           "columnIds": [
             "PRiL3BepHKxmUF7gCvifv"
           ],
-          "x": 5138.5145,
+          "x": 5086.5145,
           "y": 154.3355,
           "direction": 2
         },
@@ -9336,7 +9336,7 @@
         "name": 1741004453429,
         "dataType": 1741004446728,
         "default": 1741004446728,
-        "comment": 1741004655560
+        "comment": 1742322728768
       }
     ],
     "-YN9hzJoAPKGtts5dzM40": [
@@ -9356,7 +9356,7 @@
         "name": 1741004543944,
         "dataType": 1741004536301,
         "default": 1741004536301,
-        "comment": 1741004671037
+        "comment": 1742322724479
       }
     ],
     "R51Kygrxsk5aSGbENgv5D": [
