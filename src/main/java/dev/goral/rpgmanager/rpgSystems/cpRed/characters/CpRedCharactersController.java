@@ -18,7 +18,7 @@ public class CpRedCharactersController {
         return cpRedCharactersService.getAllCharacters();
     }
 
-    @GetMapping(path = "games/cpRed/characters/{characterId}")
+    @GetMapping(path = "/games/cpRed/characters/{characterId}")
     public CpRedCharactersDTO getCharacter(@PathVariable("characterId") Long characterId) {
         return cpRedCharactersService.getCharacter(characterId);
     }
