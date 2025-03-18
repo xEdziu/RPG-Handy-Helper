@@ -23,7 +23,7 @@ public class CpRedCharactersController {
         return cpRedCharactersService.getCharacter(characterId);
     }
 
-    @PostMapping(path = "games/cpRed/characters/create")
+    @PostMapping(path = "/games/cpRed/characters/create")
     public Map<String, Object> createCharacter(@RequestBody CpRedCharacters character) {
         return cpRedCharactersService.createCharacter(character);
     }
