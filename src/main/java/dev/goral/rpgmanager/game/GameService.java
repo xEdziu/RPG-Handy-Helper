@@ -7,6 +7,7 @@ import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,20 +18,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class GameService {
 
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
     private final GameUsersRepository gameUsersRepository;
     private final RpgSystemsRepository rpgSystemsRepository;
-
-    @Autowired
-    public GameService(GameRepository gameRepository, UserRepository userRepository, GameUsersRepository gameUsersRepository, RpgSystemsRepository rpgSystemsRepository) {
-        this.gameRepository = gameRepository;
-        this.userRepository = userRepository;
-        this.gameUsersRepository = gameUsersRepository;
-        this.rpgSystemsRepository = rpgSystemsRepository;
-    }
 
     public List<GameDTO> getAllGames() {
         return gameRepository.findAll()

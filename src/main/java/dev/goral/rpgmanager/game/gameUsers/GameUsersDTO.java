@@ -1,14 +1,12 @@
 package dev.goral.rpgmanager.game.gameUsers;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class GameUsersDTO {
     private Long id;
     private Long userId;

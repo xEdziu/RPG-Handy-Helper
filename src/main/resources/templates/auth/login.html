@@ -25,6 +25,16 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+        if (csrfToken) {
+            let csrfInput = document.createElement("input");
+            csrfInput.type = "hidden";
+            csrfInput.name = "_csrf";
+            csrfInput.value = csrfToken;
+            document.querySelector("form").appendChild(csrfInput);
+        }
+    });
     //get parameters from URL
     const urlParams = new URLSearchParams(window.location.search);
     const error = urlParams.get('error');

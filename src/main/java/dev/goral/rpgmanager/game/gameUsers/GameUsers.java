@@ -3,13 +3,15 @@ package dev.goral.rpgmanager.game.gameUsers;
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.user.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Table
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class GameUsers {
     @Id
     @SequenceGenerator(
@@ -34,29 +36,10 @@ public class GameUsers {
     @Enumerated(EnumType.STRING)
     private GameUsersRole role;
 
-    public GameUsers() {
-    }
-
     public GameUsers(User user, Game game, GameUsersRole role) {
         this.user = user;
         this.game = game;
         this.role = role;
     }
 
-    public GameUsers(Long id, User user, Game game, GameUsersRole role) {
-        this.id = id;
-        this.user = user;
-        this.game = game;
-        this.role = role;
-    }
-
-    @Override
-    public String toString() {
-        return "GameUsers{" +
-                "id=" + id +
-                ", user=" + user +
-                ", game=" + game +
-                ", role=" + role +
-                '}';
-    }
 }

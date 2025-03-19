@@ -23,6 +23,11 @@ public class UserController {
         return userService.setPassword(passwordRequest.getPassword());
     }
 
+    @PostMapping("/user/setUserPhoto")
+    public Map<String, Object> setUserPhoto(@RequestBody String userPhotoPath) {
+        return userService.setUserPhoto(userPhotoPath);
+    }
+
     @GetMapping("/admin/user/all")
     public List<User> getAllUsers() {
         return userService.getAllUsers();

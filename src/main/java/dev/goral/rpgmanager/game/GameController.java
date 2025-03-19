@@ -4,6 +4,7 @@ import dev.goral.rpgmanager.game.gameUsers.AddUserToGameRequest;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersDTO;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,14 +13,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/v1/authorized")
+@AllArgsConstructor
 public class GameController {
 
     private final GameService gameService;
-
-    @Autowired
-    public GameController(GameService gameService) {
-        this.gameService = gameService;
-    }
 
     // ============ User methods ============
 
