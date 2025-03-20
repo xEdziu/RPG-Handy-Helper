@@ -14,7 +14,8 @@
         }
     </style>
 </head>
-<script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script> <!-- Dodanie reCAPTCHA v3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
+<!-- Dodanie reCAPTCHA v3 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
 <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script> <!-- Dodanie Font Awesome -->
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
@@ -143,6 +144,50 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:
                     </label>
+                    <i id="usernameErrorIcon" class="fa-solid fa-exclamation-circle hidden absolute -left-8 top-10 transform -translate-y-1/2
+                           text-light-error dark:text-dark-error cursor-pointer">
+                    </i>
+                    <span id="usernameErrorTooltip"
+                        class="hidden absolute -left-80 top-10 transform -translate-y-1/2
+                            text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 transition-opacity duration-300
+                            bg-light-error dark:bg-dark-error
+                            text-dark-textPrimary dark:text-light-textPrimary
+                            ">
+                        Nazwa użytkownika musi mieć co najmniej 3 znaki.
+                    </span>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const usernameInput = document.getElementById("username");
+                            const errorIcon = document.getElementById("usernameErrorIcon");
+                            const errorTooltip = document.getElementById("usernameErrorTooltip");
+                            function validateUsername() {
+                                let value = usernameInput.value.trim();
+                                if (value === "") {
+                                    errorIcon.classList.add("hidden");
+                                    errorTooltip.classList.add("hidden");
+                                    usernameInput.classList.remove("border-error");
+                                } else if (value.length < 3) {
+                                    errorIcon.classList.remove("hidden");
+                                    usernameInput.classList.add("border-error");
+                                } else {
+                                    errorIcon.classList.add("hidden");
+                                    errorTooltip.classList.add("hidden");
+                                    usernameInput.classList.remove("border-error");
+                                }
+                            }
+                            usernameInput.addEventListener("blur", validateUsername);
+                            errorIcon.addEventListener("mouseenter", () => {
+                                if (!errorIcon.classList.contains("hidden")) {
+                                    errorTooltip.classList.remove("hidden");
+                                    errorTooltip.classList.remove("opacity-0");
+                                }
+                            });
+                            errorIcon.addEventListener("mouseleave", () => {
+                                errorTooltip.classList.add("opacity-0");
+                                setTimeout(() => errorTooltip.classList.add("hidden"), 300);
+                            });
+                        });
+                        </script>
                 </div>
                 <!-- <label for="username"><i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:</label><br>
                 <input type="text" id="username" name="username" required><br> -->
@@ -278,9 +323,9 @@
                 <br>
                 <div class="flex flex-col items-center justify-center">
                     <p class="-mt-6 mb-10 text-light-textSecondary dark:text-dark-textSecondary">
-                        Rejestrując się, zgadzasz się na nasze 
+                        Rejestrując się, zgadzasz się na nasze
                         <a href="#" class="text-light-accent dark:text-dark-accent hover:underline
-                        visited:text-light-accentDark dark:visited:text-dark-accent">Warunki użytkowania</a> i  
+                        visited:text-light-accentDark dark:visited:text-dark-accent">Warunki użytkowania</a> i
                         <a href="#" class="text-light-accent dark:text-dark-accent hover:underline
                         visited:text-light-accentDark dark:visited:text-dark-accent">Politykę prywatności</a>.
                     </p>
