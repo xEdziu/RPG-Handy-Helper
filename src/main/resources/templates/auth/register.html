@@ -39,7 +39,7 @@
                         warning: "#FFD700",
                     },
                     light: {
-                        background: "#3ff4f4",
+                        background: "#FFFFFF",
                         backgroundSecondary: "#FAFAFA",
                         backgroundTertiary: "#EAEAEA",
                         surface: "#F5F5F5",
@@ -63,28 +63,26 @@
             <img id="logo-light" src="logo-light.png" alt="RPG Manager" class="h-10 dark:hidden">
             <img id="logo-dark" src="logo-dark.png" alt="RPG Manager" class="h-10 hidden dark:block">
             <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
-                RPG Manager
+                RPG Handy Helper
             </h1>
         </div>
         <div class="flex items-center justify-center">
-            <i class="fa-solid fa-sun p-2 text-light-textPrimary dark:text-dark-textPrimary"></i>
+            <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
             <div class="relative inline-block w-12 h-6">
                 <input id="switch-component" type="checkbox" class="peer hidden m-1"/>
                 <label for="switch-component"
                     class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full 
-                           bg-light-textPrimary dark:bg-dark-textPrimary
-                           border border-light-border dark:border-dark-border
+                           bg-light-accent dark:bg-dark-accent
                            shadow-md transition-all duration-300 
                            peer-checked:translate-x-[0.75rem] 
-                           peer-checked:bg-dark-textPrimary peer-checked:dark:bg-light-textPrimary
-                           peer-checked:border-dark-border peer-checked:dark:border-light-border 
+                           peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
                            cursor-pointer hover:shadow-lg">
                 </label>
                 <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
-                            bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary">
+                            dark:bg-light-backgroundSecondary bg-dark-backgroundSecondary">
                 </div>
             </div>
-            <i class="fa-solid fa-moon p-2 text-light-textPrimary dark:text-dark-textPrimary"></i>
+            <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
         </div>
     </nav>
             <script> // Skrypt do obsługi przełącznika jasny/ciemny motyw
