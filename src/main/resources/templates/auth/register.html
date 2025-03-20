@@ -79,7 +79,8 @@
                            cursor-pointer hover:shadow-lg">
                 </label>
                 <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
-                            dark:bg-light-backgroundSecondary bg-dark-backgroundSecondary">
+                            bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary
+                            border border-light-accent dark:border-dark-accent">
                 </div>
             </div>
             <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
@@ -108,40 +109,161 @@
                     });
                 });
             </script>
-    <main class="flex-grow flex flex-col items-center justify-center">
-        <h1 class ="text-light-accentDark dark:text-dark-accentDark">Rejestracja</h1>
-        <br>
-        <form method="post">
-            <div class="relative">
-                <input type="text" id="floating_helper" aria-describedby="floating_helper_text" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-                <label for="floating_helper" class="absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Floating helper</label>
-            </div>
-            <label for="username"><i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:</label><br>
-            <input type="text" id="username" name="username" required><br>
-
-            <label for="firstName"><i class="fa-solid fa-user"></i> Imię:</label><br>
-            <input type="text" id="firstName" name="firstName" required><br>
-
-            <label for="surname"><i class="fa-solid fa-id-badge"></i> Nazwisko:</label><br>
-            <input type="text" id="surname" name="surname" required><br>
-
-            <label for="email"> <i class="fa-solid fa-envelope"></i>  E-mail:</label><br>
-            <input type="email" id="email" name="email" required><br>
-
-            <label for="password"> <i class="fa-solid fa-user-lock"></i> Hasło:</label><br>
-            <input type="password" id="password" name="password" required><br>
-
-            <label for="passwordConfirm"> <i class="fa-solid fa-lock"></i> Potwierdź hasło:</label><br>
-            <input type="password" id="passwordConfirm" name="passwordConfirm" required><br>
+    <main class="flex-grow flex flex-col items-center justify-center bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary w-screen">
+        <div class="p-4 m-3 flex items-center justify-center text-3xl border-b-4 border-light-accentDark dark:border-dark-accentDark">
+            <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
+                REJESTRACJA
+            </h1>
+        </div>
+        <div class="p-9 m-1 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg xl:w-[30%] ">
+            <h1 class ="text-light-accentDark dark:text-dark-accentDark font-semibold text-xl"></h1>
             <br>
-            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
-            <br>
-            <button type="submit">Zarejestruj się</button>
-            <br>
-            <p>Masz już konto? <a href="/login">Zaloguj się</a></p>
-        </form>
+            <form method="post">
+                <div class="relative m-5">
+                    <input type="text" id="username" aria-describedby="username" name="username" required
+                        class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-surface
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" 
+                        placeholder=" " />
+                
+                    <label for="username" 
+                        class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                               <i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:
+                    </label>
+                </div>
+                
+                
+                <!-- <label for="username"><i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:</label><br>
+                <input type="text" id="username" name="username" required><br> -->
+                <div class="relative m-5">
+                    <input type="text" id="firstName" aria-describedby="firstName" name="firstName" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    text-light-textPrimary dark:text-dark-textPrimary 
+                    bg-light-background dark:bg-dark-surface
+                    border-0 border-b-2 border-light-border dark:border-dark-border
+                    focus:outline-none focus:ring-0
+                    focus:border-light-accent peer dark:focus:border-dark-accent 
+                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" 
+             placeholder=" "  />
+                    <label for="firstName" 
+                        class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                               <i class="fa-solid fa-user"></i> Imię:
+                    </label>
+                </div>
+                <!-- <label for="firstName"><i class="fa-solid fa-user"></i> Imię:</label><br>
+                <input type="text" id="firstName" name="firstName" required><br> -->
+                <div class="relative m-5">
+                    <input type="text" id="surname" aria-describedby="surname" name="surname" required
+                        class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                        text-light-textPrimary dark:text-dark-textPrimary 
+                        bg-light-background dark:bg-dark-surface
+                        border-0 border-b-2 border-light-border dark:border-dark-border
+                        focus:outline-none focus:ring-0
+                        focus:border-light-accent peer dark:focus:border-dark-accent 
+                        placeholder-light-textSecondary dark:placeholder-dark-textSecondary" 
+                 placeholder=" "  />
+                    <label for="surname" 
+                        class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                               <i class="fa-solid fa-id-badge"></i> Nazwisko:
+                    </label>
+                </div>
+                <!-- <label for="surname"><i class="fa-solid fa-id-badge"></i> Nazwisko:</label><br>
+                <input type="text" id="surname" name="surname" required><br> -->
+
+                <div class="relative m-5">
+                    <input type="text" id="email" aria-describedby="email" name="email" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    text-light-textPrimary dark:text-dark-textPrimary 
+                    bg-light-background dark:bg-dark-surface
+                    border-0 border-b-2 border-light-border dark:border-dark-border
+                    focus:outline-none focus:ring-0
+                    focus:border-light-accent peer dark:focus:border-dark-accent 
+                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" 
+             placeholder=" "  />
+                    <label for="email" 
+                        class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                               <i class="fa-solid fa-envelope"></i>  E-mail:
+                    </label>
+                </div>
+                <!-- <label for="email"> <i class="fa-solid fa-envelope"></i>  E-mail:</label><br>
+                <input type="email" id="email" name="email" required><br> -->
+                <div class="relative m-5">
+                    <input type="text" id="password" aria-describedby="password" name="password" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    text-light-textPrimary dark:text-dark-textPrimary 
+                    bg-light-background dark:bg-dark-surface
+                    border-0 border-b-2 border-light-border dark:border-dark-border
+                    focus:outline-none focus:ring-0
+                    focus:border-light-accent peer dark:focus:border-dark-accent 
+                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" 
+             placeholder=" "  />
+                    <label for="password" 
+                        class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                               <i class="fa-solid fa-user-lock"></i> Hasło:
+                    </label>
+                </div>
+                <!-- <label for="password"> <i class="fa-solid fa-user-lock"></i> Hasło:</label><br>
+                <input type="password" id="password" name="password" required><br> -->
+                <div class="relative m-5">
+                    <input type="text" id="password" aria-describedby="password" name="password" required
+                        class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                        text-light-textPrimary dark:text-dark-textPrimary 
+                        bg-light-background dark:bg-dark-surface
+                        border-0 border-b-2 border-light-border dark:border-dark-border
+                        focus:outline-none focus:ring-0
+                        focus:border-light-accent peer dark:focus:border-dark-accent 
+                        placeholder-light-textSecondary dark:placeholder-dark-textSecondary" 
+             placeholder=" "  />
+                    <label for="password" 
+                        class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                               <i class="fa-solid fa-lock"></i> Potwierdź hasło:
+                    </label>
+                </div>
+                <!-- <label for="passwordConfirm"> <i class="fa-solid fa-lock"></i> Potwierdź hasło:</label><br>
+                <input type="password" id="passwordConfirm" name="passwordConfirm" required><br> -->
+                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
+                <br>
+                <button type="submit">Zarejestruj się</button>
+                <br>
+                <p>Masz już konto? <a href="/login">Zaloguj się</a></p>
+            </form>
+        </div>
     </main>
-    <footer class="w-full text-center p-4 bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-borde">
+    <footer class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
         <h3 class = "text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Manager</h3>
         <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank" class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
     </footer>
