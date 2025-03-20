@@ -67,6 +67,15 @@
                         </bodyState>
                       </option>
                       <option name="description" value="loguje na admina" />
+                      <option name="headers">
+                        <list>
+                          <headerState>
+                            <option name="disabled" value="true" />
+                            <option name="key" value="X-XSRF-TOKEN" />
+                            <option name="value" value="50ad00e8-c324-45f8-9847-827578a58439" />
+                          </headerState>
+                        </list>
+                      </option>
                       <option name="id" value="2a438e47-9129-492b-b39a-762372dcdeb1" />
                       <option name="method" value="POST" />
                       <option name="name" value="Login Admin" />
@@ -307,7 +316,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Dungeons &amp; Dragons&quot;,&#10;  &quot;description&quot;: &quot;A fantasy tabletop role-playing game.&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Dungeons &amp; Dragons&quot;,&#10;  &quot;description&quot;: &quot;A fantasy tabletop role-playing game. &quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
