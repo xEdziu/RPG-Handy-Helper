@@ -25,31 +25,31 @@
             extend: {
                 colors: {
                     dark: {
-                        background: "#121212",
-                        backgroundSecondary: "#181818",
+                        background: "#0070d29",
+                        backgroundSecondary : "#181818",
                         backgroundTertiary: "#242424",
                         surface: "#1E1E1E",
                         textPrimary: "#E0E0E0",
                         textSecondary: "#B0B0B0",
                         border: "#333333",
-                        accent: "#00FFFF",
-                        accentDark: "#009999",
+                        accent: "#12e1b9",
+                        accentDark: "#01d0a8",
                         success: "#00FF99",
                         error: "#FF4444",
                         warning: "#FFD700",
                     },
                     light: {
-                        background: "#FFFFFF",
+                        background: "#3ff4f4",
                         backgroundSecondary: "#FAFAFA",
                         backgroundTertiary: "#EAEAEA",
                         surface: "#F5F5F5",
                         textPrimary: "#1A1A1A",
                         textSecondary: "#5A5A5A",
                         border: "#CCCCCC",
-                        accent: "#FF00FF",
-                        accentDark: "#990099",
+                        accent: "#ff3131",
+                        accentDark: "#ee2020",
                         success: "#00CC66",
-                        error: "#FF3333",
+                        error: "#bf7799",
                         warning: "#FFAA00",
                     },
                 },
@@ -57,32 +57,66 @@
         },
     };
 </script>
-<body class="m-0 h-screen w-screen flex flex-col justify-between bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-    <nav class="flex justify-around w-full p-6">
-        <div>
-            <a href="#" class="flex items-center flex-row justify-center"><img src="#" alt="Logo">RPG Manager</a>
+<body class="m-0 h-screen w-screen flex flex-col justify-between">
+    <nav class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+        <div class="flex items-center">
+            <img id="logo-light" src="logo-light.png" alt="RPG Manager" class="h-10 dark:hidden">
+            <img id="logo-dark" src="logo-dark.png" alt="RPG Manager" class="h-10 hidden dark:block">
+            <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
+                RPG Manager
+            </h1>
         </div>
-        <div>
-            <div class="flex items-center justify-center">
-                <i class="fa-solid fa-sun p-2"></i>
-                <div class="relative inline-block w-12 h-6">
-                    <input id="switch-component" type="checkbox" class="peer hidden m-1"/>
-                    <label for="switch-component"
-                    class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-md transition-transform duration-300 peer-checked:translate-x-[0.75rem] peer-checked:border-slate-800 cursor-pointer z-10">
-                    </label>
-                    <div class="w-12 h-6 bg-slate-200 peer-checked:bg-slate-800 rounded-full transition-all duration-300 cursor-pointer"></div>
+        <div class="flex items-center justify-center">
+            <i class="fa-solid fa-sun p-2 text-light-textPrimary dark:text-dark-textPrimary"></i>
+            <div class="relative inline-block w-12 h-6">
+                <input id="switch-component" type="checkbox" class="peer hidden m-1"/>
+                <label for="switch-component"
+                    class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full 
+                           bg-light-textPrimary dark:bg-dark-textPrimary
+                           border border-light-border dark:border-dark-border
+                           shadow-md transition-all duration-300 
+                           peer-checked:translate-x-[0.75rem] 
+                           peer-checked:bg-dark-textPrimary peer-checked:dark:bg-light-textPrimary
+                           peer-checked:border-dark-border peer-checked:dark:border-light-border 
+                           cursor-pointer hover:shadow-lg">
+                </label>
+                <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                            bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary">
                 </div>
-                <i class="fa-solid fa-moon p-2"></i>
-            </div>         
+            </div>
+            <i class="fa-solid fa-moon p-2 text-light-textPrimary dark:text-dark-textPrimary"></i>
         </div>
     </nav>
+            <script> // Skrypt do obsługi przełącznika jasny/ciemny motyw
+                document.addEventListener("DOMContentLoaded", function () {
+                    const toggleSwitch = document.getElementById("switch-component");
+                    const body = document.body;
+                    const savedTheme = localStorage.getItem("theme");
+                    if (savedTheme === "dark") {
+                        body.classList.add("dark");
+                        toggleSwitch.checked = true;
+                    } else {
+                        body.classList.remove("dark");
+                        toggleSwitch.checked = false;
+                    }
+                    toggleSwitch.addEventListener("change", function () {
+                        if (this.checked) {
+                            body.classList.add("dark");
+                            localStorage.setItem("theme", "dark");
+                        } else {
+                            body.classList.remove("dark");
+                            localStorage.setItem("theme", "light");
+                        }
+                    });
+                });
+            </script>
     <main class="flex-grow flex flex-col items-center justify-center">
         <h1 class ="text-light-accentDark dark:text-dark-accentDark">Rejestracja</h1>
         <br>
         <form method="post">
             <div class="relative">
                 <input type="text" id="floating_helper" aria-describedby="floating_helper_text" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-                <label for="floating_helper" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Floating helper</label>
+                <label for="floating_helper" class="absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Floating helper</label>
             </div>
             <label for="username"><i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:</label><br>
             <input type="text" id="username" name="username" required><br>
