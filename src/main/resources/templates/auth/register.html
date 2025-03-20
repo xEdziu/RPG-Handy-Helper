@@ -14,8 +14,7 @@
         }
     </style>
 </head>
-<script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
-<!-- Dodanie reCAPTCHA v3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script> <!-- Dodanie reCAPTCHA v3 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
 <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script> <!-- Dodanie Font Awesome -->
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
@@ -63,13 +62,15 @@
 <body class="m-0 h-screen w-screen flex flex-col justify-between">
     <nav
         class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
-        <div class="flex items-center">
-            <img id="logo-light" src="logo-light.png" alt="RPG Manager" class="h-10 dark:hidden">
-            <img id="logo-dark" src="logo-dark.png" alt="RPG Manager" class="h-10 hidden dark:block">
-            <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
-                RPG Handy Helper
-            </h1>
-        </div>
+        <a href="#"> <!-- Przekierowanie do strony głównej -->
+            <div class="flex items-center">
+                <img id="logo-light" src="logo-light.png" alt="RPG Manager" class="h-10 dark:hidden">
+                <img id="logo-dark" src="logo-dark.png" alt="RPG Manager" class="h-10 hidden dark:block">
+                <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
+                    RPG Handy Helper
+                </h1>
+            </div>
+        </a>
         <div class="flex items-center justify-center">
             <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
             <div class="relative inline-block w-12 h-6">
@@ -184,7 +185,7 @@
                 <!-- <label for="surname"><i class="fa-solid fa-id-badge"></i> Nazwisko:</label><br>
                 <input type="text" id="surname" name="surname" required><br> -->
                 <div class="relative m-5">
-                    <input type="text" id="email" aria-describedby="email" name="email" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    <input type="email" id="email" aria-describedby="email" name="email" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                     text-light-textPrimary dark:text-dark-textPrimary 
                     bg-light-background dark:bg-dark-surface
                     border-0 border-b-2 border-light-border dark:border-dark-border
@@ -204,26 +205,43 @@
                 <input type="email" id="email" name="email" required><br> -->
                 <div class="relative m-5">
                     <input type="password" id="password" aria-describedby="password" name="password" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
-                    text-light-textPrimary dark:text-dark-textPrimary 
-                    bg-light-background dark:bg-dark-surface
-                    border-0 border-b-2 border-light-border dark:border-dark-border
-                    focus:outline-none focus:ring-0
-                    focus:border-light-accent peer dark:focus:border-dark-accent 
-                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-surface
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+
                     <label for="password" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
-                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
-                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
-                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-                               peer-focus:scale-90 peer-focus:-translate-y-4 
-                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                           duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                           peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                           peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                           peer-focus:scale-90 peer-focus:-translate-y-4 
+                           rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-user-lock"></i> Hasło:
                     </label>
+                    <i id="togglePasswordIcon1" onclick="togglePassword1()" class="fa-solid fa-eye absolute right-4 top-4.5
+                               text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
+                    </i>
+                    <script>
+                        function togglePassword1() {
+                            let inputField = document.getElementById("password");
+                            let icon = document.getElementById("togglePasswordIcon1");
+                            if (inputField.type === "password") {
+                                inputField.type = "text";
+                                icon.classList.replace("fa-eye", "fa-eye-slash"); // Zmiana ikony na "ukryj"
+                            } else {
+                                inputField.type = "password";
+                                icon.classList.replace("fa-eye-slash", "fa-eye"); // Zmiana ikony na "pokaż"
+                            }
+                        }
+                    </script>
                 </div>
                 <!-- <label for="password"> <i class="fa-solid fa-user-lock"></i> Hasło:</label><br>
                 <input type="password" id="password" name="password" required><br> -->
                 <div class="relative m-5">
-                    <input type="password" id="passwordConfirm" aria-describedby="password" name="passwordConfirm"
-                        required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    <input type="password" id="passwordConfirm" aria-describedby="passwordConfirm"
+                        name="passwordConfirm" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                         text-light-textPrimary dark:text-dark-textPrimary 
                         bg-light-background dark:bg-dark-surface
                         border-0 border-b-2 border-light-border dark:border-dark-border
@@ -238,12 +256,35 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-lock"></i> Potwierdź hasło:
                     </label>
+                    <i id="togglePasswordIcon2" onclick="togglePassword2()" class="fa-solid fa-eye absolute right-4 top-4.5
+                               text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
+                    </i>
+                    <script>
+                        function togglePassword2() {
+                            let inputField = document.getElementById("passwordConfirm");
+                            let icon = document.getElementById("togglePasswordIcon2");
+                            if (inputField.type === "password") {
+                                inputField.type = "text";
+                                icon.classList.replace("fa-eye", "fa-eye-slash"); // Zmiana ikony na "ukryj"
+                            } else {
+                                inputField.type = "password";
+                                icon.classList.replace("fa-eye-slash", "fa-eye"); // Zmiana ikony na "pokaż"
+                            }
+                        }
+                    </script>
                 </div>
                 <!-- <label for="passwordConfirm"> <i class="fa-solid fa-lock"></i> Potwierdź hasło:</label><br>
                 <input type="password" id="passwordConfirm" name="passwordConfirm" required><br> -->
                 <br>
-                <div  class = "flex flex-col items-center justify-center">
-                <button type="submit" class="px-8 py-3 text-lg font-semibold 
+                <div class="flex flex-col items-center justify-center">
+                    <p class="-mt-6 mb-10 text-light-textSecondary dark:text-dark-textSecondary">
+                        Rejestrując się, zgadzasz się na nasze 
+                        <a href="#" class="text-light-accent dark:text-dark-accent hover:underline
+                        visited:text-light-accentDark dark:visited:text-dark-accent">Warunki użytkowania</a> i  
+                        <a href="#" class="text-light-accent dark:text-dark-accent hover:underline
+                        visited:text-light-accentDark dark:visited:text-dark-accent">Politykę prywatności</a>.
+                    </p>
+                    <button type="submit" class="px-6 py-3 text-lg font-semibold 
                    text-light-textPrimary dark:text-dark-textPrimary
                    bg-light-accent dark:bg-dark-accent 
                    border border-light-border dark:border-dark-border
@@ -251,17 +292,14 @@
                    hover:bg-light-accentDark hover:dark:bg-dark-accentDark 
                    focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
                    active:scale-95">
-                    ZAREJESTRUJ SIĘ
-                </button>
-
-                <!-- Wycentrowany tekst pod przyciskiem -->
-                <p class="m-4 text-center text-light-textSecondary dark:text-dark-textSecondary">
-                    Masz już konto? <a href="/login" 
-                                        class="text-light-accent dark:text-dark-accent hover:underline
+                        ZAREJESTRUJ SIĘ
+                    </button>
+                    <p class="m-4 text-center text-light-textSecondary dark:text-dark-textSecondary">
+                        Masz już konto? <a href="/login" class="text-light-accent dark:text-dark-accent hover:underline
                                                 visited:text-light-accentDark dark:visited:text-dark-accent">
-                        Zaloguj się
-                    </a>
-                </p>
+                            Zaloguj się
+                        </a>
+                    </p>
                 </div>
             </form>
         </div>
