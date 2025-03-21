@@ -5,10 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strona Główna</title>
 </head>
-<body class="p-0 m-0 flax flex-col items-center justify-center bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-<main>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    dark: {
+                        background: "#0070d29",
+                        backgroundSecondary: "#181818",
+                        backgroundTertiary: "#242424",
+                        surface: "#1E1E1E",
+                        textPrimary: "#E0E0E0",
+                        textSecondary: "#B0B0B0",
+                        border: "#333333",
+                        accent: "#12e1b9",
+                        accentDark: "#01d0a8",
+                        success: "#00FF99",
+                        error: "#FF4444",
+                        warning: "#FFD700",
+                    },
+                    light: {
+                        background: "#FFFFFF",
+                        backgroundSecondary: "#FAFAFA",
+                        backgroundTertiary: "#EAEAEA",
+                        surface: "#F5F5F5",
+                        textPrimary: "#1A1A1A",
+                        textSecondary: "#5A5A5A",
+                        border: "#CCCCCC",
+                        accent: "#ff3131",
+                        accentDark: "#ee2020",
+                        success: "#00CC66",
+                        error: "#bf7799",
+                        warning: "#FFAA00",
+                    },
+                },
+            },
+        },
+    };
+</script>
+<body class="p-0 m-0 flex flex-col items-center justify-center bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
+<header>
     <h1>Witaj w RPG Manager!</h1>
-    <p><a href="/login">Zaloguj się</a></p>
+</header>
+<main class ="flex flex-auto grid grid-cols-2 gap-2">
+    <button class ="" type="button" onclick="location.href='auth/login.html'">Login</button>
+    <button type="button" onclick="location.href='auth/register.html'">Register</button>
+    <button type="button">Learn more</button>
+    <button type="button">Demo</button>
 </main>
 <footer class="bottom-0 w-full text-center p-4 bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary text-light-text dark:text-dark-text">
     <h5>© 2025 RPG Manager</h5>
