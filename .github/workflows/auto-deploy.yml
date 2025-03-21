@@ -1,4 +1,6 @@
 name: Restart RPG Handy Helper Service
+permissions:
+  contents: read
 
 on:
   push:

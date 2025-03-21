@@ -37,14 +37,14 @@
 <p>Masz już konto? <a href="/login">Zaloguj się</a></p>
 </body>
 <script>
+    const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
     let form = document.querySelector('form');
     form.addEventListener('submit', function (event) {
         event.preventDefault(); // Zatrzymanie domyślnego wysyłania formularza
-
         let formData = new FormData(form);
         let data = Object.fromEntries(formData);
 
-        // Walidacja: sprawdzenie czy hasła są identyczne
+        // Walidacja: sprawdzenie, czy hasła są identyczne
         if (data.password !== data.passwordConfirm) {
             Swal.fire({
                 icon: 'error',
@@ -59,7 +59,7 @@
             grecaptcha.execute('6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM', { action: 'signup' }).then(function(token) {
                 // Dodanie tokena reCAPTCHA do danych formularza
                 data["captcha"] = token;
-
+                data["_csrf"] = csrfToken;
                 if (!token) {
                     Swal.fire({
                         icon: 'error',
@@ -73,7 +73,8 @@
                 fetch('/api/v1/register/signup', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-XSRF-TOKEN': csrfToken,
                     },
                     body: JSON.stringify(data),
                 })
