@@ -637,10 +637,7 @@
                                     passwordConfirm.classList.remove("border-error");
                                 }
                             }
-
                             passwordConfirm.addEventListener("blur", validatePasswordMatch);
-
-                            // Hover obsługa
                             icon.addEventListener("mouseenter", () => {
                                 hoverState.icon = true;
                                 updateTooltipVisibility();
@@ -697,7 +694,6 @@
         <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
             class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
     </footer>
-
 </body>
 <script> // Skrypt do obsługi formularza rejestracji
     let form = document.querySelector('form');
