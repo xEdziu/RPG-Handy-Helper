@@ -115,6 +115,11 @@ public class GameService {
     }
 
     public Map<String, Object> addUserToGame(AddUserToGameRequest request) {
+
+        if ( request.getGameId() == null || request.getUserId() == null || request.getRole() == null) {
+            throw new IllegalArgumentException("Nie podano wszystkich danych.");
+        }
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o podanym ID nie istnieje."));
         Game game = gameRepository.findById(request.getGameId())

@@ -65,16 +65,33 @@ public class CpRedCharactersService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 
-        Game game = gameRepository.findGameById(character.getGame().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + character.getGame().getId() + " nie została znaleziona."));
-
         if(character.getName() == null ||
                 character.getNickname() == null ||
                 character.getType() == null ||
                 character.getExpAll() == null ||
                 character.getExpAvailable() == null ||
-                character.getCash() == null){
+                character.getCash() == null ||
+                character.getGame() == null) {
             throw new IllegalStateException("Nie podano wszystkich parametrów");
+        }
+
+        Game game = gameRepository.findGameById(character.getGame().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + character.getGame().getId() + " nie została znaleziona."));
+
+        String characterName = character.getName().trim();
+        if(characterName.isEmpty()) {
+            throw new IllegalStateException("Nazwa postaci nie może być pusta");
+        }
+        if (characterName.length() > 255) {
+            throw new IllegalStateException("Nazwa postaci nie może mieć więcej niż 255 znaków.");
+        }
+
+        String characterNickname = character.getNickname().trim();
+        if(characterNickname.isEmpty()) {
+            throw new IllegalStateException("Pseudonim postaci nie może być pusty");
+        }
+        if (characterNickname.length() > 255) {
+            throw new IllegalStateException("Pseudonim postaci nie może mieć więcej niż 255 znaków.");
         }
 
         if(character.getExpAll() < 0) {
@@ -102,8 +119,8 @@ public class CpRedCharactersService {
         } else {
             cpRedCharacter.setUser(null);
         }
-        cpRedCharacter.setName(character.getName());
-        cpRedCharacter.setNickname(character.getNickname());
+        cpRedCharacter.setName(characterName);
+        cpRedCharacter.setNickname(characterNickname);
         cpRedCharacter.setType(character.getType());
         cpRedCharacter.setExpAll(character.getExpAll());
         cpRedCharacter.setExpAvailable(character.getExpAvailable());
@@ -128,7 +145,8 @@ public class CpRedCharactersService {
             character.getExpAvailable() == null &&
             character.getCash() == null &&
             character.getCharacterPhotoPath() == null &&
-            character.getUser() == null) {
+            character.getUser() == null &&
+            character.getGame() == null) {
             throw new IllegalStateException("Należy podać jeden z parametrów");
         }
 
@@ -138,16 +156,26 @@ public class CpRedCharactersService {
         String cpRedCharacterToUpdateName = cpRedCharacterToUpdate.getName();
 
         if(character.getName() != null) {
-            if(cpRedCharacterToUpdate.getName().isEmpty()) {
+            String characterName = character.getName().trim();
+            if(characterName.isEmpty()) {
                 throw new IllegalStateException("Nazwa postaci nie może być pusta");
             }
+            if (characterName.length() > 255) {
+                throw new IllegalStateException("Nazwa postaci nie może mieć więcej niż 255 znaków.");
+            }
+
             cpRedCharacterToUpdate.setName(character.getName());
         }
 
         if(character.getNickname() != null) {
-            if(cpRedCharacterToUpdate.getNickname().isEmpty()) {
+            String characterNickname = character.getNickname().trim();
+            if(characterNickname.isEmpty()) {
                 throw new IllegalStateException("Pseudonim postaci nie może być pusty");
             }
+            if (characterNickname.length() > 255) {
+                throw new IllegalStateException("Pseudonim postaci nie może mieć więcej niż 255 znaków.");
+            }
+
             cpRedCharacterToUpdate.setNickname(character.getNickname());
         }
 
@@ -193,15 +221,33 @@ public class CpRedCharactersService {
                     .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o id " + character.getUser().getId() + " nie istnieje"));
             cpRedCharacterToUpdate.setUser(user);
         }
-        if(character.getUser() == null) {
-            cpRedCharacterToUpdate.setUser(null);
-        }
 
         if(character.getCharacterPhotoPath() != null) {
             cpRedCharacterToUpdate.setCharacterPhotoPath(character.getCharacterPhotoPath());
         }
 
         cpRedCharactersRepository.save(cpRedCharacterToUpdate);
+
+        return CustomReturnables.getOkResponseMap("Postać " + cpRedCharacterToUpdateName + " została zaktualizowana");
+    }
+
+    public Map<String, Object> playerToNpc(Long characterId) {
+        if (characterId == null) {
+            throw new IllegalStateException("Należy podać id postaci");
+        }
+        CpRedCharacters cpRedCharacter = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje"));
+
+        String cpRedCharacterToUpdateName = cpRedCharacter.getName();
+
+        if (cpRedCharacter.getType() == CpRedCharactersType.NPC) {
+            throw new IllegalStateException("Postać o id " + characterId + " jest już NPC");
+        }
+
+        cpRedCharacter.setUser(null);
+        cpRedCharacter.setType(CpRedCharactersType.NPC);
+
+        cpRedCharactersRepository.save(cpRedCharacter);
 
         return CustomReturnables.getOkResponseMap("Postać " + cpRedCharacterToUpdateName + " została zaktualizowana");
     }
