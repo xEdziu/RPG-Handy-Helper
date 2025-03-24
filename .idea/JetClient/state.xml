@@ -146,6 +146,14 @@
                       <option name="sortWeight" value="6000000" />
                       <option name="url" value="http://localhost:8888/api/v1/authorized/user/setUserPhoto" />
                     </requestState>
+                    <requestState>
+                      <option name="description" value="Wylogowanie" />
+                      <option name="id" value="d3f143b2-0567-451e-8193-3bf23fa6a483" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Logout" />
+                      <option name="sortWeight" value="7000000" />
+                      <option name="url" value="http://localhost:8888/logout" />
+                    </requestState>
                   </list>
                 </option>
                 <option name="sortWeight" value="1000000" />
@@ -172,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 2,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -197,7 +205,7 @@
                       <option name="method" value="GET" />
                       <option name="name" value="Gracze danej gry" />
                       <option name="sortWeight" value="3000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/allPlayers/1" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/allPlayers/2" />
                     </requestState>
                     <requestState>
                       <option name="body">
@@ -361,6 +369,71 @@
                 </option>
                 <option name="sortWeight" value="3000000" />
               </folderState>
+              <folderState>
+                <option name="description" value="System notatek dla graczy" />
+                <option name="id" value="eb7bddd7-67c5-45e7-a191-b3cc3a7b6fd8" />
+                <option name="name" value="Notatki" />
+                <option name="requests">
+                  <list>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;gameId&quot;: 1,&#10;  &quot;userId&quot;: 3,&#10;  &quot;title&quot;: &quot;Test 3&quot;,&#10;  &quot;content&quot;: &quot;# **Test**&quot;&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Dodanie nowej notatki do gry przez użytkownika" />
+                      <option name="id" value="f1fb9bf9-816e-4164-978e-00c346672831" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Utwórz notatkę" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameNotes/add" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Pobranie wszystkich notatek zalogowanego użytkownika" />
+                      <option name="id" value="f3db88b4-49fe-4c04-9f2b-b4d0943372dd" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Wszystkie notatki użytkownika" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameNotes" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Pobranie konkretnej notatki według id" />
+                      <option name="id" value="fc93474d-a1dd-479a-9fbb-e64a94d10eb7" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Notatka po id" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameNotes/3" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;gameId&quot;: 1,&#10;  &quot;userId&quot;: 1,&#10;  &quot;title&quot;: &quot;Pierwsza notatka - edytowana&quot;,&#10;  &quot;content&quot;: &quot;Zmieniona treść notatki *markdown* po edycji.&quot;&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Edycja notatki" />
+                      <option name="id" value="99a9432d-e0f9-4e9f-beee-16d1c4ad6d90" />
+                      <option name="method" value="PUT" />
+                      <option name="name" value="Aktualizuj notatkę" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameNotes/update/1" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Usunięcie notatki" />
+                      <option name="id" value="2ccba645-af8f-47f3-a819-f3a177156bd1" />
+                      <option name="method" value="DELETE" />
+                      <option name="name" value="Usuń notatkę" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameNotes/delete/1" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Pobieranie wszystkich notatek użytkownika w danej grze" />
+                      <option name="id" value="2d346291-4b03-4553-9af6-73b25f6bd2ec" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Notatki użytkownika w grze" />
+                      <option name="sortWeight" value="1000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameNotes/game/2" />
+                    </requestState>
+                  </list>
+                </option>
+                <option name="sortWeight" value="4000000" />
+              </folderState>
             </list>
           </option>
           <option name="id" value="8466bebc-89be-4082-a8f4-7567faaeae17" />
@@ -369,12 +442,6 @@
             <map>
               <entry key="default" />
             </map>
-          </option>
-          <option name="syncProperties">
-            <synchronizationPropertiesState>
-              <option name="autoSync" value="true" />
-              <option name="folderPath" value="E:\studia\sem 6\projekt zespołowy\RPG-Handy-Helper\.jetclient" />
-            </synchronizationPropertiesState>
           </option>
         </folderState>
       </list>
