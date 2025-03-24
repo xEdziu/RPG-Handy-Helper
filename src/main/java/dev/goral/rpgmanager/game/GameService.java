@@ -26,15 +26,16 @@ public class GameService {
     private final GameUsersRepository gameUsersRepository;
     private final RpgSystemsRepository rpgSystemsRepository;
 
-    public List<GameDTO> getAllGames() {
-        return gameRepository.findAll()
-                .stream()
-                .map(game -> new GameDTO(
+    public List<GameDTOAdmin> getAllGames() {
+        List<Game> games = gameRepository.findAll();
+        return games.stream()
+                .map(game -> new GameDTOAdmin(
                         game.getId(),
                         game.getName(),
                         game.getDescription(),
                         game.getGameMaster().getId(),
-                        game.getRpgSystem().getId()
+                        game.getRpgSystem().getId(),
+                        game.getStatus().toString()
                 ))
                 .collect(Collectors.toList());
     }
@@ -73,6 +74,24 @@ public class GameService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
+        if (game == null || game.getName() == null || game.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Gra musi mieć nazwę.");
+        }
+
+        // Check game name
+        String name = game.getName().trim();
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("Niewłaściwa nazwa gry");
+        }
+        if (name.length() > 255) {
+            throw new IllegalArgumentException("Nazwa gry nie może mieć więcej niż 255 znaków.");
+        }
+
+        // Check game description
+        if (game.getDescription() != null && game.getDescription().length() > 500) {
+            throw new IllegalArgumentException("Opis gry nie może mieć więcej niż 500 znaków.");
+        }
+
         if(game.getRpgSystem() == null) {
             throw new IllegalArgumentException("Gra musi mieć przypisany system RPG.");
         }
@@ -80,7 +99,9 @@ public class GameService {
             throw new IllegalArgumentException("Podany system RPG nie istnieje.");
         }
 
+        game.setName(name);
         game.setGameMaster(currentUser);
+        game.setStatus(GameStatus.valueOf("ACTIVE"));
         gameRepository.save(game);
 
         // Add the creator as a GameMaster to the game
@@ -128,12 +149,34 @@ public class GameService {
         if (gameToUpdate == null) {
             throw new ResourceNotFoundException("Gra o podanym ID nie istnieje.");
         }
-        if (game.getName() != null ) {
-            if(gameToUpdate.getName().isEmpty()) {
-                throw new IllegalArgumentException("Nazwa gry nie może być pusta.");
-            }
-            gameToUpdate.setName(game.getName());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        // Sprawdzenie, czy na pewno to GM próbuje zmienić swoja gre
+        if(!currentUser.getId().equals(gameToUpdate.getGameMaster().getId())) {
+            throw new IllegalArgumentException("Nie możesz zmienić gry gdy nie jesteś jej GameMasterem.");
         }
+
+        if(game.getName() == null && game.getGameMaster() == null && game.getDescription() == null) {
+            throw new IllegalArgumentException("Brak danych do aktualizacji.");
+        }
+
+        if (game.getName() != null) {
+            String newName = game.getName().trim();
+            if (!newName.isEmpty()) {
+                if(gameToUpdate.getName().isEmpty()) {
+                    throw new IllegalArgumentException("Nazwa gry nie może być pusta.");
+                }
+                if (newName.length() > 255) {
+                    throw new IllegalArgumentException("Nazwa nie może mieć więcej niż 255 znaków.");
+                }
+                gameToUpdate.setName(game.getName());
+            }
+        }
+
         if (game.getGameMaster() != null ) {
             if(gameToUpdate.getGameMaster().getId() == null) {
                 throw new IllegalArgumentException("Gra musi mieć GameMastera.");
@@ -158,12 +201,51 @@ public class GameService {
             gameToUpdate.setGameMaster(game.getGameMaster());
         }
         if (game.getDescription() != null ) {
+            if (game.getDescription().length() > 500) {
+                throw new IllegalArgumentException("Opis gry nie może mieć więcej niż 500 znaków.");
+            }
             gameToUpdate.setDescription(game.getDescription());
         }
 
         gameRepository.save(gameToUpdate);
 
         return CustomReturnables.getOkResponseMap("Gra została zaktualizowana.");
+    }
+
+    @Transactional
+    public Map<String, Object> changeGameStatus(Long gameId, Map<String, String> request) {
+        String statusStr = request.get("status");
+
+        Game gameToUpdate = gameRepository.findById(gameId)
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o podanym ID nie istnieje."));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        // Sprawdzenie, czy na pewno to GM próbuje zmienić swoja gre
+        if(!currentUser.getId().equals(gameToUpdate.getGameMaster().getId())) {
+            throw new IllegalArgumentException("Nie możesz zmienić gry gdy nie jesteś jej GameMasterem.");
+        }
+
+        if (statusStr == null) {
+            throw new IllegalArgumentException("Brak statusu w żądaniu.");
+        }
+
+        GameStatus status;
+        try {
+            status = GameStatus.valueOf(statusStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Niepoprawny status: " + statusStr);
+        }
+
+
+
+        gameToUpdate.setStatus(status);
+        gameRepository.save(gameToUpdate);
+
+        return CustomReturnables.getOkResponseMap("Status gry został zaktualizowany.");
     }
 
     public Map<String, Object> updateGameUserRole(Long gameUserId, Map<String, String> request) {

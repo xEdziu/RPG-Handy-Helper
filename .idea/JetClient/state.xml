@@ -202,7 +202,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 2&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;gameMaster&quot;: {&#10;    id: 2&#10;  }&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 2&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;gameMaster&quot;: {&#10;    id: 2&#10;  },&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -226,6 +226,20 @@
                       <option name="name" value="Modyfikuj role użytkownika w grze" />
                       <option name="sortWeight" value="5000000" />
                       <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/1" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  status: &quot;DELETED&quot;&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Zmienia status gry na podany " />
+                      <option name="id" value="0e5d197d-e7f6-495a-a704-4ae1d85677b4" />
+                      <option name="method" value="PUT" />
+                      <option name="name" value="Zmień status DELETED/ACTIVE" />
+                      <option name="sortWeight" value="6000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/changeStatus/1" />
                     </requestState>
                   </list>
                 </option>
