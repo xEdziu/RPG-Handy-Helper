@@ -174,9 +174,9 @@
                                 }
                                 try {
                                     const res = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(username)}`);
-                                    console.log(res.responsie);
                                     const data = await res.json();
-                                    if (data.available === false) {
+                                    console.log(data);
+                                    if (data.error != 200) {
                                         showError("Nazwa użytkownika jest już zajęta.");
                                     } else {
                                         hideError();
@@ -395,50 +395,62 @@
                             const icon = document.getElementById("emailErrorIcon");
                             const tooltip = document.getElementById("emailErrorTooltip");
                             let isHovering = false;
-                            function validateEmail() {
-                                const value = input.value.trim();
-                                const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-                                if (value === "") {
-                                    icon.classList.add("hidden");
-                                    tooltip.classList.add("hidden");
-                                    input.classList.remove("border-error");
-                                } else if (!isValid) {
-                                    icon.classList.remove("hidden");
-                                    input.classList.add("border-error");
-                                } else {
-                                    icon.classList.add("hidden");
-                                    tooltip.classList.add("hidden");
-                                    input.classList.remove("border-error");
+                            async function checkEmailAvailability() {
+                                const email = input.value.trim();
+                                const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                                if (email === "") {
+                                    hideError();
+                                    return;
+                                }
+                                if (!isValid) {
+                                    showError("Podaj poprawny adres e-mail.");
+                                    return;
+                                }
+                                try {
+                                    const res = await fetch(`/api/v1/register/checkEmail?email=${encodeURIComponent(email)}`);
+                                    const data = await res.json();
+                                    if (data.error !== 200) {
+                                        showError("Adres e-mail jest już zajęty.");
+                                    } else {
+                                        hideError();
+                                    }
+                                } catch (err) {
+                                    console.error("Błąd połączenia z API", err);
+                                    showError("Nie udało się sprawdzić dostępności.");
                                 }
                             }
-                            input.addEventListener("blur", validateEmail);
-                            const showTooltip = () => {
-                                tooltip.classList.remove("hidden");
-                                tooltip.classList.remove("opacity-0");
-                            };
-                            const hideTooltip = () => {
-                                tooltip.classList.add("opacity-0");
-                                setTimeout(() => {
-                                    if (!isHovering) {
-                                        tooltip.classList.add("hidden");
-                                    }
-                                }, 300);
-                            };
+                            function showError(msg) {
+                                icon.classList.remove("hidden");
+                                input.classList.add("border-error");
+                                tooltip.textContent = msg;
+                            }
+                            function hideError() {
+                                icon.classList.add("hidden");
+                                tooltip.classList.add("hidden");
+                                input.classList.remove("border-error");
+                            }
+                            input.addEventListener("blur", checkEmailAvailability);
                             icon.addEventListener("mouseenter", () => {
                                 isHovering = true;
-                                showTooltip();
+                                tooltip.classList.remove("hidden", "opacity-0");
                             });
                             icon.addEventListener("mouseleave", () => {
                                 isHovering = false;
-                                hideTooltip();
+                                tooltip.classList.add("opacity-0");
+                                setTimeout(() => {
+                                    if (!isHovering) tooltip.classList.add("hidden");
+                                }, 300);
                             });
                             tooltip.addEventListener("mouseenter", () => {
                                 isHovering = true;
-                                showTooltip();
+                                tooltip.classList.remove("hidden", "opacity-0");
                             });
                             tooltip.addEventListener("mouseleave", () => {
                                 isHovering = false;
-                                hideTooltip();
+                                tooltip.classList.add("opacity-0");
+                                setTimeout(() => {
+                                    if (!isHovering) tooltip.classList.add("hidden");
+                                }, 300);
                             });
                         });
                     </script>
