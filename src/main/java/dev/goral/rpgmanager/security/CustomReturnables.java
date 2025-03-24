@@ -16,4 +16,12 @@ public class CustomReturnables {
         response.put("timestamp", new Timestamp(new Date().getTime()));
         return response;
     }
+
+    public static Map<String, Object> getErrorResponseMap(String message) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", message);
+        response.put("error", HttpStatus.BAD_REQUEST.value());
+        response.put("timestamp", new Timestamp(new Date().getTime()));
+        return response;
+    }
 }
