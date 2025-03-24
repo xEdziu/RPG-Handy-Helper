@@ -23,13 +23,16 @@ public class GameNote {
     @SequenceGenerator(name = "note_sequence", sequenceName = "note_sequence", allocationSize = 1)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(nullable = false)
+    private String title;
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
