@@ -32,6 +32,7 @@ public class UserController {
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
+
     @PostMapping("/admin/user/create")
     public Map<String, Object> createUserAdmin(@RequestBody User user) {
         return userService.createUserAdmin(user);
