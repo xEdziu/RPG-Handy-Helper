@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.Skills;
 
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.stats.CpRedStats;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,8 +25,11 @@ public class CpRedSkills {
     @Enumerated(EnumType.STRING)
     private CpRedSkillsCategory category;
     private String name;
-
-
-
+    @ManyToOne
+    @JoinColumn(
+            name = "stat_id",
+            referencedColumnName = "id"
+    )
+    private CpRedStats connectedStatId;
     private String description;
 }

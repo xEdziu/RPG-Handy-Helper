@@ -1,6 +1,13 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.Skills;
 
 public enum CpRedSkillsCategory {
-    temp1,
-    temp2
+    AWARNESS,
+    BODY,
+    CONTROL,
+    EDUCATION,
+    FIGHTING,
+    PERFORMANCE,
+    RANGED_WEAPON,
+    SOCIAL,
+    TECHNIQUE
 }
