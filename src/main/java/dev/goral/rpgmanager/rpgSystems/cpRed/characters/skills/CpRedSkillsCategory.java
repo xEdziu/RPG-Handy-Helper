@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.Skills;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills;
 
 public enum CpRedSkillsCategory {
     AWARNESS,

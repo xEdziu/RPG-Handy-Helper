@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.Skills;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.stats.CpRedStats;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.Skills;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
