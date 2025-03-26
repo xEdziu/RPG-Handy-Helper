@@ -181,8 +181,9 @@ public class GameService {
                 gameToUpdate.setName(game.getName());
             }
         }
-
+        
         if (game.getGameMaster() != null ) {
+
             if(gameToUpdate.getGameMaster().getId() == null) {
                 throw new IllegalArgumentException("Gra musi mieć GameMastera.");
             }
@@ -200,11 +201,12 @@ public class GameService {
             Map<String, String> roleUpdateGameMaster = Map.of("role", "GAMEMASTER");
             Map<String, String> roleUpdatePlayer = Map.of("role", "PLAYER");
 
-            updateGameUserRole(gameUsersRepository.findIdByUserId(game.getGameMaster().getId()), roleUpdateGameMaster);
-            updateGameUserRole(gameUsersRepository.findIdByUserId(gameToUpdate.getGameMaster().getId()), roleUpdatePlayer);
+            updateGameUserRole(gameUsersRepository.findIdByUserIdAndGameId(game.getGameMaster().getId(), gameId), roleUpdateGameMaster);
+            updateGameUserRole(gameUsersRepository.findIdByUserIdAndGameId(gameToUpdate.getGameMaster().getId(), gameId), roleUpdatePlayer);
 
             gameToUpdate.setGameMaster(game.getGameMaster());
         }
+
         if (game.getDescription() != null ) {
             if (game.getDescription().length() > 500) {
                 throw new IllegalArgumentException("Opis gry nie może mieć więcej niż 500 znaków.");
@@ -245,8 +247,6 @@ public class GameService {
             throw new IllegalArgumentException("Niepoprawny status: " + statusStr);
         }
 
-
-
         gameToUpdate.setStatus(status);
         gameRepository.save(gameToUpdate);
 
@@ -276,6 +276,4 @@ public class GameService {
         return CustomReturnables.getOkResponseMap("Rola użytkownika gry została zaktualizowana.");
 
     }
-
-
 }

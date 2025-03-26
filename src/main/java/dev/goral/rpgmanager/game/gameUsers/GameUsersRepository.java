@@ -20,4 +20,7 @@ public interface GameUsersRepository extends JpaRepository<GameUsers, Long> {
 
     @Query("SELECT gu.id FROM GameUsers gu WHERE gu.user.id = :userId")
     Long findIdByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT gu.id FROM GameUsers gu WHERE gu.user.id = :userId AND gu.game.id = :gameId")
+    Long findIdByUserIdAndGameId(@Param("userId") Long userId, @Param("gameId") Long gameId);
 }
