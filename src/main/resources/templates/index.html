@@ -46,20 +46,19 @@
     };
 </script>
 
-<style>
-.btn{
-    @apply bg-transparent
-}
-</style>
-<body class="p-0 m-0 ml-6 h-screen flex flex-col items-start bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-<header class="mt-[20vh] font-bold text-5xl pb-12">
-    <h1>Witaj w RPG Manager!</h1>
-</header>
-<main class ="flex flex-col grid grid-cols-2 gap-6 text-xl">
-    <button class ="btn" type="button" onclick="location.href='auth/login.html'">Login</button>
-    <button type="button" onclick="location.href='auth/register.html'">Register</button>
-    <button type="button">Learn more</button>
-    <button type="button">Demo</button>
+<body class="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
+<main class ="flex-grow flex flex-col items-start justify-center px-12">
+    <header class="font-extrabold text-5xl">
+        <h1>Witaj w RPG Manager!</h1>
+    </header>
+    <div class="mt-10 grid grid-cols-2 gap-4">
+        <button class ="flex items-center justify-between px-6 py-3 border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
+                        hover:bg-light-success dark:hover:bg-dark-success"
+                type="button" onclick="location.href='auth/login.html'">Login</button>
+        <button type="button" onclick="location.href='auth/register.html'">Register</button>
+        <button type="button">Learn more</button>
+        <button type="button">Demo</button>
+    </div>
 </main>
 <footer class="bottom-0 w-full text-center p-4 bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary text-light-text dark:text-dark-text">
     <h5>© 2025 RPG Manager</h5>
