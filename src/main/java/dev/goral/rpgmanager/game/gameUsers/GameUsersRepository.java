@@ -23,4 +23,7 @@ public interface GameUsersRepository extends JpaRepository<GameUsers, Long> {
 
     @Query("SELECT gu.id FROM GameUsers gu WHERE gu.user.id = :userId AND gu.game.id = :gameId")
     Long findIdByUserIdAndGameId(@Param("userId") Long userId, @Param("gameId") Long gameId);
+
+    @Query("SELECT COUNT(gu) FROM GameUsers gu WHERE gu.game.id = :gameId AND gu.role = :role")
+    long countByGameIdAndRole(@Param("gameId") Long gameId, @Param("role") GameUsersRole role);
 }

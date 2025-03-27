@@ -260,9 +260,9 @@ public class GameService {
             throw new IllegalArgumentException("Brak roli w żądaniu.");
         }
 
-        GameUsersRole role;
+        GameUsersRole newRole;
         try {
-            role = GameUsersRole.valueOf(roleStr.toUpperCase());
+            newRole = GameUsersRole.valueOf(roleStr.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Niepoprawna rola: " + roleStr);
         }
@@ -270,7 +270,17 @@ public class GameService {
         GameUsers gameUserToUpdate = gameUsersRepository.findById(gameUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik gry o podanym ID nie istnieje."));
 
-        gameUserToUpdate.setRole(role);
+        GameUsersRole currentRole = gameUserToUpdate.getRole();
+        Long gameId = gameUserToUpdate.getGame().getId();
+
+        if (currentRole == GameUsersRole.GAMEMASTER && newRole != GameUsersRole.GAMEMASTER) {
+            long gameMasterCount = gameUsersRepository.countByGameIdAndRole(gameId, GameUsersRole.GAMEMASTER);
+            if (gameMasterCount <= 1) {
+                throw new IllegalArgumentException("Nie można usunąć ostatniego GameMastera z gry.");
+            }
+        }
+
+        gameUserToUpdate.setRole(newRole);
         gameUsersRepository.save(gameUserToUpdate);
 
         return CustomReturnables.getOkResponseMap("Rola użytkownika gry została zaktualizowana.");
