@@ -182,6 +182,12 @@ public class CpRedCharactersService {
             if (characterName.length() > 255) {
                 throw new IllegalStateException("Nazwa postaci nie może mieć więcej niż 255 znaków.");
             }
+            Game game = gameRepository.findGameById(cpRedCharacterToUpdate.getGame().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + character.getGame().getId() + " nie została znaleziona."));
+
+            if(cpRedCharactersRepository.existsByGameIdAndName(game.getId(), character.getName())) {
+                throw new IllegalStateException("Postać o nazwie " + character.getName() + " już istnieje");
+            }
 
             cpRedCharacterToUpdate.setName(character.getName());
         }
