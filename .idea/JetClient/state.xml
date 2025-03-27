@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 1,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -309,7 +309,7 @@
                             <option name="method" value="PUT" />
                             <option name="name" value="Modyfikuj postać" />
                             <option name="sortWeight" value="4000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/1" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/2" />
                           </requestState>
                           <requestState>
                             <option name="body">
@@ -323,7 +323,7 @@
                             <option name="method" value="PUT" />
                             <option name="name" value="Zrób z gracza NPC" />
                             <option name="sortWeight" value="5000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/1" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/2" />
                           </requestState>
                         </list>
                       </option>

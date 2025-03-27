@@ -138,6 +138,28 @@ public class CpRedCharactersService {
 
     public Map<String, Object> updateCharacter(Long characterId, CpRedCharacters character) {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        CpRedCharacters cpRedCharacterToUpdate = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje"));
+
+        if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())) {
+            Game game = cpRedCharacterToUpdate.getGame();
+            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
+                throw new IllegalArgumentException("Nie masz uprawnień do modyfikacji tej postaci.");
+            }
+        }
+
+        if (cpRedCharacterToUpdate.getUser() == null) {
+            Game game = cpRedCharacterToUpdate.getGame();
+            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
+                throw new IllegalArgumentException("Tylko GameMaster może modyfikować tę postać.");
+            }
+        }
+
         if(character.getName() == null &&
             character.getNickname() == null &&
             character.getType() == null &&
@@ -149,9 +171,6 @@ public class CpRedCharactersService {
             character.getGame() == null) {
             throw new IllegalStateException("Należy podać jeden z parametrów");
         }
-
-        CpRedCharacters cpRedCharacterToUpdate = cpRedCharactersRepository.findById(characterId)
-                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje"));
 
         String cpRedCharacterToUpdateName = cpRedCharacterToUpdate.getName();
 
