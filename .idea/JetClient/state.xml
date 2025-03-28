@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 1,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -300,7 +300,7 @@
                           <requestState>
                             <option name="body">
                               <bodyState>
-                                <option name="raw" value="{&#10;  &quot;user&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
+                                <option name="raw" value="{&#10;  &quot;user&quot;: {&#10;    &quot;id&quot;: 3&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
                                 <option name="type" value="JSON" />
                               </bodyState>
                             </option>
@@ -309,7 +309,7 @@
                             <option name="method" value="PUT" />
                             <option name="name" value="Modyfikuj postać" />
                             <option name="sortWeight" value="4000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/2" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/1" />
                           </requestState>
                           <requestState>
                             <option name="body">

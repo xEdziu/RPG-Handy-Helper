@@ -2,6 +2,9 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.characters;
 
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.game.GameRepository;
+import dev.goral.rpgmanager.game.gameUsers.GameUsers;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
@@ -22,6 +25,7 @@ public class CpRedCharactersService {
     private final CpRedCharactersRepository cpRedCharactersRepository;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
+    private final GameUsersRepository gameUsersRepository;
 
     public List<CpRedCharactersDTO> getAllCharacters() {
         List<CpRedCharacters> characters = cpRedCharactersRepository.findAll();
@@ -64,6 +68,8 @@ public class CpRedCharactersService {
     public Map<String, Object> createCharacter(CpRedCharacters character) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         if(character.getName() == null ||
                 character.getNickname() == null ||
@@ -77,6 +83,24 @@ public class CpRedCharactersService {
 
         Game game = gameRepository.findGameById(character.getGame().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + character.getGame().getId() + " nie została znaleziona."));
+
+        // Check if the user belongs to the game
+        boolean userBelongsToGame = gameUsersRepository.existsByUserIdAndGameId(currentUser.getId(), game.getId());
+        if (!userBelongsToGame) {
+            throw new IllegalArgumentException("Użytkownik nie należy do tej gry.");
+        }
+
+        // Check if the user is a player and ensure they can only create one character
+        GameUsers gameUser = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie jest przypisany do tej gry."));
+        if (gameUser.getRole() == GameUsersRole.PLAYER) {
+            long characterCount = cpRedCharactersRepository.countByUserIdAndGameId(currentUser.getId(), game.getId());
+            if (characterCount >= 1) {
+                throw new IllegalStateException("Gracz może stworzyć tylko jedną postać w tej grze.");
+            }
+        } else if (gameUser.getRole() == GameUsersRole.SPECTATOR) {
+            throw new IllegalStateException("Spectator nie może tworzyć postaci w tej grze.");
+        }
 
         String characterName = character.getName().trim();
         if(characterName.isEmpty()) {
@@ -113,8 +137,6 @@ public class CpRedCharactersService {
         CpRedCharacters cpRedCharacter = new CpRedCharacters();
         cpRedCharacter.setGame(game);
         if(character.getType() == CpRedCharactersType.PLAYER) {
-            User currentUser = userRepository.findByUsername(currentUsername)
-                    .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
             cpRedCharacter.setUser(currentUser);
         } else {
             cpRedCharacter.setUser(null);
@@ -146,17 +168,24 @@ public class CpRedCharactersService {
         CpRedCharacters cpRedCharacterToUpdate = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje"));
 
+        Game game = cpRedCharacterToUpdate.getGame();
+
         if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())) {
-            Game game = cpRedCharacterToUpdate.getGame();
             if (!game.getGameMaster().getId().equals(currentUser.getId())) {
                 throw new IllegalArgumentException("Nie masz uprawnień do modyfikacji tej postaci.");
             }
         }
 
         if (cpRedCharacterToUpdate.getUser() == null) {
-            Game game = cpRedCharacterToUpdate.getGame();
             if (!game.getGameMaster().getId().equals(currentUser.getId())) {
                 throw new IllegalArgumentException("Tylko GameMaster może modyfikować tę postać.");
+            }
+        }
+
+        if (character.getUser() != null) {
+            boolean userBelongsToGame = gameUsersRepository.existsByUserIdAndGameId(character.getUser().getId(), game.getId());
+            if (!userBelongsToGame) {
+                throw new IllegalArgumentException("Użytkownik o id " + character.getUser().getId() + " nie należy do tej gry.");
             }
         }
 
@@ -182,8 +211,6 @@ public class CpRedCharactersService {
             if (characterName.length() > 255) {
                 throw new IllegalStateException("Nazwa postaci nie może mieć więcej niż 255 znaków.");
             }
-            Game game = gameRepository.findGameById(cpRedCharacterToUpdate.getGame().getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + character.getGame().getId() + " nie została znaleziona."));
 
             if(cpRedCharactersRepository.existsByGameIdAndName(game.getId(), character.getName())) {
                 throw new IllegalStateException("Postać o nazwie " + character.getName() + " już istnieje");
@@ -260,8 +287,22 @@ public class CpRedCharactersService {
         if (characterId == null) {
             throw new IllegalStateException("Należy podać id postaci");
         }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
         CpRedCharacters cpRedCharacter = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje"));
+
+        Game game = cpRedCharacter.getGame();
+
+        GameUsers gameUser = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie jest przypisany do tej gry."));
+        if (gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalArgumentException("Tylko GameMaster może zmienić postać na NPC.");
+        }
 
         String cpRedCharacterToUpdateName = cpRedCharacter.getName();
 
