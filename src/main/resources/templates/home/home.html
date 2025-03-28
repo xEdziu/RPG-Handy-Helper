@@ -22,6 +22,18 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+    function getCookie(name) {
+        const cookies = document.cookie.split('; ');
+        for (let cookie of cookies) {
+            const [cookieName, cookieValue] = cookie.split('=');
+            if (cookieName === name) {
+                return decodeURIComponent(cookieValue);
+            }
+        }
+        return null;
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -38,10 +50,23 @@
             })
         }
 
+        const csrfToken = getCookie("XSRF-TOKEN");
+        console.log(csrfToken)
+        if (csrfToken == null) {
+            Swal.fire({
+                title: 'Błąd',
+                text: 'Nie udało się pobrać tokenu CSRF',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
         fetch('/api/v1/authorized/setPassword', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': getCookie("XSRF-TOKEN"),
             },
             body:JSON.stringify({
                 password: password1
