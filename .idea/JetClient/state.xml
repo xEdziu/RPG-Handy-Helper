@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -264,7 +264,7 @@
                           <requestState>
                             <option name="body">
                               <bodyState>
-                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Johnny Silverhand&quot;,&#10;  &quot;nickname&quot;: &quot;Silverhand&quot;,&#10;  &quot;type&quot;: &quot;PLAYER&quot;,&#10;  &quot;expAll&quot;: 1000,&#10;  &quot;expAvailable&quot;: 500,&#10;  &quot;cash&quot;: 2000&#10;}" />
+                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Johnny Goldboy&quot;,&#10;  &quot;nickname&quot;: &quot;Goldhand&quot;,&#10;  &quot;type&quot;: &quot;PLAYER&quot;,&#10;  &quot;expAll&quot;: 1000,&#10;  &quot;expAvailable&quot;: 500,&#10;  &quot;cash&quot;: 2000&#10;}" />
                                 <option name="type" value="JSON" />
                               </bodyState>
                             </option>
@@ -314,16 +314,16 @@
                           <requestState>
                             <option name="body">
                               <bodyState>
-                                <option name="raw" value="{&#10;  &quot;user&quot;: null,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;}" />
+                                <option name="raw" value="{&#10;  &quot;user&quot;: null,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;} " />
                                 <option name="type" value="JSON" />
                               </bodyState>
                             </option>
-                            <option name="description" value="Usuwa usera" />
+                            <option name="description" value="Usuwa usera z postaci" />
                             <option name="id" value="8595f81c-9831-4056-b5a8-09c8b3b50d5b" />
                             <option name="method" value="PUT" />
-                            <option name="name" value="Zrób z gracza NPC" />
+                            <option name="name" value="Zrób z postaci NPC" />
                             <option name="sortWeight" value="5000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/2" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/1" />
                           </requestState>
                         </list>
                       </option>

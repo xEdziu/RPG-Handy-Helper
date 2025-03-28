@@ -269,6 +269,12 @@ public class CpRedCharactersService {
         }
 
         if(character.getUser() != null) {
+            GameUsers gameUser = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie jest przypisany do tej gry."));
+            if (gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+                throw new IllegalArgumentException("Tylko GameMaster może zmienić właściciela postaci.");
+            }
+
             User user = userRepository.findById(character.getUser().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o id " + character.getUser().getId() + " nie istnieje"));
             cpRedCharacterToUpdate.setUser(user);
