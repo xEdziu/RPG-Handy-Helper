@@ -1,10 +1,19 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rejestracja</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
         .grecaptcha-badge {
             position: fixed !important;
             bottom: 10px;
@@ -59,14 +68,14 @@
     };
 </script>
 
-<body class="m-0 h-screen w-screen flex flex-col justify-between">
+<body class="m-0 h-screen w-screen flex flex-col justify-between font-league-spartan">
     <nav
         class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
         <a href="#"> <!-- Przekierowanie do strony głównej -->
             <div class="flex items-center">
                 <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
                 <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
-                <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
+                <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
                     RPG Handy Helper
                 </h1>
             </div>
@@ -143,49 +152,12 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:
                     </label>
-                    <i id="usernameErrorIcon" class="fa-solid fa-exclamation-circle hidden absolute -left-8 top-10 transform -translate-y-1/2
-                           text-light-error dark:text-dark-error cursor-pointer">
-                    </i>
-                    <span id="usernameErrorTooltip" class="hidden absolute -left-80 top-10 transform -translate-y-1/2
-                            text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 transition-opacity duration-300
-                            bg-light-error dark:bg-dark-error
-                            text-dark-textPrimary dark:text-light-textPrimary
-                            ">
-                        Nazwa użytkownika musi mieć co najmniej 3 znaki.
-                    </span>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const usernameInput = document.getElementById("username");
-                            const errorIcon = document.getElementById("usernameErrorIcon");
-                            const errorTooltip = document.getElementById("usernameErrorTooltip");
-                            function validateUsername() {
-                                let value = usernameInput.value.trim();
-                                if (value === "") {
-                                    errorIcon.classList.add("hidden");
-                                    errorTooltip.classList.add("hidden");
-                                    usernameInput.classList.remove("border-error");
-                                } else if (value.length < 3) {
-                                    errorIcon.classList.remove("hidden");
-                                    usernameInput.classList.add("border-error");
-                                } else {
-                                    errorIcon.classList.add("hidden");
-                                    errorTooltip.classList.add("hidden");
-                                    usernameInput.classList.remove("border-error");
-                                }
-                            }
-                            usernameInput.addEventListener("blur", validateUsername);
-                            errorIcon.addEventListener("mouseenter", () => {
-                                if (!errorIcon.classList.contains("hidden")) {
-                                    errorTooltip.classList.remove("hidden");
-                                    errorTooltip.classList.remove("opacity-0");
-                                }
-                            });
-                            errorIcon.addEventListener("mouseleave", () => {
-                                errorTooltip.classList.add("opacity-0");
-                                setTimeout(() => errorTooltip.classList.add("hidden"), 300);
-                            });
-                        });
-                    </script>
+
+                    <p id="error-username" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="usernameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="usernameErrorTooltip"></span>
+                    </p>
+
                 </div>
                 <div class="relative m-5">
                     <input type="text" id="firstName" aria-describedby="firstName" name="firstName" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -203,6 +175,12 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-user"></i> Imię:
                     </label>
+
+                    <p id="error-firstName" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="firstNameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="firstNameErrorTooltip"></span>
+                    </p>
+
                 </div>
                 <div class="relative m-5">
                     <input type="text" id="surname" aria-describedby="surname" name="surname" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -220,6 +198,11 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-id-badge"></i> Nazwisko:
                     </label>
+
+                    <p id="error-surname" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="surnameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="surnameErrorTooltip"></span>
+
                 </div>
                 <div class="relative m-5">
                     <input type="email" id="email" aria-describedby="email" name="email" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -237,6 +220,12 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-envelope"></i> E-mail:
                     </label>
+
+                    <p id="error-email" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="emailErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="emailErrorTooltip"></span>
+                    </p>
+
                 </div>
                 <div class="relative m-5">
                     <input type="password" id="password" aria-describedby="password" name="password" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -258,6 +247,12 @@
                     <i id="togglePasswordIcon1" onclick="togglePassword('password', 'togglePasswordIcon1')" class="fa-solid fa-eye absolute right-4 top-4.5
                                text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
                     </i>
+
+                    <p id="error-password" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="passwordErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="passwordErrorTooltip"></span>
+                    </p>
+
                 </div>
                 <div class="relative m-5">
                     <input type="password" id="passwordConfirm" aria-describedby="passwordConfirm"
@@ -280,15 +275,13 @@
                         class="fa-solid fa-eye absolute right-4 top-4.5
                                text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
                     </i>
-                    <script>
-                        function togglePassword(inputId, iconId) {
-                            const inputField = document.getElementById(inputId);
-                            const icon = document.getElementById(iconId);
-                            const isPassword = inputField.type === "password";
-                            inputField.type = isPassword ? "text" : "password";
-                            icon.classList.replace(isPassword ? "fa-eye" : "fa-eye-slash", isPassword ? "fa-eye-slash" : "fa-eye");
-                        }
-                    </script>
+
+                    <p id="error-passwordConfirm"
+                        class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="passwordConfirmErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="passwordConfirmErrorTooltip"></span>
+                    </p>
+
                 </div>
                 <br>
                 <div class="flex flex-col items-center justify-center">
@@ -397,6 +390,21 @@
             });
         });
     });
+    function togglePassword(inputId, iconId) { // Funkcja do przełączania widoczności hasła
+        const inputField = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        const isPassword = inputField.type === "password";
+        inputField.type = isPassword ? "text" : "password";
+        icon.classList.replace(isPassword ? "fa-eye" : "fa-eye-slash", isPassword ? "fa-eye-slash" : "fa-eye");
+    }
+    function toggleVisibilityError(elementId) { // Funkcja do przełączania widoczności błędów
+        var element = document.getElementById(elementId);
+        if (element.style.display === 'hidden' || element.style.display === 'none') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
 </script>
 
 </html>
