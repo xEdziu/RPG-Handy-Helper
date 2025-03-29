@@ -101,4 +101,8 @@ public class GameRoomManager {
 
         return activeRoomsForGame;
     }
+
+    public GameRoom getRoom(String roomId) {
+        return activeRooms.get(roomId);
+    }
 }
