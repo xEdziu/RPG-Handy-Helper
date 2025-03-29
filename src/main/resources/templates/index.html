@@ -46,18 +46,23 @@
     };
 </script>
 
-<body class="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-<main class ="flex-grow flex flex-col items-start justify-center px-12">
-    <header class="font-extrabold text-5xl">
-        <h1>Witaj w RPG Manager!</h1>
+<body class="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text font-mono">
+<main class ="flex-grow flex flex-col items-start justify-center px-16">
+    <header class="font-bold text-6xl tracking-widest leading-30">
+        <h1>RPG Handy</h1>
+        <h1>Helper</h1>
     </header>
-    <div class="mt-10 grid grid-cols-2 gap-4">
-        <button class ="flex items-center justify-between px-6 py-3 border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
+    <div class="mt-10 grid grid-cols-2 gap-6">
+        <button class ="flex items-center justify-between w-64 text-left px-2 py-2 border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
                         hover:bg-light-success dark:hover:bg-dark-success"
                 type="button" onclick="location.href='auth/login.html'">Login</button>
-        <button type="button" onclick="location.href='auth/register.html'">Register</button>
-        <button type="button">Learn more</button>
-        <button type="button">Demo</button>
+        <button class="flex items-center justify-between border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
+                        hover:bg-light-success dark:hover:bg-dark-success"
+                type="button" onclick="location.href='auth/register.html'">Register</button>
+        <button class="flex items-center justify-between border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
+                        hover:bg-light-success dark:hover:bg-dark-success" type="button">Learn more</button>
+        <button class="flex items-center justify-between border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
+                        hover:bg-light-success dark:hover:bg-dark-success" type="button">Demo</button>
     </div>
 </main>
 <footer class="bottom-0 w-full text-center p-4 bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary text-light-text dark:text-dark-text">
