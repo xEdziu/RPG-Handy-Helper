@@ -147,8 +147,7 @@
                     <i id="usernameErrorIcon" class="fa-solid fa-exclamation-circle hidden absolute -left-8 top-10 transform -translate-y-1/2
                            text-light-error dark:text-dark-error cursor-pointer">
                     </i>
-                    <span id="usernameErrorTooltip"
-                        class="hidden absolute -left-80 top-10 transform -translate-y-1/2
+                    <span id="usernameErrorTooltip" class="hidden absolute -left-80 top-10 transform -translate-y-1/2
                             text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 transition-opacity duration-300
                             bg-light-error dark:bg-dark-error
                             text-dark-textPrimary dark:text-light-textPrimary
@@ -187,10 +186,8 @@
                                 setTimeout(() => errorTooltip.classList.add("hidden"), 300);
                             });
                         });
-                        </script>
+                    </script>
                 </div>
-                <!-- <label for="username"><i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:</label><br>
-                <input type="text" id="username" name="username" required><br> -->
                 <div class="relative m-5">
                     <input type="text" id="firstName" aria-describedby="firstName" name="firstName" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                     text-light-textPrimary dark:text-dark-textPrimary 
@@ -208,8 +205,6 @@
                         <i class="fa-solid fa-user"></i> Imię:
                     </label>
                 </div>
-                <!-- <label for="firstName"><i class="fa-solid fa-user"></i> Imię:</label><br>
-                <input type="text" id="firstName" name="firstName" required><br> -->
                 <div class="relative m-5">
                     <input type="text" id="surname" aria-describedby="surname" name="surname" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                         text-light-textPrimary dark:text-dark-textPrimary 
@@ -227,8 +222,6 @@
                         <i class="fa-solid fa-id-badge"></i> Nazwisko:
                     </label>
                 </div>
-                <!-- <label for="surname"><i class="fa-solid fa-id-badge"></i> Nazwisko:</label><br>
-                <input type="text" id="surname" name="surname" required><br> -->
                 <div class="relative m-5">
                     <input type="email" id="email" aria-describedby="email" name="email" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                     text-light-textPrimary dark:text-dark-textPrimary 
@@ -246,8 +239,6 @@
                         <i class="fa-solid fa-envelope"></i> E-mail:
                     </label>
                 </div>
-                <!-- <label for="email"> <i class="fa-solid fa-envelope"></i>  E-mail:</label><br>
-                <input type="email" id="email" name="email" required><br> -->
                 <div class="relative m-5">
                     <input type="password" id="password" aria-describedby="password" name="password" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                                text-light-textPrimary dark:text-dark-textPrimary 
@@ -265,25 +256,10 @@
                            rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-user-lock"></i> Hasło:
                     </label>
-                    <i id="togglePasswordIcon1" onclick="togglePassword1()" class="fa-solid fa-eye absolute right-4 top-4.5
+                    <i id="togglePasswordIcon1" onclick="togglePassword('password', 'togglePasswordIcon1')" class="fa-solid fa-eye absolute right-4 top-4.5
                                text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
                     </i>
-                    <script>
-                        function togglePassword1() {
-                            let inputField = document.getElementById("password");
-                            let icon = document.getElementById("togglePasswordIcon1");
-                            if (inputField.type === "password") {
-                                inputField.type = "text";
-                                icon.classList.replace("fa-eye", "fa-eye-slash"); // Zmiana ikony na "ukryj"
-                            } else {
-                                inputField.type = "password";
-                                icon.classList.replace("fa-eye-slash", "fa-eye"); // Zmiana ikony na "pokaż"
-                            }
-                        }
-                    </script>
                 </div>
-                <!-- <label for="password"> <i class="fa-solid fa-user-lock"></i> Hasło:</label><br>
-                <input type="password" id="password" name="password" required><br> -->
                 <div class="relative m-5">
                     <input type="password" id="passwordConfirm" aria-describedby="passwordConfirm"
                         name="passwordConfirm" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -301,25 +277,19 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-lock"></i> Potwierdź hasło:
                     </label>
-                    <i id="togglePasswordIcon2" onclick="togglePassword2()" class="fa-solid fa-eye absolute right-4 top-4.5
+                    <i id="togglePasswordIcon2" onclick="togglePassword('passwordConfirm', 'togglePasswordIcon2')" class="fa-solid fa-eye absolute right-4 top-4.5
                                text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
                     </i>
                     <script>
-                        function togglePassword2() {
-                            let inputField = document.getElementById("passwordConfirm");
-                            let icon = document.getElementById("togglePasswordIcon2");
-                            if (inputField.type === "password") {
-                                inputField.type = "text";
-                                icon.classList.replace("fa-eye", "fa-eye-slash"); // Zmiana ikony na "ukryj"
-                            } else {
-                                inputField.type = "password";
-                                icon.classList.replace("fa-eye-slash", "fa-eye"); // Zmiana ikony na "pokaż"
-                            }
+                        function togglePassword(inputId, iconId) {
+                            const inputField = document.getElementById(inputId);
+                            const icon = document.getElementById(iconId);
+                            const isPassword = inputField.type === "password";
+                            inputField.type = isPassword ? "text" : "password";
+                            icon.classList.replace(isPassword ? "fa-eye" : "fa-eye-slash", isPassword ? "fa-eye-slash" : "fa-eye");
                         }
                     </script>
                 </div>
-                <!-- <label for="passwordConfirm"> <i class="fa-solid fa-lock"></i> Potwierdź hasło:</label><br>
-                <input type="password" id="passwordConfirm" name="passwordConfirm" required><br> -->
                 <br>
                 <div class="flex flex-col items-center justify-center">
                     <p class="-mt-6 mb-10 text-light-textSecondary dark:text-dark-textSecondary">
