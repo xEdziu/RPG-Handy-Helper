@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,8 +64,8 @@
         class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
         <a href="#"> <!-- Przekierowanie do strony głównej -->
             <div class="flex items-center">
-                <img id="logo-light" src="logo-light.png" alt="RPG Manager" class="h-10 dark:hidden">
-                <img id="logo-dark" src="logo-dark.png" alt="RPG Manager" class="h-10 hidden dark:block">
+                <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+                <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
                 <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
                     RPG Handy Helper
                 </h1>
@@ -277,7 +276,8 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-lock"></i> Potwierdź hasło:
                     </label>
-                    <i id="togglePasswordIcon2" onclick="togglePassword('passwordConfirm', 'togglePasswordIcon2')" class="fa-solid fa-eye absolute right-4 top-4.5
+                    <i id="togglePasswordIcon2" onclick="togglePassword('passwordConfirm', 'togglePasswordIcon2')"
+                        class="fa-solid fa-eye absolute right-4 top-4.5
                                text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
                     </i>
                     <script>
