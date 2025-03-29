@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +24,9 @@ public class RegisterService {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
+            "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()\\-+]).{8,}$"
+    );
 
     /**
      * Potwierdzanie adresu e-mail za pomocą tokena
@@ -69,18 +73,14 @@ public class RegisterService {
             return CustomReturnables.getOkResponseMap("Konto zostało utworzone. Sprawdź swoją skrzynkę e-mail, aby aktywować konto.");
     }
 
-    /**
+        /**
      * Walidacja hasła
      * @param password Hasło do walidacji
      *                 Musi zawierać co najmniej 8 znaków, jedną cyfrę, jedną małą literę, jedną dużą literę oraz jeden znak specjalny
      * @return bool
      */
     public static Boolean validatePassword(String password) {
-      return password.length() >= 8 &&
-              password.matches(".*\\d.*") &&
-              password.matches(".*[a-z].*") &&
-              password.matches(".*[A-Z].*") &&
-              password.matches(".*[!@#$%^&*()-+].*");
+        return PASSWORD_PATTERN.matcher(password).matches();
     }
 
     public Map<String, Object> checkUsernameAvailability(String username) {

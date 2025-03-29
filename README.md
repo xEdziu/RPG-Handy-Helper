@@ -14,4 +14,5 @@ This project is in the early stages of development. We are working on the first 
 
 Actual progress (which is eqivalent to the `main` branch) can be found [here](https://rpg.adrian-goral.dev).
 
-**Disclaimer!** This link may not work and the server may be down. We are hosting the project on our own server, so it may not be available all the time. Also you may (and probably will) encounter some bugs, as the project is still in development. If you encounter any bugs, please report them in the issues tab.
+> [!IMPORTANT]
+> This link may not work and the server may be down. We are hosting the project on our own server, so it may not be available all the time. Also you may (and probably will) encounter some bugs, as the project is still in development. If you encounter any bugs, please report them in the issues tab.
