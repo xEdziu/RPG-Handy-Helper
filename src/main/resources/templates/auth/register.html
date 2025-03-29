@@ -63,7 +63,7 @@
 <body class="m-0 h-screen w-screen flex flex-col justify-between">
     <nav
         class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
-        <a href="#"> <!-- Przekierowanie do strony głównej -->
+        <a href="#">
             <div class="flex items-center">
                 <img id="logo-light" src="logo-light.png" alt="RPG Manager" class="h-10 dark:hidden">
                 <img id="logo-dark" src="logo-dark.png" alt="RPG Manager" class="h-10 hidden dark:block">
@@ -91,7 +91,7 @@
             <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
         </div>
     </nav>
-    <script> // Skrypt do obsługi przełącznika jasny/ciemny motyw
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
             const toggleSwitch = document.getElementById("switch-component");
             const body = document.body;
@@ -135,7 +135,6 @@
                                focus:outline-none focus:ring-0
                                focus:border-light-accent peer dark:focus:border-dark-accent 
                                placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
-
                     <label for="username" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
                                duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
                                peer-focus:text-light-accent peer-focus:dark:text-dark-accent
@@ -148,6 +147,7 @@
                            text-light-error dark:text-dark-error cursor-pointer">
                     </i>
                     <span id="usernameErrorTooltip" class="hidden absolute -left-80 top-10 transform -translate-y-1/2
+                    <span id="usernameErrorTooltip" class="hidden absolute -left-80 top-10 transform -translate-y-1/2
                             text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 transition-opacity duration-300
                             bg-light-error dark:bg-dark-error
                             text-dark-textPrimary dark:text-light-textPrimary
@@ -156,88 +156,300 @@
                     </span>
                     <script>
                         document.addEventListener("DOMContentLoaded", function () {
-                            const usernameInput = document.getElementById("username");
-                            const errorIcon = document.getElementById("usernameErrorIcon");
-                            const errorTooltip = document.getElementById("usernameErrorTooltip");
-                            function validateUsername() {
-                                let value = usernameInput.value.trim();
-                                if (value === "") {
-                                    errorIcon.classList.add("hidden");
-                                    errorTooltip.classList.add("hidden");
-                                    usernameInput.classList.remove("border-error");
-                                } else if (value.length < 3) {
-                                    errorIcon.classList.remove("hidden");
-                                    usernameInput.classList.add("border-error");
-                                } else {
-                                    errorIcon.classList.add("hidden");
-                                    errorTooltip.classList.add("hidden");
-                                    usernameInput.classList.remove("border-error");
+                            const input = document.getElementById("username");
+                            const icon = document.getElementById("usernameErrorIcon");
+                            const tooltip = document.getElementById("usernameErrorTooltip");
+
+                            let isHovering = false;
+                            async function checkUsernameAvailability() {
+                                const username = input.value.trim();
+                                if (username === "") {
+                                    icon.classList.add("hidden");
+                                    tooltip.classList.add("hidden");
+                                    input.classList.remove("border-error");
+                                    return;
+                                }
+                                if (username.length < 3) {
+                                    showError("Nazwa użytkownika musi mieć co najmniej 3 znaki.");
+                                    return;
+                                }
+                                try {
+                                    const res = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(username)}`);
+                                    const data = await res.json();
+                                    console.log(data);
+                                    if (data.error != 200) {
+                                        showError("Nazwa użytkownika jest już zajęta.");
+                                    } else {
+                                        hideError();
+                                    }
+                                } catch (error) {
+                                    console.error("Błąd połączenia z serwerem", error);
+                                    showError("Nie udało się sprawdzić dostępności.");
                                 }
                             }
-                            usernameInput.addEventListener("blur", validateUsername);
-                            errorIcon.addEventListener("mouseenter", () => {
-                                if (!errorIcon.classList.contains("hidden")) {
-                                    errorTooltip.classList.remove("hidden");
-                                    errorTooltip.classList.remove("opacity-0");
+                            function showError(msg) {
+                                icon.classList.remove("hidden");
+                                input.classList.add("border-error");
+                                tooltip.textContent = msg;
+                            }
+                            function hideError() {
+                                icon.classList.add("hidden");
+                                tooltip.classList.add("hidden");
+                                input.classList.remove("border-error");
+                            }
+                            input.addEventListener("blur", checkUsernameAvailability);
+                            icon.addEventListener("mouseenter", () => {
+                                isHovering = true;
+                                tooltip.classList.remove("hidden", "opacity-0");
+                            });
+                            icon.addEventListener("mouseleave", () => {
+                                isHovering = false;
+                                tooltip.classList.add("opacity-0");
+                                setTimeout(() => {
+                                    if (!isHovering) tooltip.classList.add("hidden");
+                                }, 300);
+                            });
+                            tooltip.addEventListener("mouseenter", () => isHovering = true);
+                            tooltip.addEventListener("mouseleave", () => {
+                                isHovering = false;
+                                tooltip.classList.add("opacity-0");
+                                setTimeout(() => {
+                                    if (!isHovering) tooltip.classList.add("hidden");
+                                }, 300);
+                            });
+                        });
+                    </script>
+                    </script>
+                </div>
+                <div class="relative m-5">
+                    <input type="text" id="firstName" aria-describedby="firstName" name="firstName" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-surface
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="firstName" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                           duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                           peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                           peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                           peer-focus:scale-90 peer-focus:-translate-y-4 
+                           rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-user"></i> Imię:
+                    </label>
+                    <i id="firstNameErrorIcon" class="fa-solid fa-exclamation-circle hidden absolute -left-8 top-10 transform -translate-y-1/2
+                              text-light-error dark:text-dark-error cursor-pointer">
+                    </i>
+                    <span id="firstNameErrorTooltip" class="hidden absolute -left-82 top-10 transform -translate-y-1/2
+                                 text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 transition-opacity duration-300
+                                 bg-light-error dark:bg-dark-error
+                                 text-dark-textPrimary dark:text-light-textPrimary">
+                        Imię nie może zawierać cyfr ani znaków specjalnych.
+                    </span>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const input = document.getElementById("firstName");
+                            const icon = document.getElementById("firstNameErrorIcon");
+                            const tooltip = document.getElementById("firstNameErrorTooltip");
+                            function validateFirstName() {
+                                const value = input.value.trim();
+                                const isValid = /^[A-Za-zÀ-ÖØ-öø-ÿżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$/u.test(value);
+                                if (value === "") {
+                                    icon.classList.add("hidden");
+                                    tooltip.classList.add("hidden");
+                                    input.classList.remove("border-error");
+                                } else if (!isValid) {
+                                    icon.classList.remove("hidden");
+                                    input.classList.add("border-error");
+                                } else {
+                                    icon.classList.add("hidden");
+                                    tooltip.classList.add("hidden");
+                                    input.classList.remove("border-error");
+                                }
+                            }
+                            input.addEventListener("blur", validateFirstName);
+                            icon.addEventListener("mouseenter", () => {
+                                if (!icon.classList.contains("hidden")) {
+                                    tooltip.classList.remove("hidden");
+                                    tooltip.classList.remove("opacity-0");
                                 }
                             });
-                            errorIcon.addEventListener("mouseleave", () => {
-                                errorTooltip.classList.add("opacity-0");
-                                setTimeout(() => errorTooltip.classList.add("hidden"), 300);
+                            icon.addEventListener("mouseleave", () => {
+                                tooltip.classList.add("opacity-0");
+                                setTimeout(() => tooltip.classList.add("hidden"), 300);
                             });
                         });
                     </script>
                 </div>
                 <div class="relative m-5">
-                    <input type="text" id="firstName" aria-describedby="firstName" name="firstName" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
-                    text-light-textPrimary dark:text-dark-textPrimary 
-                    bg-light-background dark:bg-dark-surface
-                    border-0 border-b-2 border-light-border dark:border-dark-border
-                    focus:outline-none focus:ring-0
-                    focus:border-light-accent peer dark:focus:border-dark-accent 
-                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
-                    <label for="firstName" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
-                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
-                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
-                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-                               peer-focus:scale-90 peer-focus:-translate-y-4 
-                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
-                        <i class="fa-solid fa-user"></i> Imię:
-                    </label>
-                </div>
-                <div class="relative m-5">
                     <input type="text" id="surname" aria-describedby="surname" name="surname" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
-                        text-light-textPrimary dark:text-dark-textPrimary 
-                        bg-light-background dark:bg-dark-surface
-                        border-0 border-b-2 border-light-border dark:border-dark-border
-                        focus:outline-none focus:ring-0
-                        focus:border-light-accent peer dark:focus:border-dark-accent 
-                        placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-surface
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
                     <label for="surname" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
-                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
-                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
-                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-                               peer-focus:scale-90 peer-focus:-translate-y-4 
-                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                           duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                           peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                           peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                           peer-focus:scale-90 peer-focus:-translate-y-4 
+                           rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-id-badge"></i> Nazwisko:
                     </label>
+                    <i id="surnameErrorIcon" class="fa-solid fa-exclamation-circle hidden absolute -left-8 top-10 transform -translate-y-1/2
+                              text-light-error dark:text-dark-error cursor-pointer">
+                    </i>
+                    <span id="surnameErrorTooltip" class="hidden absolute -left-89 top-10 transform -translate-y-1/2
+                                 text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 transition-opacity duration-300
+                                 bg-light-error dark:bg-dark-error
+                                 text-dark-textPrimary dark:text-light-textPrimary">
+                        Nazwisko nie może zawierać cyfr ani znaków specjalnych.
+                    </span>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const input = document.getElementById("surname");
+                            const icon = document.getElementById("surnameErrorIcon");
+                            const tooltip = document.getElementById("surnameErrorTooltip");
+                            let isHovering = false;
+                            function validateSurname() {
+                                const value = input.value.trim();
+                                const isValid = /^[A-Za-zÀ-ÖØ-öø-ÿżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$/u.test(value);
+                                if (value === "") {
+                                    icon.classList.add("hidden");
+                                    tooltip.classList.add("hidden");
+                                    input.classList.remove("border-error");
+                                } else if (!isValid) {
+                                    icon.classList.remove("hidden");
+                                    input.classList.add("border-error");
+                                } else {
+                                    icon.classList.add("hidden");
+                                    tooltip.classList.add("hidden");
+                                    input.classList.remove("border-error");
+                                }
+                            }
+                            input.addEventListener("blur", validateSurname);
+                            const showTooltip = () => {
+                                tooltip.classList.remove("hidden");
+                                tooltip.classList.remove("opacity-0");
+                            };
+                            const hideTooltip = () => {
+                                tooltip.classList.add("opacity-0");
+                                setTimeout(() => {
+                                    if (!isHovering) {
+                                        tooltip.classList.add("hidden");
+                                    }
+                                }, 300);
+                            };
+                            icon.addEventListener("mouseenter", () => {
+                                isHovering = true;
+                                showTooltip();
+                            });
+                            icon.addEventListener("mouseleave", () => {
+                                isHovering = false;
+                                hideTooltip();
+                            });
+                            tooltip.addEventListener("mouseenter", () => {
+                                isHovering = true;
+                                showTooltip();
+                            });
+                            tooltip.addEventListener("mouseleave", () => {
+                                isHovering = false;
+                                hideTooltip();
+                            });
+                        });
+                    </script>
                 </div>
                 <div class="relative m-5">
                     <input type="email" id="email" aria-describedby="email" name="email" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
-                    text-light-textPrimary dark:text-dark-textPrimary 
-                    bg-light-background dark:bg-dark-surface
-                    border-0 border-b-2 border-light-border dark:border-dark-border
-                    focus:outline-none focus:ring-0
-                    focus:border-light-accent peer dark:focus:border-dark-accent 
-                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-surface
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
                     <label for="email" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
-                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
-                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
-                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-                               peer-focus:scale-90 peer-focus:-translate-y-4 
-                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                           duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                           peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                           peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                           peer-focus:scale-90 peer-focus:-translate-y-4 
+                           rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-envelope"></i> E-mail:
                     </label>
+                    <i id="emailErrorIcon" class="fa-solid fa-exclamation-circle hidden absolute -left-8 top-10 transform -translate-y-1/2
+                              text-light-error dark:text-dark-error cursor-pointer">
+                    </i>
+                    <span id="emailErrorTooltip" class="hidden absolute -left-55 top-10 transform -translate-y-1/2
+                                 text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 transition-opacity duration-300
+                                 bg-light-error dark:bg-dark-error
+                                 text-dark-textPrimary dark:text-light-textPrimary">
+                        Podaj poprawny adres e-mail.
+                    </span>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const input = document.getElementById("email");
+                            const icon = document.getElementById("emailErrorIcon");
+                            const tooltip = document.getElementById("emailErrorTooltip");
+                            let isHovering = false;
+                            async function checkEmailAvailability() {
+                                const email = input.value.trim();
+                                const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                                if (email === "") {
+                                    hideError();
+                                    return;
+                                }
+                                if (!isValid) {
+                                    showError("Podaj poprawny adres e-mail.");
+                                    return;
+                                }
+                                try {
+                                    const res = await fetch(`/api/v1/register/checkEmail?email=${encodeURIComponent(email)}`);
+                                    const data = await res.json();
+                                    if (data.error !== 200) {
+                                        showError("Adres e-mail jest już zajęty.");
+                                    } else {
+                                        hideError();
+                                    }
+                                } catch (err) {
+                                    console.error("Błąd połączenia z API", err);
+                                    showError("Nie udało się sprawdzić dostępności.");
+                                }
+                            }
+                            function showError(msg) {
+                                icon.classList.remove("hidden");
+                                input.classList.add("border-error");
+                                tooltip.textContent = msg;
+                            }
+                            function hideError() {
+                                icon.classList.add("hidden");
+                                tooltip.classList.add("hidden");
+                                input.classList.remove("border-error");
+                            }
+                            input.addEventListener("blur", checkEmailAvailability);
+                            icon.addEventListener("mouseenter", () => {
+                                isHovering = true;
+                                tooltip.classList.remove("hidden", "opacity-0");
+                            });
+                            icon.addEventListener("mouseleave", () => {
+                                isHovering = false;
+                                tooltip.classList.add("opacity-0");
+                                setTimeout(() => {
+                                    if (!isHovering) tooltip.classList.add("hidden");
+                                }, 300);
+                            });
+                            tooltip.addEventListener("mouseenter", () => {
+                                isHovering = true;
+                                tooltip.classList.remove("hidden", "opacity-0");
+                            });
+                            tooltip.addEventListener("mouseleave", () => {
+                                isHovering = false;
+                                tooltip.classList.add("opacity-0");
+                                setTimeout(() => {
+                                    if (!isHovering) tooltip.classList.add("hidden");
+                                }, 300);
+                            });
+                        });
+                    </script>
                 </div>
                 <div class="relative m-5">
                     <input type="password" id="password" aria-describedby="password" name="password" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -280,6 +492,14 @@
                     <i id="togglePasswordIcon2" onclick="togglePassword('passwordConfirm', 'togglePasswordIcon2')" class="fa-solid fa-eye absolute right-4 top-4.5
                                text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
                     </i>
+                    <i id="passwordMatchErrorIcon" class="fa-solid fa-exclamation-circle hidden absolute -left-8 top-10 transform -translate-y-1/2
+   text-light-error dark:text-dark-error cursor-pointer"></i>
+                    <span id="passwordMatchErrorTooltip" class="hidden absolute -left-43 top-10 transform -translate-y-1/2
+             text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 transition-opacity duration-300
+             bg-light-error dark:bg-dark-error
+             text-dark-textPrimary dark:text-light-textPrimary">
+                        Hasła się nie zgadzają.
+                    </span>
                     <script>
                         function togglePassword(inputId, iconId) {
                             const inputField = document.getElementById(inputId);
