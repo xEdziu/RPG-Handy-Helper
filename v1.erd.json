@@ -4,8 +4,8 @@
   "settings": {
     "width": 6000,
     "height": 6000,
-    "scrollTop": -511,
-    "scrollLeft": -4754,
+    "scrollTop": 0,
+    "scrollLeft": -4793,
     "zoomLevel": 1,
     "show": 431,
     "database": 4,
@@ -576,7 +576,7 @@
           "color": "#F44336"
         },
         "meta": {
-          "updateAt": 1741646130288,
+          "updateAt": 1743248527588,
           "createAt": 1741004878374
         }
       },
@@ -2795,7 +2795,7 @@
         "tableId": "M0pfXihwEnLvYk62vLEyG",
         "name": "DMG",
         "comment": "",
-        "dataType": "TEXT",
+        "dataType": "INT",
         "default": "",
         "options": 8,
         "ui": {
@@ -2806,7 +2806,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741005190955,
+          "updateAt": 1743246725421,
           "createAt": 1741005112189
         }
       },
@@ -2835,7 +2835,7 @@
         "tableId": "M0pfXihwEnLvYk62vLEyG",
         "name": "ammunition",
         "comment": "",
-        "dataType": "INT",
+        "dataType": "ENUM",
         "default": "",
         "options": 8,
         "ui": {
@@ -2846,7 +2846,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741005322538,
+          "updateAt": 1743247101834,
           "createAt": 1741005254364
         }
       },
@@ -3393,20 +3393,20 @@
       "vqiYeo6dAin9on0dFU-eT": {
         "id": "vqiYeo6dAin9on0dFU-eT",
         "tableId": "M0pfXihwEnLvYk62vLEyG",
-        "name": "prise_category",
+        "name": "availability",
         "comment": "",
         "dataType": "ENUM",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 86,
+          "widthName": 61,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741642995693,
+          "updateAt": 1743248543452,
           "createAt": 1741007102714
         }
       },
@@ -4414,19 +4414,19 @@
         "id": "PhKWX18R5yA04pMEqnqNb",
         "tableId": "shTmExS1WVhMGjdKhDfbU",
         "name": "quality",
-        "comment": "",
-        "dataType": "TEXT",
+        "comment": "POOR/STANDARD/EXCELLENT",
+        "dataType": "ENUM",
         "default": "",
         "options": 0,
         "ui": {
           "keys": 0,
           "widthName": 60,
-          "widthComment": 60,
+          "widthComment": 175,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741018860496,
+          "updateAt": 1743245148279,
           "createAt": 1741018837783
         }
       },
@@ -5554,19 +5554,19 @@
         "id": "rAzfyXPb6GfH-ho68EO_6",
         "tableId": "shTmExS1WVhMGjdKhDfbU",
         "name": "status",
-        "comment": "przy sobie/w schowku",
+        "comment": "EQUIPPED/STORED",
         "dataType": "ENUM",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 60,
-          "widthComment": 127,
+          "widthComment": 113,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741642762510,
+          "updateAt": 1743244050534,
           "createAt": 1741642631451
         }
       },
@@ -9367,7 +9367,7 @@
       -1,
       {
         "name": 1741005168396,
-        "dataType": 1741005174257,
+        "dataType": 1743246725420,
         "options(notNull)": 1741005190955
       }
     ],
@@ -9387,7 +9387,7 @@
       -1,
       {
         "name": 1741005269712,
-        "dataType": 1741005273805,
+        "dataType": 1743247101832,
         "options(notNull)": 1741005322538
       }
     ],
@@ -9748,7 +9748,7 @@
       1741641819520,
       1741641818146,
       {
-        "name": 1741007107858,
+        "name": 1743248543451,
         "dataType": 1741642995693,
         "options(notNull)": 1741007134884
       }
@@ -10334,7 +10334,8 @@
       -1,
       {
         "name": 1741018841796,
-        "dataType": 1741018860496
+        "dataType": 1743245111259,
+        "comment": 1743245148278
       }
     ],
     "42GcZP_KLTfDTxbrAQJa4": [
@@ -11083,7 +11084,7 @@
       -1,
       {
         "name": 1741642640658,
-        "comment": 1741642653126,
+        "comment": 1743244050533,
         "dataType": 1741642762509,
         "options(notNull)": 1741642742323
       }
