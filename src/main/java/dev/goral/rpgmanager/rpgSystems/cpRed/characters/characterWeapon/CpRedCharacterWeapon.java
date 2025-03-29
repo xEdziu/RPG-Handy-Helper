@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterWeapon;
 
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacterItemStatus;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapon.CpRedWeapon;
 import jakarta.persistence.*;
@@ -41,6 +42,6 @@ public class CpRedCharacterWeapon {
     private CpRedCharacterWeaponQuality quality;
     private int ammunition;
     @Enumerated(EnumType.STRING)
-    private CpRedCharacterWeaponStatus status;
+    private CpRedCharacterItemStatus status;
     private String description;
 }

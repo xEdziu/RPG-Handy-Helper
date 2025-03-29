@@ -4,8 +4,8 @@
   "settings": {
     "width": 6000,
     "height": 6000,
-    "scrollTop": 0,
-    "scrollLeft": -4793,
+    "scrollTop": -641,
+    "scrollLeft": -4800,
     "zoomLevel": 1,
     "show": 431,
     "database": 4,
@@ -3413,20 +3413,20 @@
       "eyvYcaQ16qj54k81V6FWh": {
         "id": "eyvYcaQ16qj54k81V6FWh",
         "tableId": "qyhckDg2TexZsRxK63mjK",
-        "name": "price_category",
+        "name": "availability",
         "comment": "",
         "dataType": "ENUM",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 87,
+          "widthName": 61,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741643004271,
+          "updateAt": 1743251264798,
           "createAt": 1741007122600
         }
       },
@@ -9758,7 +9758,7 @@
       1741007122599,
       -1,
       {
-        "name": 1741007128334,
+        "name": 1743251264798,
         "dataType": 1741643004271,
         "options(notNull)": 1741007132851
       }
