@@ -87,7 +87,7 @@ public class GameRoomController {
         }
 
         // Check if the user is a participant of the game
-        Optional<GameUsers> gameUsers = gameUsersRepository.isUserInGame(gameId, currentUser.getId());
+        Optional<GameUsers> gameUsers = gameUsersRepository.findUserInGame(gameId, currentUser.getId());
         if (gameUsers.isEmpty()) {
             throw new ForbiddenActionException("Nie jesteś uczestnikiem tej gry.");
         }
