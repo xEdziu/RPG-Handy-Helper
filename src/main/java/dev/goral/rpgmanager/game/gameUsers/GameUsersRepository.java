@@ -1,7 +1,6 @@
 package dev.goral.rpgmanager.game.gameUsers;
 
 import dev.goral.rpgmanager.game.Game;
-import dev.goral.rpgmanager.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,5 +28,5 @@ public interface GameUsersRepository extends JpaRepository<GameUsers, Long> {
     long countByGameIdAndRole(@Param("gameId") Long gameId, @Param("role") GameUsersRole role);
 
     @Query("SELECT gu FROM GameUsers gu WHERE gu.game.id = :gameId AND gu.user.id = :userId")
-    Optional<GameUsers> isUserInGame(Long gameId, Long userId);
+    Optional<GameUsers> isUserInGame(@Param("gameId") Long gameId, @Param("userId") Long userId);
 }
