@@ -14,10 +14,13 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
+!.idea/JetClient/state.xml
+
 *.iws
 *.iml
 *.ipr
+
 
 ### NetBeans ###
 /nbproject/private/
@@ -44,3 +47,4 @@ maven-wrapper.properties
 ### Log files ###
 *.log
 logs/*
+/src/main/java/dev/goral/rpgmanager/user/UserConfig.java

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -88,6 +89,38 @@ public class UserService implements UserDetailsService {
         }
 
         return CustomReturnables.getOkResponseMap("Hasło zostało ustawione");
+    }
+
+    public Map<String, Object> setUserPhoto(String userPhotoPath) {
+        //TODO: Sprawdzić czy ścieżka jest poprawna
+        User user = (User) getAuthentication().getPrincipal();
+        user.setUserPhotoPath(userPhotoPath);
+        userRepository.save(user);
+        return CustomReturnables.getOkResponseMap("Zdjęcie profilowe zostało ustawione.");
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public Map<String, Object> createUserAdmin(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalStateException("Użytkownik o podanym nicku już istnieje.");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalStateException("Użytkownik o podanym emailu już istnieje.");
+        }
+        if (userRepository.findByOAuthId(user.getOAuthId()).isPresent()) {
+            throw new IllegalStateException("Użytkownik o podanym ID OAuth już istnieje.");
+        }
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new IllegalStateException("Hasło nie może być puste.");
+        }
+
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
+        userRepository.save(user);
+        return CustomReturnables.getOkResponseMap("Użytkownik został utworzony.");
     }
 
 }

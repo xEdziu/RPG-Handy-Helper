@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByToken(String token);
     @Query("SELECT u FROM User u WHERE u.oAuthId = ?1")
     Optional<User> findByOAuthId(String oAuthId);
+
 }
