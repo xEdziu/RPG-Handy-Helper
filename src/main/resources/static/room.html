@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokój czatu</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 2rem;
+        }
+
+        #chat {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        #chat .message {
+            margin-bottom: 0.5rem;
+        }
+
+        #chat .message strong {
+            color: #333;
+        }
+
+        #message-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #aaa;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+        }
+
+        #online-users {
+            margin-top: 1rem;
+            padding-left: 1.2rem;
+        }
+
+        h2, h4 {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Pokój czatowy: <span id="room-id"></span></h2>
+
+<div id="chat"></div>
+
+<form id="message-form">
+    <input type="text" id="message-input" placeholder="Napisz wiadomość..." autocomplete="off" required />
+    <button type="submit">Wyślij</button>
+</form>
+
+<h4>Uczestnicy online</h4>
+<ul id="online-users"></ul>
+
+<script>
+    const roomId = window.location.pathname.split("/").pop();
+    document.getElementById("room-id").textContent = roomId;
+
+    let username = null;
+    let stompClient = null;
+
+    fetch("/api/v1/authorized/user")
+        .then(response => response.json())
+        .then(data => {
+            username = data.username;
+            connectWebSocket();
+        })
+        .catch(err => {
+            alert("Nie udało się pobrać danych użytkownika – czy jesteś zalogowany?");
+        });
+
+    function connectWebSocket() {
+        const socket = new SockJS("/ws");
+        stompClient = Stomp.over(socket);
+        stompClient.debug = null; // wyłączenie logowania
+
+        stompClient.connect({}, function () {
+            stompClient.subscribe(`/topic/chat/${roomId}`, function (message) {
+                const msg = JSON.parse(message.body);
+                displayMessage(msg.from, msg.content);
+            });
+
+            stompClient.subscribe(`/topic/chat/${roomId}/users`, function (message) {
+                const users = JSON.parse(message.body);
+                updateOnlineUsers(users);
+            });
+            stompClient.send(`/app/join/${roomId}`, {}, {});
+        });
+    }
+
+
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function displayMessage(from, content) {
+        const chat = document.getElementById("chat");
+        const div = document.createElement("div");
+        div.classList.add("message");
+
+        const safeFrom = escapeHtml(from);
+        const safeContent = escapeHtml(content);
+
+        div.innerHTML = `<strong>${safeFrom}</strong>: ${safeContent}`;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function updateOnlineUsers(users) {
+        const ul = document.getElementById("online-users");
+        ul.innerHTML = "";
+        users.forEach(user => {
+            const li = document.createElement("li");
+            li.textContent = user;
+            ul.appendChild(li);
+        });
+    }
+
+    document.getElementById("message-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const input = document.getElementById("message-input");
+        const content = input.value.trim();
+        if (content && stompClient && stompClient.connected) {
+            stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({
+                from: username,
+                content: content
+            }));
+            input.value = "";
+        }
+    });
+</script>
+
+</body>
+</html>
