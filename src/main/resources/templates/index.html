@@ -6,6 +6,17 @@
     <title>Strona Główna</title>
 </head>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+    .font-league-spartan {
+        font-family: 'League Spartan', sans-serif;
+    }
+    .font-jetbrains-mono {
+        font-family: 'JetBrains Mono', monospace;
+    }
+</style>
+
 <script>
     tailwind.config = {
         darkMode: "class",
@@ -13,59 +24,100 @@
             extend: {
                 colors: {
                     dark: {
-                        background: "#0070d29",
+                        background: "#1E1E1E",
                         backgroundSecondary: "#181818",
-                        backgroundTertiary: "#242424",
-                        surface: "#1E1E1E",
-                        textPrimary: "#E0E0E0",
-                        textSecondary: "#B0B0B0",
-                        border: "#333333",
+                        backgroundTertiary: "#101010",
+                        textPrimary: "#E1E1E1",
+                        textSecondary: "#AFAFAF",
                         accent: "#12e1b9",
-                        accentDark: "#01d0a8",
-                        success: "#00FF99",
-                        error: "#FF4444",
-                        warning: "#FFD700",
+                        accentDark: "#00B189",
+                        success: "#00EE00",
+                        error: "#D00000",
+                        warning: "#FF9831",
                     },
                     light: {
-                        background: "#FFFFFF",
-                        backgroundSecondary: "#FAFAFA",
-                        backgroundTertiary: "#EAEAEA",
-                        surface: "#F5F5F5",
-                        textPrimary: "#1A1A1A",
-                        textSecondary: "#5A5A5A",
-                        border: "#CCCCCC",
-                        accent: "#ff3131",
-                        accentDark: "#ee2020",
-                        success: "#00CC66",
-                        error: "#bf7799",
-                        warning: "#FFAA00",
+                        background: "#E1E1E1",
+                        backgroundSecondary: "#C1C1C1",
+                        backgroundTertiary: "#818181",
+                        textPrimary: "#252525",
+                        textSecondary: "#505050",
+                        accent: "#ED1E46",
+                        accentDark: "#BD0016",
+                        success: "#009688",
+                        error: "#b388FF",
+                        warning: "#FF6F00",
                     },
                 },
             },
         },
     };
 </script>
+<script> // Skrypt do obsługi przełącznika jasny/ciemny motyw
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleSwitch = document.getElementById("switch-component");
+    const body = document.documentElement;
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+        body.classList.add("dark");
+        toggleSwitch.checked = true;
+    } else {
+        body.classList.remove("dark");
+        toggleSwitch.checked = false;
+    }
+    toggleSwitch.addEventListener("change", function () {
+        if (this.checked) {
+            body.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            body.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    });
+});
+</script>
+<body class="min-h-screen flex flex-col">
+<div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
+    <i class="fa-solid fa-sun text-light-accent dark:text-dark-accent"></i>
 
-<body class="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text font-mono">
-<main class ="flex-grow flex flex-col items-start justify-center px-16">
-    <header class="font-bold text-6xl tracking-widest leading-30">
+    <label for="switch-component" class="relative inline-block w-12 h-6 cursor-pointer">
+        <input id="switch-component" type="checkbox" class="peer hidden" />
+
+        <div class="w-12 h-6 rounded-full transition-all duration-300
+                    bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary">
+        </div>
+
+        <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
+                    bg-light-accent dark:bg-dark-accent
+                    shadow-md transition-all duration-300
+                    peer-checked:translate-x-[1.5rem]
+                    pointer-events-none">
+        </div>
+    </label>
+
+    <i class="fa-solid fa-moon text-light-accent dark:text-dark-accent"></i>
+</div>
+
+
+
+<main class ="flex-grow flex flex-col items-start px-16 pt-36 bg-light-background dark:bg-dark-background font-league-spartan">
+    <header class="font-bold text-7xl tracking-widest leading-30 text-light-textPrimary dark:text-dark-textPrimary">
         <h1>RPG Handy</h1>
         <h1>Helper</h1>
     </header>
-    <div class="mt-10 grid grid-cols-2 gap-6">
-        <button class ="flex items-center justify-between w-64 text-left px-2 py-2 border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
+    <div class="mt-10 grid grid-cols-2 gap-6 pt-12">
+        <button class ="flex items-center justify-between w-64 text-left px-2 py-2 border border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-text-light-textPrimary dark:text-dark-textPrimary
                         hover:bg-light-success dark:hover:bg-dark-success"
                 type="button" onclick="location.href='auth/login.html'">Login</button>
-        <button class="flex items-center justify-between border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
+        <button class="flex items-center justify-between border border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary
                         hover:bg-light-success dark:hover:bg-dark-success"
                 type="button" onclick="location.href='auth/register.html'">Register</button>
-        <button class="flex items-center justify-between border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
+        <button class="flex items-center justify-between border border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary
                         hover:bg-light-success dark:hover:bg-dark-success" type="button">Learn more</button>
-        <button class="flex items-center justify-between border border-light-accent dark:border-dark-accent text-light-primary dark:text-dark-primary
+        <button class="flex items-center justify-between border border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary
                         hover:bg-light-success dark:hover:bg-dark-success" type="button">Demo</button>
     </div>
 </main>
-<footer class="bottom-0 w-full text-center p-4 bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary text-light-text dark:text-dark-text">
+<footer class="bottom-0 w-full text-center p-4 bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary text-light-text dark:text-dark-textPrimary">
     <h5>© 2025 RPG Manager</h5>
 </footer>
 </body>
