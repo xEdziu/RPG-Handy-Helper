@@ -2,7 +2,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterWeapon;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacterItemStatus;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapon.CpRedWeapon;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons.CpRedWeapons;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class CpRedCharacterWeapon {
             name = "weapon_id",
             referencedColumnName = "id"
     )
-    private CpRedWeapon weaponId;
+    private CpRedWeapons weaponId;
     @ManyToOne
     @JoinColumn(
             name = "character_id",

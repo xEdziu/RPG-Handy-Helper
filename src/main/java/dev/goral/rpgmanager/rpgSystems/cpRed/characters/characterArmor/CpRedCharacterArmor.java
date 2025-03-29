@@ -2,7 +2,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterArmor;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacterItemStatus;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.armor.CpRedArmor;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.armors.CpRedArmors;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class CpRedCharacterArmor {
         name = "armor_id",
         referencedColumnName = "id"
     )
-    private CpRedArmor armorId;
+    private CpRedArmors armorId;
     @ManyToOne
     @JoinColumn(
         name = "character_id",
