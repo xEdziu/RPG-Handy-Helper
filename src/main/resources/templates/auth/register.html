@@ -7,9 +7,11 @@
     <title>Rejestracja</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
         .font-league-spartan {
             font-family: 'League Spartan', sans-serif;
         }
+
         .font-jetbrains-mono {
             font-family: 'JetBrains Mono', monospace;
         }
@@ -75,7 +77,8 @@
             <div class="flex items-center">
                 <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
                 <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
-                <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                <h1
+                    class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
                     RPG Handy Helper
                 </h1>
             </div>
@@ -126,7 +129,7 @@
         class="flex-grow flex flex-col items-center justify-center bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary w-screen">
         <div
             class="p-4 m-3 flex items-center justify-center text-3xl border-b-4 border-light-accentDark dark:border-dark-accentDark">
-            <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
+            <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary text-font-jetbrains-mono">
                 REJESTRACJA
             </h1>
         </div>
@@ -299,7 +302,7 @@
                    rounded-lg transition-all duration-300 
                    hover:bg-light-accentDark hover:dark:bg-dark-accentDark 
                    focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
-                   active:scale-95">
+                   active:scale-95 text-font-jetbrains-mono">
                         ZAREJESTRUJ SIĘ
                     </button>
                     <p class="m-4 text-center text-light-textSecondary dark:text-dark-textSecondary">
@@ -313,7 +316,7 @@
         </div>
     </main>
     <footer
-        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
         <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Manager</h3>
         <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
             class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
@@ -397,14 +400,140 @@
         inputField.type = isPassword ? "text" : "password";
         icon.classList.replace(isPassword ? "fa-eye" : "fa-eye-slash", isPassword ? "fa-eye-slash" : "fa-eye");
     }
-    function toggleVisibilityError(elementId) { // Funkcja do przełączania widoczności błędów
-        var element = document.getElementById(elementId);
-        if (element.style.display === 'hidden' || element.style.display === 'none') {
-            element.style.display = 'block';
-        } else {
-            element.style.display = 'none';
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const fields = [
+            {
+                id: 'username',
+                validate: validateUsername,
+                errorElement: document.getElementById('error-username')
+            },
+            {
+                id: 'firstName',
+                validate: validateName,
+                errorElement: document.getElementById('error-firstName')
+            },
+            {
+                id: 'surname',
+                validate: validateName,
+                errorElement: document.getElementById('error-surname')
+            },
+            {
+                id: 'email',
+                validate: validateEmail,
+                errorElement: document.getElementById('error-email')
+            },
+            {
+                id: 'password',
+                validate: validatePassword,
+                errorElement: document.getElementById('error-password')
+            },
+            {
+                id: 'passwordConfirm',
+                validate: validatePasswordConfirm,
+                errorElement: document.getElementById('error-passwordConfirm')
+            }
+        ];
+        fields.forEach(field => {
+            const input = document.getElementById(field.id);
+            input.addEventListener('blur', () => {
+                const isValid = field.validate(input.value);
+                toggleError(field.errorElement, isValid, input);
+            });
+        });
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            let isFormValid = true;
+            for (const field of fields) {
+                const input = document.getElementById(field.id);
+                const isValid = await field.validate(input.value);
+                toggleError(field.errorElement, isValid, input);
+                if (!isValid) {
+                    isFormValid = false;
+                }
+            }
+            if (isFormValid) {
+                form.submit();
+            }
+        });
+        function validateUsername(username) {
+            if (username.trim() === '') return true;
+            const regex = /^[a-zA-Z0-9_\-\*\!\?][\w\-\*\!\?]{2,}$/
+            if (!regex.test(username)) {
+                document.getElementById('usernameErrorTooltip').textContent = 'Nazwa użytkownika musi mieć co najmniej 3 znaki i nie może zaczynać się od znaku specjalnego.';
+                return false;
+            }
+            if (checkAvailability(`/api/v1/register/checkUsername?username=${encodeURIComponent(username)}`)) {
+                document.getElementById('usernameErrorTooltip').textContent = 'Nazwa użytkownika jest już zajęta.';
+                return false;
+            }
+            return true;
         }
-    }
+        function validateName(name) {
+            if (name.trim() === '') return true;
+            const regex = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]+$/;
+            if (!regex.test(name)) {
+                document.getElementById('firstNameErrorTooltip').textContent = 'Pole nie może zawierać cyfr ani znaków specjalnych.';
+                return false;
+            }
+            return true;
+        }
+        function validateEmail(email) {
+            if (email.trim() === '') return true;
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!regex.test(email)) {
+                document.getElementById('emailErrorTooltip').textContent = 'Proszę podać prawidłowy adres e-mail.';
+                return false;
+            }
+            if (checkAvailability(`/api/v1/register/checkEmail?email=${encodeURIComponent(email)}`)) {
+                document.getElementById('emailErrorTooltip').textContent = 'Adres e-mail jest już zajęty.';
+                return false;
+            }
+            return true;
+        }
+        function validatePassword(password) {
+            if (password.trim() === '') return true;
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            if (!regex.test(password)) {
+                document.getElementById('passwordErrorTooltip').textContent = 'Hasło musi mieć co najmniej 8 znaków, zawierać małą i dużą literę, cyfrę oraz znak specjalny.';
+                return false;
+            }
+            return true;
+        }
+        function validatePasswordConfirm(passwordConfirm) {
+            if (passwordConfirm.trim() === '') return true;
+            const password = document.getElementById('password').value;
+            if (passwordConfirm !== password) {
+                document.getElementById('passwordConfirmErrorTooltip').textContent = 'Hasła nie są identyczne.';
+                return false;
+            }
+            return true;
+        }
+        function toggleError(errorElement, isValid, input) {
+            if (isValid || input.value.trim() === '') {
+                errorElement.classList.add('hidden');
+                input.classList.remove('border-error');
+            } else {
+                errorElement.classList.remove('hidden');
+                input.classList.add('border-error');
+            }
+        }
+        async function checkAvailability(url) {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log(data);
+                if (data.error !== 200) {
+                    return false;
+                }
+                return true;
+            } catch (err) {
+                return false;
+            }
+        }
+
+
+    });
 </script>
 
 </html>
