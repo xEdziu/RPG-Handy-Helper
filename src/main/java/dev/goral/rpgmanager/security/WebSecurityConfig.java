@@ -33,6 +33,7 @@ public class WebSecurityConfig {
                         customizer
                                 .requestMatchers("/api/v1/authorized/admin/**").hasAuthority("ROLE_ADMIN") // Only for ADMIN
                                 .requestMatchers("/api/v1/authorized/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN") // For USER and ADMIN
+                                .requestMatchers("/room/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                                 .requestMatchers("/api/v1/**").permitAll() // Publicly accessible, no login required
                                 .requestMatchers("/admin", "/admin/**").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/home", "/home/**").hasAuthority("ROLE_USER")

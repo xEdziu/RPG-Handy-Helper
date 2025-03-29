@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.3</version>
+        <version>3.4.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>dev.goral</groupId>
-    <artifactId>RPG-Manager</artifactId>
+    <artifactId>RPG-Handy-Helper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>RPG-Manager</name>
-    <description>RPG-Manager</description>
+    <name>RPG-Handy-Helper</name>
+    <description>RPG-Handy-Helper - a team Project on Wrocław University of Science and Technology</description>
     <url/>
     <licenses>
         <license/>
@@ -91,6 +91,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
     </dependencies>
 
