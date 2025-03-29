@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rejestracja</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
 
@@ -17,6 +18,7 @@
         }
 
         .grecaptcha-badge {
+            /* Stylizacja reCAPTCHA */
             position: fixed !important;
             bottom: 10px;
             right: 10px;
@@ -31,49 +33,85 @@
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
+    // Ustawienia Tailwind CSS
     tailwind.config = {
         darkMode: "class",
         theme: {
             extend: {
                 colors: {
                     dark: {
-                        background: "#0070d29",
+                        background: "#1E1E1E",
                         backgroundSecondary: "#181818",
-                        backgroundTertiary: "#242424",
-                        surface: "#1E1E1E",
-                        textPrimary: "#E0E0E0",
-                        textSecondary: "#B0B0B0",
-                        border: "#333333",
+                        backgroundTertiary: "#101010",
+                        textPrimary: "#E1E1E1",
+                        textSecondary: "#AFAFAF",
                         accent: "#12e1b9",
-                        accentDark: "#01d0a8",
-                        success: "#00FF99",
-                        error: "#FF4444",
-                        warning: "#FFD700",
+                        border: "#333333",
+                        surface: "#1E1E1E",
+                        accentDark: "#00B189",
+                        success: "#00EE00",
+                        error: "#D00000",
+                        warning: "#FF9831",
                     },
                     light: {
-                        background: "#FFFFFF",
-                        backgroundSecondary: "#FAFAFA",
-                        backgroundTertiary: "#EAEAEA",
+                        background: "#E1E1E1",
+                        backgroundSecondary: "#C1C1C1",
+                        backgroundTertiary: "#818181",
+                        textPrimary: "#252525",
                         surface: "#F5F5F5",
-                        textPrimary: "#1A1A1A",
-                        textSecondary: "#5A5A5A",
                         border: "#CCCCCC",
-                        accent: "#ff3131",
-                        accentDark: "#ee2020",
-                        success: "#00CC66",
-                        error: "#bf7799",
-                        warning: "#FFAA00",
+                        textSecondary: "#505050",
+                        accent: "#ED1E46",
+                        accentDark: "#BD0016",
+                        success: "#009688",
+                        error: "#b388FF",
+                        warning: "#FF6F00",
                     },
                 },
             },
         },
     };
+    // Skrypt do przełączania motywu jasnego/ciemnego
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleSwitch = document.getElementById("switch-component");
+        const body = document.body;
+        const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+        const favicon = document.getElementById("favicon");
+        function updateFavicon(theme) {
+            if (favicon) {
+                favicon.href = theme === "dark"
+                    ? "/img/logo/logo-dark.svg"
+                    : "/img/logo/logo-light.svg";
+            }
+        }
+        function applyTheme(theme) {
+            body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+            if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+        }
+        const savedTheme = localStorage.getItem("theme") || "light";
+        applyTheme(savedTheme);
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener("change", function () {
+                const newTheme = toggleSwitch.checked ? "dark" : "light";
+                applyTheme(newTheme);
+            });
+        }
+        if (themeToggleDiv) {
+            themeToggleDiv.addEventListener("click", function (e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                const newTheme = body.classList.contains("dark") ? "light" : "dark";
+                applyTheme(newTheme);
+            });
+        }
+    });
 </script>
 
 <body class="m-0 h-screen w-screen flex flex-col justify-between font-league-spartan">
     <nav
         class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
-        <a href="#"> <!-- Przekierowanie do strony głównej -->
+        <a href="/"> <!-- Przekierowanie do strony głównej -->
             <div class="flex items-center">
                 <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
                 <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
@@ -102,34 +140,11 @@
             <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
         </div>
     </nav>
-    <script> // Skrypt do obsługi przełącznika jasny/ciemny motyw
-        document.addEventListener("DOMContentLoaded", function () {
-            const toggleSwitch = document.getElementById("switch-component");
-            const body = document.body;
-            const savedTheme = localStorage.getItem("theme");
-            if (savedTheme === "dark") {
-                body.classList.add("dark");
-                toggleSwitch.checked = true;
-            } else {
-                body.classList.remove("dark");
-                toggleSwitch.checked = false;
-            }
-            toggleSwitch.addEventListener("change", function () {
-                if (this.checked) {
-                    body.classList.add("dark");
-                    localStorage.setItem("theme", "dark");
-                } else {
-                    body.classList.remove("dark");
-                    localStorage.setItem("theme", "light");
-                }
-            });
-        });
-    </script>
     <main
-        class="flex-grow flex flex-col items-center justify-center bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary w-screen">
+        class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
         <div
             class="p-4 m-3 flex items-center justify-center text-3xl border-b-4 border-light-accentDark dark:border-dark-accentDark">
-            <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary text-font-jetbrains-mono">
+            <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
                 REJESTRACJA
             </h1>
         </div>
@@ -137,16 +152,16 @@
             <h1 class="text-light-accentDark dark:text-dark-accentDark font-semibold text-xl"></h1>
             <br>
             <form method="post">
-                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
+                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" class="hiddenS" />
                 <div class="relative m-5">
                     <input type="text" id="username" aria-describedby="username" name="username" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                                text-light-textPrimary dark:text-dark-textPrimary 
-                               bg-light-background dark:bg-dark-surface
+                               bg-light-background dark:bg-dark-background
                                border-0 border-b-2 border-light-border dark:border-dark-border
                                focus:outline-none focus:ring-0
                                focus:border-light-accent peer dark:focus:border-dark-accent 
-                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
-
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base"
+                        placeholder=" " />
                     <label for="username" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
                                duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
                                peer-focus:text-light-accent peer-focus:dark:text-dark-accent
@@ -155,12 +170,10 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:
                     </label>
-
                     <p id="error-username" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
                         <i id="usernameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
                         <span id="usernameErrorTooltip"></span>
                     </p>
-
                 </div>
                 <div class="relative m-5">
                     <input type="text" id="firstName" aria-describedby="firstName" name="firstName" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -183,7 +196,6 @@
                         <i id="firstNameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
                         <span id="firstNameErrorTooltip"></span>
                     </p>
-
                 </div>
                 <div class="relative m-5">
                     <input type="text" id="surname" aria-describedby="surname" name="surname" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -201,11 +213,10 @@
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-id-badge"></i> Nazwisko:
                     </label>
-
                     <p id="error-surname" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
                         <i id="surnameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
                         <span id="surnameErrorTooltip"></span>
-
+                    </p>
                 </div>
                 <div class="relative m-5">
                     <input type="email" id="email" aria-describedby="email" name="email" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -228,7 +239,6 @@
                         <i id="emailErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
                         <span id="emailErrorTooltip"></span>
                     </p>
-
                 </div>
                 <div class="relative m-5">
                     <input type="password" id="password" aria-describedby="password" name="password" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -238,7 +248,6 @@
                                focus:outline-none focus:ring-0
                                focus:border-light-accent peer dark:focus:border-dark-accent 
                                placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
-
                     <label for="password" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
                            duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
                            peer-focus:text-light-accent peer-focus:dark:text-dark-accent
@@ -255,7 +264,6 @@
                         <i id="passwordErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
                         <span id="passwordErrorTooltip"></span>
                     </p>
-
                 </div>
                 <div class="relative m-5">
                     <input type="password" id="passwordConfirm" aria-describedby="passwordConfirm"
@@ -436,8 +444,9 @@
         ];
         fields.forEach(field => {
             const input = document.getElementById(field.id);
-            input.addEventListener('blur', () => {
-                const isValid = field.validate(input.value);
+            input.addEventListener('blur', async () => {
+                currentFieldId = field.id; // <-- zapamiętanie ID pola
+                const isValid = await field.validate(input.value);
                 toggleError(field.errorElement, isValid, input);
             });
         });
@@ -456,15 +465,17 @@
                 form.submit();
             }
         });
-        function validateUsername(username) {
+
+        async function validateUsername(username) {
             if (username.trim() === '') return true;
-            const regex = /^[a-zA-Z0-9_\-\*\!\?][\w\-\*\!\?]{2,}$/
+            const regex = /^[a-zA-Z0-9_][\w\-\*\!\?]{2,}$/
             if (!regex.test(username)) {
                 document.getElementById('usernameErrorTooltip').textContent = 'Nazwa użytkownika musi mieć co najmniej 3 znaki i nie może zaczynać się od znaku specjalnego.';
                 return false;
             }
-            if (checkAvailability(`/api/v1/register/checkUsername?username=${encodeURIComponent(username)}`)) {
-                document.getElementById('usernameErrorTooltip').textContent = 'Nazwa użytkownika jest już zajęta.';
+            const available = await checkAvailability(`api/v1/register/checkUsername?username=${encodeURIComponent(username)}`);
+            if (available) {
+                document.getElementById('usernameErrorTooltip').textContent = 'Podana nazwa użytkownika jest już zajęta.';
                 return false;
             }
             return true;
@@ -472,24 +483,34 @@
         function validateName(name) {
             if (name.trim() === '') return true;
             const regex = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]+$/;
+            const tooltip = document.getElementById(`${currentFieldId}ErrorTooltip`);
             if (!regex.test(name)) {
-                document.getElementById('firstNameErrorTooltip').textContent = 'Pole nie może zawierać cyfr ani znaków specjalnych.';
+                if (tooltip) {
+                    tooltip.textContent = 'Pole nie może zawierać cyfr ani znaków specjalnych.';
+                }
                 return false;
             }
             return true;
         }
-        function validateEmail(email) {
+        async function validateEmail(email) {
             if (email.trim() === '') return true;
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!regex.test(email)) {
                 document.getElementById('emailErrorTooltip').textContent = 'Proszę podać prawidłowy adres e-mail.';
                 return false;
             }
-            if (checkAvailability(`/api/v1/register/checkEmail?email=${encodeURIComponent(email)}`)) {
-                document.getElementById('emailErrorTooltip').textContent = 'Adres e-mail jest już zajęty.';
+            try {
+                const response = await fetch(`/api/v1/register/checkEmail?email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+                if (data.error !== 200) {
+                    document.getElementById('emailErrorTooltip').textContent = 'Adres e-mail jest już zajęty.';
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                document.getElementById('emailErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
                 return false;
             }
-            return true;
         }
         function validatePassword(password) {
             if (password.trim() === '') return true;
@@ -518,20 +539,21 @@
                 input.classList.add('border-error');
             }
         }
-        async function checkAvailability(url) {
+        async function checkAvailability(url, errorMessage, errorElementId) {
+            const tooltip = document.getElementById(errorElementId);
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                console.log(data);
                 if (data.error !== 200) {
+                    tooltip.textContent = errorMessage;
                     return false;
                 }
                 return true;
-            } catch (err) {
+            } catch (error) {
+                alert('Błąd połączenia z serwerem.');
                 return false;
             }
         }
-
 
     });
 </script>
