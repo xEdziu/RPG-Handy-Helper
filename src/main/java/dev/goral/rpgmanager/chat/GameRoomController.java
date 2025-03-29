@@ -2,6 +2,8 @@ package dev.goral.rpgmanager.chat;
 
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.game.GameRepository;
+import dev.goral.rpgmanager.game.gameUsers.GameUsers;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ForbiddenActionException;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
@@ -21,6 +23,7 @@ public class GameRoomController {
     private final GameRoomManager gameRoomManager;
     private final GameRoomHistoryRepository historyRepository;
     private final GameRepository gameRepository;
+    private final GameUsersRepository gameUsersRepository;
 
     @PostMapping("/create")
     public Map<String, Object> createGameRoom(@RequestParam Long gameId,
@@ -73,8 +76,22 @@ public class GameRoomController {
     }
 
     @GetMapping("/active")
-    public Map<String, Object> getActiveRoomsForGame(@RequestParam Long gameId) {
+    public Map<String, Object> getActiveRoomsForGame(@RequestParam Long gameId,
+                                                     @AuthenticationPrincipal User currentUser) {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Znaleziono aktywne pokoje.");
+
+        // Check if the game exists
+        Game game = gameRepository.findById(gameId).orElse(null);
+        if (game == null) {
+            throw new ResourceNotFoundException("Nie znaleziono gry o podanym ID.");
+        }
+
+        // Check if the user is a participant of the game
+        Optional<GameUsers> gameUsers = gameUsersRepository.isUserInGame(gameId, currentUser.getId());
+        if (gameUsers.isEmpty()) {
+            throw new ForbiddenActionException("Nie jesteś uczestnikiem tej gry.");
+        }
+
         List<Map<String, Object>> activeRooms = gameRoomManager.getActiveRoomsForGame(gameId);
 
         if (activeRooms.isEmpty()) {

@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -433,6 +433,56 @@
                   </list>
                 </option>
                 <option name="sortWeight" value="4000000" />
+              </folderState>
+              <folderState>
+                <option name="description" value="Tworzone pokoje z czatem" />
+                <option name="id" value="94106fa3-4e09-417c-b258-d7bcb1ad809e" />
+                <option name="name" value="Lobby" />
+                <option name="requests">
+                  <list>
+                    <requestState>
+                      <option name="description" value="Tworzy pokój" />
+                      <option name="id" value="bbc20dbc-3c20-4fec-bf62-e11353d20bb1" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Utwórz pokój" />
+                      <option name="queryParams">
+                        <list>
+                          <queryParamState>
+                            <option name="key" value="gameId" />
+                            <option name="value" value="1" />
+                          </queryParamState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="1000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameRoom/create?gameId=1" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Pobierz historię pokoi, w których gracz brał udział" />
+                      <option name="id" value="7f234260-6aac-47e5-8226-3cdcc522d043" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Historia pokoi" />
+                      <option name="sortWeight" value="2000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameRoom/history" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Lista aktywnych pokoi dla danej gry" />
+                      <option name="id" value="c6dfa8ac-79fe-4b91-9262-855819f30892" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Aktywne pokoje" />
+                      <option name="queryParams">
+                        <list>
+                          <queryParamState>
+                            <option name="key" value="gameId" />
+                            <option name="value" value="1" />
+                          </queryParamState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="3000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameRoom/active?gameId=1" />
+                    </requestState>
+                  </list>
+                </option>
+                <option name="sortWeight" value="5000000" />
               </folderState>
             </list>
           </option>
