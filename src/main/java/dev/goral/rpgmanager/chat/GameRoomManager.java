@@ -26,6 +26,10 @@ public class GameRoomManager {
 
     public GameRoom createRoom(Long gameId, Long creatorId) {
         String roomId = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        // Check if the room ID is already in use
+        while (activeRooms.containsKey(roomId)) {
+            roomId = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        }
         GameRoom room = new GameRoom(roomId, gameId, creatorId);
         activeRooms.put(roomId, room);
         return room;
