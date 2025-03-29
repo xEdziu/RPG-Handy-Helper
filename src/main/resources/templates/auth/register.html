@@ -1,50 +1,339 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rejestracja</title>
+    <style>
+        .grecaptcha-badge {
+            position: fixed !important;
+            bottom: 10px;
+            right: 10px;
+            z-index: 9999;
+        }
+    </style>
 </head>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
-<body>
-<h1>Rejestracja</h1>
-
-<form method="post">
-    <label for="username">Nazwa użytkownika:</label>
-    <input type="text" id="username" name="username" required><br>
-
-    <label for="firstName">Imię:</label>
-    <input type="text" id="firstName" name="firstName" required><br>
-
-    <label for="surname">Nazwisko:</label>
-    <input type="text" id="surname" name="surname" required><br>
-
-    <label for="email">E-mail:</label>
-    <input type="email" id="email" name="email" required><br>
-
-    <label for="password">Hasło:</label>
-    <input type="password" id="password" name="password" required><br>
-
-    <label for="passwordConfirm">Potwierdź hasło:</label>
-    <input type="password" id="passwordConfirm" name="passwordConfirm" required><br>
-
-    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
-
-    <button type="submit">Zarejestruj się</button><br>
-</form>
-
-<p>Masz już konto? <a href="/login">Zaloguj się</a></p>
-</body>
+<!-- Dodanie reCAPTCHA v3 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+<script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script> <!-- Dodanie Font Awesome -->
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
-    const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    dark: {
+                        background: "#0070d29",
+                        backgroundSecondary: "#181818",
+                        backgroundTertiary: "#242424",
+                        surface: "#1E1E1E",
+                        textPrimary: "#E0E0E0",
+                        textSecondary: "#B0B0B0",
+                        border: "#333333",
+                        accent: "#12e1b9",
+                        accentDark: "#01d0a8",
+                        success: "#00FF99",
+                        error: "#FF4444",
+                        warning: "#FFD700",
+                    },
+                    light: {
+                        background: "#FFFFFF",
+                        backgroundSecondary: "#FAFAFA",
+                        backgroundTertiary: "#EAEAEA",
+                        surface: "#F5F5F5",
+                        textPrimary: "#1A1A1A",
+                        textSecondary: "#5A5A5A",
+                        border: "#CCCCCC",
+                        accent: "#ff3131",
+                        accentDark: "#ee2020",
+                        success: "#00CC66",
+                        error: "#bf7799",
+                        warning: "#FFAA00",
+                    },
+                },
+            },
+        },
+    };
+</script>
+
+<body class="m-0 h-screen w-screen flex flex-col justify-between">
+    <nav
+        class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+        <a href="#"> <!-- Przekierowanie do strony głównej -->
+            <div class="flex items-center">
+                <img id="logo-light" src="logo-light.png" alt="RPG Manager" class="h-10 dark:hidden">
+                <img id="logo-dark" src="logo-dark.png" alt="RPG Manager" class="h-10 hidden dark:block">
+                <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
+                    RPG Handy Helper
+                </h1>
+            </div>
+        </a>
+        <div class="flex items-center justify-center">
+            <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+            <div class="relative inline-block w-12 h-6">
+                <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full 
+                           bg-light-accent dark:bg-dark-accent
+                           shadow-md transition-all duration-300 
+                           peer-checked:translate-x-[0.75rem] 
+                           peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                           cursor-pointer hover:shadow-lg">
+                </label>
+                <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                            bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary
+                            border border-light-accent dark:border-dark-accent">
+                </div>
+            </div>
+            <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+        </div>
+    </nav>
+    <script> // Skrypt do obsługi przełącznika jasny/ciemny motyw
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("switch-component");
+            const body = document.body;
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark") {
+                body.classList.add("dark");
+                toggleSwitch.checked = true;
+            } else {
+                body.classList.remove("dark");
+                toggleSwitch.checked = false;
+            }
+            toggleSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    body.classList.add("dark");
+                    localStorage.setItem("theme", "dark");
+                } else {
+                    body.classList.remove("dark");
+                    localStorage.setItem("theme", "light");
+                }
+            });
+        });
+    </script>
+    <main
+        class="flex-grow flex flex-col items-center justify-center bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary w-screen">
+        <div
+            class="p-4 m-3 flex items-center justify-center text-3xl border-b-4 border-light-accentDark dark:border-dark-accentDark">
+            <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary">
+                REJESTRACJA
+            </h1>
+        </div>
+        <div class="p-9 m-1 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg xl:w-[30%]">
+            <h1 class="text-light-accentDark dark:text-dark-accentDark font-semibold text-xl"></h1>
+            <br>
+            <form method="post">
+                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
+                <div class="relative m-5">
+                    <input type="text" id="username" aria-describedby="username" name="username" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-surface
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+
+                    <label for="username" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:
+                    </label>
+                    <i id="usernameErrorIcon" class="fa-solid fa-exclamation-circle hidden absolute -left-8 top-10 transform -translate-y-1/2
+                           text-light-error dark:text-dark-error cursor-pointer">
+                    </i>
+                    <span id="usernameErrorTooltip" class="hidden absolute -left-80 top-10 transform -translate-y-1/2
+                            text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 transition-opacity duration-300
+                            bg-light-error dark:bg-dark-error
+                            text-dark-textPrimary dark:text-light-textPrimary
+                            ">
+                        Nazwa użytkownika musi mieć co najmniej 3 znaki.
+                    </span>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const usernameInput = document.getElementById("username");
+                            const errorIcon = document.getElementById("usernameErrorIcon");
+                            const errorTooltip = document.getElementById("usernameErrorTooltip");
+                            function validateUsername() {
+                                let value = usernameInput.value.trim();
+                                if (value === "") {
+                                    errorIcon.classList.add("hidden");
+                                    errorTooltip.classList.add("hidden");
+                                    usernameInput.classList.remove("border-error");
+                                } else if (value.length < 3) {
+                                    errorIcon.classList.remove("hidden");
+                                    usernameInput.classList.add("border-error");
+                                } else {
+                                    errorIcon.classList.add("hidden");
+                                    errorTooltip.classList.add("hidden");
+                                    usernameInput.classList.remove("border-error");
+                                }
+                            }
+                            usernameInput.addEventListener("blur", validateUsername);
+                            errorIcon.addEventListener("mouseenter", () => {
+                                if (!errorIcon.classList.contains("hidden")) {
+                                    errorTooltip.classList.remove("hidden");
+                                    errorTooltip.classList.remove("opacity-0");
+                                }
+                            });
+                            errorIcon.addEventListener("mouseleave", () => {
+                                errorTooltip.classList.add("opacity-0");
+                                setTimeout(() => errorTooltip.classList.add("hidden"), 300);
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="relative m-5">
+                    <input type="text" id="firstName" aria-describedby="firstName" name="firstName" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    text-light-textPrimary dark:text-dark-textPrimary 
+                    bg-light-background dark:bg-dark-surface
+                    border-0 border-b-2 border-light-border dark:border-dark-border
+                    focus:outline-none focus:ring-0
+                    focus:border-light-accent peer dark:focus:border-dark-accent 
+                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="firstName" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-user"></i> Imię:
+                    </label>
+                </div>
+                <div class="relative m-5">
+                    <input type="text" id="surname" aria-describedby="surname" name="surname" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                        text-light-textPrimary dark:text-dark-textPrimary 
+                        bg-light-background dark:bg-dark-surface
+                        border-0 border-b-2 border-light-border dark:border-dark-border
+                        focus:outline-none focus:ring-0
+                        focus:border-light-accent peer dark:focus:border-dark-accent 
+                        placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="surname" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-id-badge"></i> Nazwisko:
+                    </label>
+                </div>
+                <div class="relative m-5">
+                    <input type="email" id="email" aria-describedby="email" name="email" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    text-light-textPrimary dark:text-dark-textPrimary 
+                    bg-light-background dark:bg-dark-surface
+                    border-0 border-b-2 border-light-border dark:border-dark-border
+                    focus:outline-none focus:ring-0
+                    focus:border-light-accent peer dark:focus:border-dark-accent 
+                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="email" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-envelope"></i> E-mail:
+                    </label>
+                </div>
+                <div class="relative m-5">
+                    <input type="password" id="password" aria-describedby="password" name="password" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-surface
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+
+                    <label for="password" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                           duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                           peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                           peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                           peer-focus:scale-90 peer-focus:-translate-y-4 
+                           rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-user-lock"></i> Hasło:
+                    </label>
+                    <i id="togglePasswordIcon1" onclick="togglePassword('password', 'togglePasswordIcon1')" class="fa-solid fa-eye absolute right-4 top-4.5
+                               text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
+                    </i>
+                </div>
+                <div class="relative m-5">
+                    <input type="password" id="passwordConfirm" aria-describedby="passwordConfirm"
+                        name="passwordConfirm" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                        text-light-textPrimary dark:text-dark-textPrimary 
+                        bg-light-background dark:bg-dark-surface
+                        border-0 border-b-2 border-light-border dark:border-dark-border
+                        focus:outline-none focus:ring-0
+                        focus:border-light-accent peer dark:focus:border-dark-accent 
+                        placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="passwordConfirm" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-lock"></i> Potwierdź hasło:
+                    </label>
+                    <i id="togglePasswordIcon2" onclick="togglePassword('passwordConfirm', 'togglePasswordIcon2')" class="fa-solid fa-eye absolute right-4 top-4.5
+                               text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
+                    </i>
+                    <script>
+                        function togglePassword(inputId, iconId) {
+                            const inputField = document.getElementById(inputId);
+                            const icon = document.getElementById(iconId);
+                            const isPassword = inputField.type === "password";
+                            inputField.type = isPassword ? "text" : "password";
+                            icon.classList.replace(isPassword ? "fa-eye" : "fa-eye-slash", isPassword ? "fa-eye-slash" : "fa-eye");
+                        }
+                    </script>
+                </div>
+                <br>
+                <div class="flex flex-col items-center justify-center">
+                    <p class="-mt-6 mb-10 text-light-textSecondary dark:text-dark-textSecondary">
+                        Rejestrując się, zgadzasz się na nasze
+                        <a href="#" class="text-light-accent dark:text-dark-accent hover:underline
+                        visited:text-light-accentDark dark:visited:text-dark-accent">Warunki użytkowania</a> i
+                        <a href="#" class="text-light-accent dark:text-dark-accent hover:underline
+                        visited:text-light-accentDark dark:visited:text-dark-accent">Politykę prywatności</a>.
+                    </p>
+                    <button type="submit" class="px-6 py-3 text-lg font-semibold 
+                   text-light-textPrimary dark:text-dark-textPrimary
+                   bg-light-accent dark:bg-dark-accent 
+                   border border-light-border dark:border-dark-border
+                   rounded-lg transition-all duration-300 
+                   hover:bg-light-accentDark hover:dark:bg-dark-accentDark 
+                   focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
+                   active:scale-95">
+                        ZAREJESTRUJ SIĘ
+                    </button>
+                    <p class="m-4 text-center text-light-textSecondary dark:text-dark-textSecondary">
+                        Masz już konto? <a href="/login" class="text-light-accent dark:text-dark-accent hover:underline
+                                                visited:text-light-accentDark dark:visited:text-dark-accent">
+                            Zaloguj się
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Manager</h3>
+        <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
+    </footer>
+
+</body>
+<script> // Skrypt do obsługi formularza rejestracji
     let form = document.querySelector('form');
     form.addEventListener('submit', function (event) {
         event.preventDefault(); // Zatrzymanie domyślnego wysyłania formularza
         let formData = new FormData(form);
         let data = Object.fromEntries(formData);
-
-        // Walidacja: sprawdzenie, czy hasła są identyczne
+        // Walidacja: sprawdzenie czy hasła są identyczne
         if (data.password !== data.passwordConfirm) {
             Swal.fire({
                 icon: 'error',
@@ -53,13 +342,12 @@
             });
             return;
         }
-
         // **Dodanie reCAPTCHA v3 - Pobranie tokena przed wysłaniem**
-        grecaptcha.ready(function() {
-            grecaptcha.execute('6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM', { action: 'signup' }).then(function(token) {
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM', { action: 'signup' }).then(function (token) {
                 // Dodanie tokena reCAPTCHA do danych formularza
                 data["captcha"] = token;
-                data["_csrf"] = csrfToken;
+
                 if (!token) {
                     Swal.fire({
                         icon: 'error',
@@ -68,13 +356,11 @@
                     });
                     return;
                 }
-
                 // Wysyłanie formularza do backendu
                 fetch('/api/v1/register/signup', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-XSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data),
                 })
