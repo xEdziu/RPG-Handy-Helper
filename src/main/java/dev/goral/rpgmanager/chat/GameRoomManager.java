@@ -25,7 +25,7 @@ public class GameRoomManager {
     private final SimpMessagingTemplate messagingTemplate;
 
     public GameRoom createRoom(Long gameId, Long creatorId) {
-        String roomId = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        String roomId = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         GameRoom room = new GameRoom(roomId, gameId, creatorId);
         activeRooms.put(roomId, room);
         return room;
