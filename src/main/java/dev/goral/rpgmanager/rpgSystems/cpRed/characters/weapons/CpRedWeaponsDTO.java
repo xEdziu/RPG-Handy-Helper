@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapon;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class CpRedWeaponDTO {
+public class CpRedWeaponsDTO {
     private String requireSkillId;
     private String type;
     private int damage;

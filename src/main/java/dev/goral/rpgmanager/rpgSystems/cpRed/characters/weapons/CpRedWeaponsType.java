@@ -1,6 +1,6 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapon;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons;
 
-public enum CpRedWeaponType {
+public enum CpRedWeaponsType {
     MEDIUM_PISTOL,
     HEAVY_PISTOL,
     VERY_HEAVY_PISTOL,

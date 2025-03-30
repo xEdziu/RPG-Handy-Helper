@@ -1,6 +1,6 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapon;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons;
 
-public enum CpRedWeaponAmmunition {
+public enum CpRedWeaponsAmmunition {
     ACID_PAINBALLS,
     AMRMOR_PIERCING,
     BASIC,

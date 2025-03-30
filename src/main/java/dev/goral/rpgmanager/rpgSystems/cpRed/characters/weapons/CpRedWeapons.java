@@ -1,5 +1,6 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapon;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons;
 
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedItemAvailability;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills.CpRedSkills;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CpRedWeapon {
+public class CpRedWeapons {
     @Id
     @SequenceGenerator(
             name = "cpRedWeapon_sequence",
@@ -31,17 +32,17 @@ public class CpRedWeapon {
     )
     private CpRedSkills requireSkillId;
     @Enumerated(EnumType.STRING)
-    private CpRedWeaponType type;
+    private CpRedWeaponsType type;
     private int damage; //quantity of d6
     private int magazineCapacity;
     @Enumerated(EnumType.STRING)
-    private CpRedWeaponAmmunition ammunition;
+    private CpRedWeaponsAmmunition ammunition;
     private short la;
     private short hands;
     private boolean isHidden;
     private int price;
     @Enumerated(EnumType.STRING)
-    private CpRedWeaponAvailability availability;
+    private CpRedItemAvailability availability;
     private String description;
 
 
