@@ -1,5 +1,8 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.cyberwares;
 
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedItemAvailability;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.cyberwares.CpRedCyberwaresInstallationPlace;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.cyberwares.CpRedCyberwaresMountPlace;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,5 +27,14 @@ public class CpRedCyberwares {
     )
     private Long id;
     private String name;
-
+    @Enumerated(EnumType.STRING)
+    private CpRedCyberwaresMountPlace mountPlace;
+    private String requirements;
+    private String uc;
+    @Enumerated(EnumType.STRING)
+    private CpRedCyberwaresInstallationPlace installationPlace;
+    private int price;
+    @Enumerated(EnumType.STRING)
+    private CpRedItemAvailability availability;
+    private String description;
 }
