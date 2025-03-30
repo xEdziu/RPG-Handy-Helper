@@ -1,7 +1,7 @@
 ---
 name: Backend Bug Report
-about: Zgłoś błąd po stronie serwera w aplikacji
-title: "[BUG] | Backend | Krótki opis błędu"
+about: Zgłoś błąd po stronie serwera w aplikacji podczas używania przeglądarki
+title: "[BUG] | Backend Web Browser| Krótki opis błędu"
 labels: backend, bug
 assignees: xEdziu, ZuberRS03
 
