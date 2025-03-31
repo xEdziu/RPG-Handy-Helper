@@ -16,13 +16,13 @@ import lombok.Setter;
 public class CpRedWeapons {
     @Id
     @SequenceGenerator(
-            name = "cpRedWeapon_sequence",
-            sequenceName = "cpRedWeapon_sequence",
+            name = "cpRedWeapons_sequence",
+            sequenceName = "cpRedWeapons_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "cpRedWeapon_sequence"
+            generator = "cpRedWeapons_sequence"
     )
     private Long id;
     @ManyToOne

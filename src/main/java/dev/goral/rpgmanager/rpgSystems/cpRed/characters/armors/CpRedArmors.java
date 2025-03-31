@@ -15,13 +15,13 @@ import lombok.Setter;
 public class CpRedArmors {
     @Id
     @SequenceGenerator(
-        name = "cpRedArmor_sequence",
-        sequenceName = "cpRedArmor_sequence",
+        name = "cpRedArmors_sequence",
+        sequenceName = "cpRedArmors_sequence",
         allocationSize = 1
     )
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE,
-        generator = "cpRedArmor_sequence"
+        generator = "cpRedArmors_sequence"
     )
     private Long id;
     @Enumerated(EnumType.STRING)

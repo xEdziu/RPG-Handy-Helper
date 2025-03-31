@@ -20,13 +20,13 @@ import lombok.ToString;
 public class CpRedCharacterClasses {
     @Id
     @SequenceGenerator(
-            name = "cpRedCharacterClassesSequence",
-            sequenceName = "cpRedCharacterClassesSequence",
+            name = "cpRedCharacterClasses_sequence",
+            sequenceName = "cpRedCharacterClasses_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "cpRedCharacterClassesSequence"
+            generator = "cpRedCharacterClasses_sequence"
     )
 
     private Long id;

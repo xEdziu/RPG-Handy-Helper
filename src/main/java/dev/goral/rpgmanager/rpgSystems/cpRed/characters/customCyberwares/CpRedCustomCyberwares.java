@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,13 +18,13 @@ import lombok.Setter;
 public class CpRedCustomCyberwares {
     @Id
     @SequenceGenerator(
-            name = "customCyberware_sequence",
-            sequenceName = "customCyberware_sequence",
+            name = "cpRedCustomCyberwares_sequence",
+            sequenceName = "cpRedCustomCyberwares_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "customCyberware_sequence"
+            generator = "cpRedCustomCyberwares_sequence"
     )
     private long id;
     @ManyToOne

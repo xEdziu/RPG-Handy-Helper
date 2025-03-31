@@ -19,12 +19,12 @@ import lombok.Setter;
 public class CpRedCustomWeapons {
     @Id
     @SequenceGenerator(
-            name="cpRedCustomWeapon_sequence",
-            sequenceName = "cpRedCustomWeapon_sequence"
+            name="cpRedCustomWeapons_sequence",
+            sequenceName = "cpRedCustomWeapons_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "cpRedCustomWeapon_sequence"
+            generator = "cpRedCustomWeapons_sequence"
     )
     private long id;
     @ManyToOne

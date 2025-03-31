@@ -1,9 +1,8 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCustomWeapon;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCustomCyberware;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeaponQuality;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.customWeapons.CpRedCustomWeapons;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.customCyberwares.CpRedCustomCyberwares;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,27 +12,29 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class CpRedCharacterCustomWeapon {
+@AllArgsConstructor
+public class CpRedCharacterCustomCyberware {
     @Id
     @SequenceGenerator(
-            name = "cpRedCharacterCustomWeapon_sequence",
-            sequenceName = "cpRedCharacterCustomWeapon_sequence",
+            name = "cpRedCharacterCustomCyberware_sequence",
+            sequenceName = "cpRedCharacterCustomCyberware_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "cpRedCharacterCustomWeapon_sequence"
+            generator = "cpRedCharacterCustomCyberware_sequence"
     )
     private long id;
+
     @ManyToOne
     @JoinColumn(
-            name = "weapon_id",
+            name = "cyberware_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCustomWeapons weaponId;
+    private CpRedCustomCyberwares cyberwareId;
+
     @ManyToOne
     @JoinColumn(
             name = "character_id",
@@ -41,9 +42,7 @@ public class CpRedCharacterCustomWeapon {
             nullable = false
     )
     private CpRedCharacters characterId;
-    @Enumerated(EnumType.STRING)
-    private CpRedCharacterWeaponQuality quality;
-    private int ammunition;
+
     @Enumerated(EnumType.STRING)
     private CpRedCharacterItemStatus status;
     private String description;

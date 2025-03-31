@@ -1,14 +1,14 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterArmor;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCustomEquipment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@AllArgsConstructor
 @ToString
-public class CpRedCharacterArmorDTO {
-    private long armorId;
+@AllArgsConstructor
+public class CpRedCharacterCustomEquipmentDTO {
+    private long equipmentId;
     private long characterId;
     private String status;
     private String description;
