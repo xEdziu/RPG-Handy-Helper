@@ -1,6 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterWeapon;
 
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacterItemStatus;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons.CpRedWeapons;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.item;
 
 public enum CpRedItemAvailability {
         CHEAP,

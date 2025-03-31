@@ -1,7 +1,10 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.customWeapons;
 
+import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.item.CpRedItemAvailability;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills.CpRedSkills;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons.CpRedWeaponsAmmunition;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons.CpRedWeaponsType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,27 +16,32 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CpRedWeapons {
+public class CpRedCustomWeapons {
     @Id
     @SequenceGenerator(
-            name = "cpRedWeapon_sequence",
-            sequenceName = "cpRedWeapon_sequence",
-            allocationSize = 1
+            name="cpRedCustomWeapon_sequence",
+            sequenceName = "cpRedCustomWeapon_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "cpRedWeapon_sequence"
+            generator = "cpRedCustomWeapon_sequence"
     )
-    private Long id;
+    private long id;
+    @ManyToOne
+    @JoinColumn(name = "game_id",
+                referencedColumnName = "id",
+                nullable = false)
+    private Game gameId;
     @ManyToOne
     @JoinColumn(
-            name="skill_id",
-            referencedColumnName = "id"
+            name="required_skill_id",
+            referencedColumnName = "id",
+            nullable = false
     )
-    private CpRedSkills requireSkillId;
+    private CpRedSkills requiredSkillId;
     @Enumerated(EnumType.STRING)
-    private CpRedWeaponsType type;
-    private int damage; //quantity of d6
+    private CpRedWeaponsType type;//enum from weapons
+    private int damage;
     private int magazineCapacity;
     @Enumerated(EnumType.STRING)
     private CpRedWeaponsAmmunition ammunition;
@@ -44,7 +52,4 @@ public class CpRedWeapons {
     @Enumerated(EnumType.STRING)
     private CpRedItemAvailability availability;
     private String description;
-
-
-
 }
