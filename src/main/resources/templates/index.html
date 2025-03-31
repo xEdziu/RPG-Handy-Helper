@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Strona Główna</title>
 </head>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -16,7 +16,6 @@
         font-family: 'JetBrains Mono', monospace;
     }
 </style>
-
 <script>
     tailwind.config = {
         darkMode: "class",
@@ -30,6 +29,8 @@
                         textPrimary: "#E1E1E1",
                         textSecondary: "#AFAFAF",
                         accent: "#12e1b9",
+                        border: "#333333",
+                        surface: "#1E1E1E",
                         accentDark: "#00B189",
                         success: "#00EE00",
                         error: "#D00000",
@@ -40,6 +41,8 @@
                         backgroundSecondary: "#C1C1C1",
                         backgroundTertiary: "#818181",
                         textPrimary: "#252525",
+                        surface: "#F5F5F5",
+                        border: "#CCCCCC",
                         textSecondary: "#505050",
                         accent: "#ED1E46",
                         accentDark: "#BD0016",
@@ -52,76 +55,98 @@
         },
     };
 </script>
-<script> // Skrypt do obsługi przełącznika jasny/ciemny motyw
-document.addEventListener("DOMContentLoaded", function () {
-    const toggleSwitch = document.getElementById("switch-component");
-    const body = document.documentElement;
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-        body.classList.add("dark");
-        toggleSwitch.checked = true;
-    } else {
-        body.classList.remove("dark");
-        toggleSwitch.checked = false;
-    }
-    toggleSwitch.addEventListener("change", function () {
-        if (this.checked) {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleSwitch = document.getElementById("switch-component");
+        const body = document.documentElement;
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
             body.classList.add("dark");
-            localStorage.setItem("theme", "dark");
+            toggleSwitch.checked = true;
         } else {
             body.classList.remove("dark");
-            localStorage.setItem("theme", "light");
+            toggleSwitch.checked = false;
         }
+        toggleSwitch.addEventListener("change", function () {
+            if (this.checked) {
+                body.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+            } else {
+                body.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+            }
+        });
     });
-});
 </script>
+
 <body class="min-h-screen flex flex-col">
+
 <div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
     <i class="fa-solid fa-sun text-light-accent dark:text-dark-accent"></i>
-
     <label for="switch-component" class="relative inline-block w-12 h-6 cursor-pointer">
         <input id="switch-component" type="checkbox" class="peer hidden" />
-
-        <div class="w-12 h-6 rounded-full transition-all duration-300
-                    bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary">
-        </div>
-
-        <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
-                    bg-light-accent dark:bg-dark-accent
-                    shadow-md transition-all duration-300
-                    peer-checked:translate-x-[1.5rem]
-                    pointer-events-none">
+        <div class="w-12 h-6 rounded-full transition-all duration-300 bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary"></div>
+        <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-light-accent dark:bg-dark-accent
+            shadow-md transition-all duration-300 peer-checked:translate-x-[1.5rem] pointer-events-none">
         </div>
     </label>
-
     <i class="fa-solid fa-moon text-light-accent dark:text-dark-accent"></i>
 </div>
 
+<main class="flex-1 grid grid-cols-1 md:grid-cols-2 items-center px-6 md:px-16 gap-y-12 bg-light-background dark:bg-dark-background font-league-spartan">
 
+    <div class="flex items-center justify-center order-1 md:order-2">
+        <div>
+            <img src="/img/logo/logo-light.svg" alt="Logo Light" class="block dark:hidden w-48 md:w-64 h-auto mx-auto" />
+            <img src="/img/logo/logo-dark.svg" alt="Logo Dark" class="hidden dark:block w-48 md:w-64 h-auto mx-auto" />
+        </div>
+    </div>
 
-<main class ="flex-grow flex flex-col items-start px-16 pt-32 bg-light-background dark:bg-dark-background font-league-spartan">
-    <header class="font-bold text-7xl tracking-widest leading-30 text-light-textPrimary dark:text-dark-textPrimary">
-        <h1>RPG Handy</h1>
-        <h1>Helper</h1>
-    </header>
-    <div class="font-bold text-xl tracking-wide text-light-textPrimary dark:text-dark-textPrimary pt-4">
-        Narzędzie do Twoich kampanii RPG
+    <div class="flex flex-col justify-center space-y-12 text-center md:text-left items-center md:items-start order-2 md:order-1">
+        <header class="font-bold text-light-textPrimary dark:text-dark-textPrimary">
+            <div class="text-5xl md:text-6xl tracking-widest leading-tight">
+                <h1>RPG Handy</h1>
+                <h1>Helper</h1>
+            </div>
+            <div class="text-xl font-medium pt-4">
+                Narzędzie do Twoich kampanii RPG
+            </div>
+        </header>
+
+        <div class="flex flex-col space-y-4 w-full max-w-md">
+            <div class="flex flex-col md:flex-row md:space-x-2 space-y-4 md:space-y-0">
+                <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                        onclick="location.href='auth/login.html'">LOGIN</button>
+                <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                        onclick="location.href='auth/register.html'">REJESTRACJA</button>
+            </div>
+            <div class="flex flex-col md:flex-row md:space-x-2 space-y-4 md:space-y-0">
+                <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg">
+                    DOWIEDZ SIĘ WIĘCEJ</button>
+                <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg">
+                    DEMO</button>
+            </div>
+        </div>
     </div>
-    <div class="mt-10 grid grid-cols-2 gap-6 pt-16">
-        <button class ="flex items-center justify-between w-64 text-left font-medium px-2 py-2 border-2 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-text-light-textPrimary dark:text-dark-textPrimary
-                        hover:bg-light-success dark:hover:bg-dark-success"
-                type="button" onclick="location.href='auth/login.html'">LOGIN</button>
-        <button class="flex items-center justify-between w-64 text-left px-2 py-2 border-2 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-text-light-textPrimary dark:text-dark-textPrimary
-                        hover:bg-light-success dark:hover:bg-dark-success"
-                type="button" onclick="location.href='auth/register.html'">REJESTRACJA</button>
-        <button class="flex items-center justify-between w-64 text-left px-2 py-2 border-2 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-text-light-textPrimary dark:text-dark-textPrimary
-                        hover:bg-light-success dark:hover:bg-dark-success" type="button">DOWIEDZ SIĘ WIĘCEJ</button>
-        <button class="flex items-center justify-between w-64 text-left px-2 py-2 border-2 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-text-light-textPrimary dark:text-dark-textPrimary
-                        hover:bg-light-success dark:hover:bg-dark-success" type="button">DEMO</button>
-    </div>
+
 </main>
-<footer class="bottom-0 w-full text-center p-4 bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary text-light-text dark:text-dark-textPrimary">
-    <h5>© 2025 RPG Manager</h5>
+
+<footer class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface
+        font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary border-t border-light-border dark:border-dark-border">
+    <h3 class="text-light-textPrimary dark:text-dark-textPrimary">
+        Od Graczy dla Graczy © 2025 RPG Manager
+    </h3>
+    <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank" class="text-light-accent dark:text-dark-accent">
+        <i class="fa-brands fa-github"></i>
+    </a>
 </footer>
 </body>
 </html>
