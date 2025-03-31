@@ -1,6 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.cyberwares;
 
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.item.CpRedItemAvailability;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +33,6 @@ public class CpRedCyberwares {
     private CpRedCyberwaresInstallationPlace installationPlace;
     private int price;
     @Enumerated(EnumType.STRING)
-    private CpRedItemAvailability availability;
+    private CpRedItemsAvailability availability;
     private String description;
 }

@@ -1,6 +1,6 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.Equipment;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.Equipments;
 
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.item.CpRedItemAvailability;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CpRedEquipment {
+public class CpRedEquipments {
     @Id
     @SequenceGenerator(
             name = "cpRedEquipmentSequence",
@@ -27,6 +27,6 @@ public class CpRedEquipment {
     private String name;
     private int price;
     @Enumerated(EnumType.STRING)
-    private CpRedItemAvailability availability;
+    private CpRedItemsAvailability availability;
     private String description;
 }

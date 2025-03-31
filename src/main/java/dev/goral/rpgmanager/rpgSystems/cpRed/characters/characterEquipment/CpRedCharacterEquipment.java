@@ -1,8 +1,8 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterEquipment;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.item.CpRedItemAvailability;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.Equipment.CpRedEquipment;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.Equipments.CpRedEquipments;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class CpRedCharacterEquipment {
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedEquipment itemId;
+    private CpRedEquipments itemId;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
@@ -41,6 +41,6 @@ public class CpRedCharacterEquipment {
     )
     private CpRedCharacters characterId;
     @Enumerated(EnumType.STRING)
-    private CpRedItemAvailability availability;
+    private CpRedItemsAvailability availability;
     private String description;
 }

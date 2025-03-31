@@ -1,8 +1,6 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.customCyberwares;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.customEquipments;
 
 import dev.goral.rpgmanager.game.Game;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.cyberwares.CpRedCyberwaresInstallationPlace;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.cyberwares.CpRedCyberwaresMountPlace;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,20 +8,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
+@Entity
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CpRedCustomCyberwares {
+public class CpRedCustomEquipments {
     @Id
     @SequenceGenerator(
-            name = "customCyberware_sequence",
-            sequenceName = "customCyberware_sequence",
+            name = "cpRedCustomEquipmentSequence",
+            sequenceName = "cpRedCustomEquipmentSequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "customCyberware_sequence"
+            generator = "cpRedCustomEquipmentSequence"
     )
     private long id;
     @ManyToOne
@@ -34,12 +33,6 @@ public class CpRedCustomCyberwares {
     )
     private Game gameId;
     private String name;
-    @Enumerated(EnumType.STRING)
-    private CpRedCyberwaresMountPlace mountPlace;
-    private String requirements;
-    private String uc;
-    @Enumerated(EnumType.STRING)
-    private CpRedCyberwaresInstallationPlace installationPlace;
     private int price;
     @Enumerated(EnumType.STRING)
     private CpRedItemsAvailability availability;

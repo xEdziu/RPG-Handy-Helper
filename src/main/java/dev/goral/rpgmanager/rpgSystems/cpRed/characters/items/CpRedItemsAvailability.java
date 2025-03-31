@@ -1,6 +1,6 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.item;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.items;
 
-public enum CpRedItemAvailability {
+public enum CpRedItemsAvailability {
         CHEAP,
         EVERYDAY,
         COSTLY,

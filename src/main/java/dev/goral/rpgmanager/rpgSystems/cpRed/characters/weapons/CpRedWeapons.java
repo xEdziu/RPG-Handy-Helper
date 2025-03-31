@@ -1,6 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons;
 
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.item.CpRedItemAvailability;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills.CpRedSkills;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,7 +42,7 @@ public class CpRedWeapons {
     private boolean isHidden;
     private int price;
     @Enumerated(EnumType.STRING)
-    private CpRedItemAvailability availability;
+    private CpRedItemsAvailability availability;
     private String description;
 
 
