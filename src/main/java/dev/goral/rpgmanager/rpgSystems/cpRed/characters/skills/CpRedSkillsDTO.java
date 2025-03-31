@@ -10,6 +10,6 @@ import lombok.ToString;
 public class CpRedSkillsDTO {
     private String category;
     private String name;
-    private int connecectedStatId;
+    private long connecectedStatId;
     private String description;
 }

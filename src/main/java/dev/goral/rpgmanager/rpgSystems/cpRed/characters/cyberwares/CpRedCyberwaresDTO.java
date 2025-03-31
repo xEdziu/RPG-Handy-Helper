@@ -8,7 +8,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCyberwaresDTO {
-    private long id;
     private String name;
     private String mountPlace;
     private String requirements;

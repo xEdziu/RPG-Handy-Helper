@@ -10,6 +10,6 @@ import lombok.ToString;
 public class CpRedCharacterStatsDTO {
     private int statLevelMax;
     private int statLevelActual;
-    private Long characterId;
-    private Long statId;
+    private long characterId;
+    private long statId;
 }

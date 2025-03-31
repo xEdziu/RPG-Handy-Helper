@@ -8,7 +8,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class CpRedStatsDTO {
-    private Long id;
     private String name;
     private String description;
 }
