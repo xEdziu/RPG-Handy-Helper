@@ -2,6 +2,7 @@ package dev.goral.rpgmanager.chat;
 
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.game.GameRepository;
+import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.security.CustomReturnables;
@@ -34,6 +35,10 @@ public class GameRoomController {
 
         if (game == null) {
             throw new ResourceNotFoundException("Nie znaleziono gry o podanym ID.");
+        }
+
+        if (game.getStatus() != GameStatus.ACTIVE){
+            throw new ForbiddenActionException("Nie można stworzyć pokoju dla nieaktywnej gry.");
         }
 
         if (!game.getGameMaster().getId().equals(currentUser.getId())) {
