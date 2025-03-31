@@ -5,7 +5,7 @@
     "width": 6000,
     "height": 6000,
     "scrollTop": 0,
-    "scrollLeft": -2725,
+    "scrollLeft": -2198,
     "zoomLevel": 1,
     "show": 431,
     "database": 4,
@@ -4117,20 +4117,20 @@
       "ky7zP1y9YvaRl8H9LGv8r": {
         "id": "ky7zP1y9YvaRl8H9LGv8r",
         "tableId": "MyI0m5Wir5M3Kbsxh1rOi",
-        "name": "what he/she have",
+        "name": "what he/she has",
         "comment": "",
         "dataType": "TEXT",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 100,
+          "widthName": 94,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1741017668322,
+          "updateAt": 1743448601681,
           "createAt": 1741017597325
         }
       },
@@ -10239,7 +10239,7 @@
       1741017597325,
       -1,
       {
-        "name": 1741017619556,
+        "name": 1743448601681,
         "options(notNull)": 1741017650056,
         "dataType": 1741017668322
       }
