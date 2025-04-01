@@ -142,7 +142,7 @@
                 REJESTRACJA
             </h1>
         </div>
-        <div class="p-9 m-1 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg xl:w-[30%]">
+        <div class="p-9 m-1 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg xl:w-[40%]">
             <h1 class="text-light-accentDark dark:text-dark-accentDark font-semibold text-xl"></h1>
             <br>
             <form method="post">
@@ -459,7 +459,6 @@
                 form.submit();
             }
         });
-
         async function validateUsername(username) {
             if (username.trim() === '') return true;
             const regex = /^[a-zA-Z0-9_][\w\-\*\!\?]{2,}$/
@@ -467,12 +466,18 @@
                 document.getElementById('usernameErrorTooltip').textContent = 'Nazwa użytkownika musi mieć co najmniej 3 znaki i nie może zaczynać się od znaku specjalnego.';
                 return false;
             }
-            const available = await checkAvailability(`api/v1/register/checkUsername?username=${encodeURIComponent(username)}`);
-            if (available) {
-                document.getElementById('usernameErrorTooltip').textContent = 'Podana nazwa użytkownika jest już zajęta.';
+            try {
+                const response = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(username)}`);
+                const data = await response.json();
+                if (data.error !== 200) {
+                    document.getElementById('usernameErrorTooltip').textContent = 'Podana nazwa użytkownika jest już zajęta.';
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                document.getElementById('emailErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
                 return false;
             }
-            return true;
         }
         function validateName(name) {
             if (name.trim() === '') return true;
@@ -533,22 +538,6 @@
                 input.classList.add('border-error');
             }
         }
-        async function checkAvailability(url, errorMessage, errorElementId) {
-            const tooltip = document.getElementById(errorElementId);
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                if (data.error !== 200) {
-                    tooltip.textContent = errorMessage;
-                    return false;
-                }
-                return true;
-            } catch (error) {
-                alert('Błąd połączenia z serwerem.');
-                return false;
-            }
-        }
-
     });
 </script>
 
