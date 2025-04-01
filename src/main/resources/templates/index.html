@@ -7,7 +7,7 @@
 </head>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
-<link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+<link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-dark.svg">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
     .font-league-spartan {
@@ -85,8 +85,8 @@
         if (themeToggleDiv) {
             themeToggleDiv.addEventListener("click", function (e) {
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
-                const newTheme = body.classList.contains("dark") ? "light" : "dark";
-                applyTheme(newTheme);
+                const savedTheme = localStorage.getItem("theme") || "dark";
+                applyTheme(savedTheme);
             });
         }
     });
