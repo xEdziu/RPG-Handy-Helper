@@ -7,6 +7,7 @@
 </head>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+<link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
     .font-league-spartan {
@@ -54,28 +55,40 @@
             },
         },
     };
-</script>
-<script>
+
     document.addEventListener("DOMContentLoaded", function () {
         const toggleSwitch = document.getElementById("switch-component");
-        const body = document.documentElement;
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme === "dark") {
-            body.classList.add("dark");
-            toggleSwitch.checked = true;
-        } else {
-            body.classList.remove("dark");
-            toggleSwitch.checked = false;
-        }
-        toggleSwitch.addEventListener("change", function () {
-            if (this.checked) {
-                body.classList.add("dark");
-                localStorage.setItem("theme", "dark");
-            } else {
-                body.classList.remove("dark");
-                localStorage.setItem("theme", "light");
+        const body = document.body;
+        const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+        const favicon = document.getElementById("favicon");
+        function updateFavicon(theme) {
+            if (favicon) {
+                favicon.href = theme === "dark"
+                    ? "/img/logo/logo-dark.svg"
+                    : "/img/logo/logo-light.svg";
             }
-        });
+        }
+        function applyTheme(theme) {
+            body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+            if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+        }
+        const savedTheme = localStorage.getItem("theme") || "light";
+        applyTheme(savedTheme);
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener("change", function () {
+                const newTheme = toggleSwitch.checked ? "dark" : "light";
+                applyTheme(newTheme);
+            });
+        }
+        if (themeToggleDiv) {
+            themeToggleDiv.addEventListener("click", function (e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                const newTheme = body.classList.contains("dark") ? "light" : "dark";
+                applyTheme(newTheme);
+            });
+        }
     });
 </script>
 
@@ -118,17 +131,17 @@
                 <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
                 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
                 hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
-                        onclick="location.href='auth/login.html'">LOGIN</button>
+                        onclick="location.href='/login'">LOGIN</button>
                 <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
                 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
                 hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
-                        onclick="location.href='auth/register.html'">REJESTRACJA</button>
+                        onclick="location.href='/register'">REJESTRACJA</button>
             </div>
             <div class="flex flex-col md:flex-row md:space-x-2 space-y-4 md:space-y-0">
                 <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
                 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
-                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg">
-                    DOWIEDZ SIĘ WIĘCEJ</button>
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                    >DOWIEDZ SIĘ WIĘCEJ</button>
                 <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
                 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
                 hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg">
