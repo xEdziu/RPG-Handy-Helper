@@ -74,7 +74,7 @@
             updateFavicon(theme);
             if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
         }
-        const savedTheme = localStorage.getItem("theme") || "light";
+        const savedTheme = localStorage.getItem("theme") || "dark";
         applyTheme(savedTheme);
         if (toggleSwitch) {
             toggleSwitch.addEventListener("change", function () {
@@ -92,12 +92,12 @@
     });
 </script>
 
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col dark">
 
 <div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
     <i class="fa-solid fa-sun text-light-accent dark:text-dark-accent"></i>
     <label for="switch-component" class="relative inline-block w-12 h-6 cursor-pointer">
-        <input id="switch-component" type="checkbox" class="peer hidden" />
+        <input id="switch-component" type="checkbox" class="peer hidden" checked />
         <div class="w-12 h-6 rounded-full transition-all duration-300 bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary"></div>
         <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-light-accent dark:bg-dark-accent
             shadow-md transition-all duration-300 peer-checked:translate-x-[1.5rem] pointer-events-none">
@@ -115,7 +115,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col justify-center space-y-12 text-center md:text-left items-center md:items-start order-2 md:order-1">
+    <div class="pl-24 flex flex-col justify-center space-y-12 text-center md:text-left items-center md:items-start order-2 md:order-1">
         <header class="font-bold text-light-textPrimary dark:text-dark-textPrimary">
             <div class="text-5xl md:text-6xl tracking-widest leading-tight">
                 <h1>RPG Handy</h1>
@@ -127,7 +127,7 @@
         </header>
 
         <div class="flex flex-col space-y-4 w-full max-w-md">
-            <div class="flex flex-col md:flex-row md:space-x-2 space-y-4 md:space-y-0">
+            <div class="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
                 <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
                 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
                 hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
@@ -137,7 +137,7 @@
                 hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
                         onclick="location.href='/register'">REJESTRACJA</button>
             </div>
-            <div class="flex flex-col md:flex-row md:space-x-2 space-y-4 md:space-y-0">
+            <div class="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
                 <button class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
                 border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
                 hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
