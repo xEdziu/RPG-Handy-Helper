@@ -1,31 +1,218 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logowanie</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script><!-- Dodanie Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>// Ustawienia Tailwind CSS
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    },
+                },
+            },
+        };
+        // Skrypt do przełączania motywu jasnego/ciemnego
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("switch-component");
+            const body = document.body;
+            const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+            const favicon = document.getElementById("favicon");
+            function updateFavicon(theme) {
+                if (favicon) {
+                    favicon.href = theme === "dark"
+                        ? "/img/logo/logo-dark.svg"
+                        : "/img/logo/logo-light.svg";
+                }
+            }
+            function applyTheme(theme) {
+                body.classList.toggle("dark", theme === "dark");
+                localStorage.setItem("theme", theme);
+                updateFavicon(theme);
+                if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+            }
+            const savedTheme = localStorage.getItem("theme") || "light";
+            applyTheme(savedTheme);
+            if (toggleSwitch) {
+                toggleSwitch.addEventListener("change", function () {
+                    const newTheme = toggleSwitch.checked ? "dark" : "light";
+                    applyTheme(newTheme);
+                });
+            }
+            if (themeToggleDiv) {
+                themeToggleDiv.addEventListener("click", function (e) {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                    const newTheme = body.classList.contains("dark") ? "light" : "dark";
+                    applyTheme(newTheme);
+                });
+            }
+        });
+    </script>
 </head>
-<body>
-<h1>Logowanie</h1>
 
-<form action="/login" method="post">
-    <label for="username">Nazwa użytkownika:</label>
-    <input type="text" id="username" name="username" required>
-
-    <label for="password">Hasło:</label>
-    <input type="password" id="password" name="password" required>
-
-    <button type="submit">Zaloguj się</button>
-</form>
-
-<p>Lub zaloguj się przez:</p>
-<a href="/oauth2/authorization/discord">Zaloguj przez Discord</a>
-<p> <a href="/forgotPassword">Zapomniałeś hasła?</a></p>
-<p>Nie masz konta? <a href="/register">Zarejestruj się</a></p>
+<body class="m-0 p-0 h-screen w-screen flex flex-col justify-between font-league-spartan">
+    <nav
+        class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+        <a href="/">
+            <div class="flex items-center">
+                <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+                <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+                <h1
+                    class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    RPG Handy Helper
+                </h1>
+            </div>
+        </a>
+        <div class="flex items-center justify-center">
+            <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+            <div class="relative inline-block w-12 h-6">
+                <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full 
+                           bg-light-accent dark:bg-dark-accent
+                           shadow-md transition-all duration-300 
+                           peer-checked:translate-x-[0.75rem] 
+                           peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                           cursor-pointer hover:shadow-lg">
+                </label>
+                <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                            bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary
+                            border border-light-accent dark:border-dark-accent">
+                </div>
+            </div>
+            <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+        </div>
+    </nav>
+    <main class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
+        <div
+            class="p-4 m-3 flex items-center justify-center text-3xl border-b-4 border-light-accentDark dark:border-dark-accentDark">
+            <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                LOGOWANIE
+            </h1>
+        </div>
+        <div class="flex flex-col items-center justify-center p-9 m-2 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl">
+            <form action="/login" method="post" class="flex flex-col items-center justify-cente w-full">
+                <div class="relative m-5 w-full"> 
+                    <input type="text" id="username" aria-describedby="username" name="username" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                               text-light-textPrimary dark:text-dark-textPrimary
+                               bg-light-background dark:bg-dark-background
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base"
+                        placeholder=" " />
+                    <label for="username" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-user-ninja mr-1"></i>   Nazwa użytkownika:
+                    </label>
+                </div>
+                <div class="relative m-5 w-full">
+                    <input type="password" id="password" aria-describedby="password" name="password" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full   text-sm
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-surface
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="password" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                           duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                           peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                           peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                           peer-focus:scale-90 peer-focus:-translate-y-4 
+                           rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-user-lock mr-1"></i>Hasło:
+                    </label>
+                    <i id="togglePasswordIcon1" onclick="togglePassword('password', 'togglePasswordIcon1')" class="fa-solid fa-eye absolute right-4 top-4.5
+                               text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
+                    </i>
+                </div>
+                <button type="submit" class="px-[86px] py-3 text-lg font-semibold 
+                    dark:text-light-textPrimary text-dark-textPrimary
+                    bg-light-accent dark:bg-dark-accent 
+                    border border-light-border dark:border-dark-border
+                    rounded-lg transition-all duration-300 
+                    hover:bg-light-accentDark hover:dark:bg-dark-accentDark 
+                    focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
+                    active:scale-95 text-font-jetbrains-mono">Zaloguj się</button>
+            </form>
+                <a href="/oauth2/authorization/discord" class="m-4 text-lg">
+                    <div
+                        class="flex items-center justify-center bg-[#4654c0] p-2 py-3 text-dark-textPrimary rounded-lg hover:bg-[#3b47a5] cursor-pointer transition duration-300 mx-auto">
+                        <i class="fa-brands fa-discord text-xl mr-2"></i>
+                        <h1 class="text-lg text-dark-textPrimary font-semibold text-base text-center mt-[4px]">ZALOGUJ PRZEZ DISCORD</h1>
+                    </div>
+                </a>
+            <div class="flex flex-col items-center justify-center text-lg">
+                <a href="/forgotPassword" class="text-light-accent visited:text-light-accentDark dark:text-dark-accent dark:visited:text-dark-accentDark">
+                    Zapomniałeś hasła?
+                </a>
+                <p class="text-light-textPrimary dark:text-dark-textPrimary">Nie masz konta? 
+                    <a href="/register" class="text-light-accent visited:text-light-accentDark dark:text-dark-accent dark:visited:text-dark-accentDark">
+                        Zarejestruj się
+                    </a>
+                </p>
+            </div>
+        </div>
+    </main>
+    <footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Manager</h3>
+        <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
+    </footer>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
+<script> //SweetAlert2 script for displaying notifications
+    document.addEventListener("DOMContentLoaded", function () {
         const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
         if (csrfToken) {
             let csrfInput = document.createElement("input");
@@ -81,5 +268,13 @@
             title: 'Konto nie zostało aktywowane - może warto sprawdzić maila?'
         });
     }
+    function togglePassword(inputId, iconId) { // Funkcja do przełączania widoczności hasła
+        const inputField = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        const isPassword = inputField.type === "password";
+        inputField.type = isPassword ? "text" : "password";
+        icon.classList.replace(isPassword ? "fa-eye" : "fa-eye-slash", isPassword ? "fa-eye-slash" : "fa-eye");
+    }
 </script>
+
 </html>
