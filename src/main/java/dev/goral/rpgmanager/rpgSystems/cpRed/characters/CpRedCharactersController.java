@@ -33,6 +33,12 @@ public class CpRedCharactersController {
         return cpRedCharactersService.updateCharacter(characterId, character);
     }
 
+    @PutMapping(path = "/games/cpRed/characters/playerToNpc/{characterId}")
+    public Map<String, Object> playerToNpc(@PathVariable("characterId") Long characterId) {
+        return cpRedCharactersService.playerToNpc(characterId);
+    }
+
+
     //TODO: Dodać opcje kopiowania postaci razem ze statami
 
 }

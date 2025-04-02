@@ -27,6 +27,8 @@ public class Game {
     )
     private Long id;
     private String name;
+
+    @Column(length = 500)
     private String description;
 
     @ManyToOne
@@ -44,6 +46,9 @@ public class Game {
             nullable = false
     )
     private RpgSystems rpgSystem;
+
+    @Enumerated(EnumType.STRING)
+    private GameStatus status = GameStatus.ACTIVE;
 
     public Game(String name,
                 String description,

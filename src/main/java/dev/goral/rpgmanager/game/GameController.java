@@ -4,6 +4,7 @@ import dev.goral.rpgmanager.game.gameUsers.AddUserToGameRequest;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersDTO;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
+import dev.goral.rpgmanager.security.CustomReturnables;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,11 @@ public class GameController {
         return gameService.updateGame(gameId, game);
     }
 
+    @PutMapping(path = "/game/changeStatus/{gameId}")
+    public Map<String, Object> changeGameStatus(@PathVariable("gameId") Long gameId, @RequestBody Map<String, String> request) {
+        return gameService.changeGameStatus(gameId, request);
+    }
+
     @PutMapping(path = "/game/updateGameUserRole/{gameUserId}")
     public Map<String, Object> updateGameUserRole(@PathVariable("gameUserId") Long gameUserId, @RequestBody Map<String, String> request) {
         return gameService.updateGameUserRole(gameUserId, request);
@@ -53,7 +59,7 @@ public class GameController {
     // ============ Admin methods ============
 
     @GetMapping(path = "/admin/game/all")
-    public List<GameDTO> getAllGames() {
+    public List<GameDTOAdmin> getAllGames() {
         return gameService.getAllGames();
     }
 

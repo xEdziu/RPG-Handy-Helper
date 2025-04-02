@@ -113,6 +113,11 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByOAuthId(user.getOAuthId()).isPresent()) {
             throw new IllegalStateException("Użytkownik o podanym ID OAuth już istnieje.");
         }
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new IllegalStateException("Hasło nie może być puste.");
+        }
+
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
         return CustomReturnables.getOkResponseMap("Użytkownik został utworzony.");
