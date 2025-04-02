@@ -85,7 +85,7 @@
             updateFavicon(theme);
             if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
         }
-        const savedTheme = localStorage.getItem("theme") || "light";
+        const savedTheme = localStorage.getItem("theme") || "dark";
         applyTheme(savedTheme);
         if (toggleSwitch) {
             toggleSwitch.addEventListener("change", function () {
