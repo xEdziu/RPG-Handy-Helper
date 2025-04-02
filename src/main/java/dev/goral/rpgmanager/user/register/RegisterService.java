@@ -82,4 +82,20 @@ public class RegisterService {
     public static Boolean validatePassword(String password) {
         return PASSWORD_PATTERN.matcher(password).matches();
     }
+
+    public Map<String, Object> checkUsernameAvailability(String username) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            return CustomReturnables.getErrorResponseMap("Nazwa użytkownika jest już zajęta.");
+        } else {
+            return CustomReturnables.getOkResponseMap("Nazwa użytkownika jest dostępna.");
+        }
+    }
+
+    public Map<String, Object> checkEmailAvailability(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            return CustomReturnables.getErrorResponseMap("Ten adres e-mail jest już zarejestrowany.");
+        } else {
+            return CustomReturnables.getOkResponseMap("Adres e-mail jest dostępny.");
+        }
+    }
 }
