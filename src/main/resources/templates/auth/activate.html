@@ -102,16 +102,17 @@
     </script>
 </head>
 
-<body class="m-0 h-screen w-screen flex flex-col justify-between font-league-spartan">
+<body class="m-0 h-screen w-screen flex flex-col justify-between items-center font-league-spartan">
     <main
         class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
-        <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
-        <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+        <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-100 w-100 dark:hidden">
+        <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-100 w-100 hidden dark:block">
         <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
             Błąd
         </h1>
         <p class=" text-light-text dark:text-dark-text text-center mt-4" id="error-message">
-            <i class="fa-solid fa-circle-exclamation"></i>
+            <i class="fa-solid fa-circle-exclamation"></i> <br>
+            <span class=" text-light-text dark:text-dark-text text-center mt-4" ></span>
         </p>
     </main>
     <footer
@@ -136,7 +137,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.error !== 200) {
-                    main.textContent = data.message;
+                    main.innerHTML += `<span class=" text-light-text dark:text-dark-text text-center mt-4" >`+data.message+`</span>`;
                     main.innerHTML += '<br><i class="fa-solid fa-circle-exclamation"></i>';
                 } else if (data.error === 200) {
                     window.location.href = '/login?error=verify';
