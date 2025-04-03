@@ -497,7 +497,7 @@
         }
         async function validateEmail(email) {
             if (email.trim() === '') return true;
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (!regex.test(email)) {
                 document.getElementById('emailErrorTooltip').textContent = 'Proszę podać prawidłowy adres e-mail.';
                 return false;
