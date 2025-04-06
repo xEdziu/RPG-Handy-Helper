@@ -9,4 +9,5 @@ public class UserUpdateRequest {
     private String username;
     private String firstName;
     private String surname;
+    private String email;
 }

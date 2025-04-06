@@ -110,7 +110,8 @@
                 body: JSON.stringify({
                     username: document.getElementById("username").value,
                     firstName: document.getElementById("firstName").value,
-                    surname: document.getElementById("surname").value
+                    surname: document.getElementById("surname").value,
+                    email: document.getElementById("viewEmail").textContent
                 })
             });
 
@@ -134,6 +135,7 @@
         if (file) {
             if (file.size > 5 * 1024 * 1024) { // 5MB limit
                 Swal.fire({ icon: 'warning', text: 'Plik jest za duży. Maksymalny rozmiar to 5 MB.' });
+                e.target.value = ""; // Clear the input
                 return;
             }
             const reader = new FileReader();

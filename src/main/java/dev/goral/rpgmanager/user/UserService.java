@@ -68,8 +68,9 @@ public class UserService implements UserDetailsService {
             } else {
                 throw new IllegalStateException("Nie udało się znaleźć użytkownika w bazie danych.");
             }
+        } else {
+            throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
         }
-        throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
     }
 
     private Authentication getAuthentication() {
@@ -134,7 +135,22 @@ public class UserService implements UserDetailsService {
         return CustomReturnables.getOkResponseMap("Użytkownik został utworzony.");
     }
 
-    public Map<String, Object> updateProfile(UserUpdateRequest updateRequest, @AuthenticationPrincipal User user) {
+    public Map<String, Object> updateProfile(UserUpdateRequest updateRequest, @AuthenticationPrincipal Object principal) {
+        if (principal instanceof User user) {
+            updateUserDetails(user, updateRequest);
+        } else if (principal instanceof DefaultOAuth2User oauthUser) {
+            String email = oauthUser.getAttribute("email");
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika powiązanego z tym kontem Discord"));
+            updateUserDetails(user, updateRequest);
+        } else {
+            throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
+        }
+
+        return CustomReturnables.getOkResponseMap("Profil zaktualizowany.");
+    }
+
+    private void updateUserDetails(User user, UserUpdateRequest updateRequest) {
         if (updateRequest.getUsername() == null || updateRequest.getUsername().isEmpty()) {
             throw new IllegalStateException("Nick nie może być pusty.");
         }
@@ -152,17 +168,27 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("Nazwisko nie może być puste.");
         }
 
+        if (updateRequest.getUsername().length() < 3 || updateRequest.getUsername().length() > 50) {
+            throw new IllegalStateException("Nick musi mieć od 3 do 50 znaków.");
+        }
+
+        if (updateRequest.getFirstName().length() < 3 || updateRequest.getFirstName().length() > 50) {
+            throw new IllegalStateException("Imię musi mieć od 3 do 50 znaków.");
+        }
+
+        if (updateRequest.getSurname().length() < 3 || updateRequest.getSurname().length() > 50) {
+            throw new IllegalStateException("Nazwisko musi mieć od 3 do 50 znaków.");
+        }
+
         user.setUsername(updateRequest.getUsername());
         user.setFirstName(updateRequest.getFirstName());
         user.setSurname(updateRequest.getSurname());
 
         userRepository.save(user);
-
-        return CustomReturnables.getOkResponseMap("Profil zaktualizowany.");
     }
 
     @Transactional
-    public Map<String, Object> uploadUserPhoto(MultipartFile file, @AuthenticationPrincipal User user) {
+    public Map<String, Object> uploadUserPhoto(MultipartFile file, @AuthenticationPrincipal Object principal) {
         try {
             if (file.isEmpty()) {
                 throw new IllegalStateException("Nie wybrano pliku.");
@@ -177,6 +203,17 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("Nieprawidłowy typ pliku. Dozwolone są tylko JPEG i PNG.");
             }
 
+            User user;
+            if (principal instanceof User foundUser) {
+                user = foundUser;
+            } else if (principal instanceof DefaultOAuth2User oauthUser) {
+                String email = oauthUser.getAttribute("email");
+                user = userRepository.findByEmail(email)
+                        .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika powiązanego z tym kontem Discord"));
+            } else {
+                throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
+            }
+
             // Usuń poprzednie zdjęcie, jeśli nie domyślne
             String oldPath = user.getUserPhotoPath();
             if (oldPath != null &&
@@ -188,7 +225,7 @@ public class UserService implements UserDetailsService {
                 Path oldFile = baseDir.resolve(oldFilename).normalize().toAbsolutePath();
 
                 if (!oldFile.startsWith(baseDir)) {
-                    throw new IllegalArgumentException("Invalid file path");
+                    throw new IllegalStateException("Invalid file path");
                 }
 
                 Files.deleteIfExists(oldFile);
@@ -222,7 +259,7 @@ public class UserService implements UserDetailsService {
 
             return CustomReturnables.getOkResponseMap("Zdjęcie profilowe zaktualizowane.");
         } catch (IOException e) {
-            throw new IllegalStateException("Błąd przy zapisie zdjęcia", e);
+            throw new IllegalStateException("Błąd przy zapisie zdjęcia");
         }
     }
 
@@ -238,14 +275,14 @@ public class UserService implements UserDetailsService {
 
     public ResponseEntity<byte[]> getUserPhoto(String filename) throws IOException {
         if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
-            throw new IllegalArgumentException("Invalid filename");
+            throw new IllegalStateException("Invalid filename");
         }
 
         Path path = Paths.get("src/main/resources/static/img/profilePics").toAbsolutePath().normalize();
         Path photoPath = path.resolve(filename).normalize();
 
         if (!photoPath.startsWith(path)) {
-            throw new IllegalArgumentException("Invalid filename");
+            throw new IllegalStateException("Invalid filename");
         }
 
         if (!Files.exists(photoPath)) {

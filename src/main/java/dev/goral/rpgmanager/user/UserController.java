@@ -33,12 +33,12 @@ public class UserController {
     }
 
     @PutMapping("/user/update")
-    public Map<String, Object> updateProfile(@RequestBody UserUpdateRequest updateRequest, @AuthenticationPrincipal User user) {
+    public Map<String, Object> updateProfile(@RequestBody UserUpdateRequest updateRequest, @AuthenticationPrincipal Object user) {
         return userService.updateProfile(updateRequest, user);
     }
 
     @PostMapping("/user/photo")
-    public Map<String, Object> uploadProfilePhoto(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user) {
+    public Map<String, Object> uploadProfilePhoto(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal Object user) {
         return userService.uploadUserPhoto(file, user);
     }
 
