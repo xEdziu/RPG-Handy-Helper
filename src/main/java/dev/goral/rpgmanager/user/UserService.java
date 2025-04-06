@@ -15,10 +15,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.nio.file.*;
 import java.util.*;
+import java.util.List;
 
 import static dev.goral.rpgmanager.user.register.RegisterService.validatePassword;
 
@@ -169,10 +177,30 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("Nieprawidłowy typ pliku. Dozwolone są tylko pliki JPEG i PNG.");
             }
 
-            String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            // Usuń poprzednie zdjęcie, jeśli nie domyślne
+            String oldPath = user.getUserPhotoPath();
+            if (oldPath != null && !oldPath.equals("/img/profilePics/defaultProfilePic.png") && !oldPath.equals("/img/profilePics/cyberpunkDefaultProfilePic.png")) {
+                Path oldFile = Paths.get("src/main/resources/static" + oldPath);
+                Files.deleteIfExists(oldFile);
+            }
+
+            // Nazwa nowego pliku
+            String filename = UUID.randomUUID() + ".webp";
             Path filepath = Paths.get("src/main/resources/static/img/profilePics", filename);
             Files.createDirectories(filepath.getParent());
-            Files.write(filepath, file.getBytes());
+
+            // Konwersja i zapis do WebP
+            BufferedImage image = ImageIO.read(file.getInputStream());
+            BufferedImage resized = resizeImage(image, 512, 512);
+
+            try (ImageOutputStream output = ImageIO.createImageOutputStream(Files.newOutputStream(filepath))) {
+                ImageWriter writer = ImageIO.getImageWritersByFormatName("webp").next();
+                writer.setOutput(output);
+
+                ImageWriteParam param = writer.getDefaultWriteParam();
+                writer.write(null, new IIOImage(resized, null, null), param);
+                writer.dispose();
+            }
 
             user.setUserPhotoPath("/img/profilePics/" + filename);
             userRepository.save(user);
@@ -181,6 +209,15 @@ public class UserService implements UserDetailsService {
         } catch (IOException e) {
             throw new IllegalStateException("Błąd przy zapisie zdjęcia", e);
         }
+    }
+
+    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+        Image tmp = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resized.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+        return resized;
     }
 
     public ResponseEntity<byte[]> getUserPhoto(String filename) throws IOException {
