@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel użytkownika</title>
+    <title>BŁĄD AKTYWACJI</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
     <!-- Dodanie Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
-
         .font-league-spartan {
             font-family: 'League Spartan', sans-serif;
         }
@@ -68,7 +68,6 @@
         document.addEventListener("DOMContentLoaded", function () {
             const toggleSwitch = document.getElementById("switch-component");
             const body = document.body;
-            const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
             const favicon = document.getElementById("favicon");
             function updateFavicon(theme) {
                 if (favicon) {
@@ -91,32 +90,24 @@
                     applyTheme(newTheme);
                 });
             }
-            if (themeToggleDiv) {
-                themeToggleDiv.addEventListener("click", function (e) {
-                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
-                    const newTheme = body.classList.contains("dark") ? "light" : "dark";
-                    applyTheme(newTheme);
-                });
-            }
         });
+
     </script>
 </head>
-
 <body class="m-0 h-screen w-screen flex flex-col justify-between items-center font-league-spartan">
     <main
         class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
         <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-100 w-100 dark:hidden">
         <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-100 w-100 hidden dark:block">
-        <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+        <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono text-4xl">
             Błąd
         </h1>
-        <p class=" text-light-text dark:text-dark-text text-center mt-4" id="error-message">
-            <i class="fa-solid fa-circle-exclamation"></i> <br>
-            <span class=" text-light-text dark:text-dark-text text-center mt-4" ></span>
+        <p class=" text-light-textPrimary dark:text-dark-textPrimary text-center mt-4" id="error-message">
+            <i class="fa-solid fa-circle-exclamation"></i> 
         </p>
     </main>
     <footer
-        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary border-t border-light-border dark:border-dark-border">
         <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Manager</h3>
         <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
             class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
@@ -130,15 +121,13 @@
             window.location.href = '/register';
         }
         const main = document.getElementById('error-message');
-        //send request to confirm user
         fetch('/api/v1/register/confirm?token=' + token, {
             method: 'GET',
         })
             .then(response => response.json())
             .then(data => {
                 if (data.error !== 200) {
-                    main.innerHTML += `<span class=" text-light-text dark:text-dark-text text-center mt-4" >`+data.message+`</span>`;
-                    main.innerHTML += '<br><i class="fa-solid fa-circle-exclamation"></i>';
+                    main.innerHTML += `<span class="text-light-textPrimary dark:text-dark-textPrimary text-center mt-4 text-lg" >` + data.message + `</span>`;
                 } else if (data.error === 200) {
                     window.location.href = '/login?error=verify';
                 }
