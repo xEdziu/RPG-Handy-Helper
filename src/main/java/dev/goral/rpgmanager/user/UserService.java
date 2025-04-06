@@ -174,21 +174,27 @@ public class UserService implements UserDetailsService {
 
             String contentType = file.getContentType();
             if (contentType == null || (!contentType.equals("image/jpeg") && !contentType.equals("image/png"))) {
-                throw new IllegalStateException("Nieprawidłowy typ pliku. Dozwolone są tylko pliki JPEG i PNG.");
+                throw new IllegalStateException("Nieprawidłowy typ pliku. Dozwolone są tylko JPEG i PNG.");
             }
 
             // Usuń poprzednie zdjęcie, jeśli nie domyślne
             String oldPath = user.getUserPhotoPath();
-            if (oldPath != null && !oldPath.equals("/img/profilePics/defaultProfilePic.png") && !oldPath.equals("/img/profilePics/cyberpunkDefaultProfilePic.png")) {
+            if (oldPath != null &&
+                    !oldPath.equals("/img/profilePics/defaultProfilePic.png") &&
+                    !oldPath.equals("/img/profilePics/cyberpunkDefaultProfilePic.png")) {
+
                 Path baseDir = Paths.get("src/main/resources/static/img/profilePics").normalize().toAbsolutePath();
-                Path oldFile = baseDir.resolve(oldPath).normalize().toAbsolutePath();
+                String oldFilename = Paths.get(oldPath).getFileName().toString();
+                Path oldFile = baseDir.resolve(oldFilename).normalize().toAbsolutePath();
+
                 if (!oldFile.startsWith(baseDir)) {
                     throw new IllegalArgumentException("Invalid file path");
                 }
+
                 Files.deleteIfExists(oldFile);
             }
 
-            // Nazwa nowego pliku
+            // Nowa nazwa pliku
             String filename = UUID.randomUUID() + ".webp";
             Path filepath = Paths.get("src/main/resources/static/img/profilePics", filename);
             Files.createDirectories(filepath.getParent());
@@ -199,7 +205,6 @@ public class UserService implements UserDetailsService {
 
             try (ImageOutputStream output = ImageIO.createImageOutputStream(Files.newOutputStream(filepath))) {
 
-                // checking if a WebP ImageWriter is available (e.g., using hasNext())
                 if (!ImageIO.getImageWritersByFormatName("webp").hasNext()) {
                     throw new IllegalStateException("Nie można znaleźć ImageWriter dla formatu WebP.");
                 }
@@ -221,6 +226,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
+
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
         Image tmp = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -235,11 +241,10 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("Invalid filename");
         }
 
-        Path path = Paths.get("src/main/resources/static/img/profilePics");
+        Path path = Paths.get("src/main/resources/static/img/profilePics").toAbsolutePath().normalize();
         Path photoPath = path.resolve(filename).normalize();
-        Path expectedDir = path.toAbsolutePath().normalize();
 
-        if (!photoPath.startsWith(expectedDir)) {
+        if (!photoPath.startsWith(path)) {
             throw new IllegalArgumentException("Invalid filename");
         }
 

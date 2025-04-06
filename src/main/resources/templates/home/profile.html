@@ -132,6 +132,10 @@
     document.getElementById("photoInput").addEventListener("change", function(e) {
         const file = e.target.files[0];
         if (file) {
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                Swal.fire({ icon: 'warning', text: 'Plik jest za duży. Maksymalny rozmiar to 5 MB.' });
+                return;
+            }
             const reader = new FileReader();
             reader.onload = function(e) {
                 const preview = document.getElementById("photoPreview");
