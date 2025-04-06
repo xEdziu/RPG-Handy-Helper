@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Mój Profil</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<a href="/home">Powrót</a>
+<h1>Mój Profil</h1>
+
+<!-- Widok danych użytkownika -->
+<div id="profileView">
+    <img id="profilePhoto" src="" alt="Zdjęcie profilowe" width="150" height="150" /><br/>
+    <p>Username: <span id="viewUsername"></span></p>
+    <p>Imię: <span id="viewFirstName"></span></p>
+    <p>Nazwisko: <span id="viewSurname"></span></p>
+    <p>Email: <span id="viewEmail"></span></p>
+</div>
+
+<hr />
+
+<!-- Formularz aktualizacji profilu -->
+<h2>Edycja profilu</h2>
+<form id="updateForm">
+    <label>Username: <input type="text" id="username" /></label><br />
+    <label>Imię: <input type="text" id="firstName" /></label><br />
+    <label>Nazwisko: <input type="text" id="surname" /></label><br />
+    <button type="submit">Zapisz zmiany</button>
+</form>
+
+<hr />
+
+<!-- Formularz uploadu zdjęcia z podglądem -->
+<h2>Aktualizacja zdjęcia profilowego</h2>
+<form id="photoForm" enctype="multipart/form-data">
+    <label>Wybierz zdjęcie: <input type="file" accept="image/png, image/jpeg" name="file" id="photoInput" /></label><br />
+    <img id="photoPreview" src="" alt="Podgląd zdjęcia" width="150" height="150" style="display:none;" /><br/>
+    <button type="submit">Prześlij zdjęcie</button>
+</form>
+
+<script>
+    function getCookie(name) {
+        const cookies = document.cookie.split('; ');
+        for (let cookie of cookies) {
+            const [cookieName, cookieValue] = cookie.split('=');
+            if (cookieName === name) {
+                return decodeURIComponent(cookieValue);
+            }
+        }
+        return null;
+    }
+
+    let currentPhotoFilename = "";
+
+    async function loadProfile() {
+        Swal.fire({
+            title: 'Ładowanie profilu...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            const response = await fetch("/api/v1/authorized/user");
+            const data = await response.json();
+            Swal.close();
+
+            document.getElementById("viewUsername").textContent = data.username;
+            document.getElementById("viewFirstName").textContent = data.firstName;
+            document.getElementById("viewSurname").textContent = data.surname;
+            document.getElementById("viewEmail").textContent = data.email;
+
+            const filename = data.userPhotoPath?.split("/").pop();
+            currentPhotoFilename = filename;
+            updateProfilePhoto(filename);
+
+            document.getElementById("username").value = data.username;
+            document.getElementById("firstName").value = data.firstName;
+            document.getElementById("surname").value = data.surname;
+        } catch (error) {
+            Swal.close();
+            Swal.fire({ icon: 'error', text: 'Nie udało się załadować danych użytkownika.' });
+        }
+    }
+
+    function updateProfilePhoto(filename) {
+        if (!filename) return;
+        const url = `/api/v1/authorized/user/photo/${filename}`;
+        document.getElementById("profilePhoto").src = url;
+    }
+
+    loadProfile();
+
+    document.getElementById("updateForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'Zapisywanie...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            const response = await fetch("/api/v1/authorized/user/update", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
+                },
+                body: JSON.stringify({
+                    username: document.getElementById("username").value,
+                    firstName: document.getElementById("firstName").value,
+                    surname: document.getElementById("surname").value
+                })
+            });
+
+            const result = await response.json();
+            Swal.close();
+
+            if (response.ok) {
+                Swal.fire({ icon: 'success', text: result.message || "Profil zaktualizowany" });
+                await loadProfile();
+            } else {
+                Swal.fire({ icon: 'error', text: result.message || "Błąd aktualizacji profilu" });
+            }
+        } catch (error) {
+            Swal.close();
+            Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
+        }
+    });
+
+    document.getElementById("photoInput").addEventListener("change", function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById("photoPreview");
+                preview.src = e.target.result;
+                preview.style.display = "block";
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById("photoForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const fileInput = document.getElementById("photoInput");
+        const file = fileInput.files[0];
+
+        if (!file) {
+            Swal.fire({ icon: 'warning', text: 'Nie wybrano pliku.' });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        Swal.fire({
+            title: 'Wysyłanie...',
+            text: 'Trwa przesyłanie zdjęcia.',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            const response = await fetch("/api/v1/authorized/user/photo", {
+                method: "POST",
+                headers: {
+                    'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+            Swal.close();
+
+            if (response.ok) {
+                Swal.fire({ icon: 'success', text: result.message || "Zdjęcie zaktualizowane!" });
+                updateProfilePhoto(currentPhotoFilename);
+            } else {
+                Swal.fire({ icon: 'error', text: result.message || "Błąd podczas przesyłania zdjęcia." });
+            }
+
+        } catch (error) {
+            Swal.close();
+            Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
+        }
+    });
+</script>
+</body>
+</html>
