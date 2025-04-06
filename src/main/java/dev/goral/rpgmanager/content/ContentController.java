@@ -64,4 +64,10 @@ public class ContentController {
         System.out.println("ContentController: getResetPassword()");
         return "auth/resetPassword";
     }
+
+    @GetMapping("/profile")
+    public String getProfile() {
+        System.out.println("ContentController: getProfile()");
+        return "home/profile";
+    }
 }

@@ -50,7 +50,7 @@ public class User implements UserDetails {
     private OAuthProvider oAuthProvider;
     private String oAuthId;
     private Timestamp createdAt;
-    private String userPhotoPath = "static/img/profilePics/defaultProfilePic.png";
+    private String userPhotoPath = "/img/profilePics/defaultProfilePic.png";
 
     public User(Long id) {
         this.id = id;
