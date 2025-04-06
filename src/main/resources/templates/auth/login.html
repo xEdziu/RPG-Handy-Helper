@@ -16,9 +16,13 @@
         .font-jetbrains-mono {
             font-family: 'JetBrains Mono', monospace;
         }
+        ::-ms-reveal {
+            display: none;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
-    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script><!-- Dodanie Font Awesome -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>// Ustawienia Tailwind CSS
@@ -129,16 +133,18 @@
             <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
         </div>
     </nav>
-    <main class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
+    <main
+        class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
         <div
             class="p-4 m-3 flex items-center justify-center text-3xl border-b-4 border-light-accentDark dark:border-dark-accentDark">
             <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
                 LOGOWANIE
             </h1>
         </div>
-        <div class="flex flex-col items-center justify-center p-9 m-2 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl">
+        <div
+            class="flex flex-col items-center justify-center p-9 m-2 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl">
             <form action="/login" method="post" class="flex flex-col items-center justify-cente w-full">
-                <div class="relative m-5 w-full"> 
+                <div class="relative m-5 w-full">
                     <input type="text" id="username" aria-describedby="username" name="username" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                                text-light-textPrimary dark:text-dark-textPrimary
                                bg-light-background dark:bg-dark-background
@@ -153,7 +159,7 @@
                                peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
                                peer-focus:scale-90 peer-focus:-translate-y-4 
                                rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
-                        <i class="fa-solid fa-user-ninja mr-1"></i>   Nazwa użytkownika:
+                        <i class="fa-solid fa-user-ninja mr-1"></i> Nazwa użytkownika:
                     </label>
                 </div>
                 <div class="relative m-5 w-full">
@@ -185,19 +191,22 @@
                     focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
                     active:scale-95 text-font-jetbrains-mono">Zaloguj się</button>
             </form>
-                <a href="/oauth2/authorization/discord" class="m-4 text-lg">
-                    <div
-                        class="flex items-center justify-center bg-[#4654c0] p-2 py-3 text-dark-textPrimary rounded-lg hover:bg-[#3b47a5] cursor-pointer transition duration-300 mx-auto">
-                        <i class="fa-brands fa-discord text-xl mr-2"></i>
-                        <h1 class="text-lg text-dark-textPrimary font-semibold text-base text-center mt-[4px]">ZALOGUJ PRZEZ DISCORD</h1>
-                    </div>
-                </a>
+            <a href="/oauth2/authorization/discord" class="m-4 text-lg">
+                <div
+                    class="flex items-center justify-center bg-[#4654c0] p-2 py-3 text-dark-textPrimary rounded-lg hover:bg-[#3b47a5] cursor-pointer transition duration-300 mx-auto">
+                    <i class="fa-brands fa-discord text-xl mr-2"></i>
+                    <h1 class="text-lg text-dark-textPrimary font-semibold text-base text-center mt-[4px]">ZALOGUJ PRZEZ
+                        DISCORD</h1>
+                </div>
+            </a>
             <div class="flex flex-col items-center justify-center text-lg">
-                <a href="/forgotPassword" class="text-light-accent visited:text-light-accentDark dark:text-dark-accent dark:visited:text-dark-accentDark">
+                <a href="/forgotPassword"
+                    class="text-light-accent visited:text-light-accentDark dark:text-dark-accent dark:visited:text-dark-accentDark">
                     Zapomniałeś hasła?
                 </a>
-                <p class="text-light-textPrimary dark:text-dark-textPrimary">Nie masz konta? 
-                    <a href="/register" class="text-light-accent visited:text-light-accentDark dark:text-dark-accent dark:visited:text-dark-accentDark">
+                <p class="text-light-textPrimary dark:text-dark-textPrimary">Nie masz konta?
+                    <a href="/register"
+                        class="text-light-accent visited:text-light-accentDark dark:text-dark-accent dark:visited:text-dark-accentDark">
                         Zarejestruj się
                     </a>
                 </p>

@@ -21,9 +21,13 @@
             right: 10px;
             z-index: 9999;
         }
+        ::-ms-reveal {
+            display: none;
+        }
     </style>
 </head>
-<script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script> <!-- Dodanie reCAPTCHA v3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
+<!-- Dodanie reCAPTCHA v3 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
 <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script> <!-- Dodanie Font Awesome -->
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
@@ -102,6 +106,7 @@
         }
     });
 </script>
+
 <body class="m-0 h-screen w-screen flex flex-col justify-between font-league-spartan">
     <nav
         class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
@@ -312,9 +317,11 @@
                         </a>
                     </p>
                     <a href="/oauth2/authorization/discord">
-                        <div class="flex items-center justify-center bg-[#4654c0] p-2 text-dark-textPrimary rounded-lg hover:bg-[#3b47a5] cursor-pointer transition duration-300 mx-auto">
+                        <div
+                            class="flex items-center justify-center bg-[#4654c0] p-2 text-dark-textPrimary rounded-lg hover:bg-[#3b47a5] cursor-pointer transition duration-300 mx-auto">
                             <i class="fa-brands fa-discord text-xl mr-2"></i>
-                            <h1 class="text-dark-textPrimary font-semibold text-base text-center mt-[4px]">ZAREJESTRUJ ZA POMOCĄ DISCORD</h1>
+                            <h1 class="text-dark-textPrimary font-semibold text-base text-center mt-[4px]">ZAREJESTRUJ
+                                ZA POMOCĄ DISCORD</h1>
                         </div>
                     </a>
                 </div>
