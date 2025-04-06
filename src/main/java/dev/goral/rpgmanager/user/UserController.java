@@ -39,7 +39,7 @@ public class UserController {
 
     @PostMapping("/user/photo")
     public Map<String, Object> uploadProfilePhoto(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user) {
-        return userService.setUserPhoto(file, user);
+        return userService.uploadUserPhoto(file, user);
     }
 
     @GetMapping("/user/photo/{filename:.+}")

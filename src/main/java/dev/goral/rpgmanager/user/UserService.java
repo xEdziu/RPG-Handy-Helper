@@ -162,7 +162,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public Map<String, Object> setUserPhoto(MultipartFile file, @AuthenticationPrincipal User user) {
+    public Map<String, Object> uploadUserPhoto(MultipartFile file, @AuthenticationPrincipal User user) {
         try {
             if (file.isEmpty()) {
                 throw new IllegalStateException("Nie wybrano pliku.");
