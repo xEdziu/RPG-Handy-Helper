@@ -148,7 +148,7 @@
             </h1>
         </div>
         <div class="p-9 m-1 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg xl:w-[40%]">
-            <form method="post">
+            <form method="post" autocomplete="off">
                 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" class="hiddenS" />
                 <div class="relative m-5">
                     <input type="text" id="username" aria-describedby="username" name="username" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
@@ -335,78 +335,9 @@
             class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
     </footer>
 </body>
-<script> // Skrypt do obsługi formularza rejestracji
-    let form = document.querySelector('form');
-    form.addEventListener('submit', function (event) {
-        event.preventDefault(); // Zatrzymanie domyślnego wysyłania formularza
-        let formData = new FormData(form);
-        let data = Object.fromEntries(formData);
-        // Walidacja: sprawdzenie czy hasła są identyczne
-        if (data.password !== data.passwordConfirm) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Błąd',
-                text: 'Hasła nie są takie same',
-            });
-            return;
-        }
-        // **Dodanie reCAPTCHA v3 - Pobranie tokena przed wysłaniem**
-        grecaptcha.ready(function () {
-            grecaptcha.execute('6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM', { action: 'signup' }).then(function (token) {
-                // Dodanie tokena reCAPTCHA do danych formularza
-                data["captcha"] = token;
-
-                if (!token) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Błąd',
-                        text: 'Nie udało się uzyskać tokena reCAPTCHA. Spróbuj ponownie!',
-                    });
-                    return;
-                }
-                // Wysyłanie formularza do backendu
-                fetch('/api/v1/register/signup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data),
-                })
-                    .then(
-                        Swal.fire({
-                            title: 'Proszę czekać...',
-                            didOpen: () => {
-                                Swal.showLoading()
-                            }
-                        })
-                    )
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error !== 200) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Błąd',
-                                text: data.message,
-                                confirmButtonText: 'Spróbuj ponownie',
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Sukces',
-                                text: data.message,
-                                confirmButtonText: 'Zaloguj się',
-                            }).then(() => {
-                                window.location.href = '/login';
-                            });
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-            });
-        });
-    });
-    function togglePassword(inputId, iconId) { // Funkcja do przełączania widoczności hasła
+<script>
+    const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+    function togglePassword(inputId, iconId) {
         const inputField = document.getElementById(inputId);
         const icon = document.getElementById(iconId);
         const isPassword = inputField.type === "password";
@@ -450,7 +381,7 @@
         fields.forEach(field => {
             const input = document.getElementById(field.id);
             input.addEventListener('blur', async () => {
-                currentFieldId = field.id; // <-- zapamiętanie ID pola
+                currentFieldId = field.id;
                 const isValid = await field.validate(input.value);
                 toggleError(field.errorElement, isValid, input);
             });
@@ -462,17 +393,79 @@
                 const input = document.getElementById(field.id);
                 const isValid = await field.validate(input.value);
                 toggleError(field.errorElement, isValid, input);
-                if (!isValid) {
-                    isFormValid = false;
-                }
+                if (!isValid) isFormValid = false;
             }
-            if (isFormValid) {
-                form.submit();
+            if (!isFormValid) return;
+            let formData = new FormData(form);
+            let data = Object.fromEntries(formData);
+            // Sprawdzenie haseł jeszcze raz
+            if (data.password !== data.passwordConfirm) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd',
+                    text: 'Hasła nie są takie same',
+                });
+                return;
             }
+            grecaptcha.ready(function () {
+                grecaptcha.execute('6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM', { action: 'signup' }).then(function (token) {
+                    if (!token) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Błąd',
+                            text: 'Nie udało się uzyskać tokena reCAPTCHA. Spróbuj ponownie!',
+                        });
+                        return;
+                    }
+                    data["captcha"] = token;
+                    data["_csrf"] = csrfToken;
+                    Swal.fire({
+                        title: 'Proszę czekać...',
+                        didOpen: () => Swal.showLoading()
+                    });
+                    fetch('/api/v1/register/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-XSRF-TOKEN': csrfToken,
+                        },
+                        body: JSON.stringify(data),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error !== 200) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Błąd',
+                                    text: data.message,
+                                    confirmButtonText: 'Spróbuj ponownie',
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sukces',
+                                    text: data.message,
+                                    confirmButtonText: 'Zaloguj się',
+                                }).then(() => {
+                                    window.location.href = '/login';
+                                });
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Błąd',
+                                text: 'Coś poszło nie tak podczas rejestracji.',
+                            });
+                        });
+                });
+            });
         });
+        // ==== WALIDATORY ====
         async function validateUsername(username) {
             if (username.trim() === '') return true;
-            const regex = /^[a-zA-Z0-9_][\w\-\*\!\?]{2,}$/
+            const regex = /^[a-zA-Z0-9_][\w\-\*\!\?]{2,}$/;
             if (!regex.test(username)) {
                 document.getElementById('usernameErrorTooltip').textContent = 'Nazwa użytkownika musi mieć co najmniej 3 znaki i nie może zaczynać się od znaku specjalnego.';
                 return false;
@@ -485,8 +478,8 @@
                     return false;
                 }
                 return true;
-            } catch (error) {
-                document.getElementById('emailErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
+            } catch {
+                document.getElementById('usernameErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
                 return false;
             }
         }
@@ -495,9 +488,7 @@
             const regex = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]+$/;
             const tooltip = document.getElementById(`${currentFieldId}ErrorTooltip`);
             if (!regex.test(name)) {
-                if (tooltip) {
-                    tooltip.textContent = 'Pole nie może zawierać cyfr ani znaków specjalnych.';
-                }
+                if (tooltip) tooltip.textContent = 'Pole nie może zawierać cyfr ani znaków specjalnych.';
                 return false;
             }
             return true;
@@ -517,7 +508,7 @@
                     return false;
                 }
                 return true;
-            } catch (error) {
+            } catch {
                 document.getElementById('emailErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
                 return false;
             }
@@ -551,5 +542,4 @@
         }
     });
 </script>
-
 </html>
