@@ -180,7 +180,11 @@ public class UserService implements UserDetailsService {
             // Usuń poprzednie zdjęcie, jeśli nie domyślne
             String oldPath = user.getUserPhotoPath();
             if (oldPath != null && !oldPath.equals("/img/profilePics/defaultProfilePic.png") && !oldPath.equals("/img/profilePics/cyberpunkDefaultProfilePic.png")) {
-                Path oldFile = Paths.get("src/main/resources/static" + oldPath);
+                Path baseDir = Paths.get("src/main/resources/static/img/profilePics").normalize().toAbsolutePath();
+                Path oldFile = baseDir.resolve(oldPath).normalize().toAbsolutePath();
+                if (!oldFile.startsWith(baseDir)) {
+                    throw new IllegalArgumentException("Invalid file path");
+                }
                 Files.deleteIfExists(oldFile);
             }
 
@@ -194,6 +198,12 @@ public class UserService implements UserDetailsService {
             BufferedImage resized = resizeImage(image, 512, 512);
 
             try (ImageOutputStream output = ImageIO.createImageOutputStream(Files.newOutputStream(filepath))) {
+
+                // checking if a WebP ImageWriter is available (e.g., using hasNext())
+                if (!ImageIO.getImageWritersByFormatName("webp").hasNext()) {
+                    throw new IllegalStateException("Nie można znaleźć ImageWriter dla formatu WebP.");
+                }
+
                 ImageWriter writer = ImageIO.getImageWritersByFormatName("webp").next();
                 writer.setOutput(output);
 
@@ -221,7 +231,17 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<byte[]> getUserPhoto(String filename) throws IOException {
-        Path photoPath = Paths.get("src/main/resources/static/img/profilePics").resolve(filename);
+        if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
+            throw new IllegalArgumentException("Invalid filename");
+        }
+
+        Path path = Paths.get("src/main/resources/static/img/profilePics");
+        Path photoPath = path.resolve(filename).normalize();
+        Path expectedDir = path.toAbsolutePath().normalize();
+
+        if (!photoPath.startsWith(expectedDir)) {
+            throw new IllegalArgumentException("Invalid filename");
+        }
 
         if (!Files.exists(photoPath)) {
             throw new FileNotFoundException("Nie znaleziono pliku: " + filename);
