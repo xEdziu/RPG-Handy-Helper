@@ -94,7 +94,7 @@ public class CpRedCharactersService {
         GameUsers gameUser = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie jest przypisany do tej gry."));
         if (gameUser.getRole() == GameUsersRole.PLAYER) {
-            long characterCount = cpRedCharactersRepository.countByUserIdAndGameId(currentUser.getId(), game.getId());
+            Long characterCount = cpRedCharactersRepository.countByUserIdAndGameId(currentUser.getId(), game.getId());
             if (characterCount >= 1) {
                 throw new IllegalStateException("Gracz może stworzyć tylko jedną postać w tej grze.");
             }
