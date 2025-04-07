@@ -8,10 +8,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCharacterEnemiesDTO {
-    private long characterId;
+    private Long characterId;
     private String name;
     private String whoIs;
-    private String couseOfConfict;
+    private String causeOfConflict;
     private String whatHas;
     private String intends;
     private String description;

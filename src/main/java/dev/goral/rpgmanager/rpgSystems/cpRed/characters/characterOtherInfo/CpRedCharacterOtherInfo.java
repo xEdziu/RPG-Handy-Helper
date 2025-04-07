@@ -22,7 +22,7 @@ public class CpRedCharacterOtherInfo {
             strategy = GenerationType.SEQUENCE,
             generator = "cpRedCharacterOtherInfo_sequence"
     )
-    private long id;
+    private Long id;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
@@ -36,7 +36,7 @@ public class CpRedCharacterOtherInfo {
     private String reputation;
     private String style;
     private String classLifePath;
-    private String accomodation;
+    private String accommodation;
     private int rental;
     private String livingStandard;
 }

@@ -30,7 +30,7 @@ public class CpRedWeapons {
             name="skill_id",
             referencedColumnName = "id"
     )
-    private CpRedSkills requireSkillId;
+    private CpRedSkills requiredSkillId;
     @Enumerated(EnumType.STRING)
     private CpRedWeaponsType type;
     private int damage; //quantity of d6

@@ -9,14 +9,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCharacterOtherInfoDTO {
-    private long characterId;
+    private Long characterId;
     private String notes;
     private String criticalInjuries;
     private String addictions;
     private String reputation;
     private String style;
     private String classLifePath;
-    private String accomodation;
+    private String accommodation;
     private int rental;
     private String livingStandard;
 }

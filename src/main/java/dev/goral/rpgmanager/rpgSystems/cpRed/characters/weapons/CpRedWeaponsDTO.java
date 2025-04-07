@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class CpRedWeaponsDTO {
-    private String requireSkillId;
+    private String requiredSkillId;
     private String type;
     private int damage;
     private int magazineCapacity;

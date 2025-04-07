@@ -22,7 +22,7 @@ public class CpRedCharacterEnemies {
             strategy = GenerationType.SEQUENCE,
             generator = "cpRedCharacterEnemies_sequence"
     )
-    private long id;
+    private Long id;
     @ManyToOne
     @JoinColumn(
             name="character_id",
@@ -32,7 +32,7 @@ public class CpRedCharacterEnemies {
     private CpRedCharacters characterId;
     private String name;
     private String whoIs;
-    private String couseOfConflict;
+    private String causeOfConflict;
     private String whatHas;
     private String intends;
     private String description;

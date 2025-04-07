@@ -8,7 +8,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class CpRedCharacterFriendsDTO {
-    private long characterId;
+    private Long characterId;
     private String name;
     private String description;
 }

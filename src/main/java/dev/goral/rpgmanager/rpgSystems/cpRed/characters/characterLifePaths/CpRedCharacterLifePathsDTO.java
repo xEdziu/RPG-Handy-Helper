@@ -9,7 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCharacterLifePathsDTO {
-    private long characterId;
+    private Long characterId;
     private String cultureOfOrigin;
     private String yourCharacter;
     private String clothingAndStyle;

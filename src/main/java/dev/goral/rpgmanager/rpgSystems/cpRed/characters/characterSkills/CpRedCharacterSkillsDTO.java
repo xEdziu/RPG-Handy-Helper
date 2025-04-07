@@ -9,7 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCharacterSkillsDTO {
-    private long characterId;
-    private long skillId;
+    private Long characterId;
+    private Long skillId;
     private int skillLevel;
 }

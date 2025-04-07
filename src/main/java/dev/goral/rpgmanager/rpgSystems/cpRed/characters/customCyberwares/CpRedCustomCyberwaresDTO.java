@@ -8,7 +8,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCustomCyberwaresDTO {
-    private long gameId;
+    private Long gameId;
     private String name;
     private String mountPlace;
     private String requirements;

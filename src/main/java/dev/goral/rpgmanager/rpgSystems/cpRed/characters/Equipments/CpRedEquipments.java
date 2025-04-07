@@ -23,7 +23,7 @@ public class CpRedEquipments {
             strategy= GenerationType.SEQUENCE,
             generator = "cpRedEquipments_sequence"
     )
-    private long id;
+    private Long id;
     private String name;
     private int price;
     @Enumerated(EnumType.STRING)

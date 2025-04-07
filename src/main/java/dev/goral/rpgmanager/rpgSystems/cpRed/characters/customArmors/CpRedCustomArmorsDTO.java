@@ -8,7 +8,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class CpRedCustomArmorsDTO {
-    private long gameId;
+    private Long gameId;
     private String type;
     private int ob;
     private int penalty;

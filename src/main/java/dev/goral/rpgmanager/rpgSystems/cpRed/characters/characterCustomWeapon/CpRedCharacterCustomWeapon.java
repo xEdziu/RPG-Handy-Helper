@@ -26,7 +26,7 @@ public class CpRedCharacterCustomWeapon {
             strategy = GenerationType.SEQUENCE,
             generator = "cpRedCharacterCustomWeapon_sequence"
     )
-    private long id;
+    private Long id;
     @ManyToOne
     @JoinColumn(
             name = "weapon_id",
