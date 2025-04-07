@@ -45,8 +45,8 @@ public class CpRedCustomWeapons {
     private int magazineCapacity;
     @Enumerated(EnumType.STRING)
     private CpRedWeaponsAmmunition ammunition;
-    private short la;
-    private short hands;
+    private short numberOfAttacks;
+    private short handType;
     private boolean isHidden;
     private int price;
     @Enumerated(EnumType.STRING)

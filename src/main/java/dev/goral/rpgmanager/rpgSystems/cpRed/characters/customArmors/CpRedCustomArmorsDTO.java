@@ -10,7 +10,7 @@ import lombok.ToString;
 public class CpRedCustomArmorsDTO {
     private Long gameId;
     private String type;
-    private int ob;
+    private int armorPoints;
     private int penalty;
     private int price;
     private String availability;

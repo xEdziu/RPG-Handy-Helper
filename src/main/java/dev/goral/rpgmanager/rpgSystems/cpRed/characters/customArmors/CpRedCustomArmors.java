@@ -35,7 +35,7 @@ public class CpRedCustomArmors {
     private Game gameId;
     @Enumerated(EnumType.STRING)
     private CpRedArmorsType type;
-    private int ob;
+    private int armorPoints;
     private int penalty;
     private int price;
     @Enumerated(EnumType.STRING)

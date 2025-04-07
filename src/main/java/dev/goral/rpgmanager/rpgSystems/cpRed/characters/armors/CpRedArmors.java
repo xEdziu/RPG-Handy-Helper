@@ -26,7 +26,7 @@ public class CpRedArmors {
     private Long id;
     @Enumerated(EnumType.STRING)
     private CpRedArmorsType type;
-    private int ob;
+    private int armorPoints;
     private int penalty;
     private int price;
     @Enumerated(EnumType.STRING)

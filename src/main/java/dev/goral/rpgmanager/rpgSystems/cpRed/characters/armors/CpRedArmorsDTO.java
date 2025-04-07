@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class CpRedArmorsDTO {
     private String type;
-    private int ob;
+    private int armorPoints;
     private int penalty;
     private int price;
     private String availability;

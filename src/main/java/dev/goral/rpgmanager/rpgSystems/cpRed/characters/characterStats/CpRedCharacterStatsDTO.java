@@ -8,8 +8,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCharacterStatsDTO {
-    private int statLevelMax;
-    private int statLevelActual;
+    private int maxStatLevel;
+    private int currentStatLevel;
     private Long characterId;
     private Long statId;
 }
