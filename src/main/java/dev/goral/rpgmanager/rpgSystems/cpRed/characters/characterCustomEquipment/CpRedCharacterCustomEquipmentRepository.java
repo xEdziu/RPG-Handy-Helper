@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CpRedCharacterCustomEquipmentRepository extends JpaRepository<CpRedCharacterCustomEquipment, Long> {
-    CpRedCharacterCustomEquipment findByName(String name);
 }
