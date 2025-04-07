@@ -12,7 +12,6 @@
         .font-league-spartan {
             font-family: 'League Spartan', sans-serif;
         }
-
         .font-jetbrains-mono {
             font-family: 'JetBrains Mono', monospace;
         }
@@ -145,14 +144,14 @@
             class="flex flex-col items-center justify-center p-9 m-2 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl">
             <form action="/login" method="post" class="flex flex-col items-center justify-cente w-full">
                 <div class="relative m-5 w-full">
-                    <input type="text" id="username" aria-describedby="username" name="username" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
-                               text-light-textPrimary dark:text-dark-textPrimary
-                               bg-light-background dark:bg-dark-background
-                               border-0 border-b-2 border-light-border dark:border-dark-border
-                               focus:outline-none focus:ring-0
-                               focus:border-light-accent peer dark:focus:border-dark-accent 
-                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base"
-                        placeholder=" " />
+                    <input type="text" id="username" aria-describedby="username" name="username" required
+                        autocomplete="off" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                                text-light-textPrimary dark:text-dark-textPrimary
+                                bg-light-background dark:bg-dark-background
+                                border-0 border-b-2 border-light-border dark:border-dark-border
+                                focus:outline-none focus:ring-0
+                                focus:border-light-accent peer dark:focus:border-dark-accent 
+                                placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" placeholder=" " />
                     <label for="username" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary
                                duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
                                peer-focus:text-light-accent peer-focus:dark:text-dark-accent
@@ -163,7 +162,7 @@
                     </label>
                 </div>
                 <div class="relative m-5 w-full">
-                    <input type="password" id="password" aria-describedby="password" name="password" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full   text-sm
+                    <input type="password" id="password" aria-describedby="password" name="password" required autocomplete="off" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full   text-sm
                                text-light-textPrimary dark:text-dark-textPrimary 
                                bg-light-background dark:bg-dark-surface
                                border-0 border-b-2 border-light-border dark:border-dark-border
@@ -178,7 +177,7 @@
                            rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
                         <i class="fa-solid fa-user-lock mr-1"></i>Hasło:
                     </label>
-                    <i id="togglePasswordIcon1" onclick="togglePassword('password', 'togglePasswordIcon1')" class="fa-solid fa-eye absolute right-4 top-4.5
+                    <i id="togglePasswordIcon1" onclick="togglePassword('password', 'togglePasswordIcon1')" class="appearance-auto fa-solid fa-eye absolute right-4 top-4.5
                                text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
                     </i>
                 </div>
@@ -215,7 +214,7 @@
     </main>
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
-        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Manager</h3>
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
         <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
             class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
     </footer>
