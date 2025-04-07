@@ -28,7 +28,7 @@ public class CpRedCyberwares {
     @Enumerated(EnumType.STRING)
     private CpRedCyberwaresMountPlace mountPlace;
     private String requirements;
-    private String uc;
+    private String humanityLoss;
     @Enumerated(EnumType.STRING)
     private CpRedCyberwaresInstallationPlace installationPlace;
     private int price;
