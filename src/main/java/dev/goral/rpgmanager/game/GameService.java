@@ -1,8 +1,10 @@
 package dev.goral.rpgmanager.game;
 
+import dev.goral.rpgmanager.chat.GameRoomManager;
 import dev.goral.rpgmanager.game.gameUsers.*;
 import dev.goral.rpgmanager.rpgSystems.RpgSystemsRepository;
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ForbiddenActionException;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
@@ -25,6 +27,7 @@ public class GameService {
     private final UserRepository userRepository;
     private final GameUsersRepository gameUsersRepository;
     private final RpgSystemsRepository rpgSystemsRepository;
+    private final GameRoomManager gameRoomManager;
 
     public List<GameDTOAdmin> getAllGames() {
         List<Game> games = gameRepository.findAll();
@@ -246,6 +249,11 @@ public class GameService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Niepoprawny status: " + statusStr);
         }
+
+        List<Map<String, Object>> activeRooms = gameRoomManager.getActiveRoomsForGame(gameId);
+
+        if (!activeRooms.isEmpty())
+            throw new ForbiddenActionException("Nie można zmienić statusu gry, gdy istnieją w niej aktywne pokoje.");
 
         gameToUpdate.setStatus(status);
         gameRepository.save(gameToUpdate);
