@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons;
 
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.ammunition.CpRedAmmunition;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsQuality;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills.CpRedSkills;
