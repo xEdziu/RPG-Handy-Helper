@@ -11,5 +11,6 @@ public class CpRedCharacterCustomArmorDTO {
     private Long armorId;
     private Long characterId;
     private String status;
+    private int currentArmorPoints;
     private String description;
 }

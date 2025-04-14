@@ -43,5 +43,6 @@ public class CpRedCharacterCustomArmor {
     private CpRedCharacters characterId;
     @Enumerated(EnumType.STRING)
     private CpRedCharacterItemStatus status;
+    private int currentArmorPoints;
     private String description;
 }

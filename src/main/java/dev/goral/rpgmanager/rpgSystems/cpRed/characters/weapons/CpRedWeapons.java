@@ -1,6 +1,7 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsQuality;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills.CpRedSkills;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,14 +36,21 @@ public class CpRedWeapons {
     private CpRedWeaponsType type;
     private int damage; //quantity of d6
     private int magazineCapacity;
-    @Enumerated(EnumType.STRING)
-    private CpRedWeaponsAmmunition ammunition;
+    @ManyToOne
+    @JoinColumn(
+            name="standard_ammunition_id",
+            referencedColumnName = "id"
+    )
+    private CpRedAmmunition standardAmmunitionId;
     private short numberOfAttacks;
     private short handType;
     private boolean isHidden;
+    @Enumerated(EnumType.STRING)
+    private CpRedItemsQuality quality;
     private int price;
     @Enumerated(EnumType.STRING)
     private CpRedItemsAvailability availability;
+    private boolean isModifiable;
     private String description;
 
 

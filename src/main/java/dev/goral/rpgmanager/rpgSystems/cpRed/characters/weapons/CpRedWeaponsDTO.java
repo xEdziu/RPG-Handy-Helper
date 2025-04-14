@@ -8,15 +8,17 @@ import lombok.ToString;
 @Getter
 @ToString
 public class CpRedWeaponsDTO {
-    private String requiredSkillId;
+    private long requiredSkillId;
     private String type;
     private int damage;
     private int magazineCapacity;
-    private String ammunition;
+    private long standardAmmunitionId;
     private short numberOfAttacks;
     private short handType;
     private boolean isHidden;
+    private String quality;
     private int price;
     private String availability;
+    private boolean isModifiable;
     private String description;
 }

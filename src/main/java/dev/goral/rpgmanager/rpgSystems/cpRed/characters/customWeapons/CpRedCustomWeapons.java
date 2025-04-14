@@ -3,7 +3,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.characters.customWeapons;
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills.CpRedSkills;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons.CpRedWeaponsAmmunition;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsQuality;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons.CpRedWeaponsType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,13 +43,14 @@ public class CpRedCustomWeapons {
     private CpRedWeaponsType type;//enum from weapons
     private int damage;
     private int magazineCapacity;
-    @Enumerated(EnumType.STRING)
-    private CpRedWeaponsAmmunition ammunition;
     private short numberOfAttacks;
     private short handType;
     private boolean isHidden;
+    @Enumerated(EnumType.STRING)
+    private CpRedItemsQuality quality;
     private int price;
     @Enumerated(EnumType.STRING)
     private CpRedItemsAvailability availability;
+    private boolean isModifiable;
     private String description;
 }

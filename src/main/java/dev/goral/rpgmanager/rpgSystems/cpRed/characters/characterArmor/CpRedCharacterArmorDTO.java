@@ -11,5 +11,5 @@ public class CpRedCharacterArmorDTO {
     private Long armorId;
     private Long characterId;
     private String status;
-    private String description;
+    private int currentArmorPoints;
 }

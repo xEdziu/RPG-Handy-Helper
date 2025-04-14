@@ -31,7 +31,6 @@ public class CpRedCharacterOtherInfo {
     )
     private CpRedCharacters characterId;
     private String notes;
-    private String criticalInjuries;
     private String addictions;
     private String reputation;
     private String style;

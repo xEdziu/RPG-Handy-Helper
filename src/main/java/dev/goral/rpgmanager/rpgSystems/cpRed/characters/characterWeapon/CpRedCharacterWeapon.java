@@ -3,6 +3,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterWeapon;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons.CpRedWeapons;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsQuality;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,20 +29,24 @@ public class CpRedCharacterWeapon {
     private Long id;
     @ManyToOne
     @JoinColumn(
-            name = "weapon_id",
+            name = "base_weapon_id",
             referencedColumnName = "id"
     )
-    private CpRedWeapons weaponId;
+    private CpRedWeapons baseWeaponId;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
             referencedColumnName = "id"
     )
     private CpRedCharacters characterId;
+    private int dmg;
+    private int magazineCapacity;
+    private short numberOfAttacks;
     @Enumerated(EnumType.STRING)
-    private CpRedCharacterWeaponQuality quality;
-    private int ammunition;
+    private CpRedCharacterWeaponHandType handType;
+    private boolean isHidden;
     @Enumerated(EnumType.STRING)
+    private CpRedItemsQuality quality;
     private CpRedCharacterItemStatus status;
     private String description;
 }

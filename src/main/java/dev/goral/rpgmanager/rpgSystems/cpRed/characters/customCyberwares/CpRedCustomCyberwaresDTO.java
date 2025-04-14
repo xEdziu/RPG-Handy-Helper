@@ -13,6 +13,7 @@ public class CpRedCustomCyberwaresDTO {
     private String mountPlace;
     private String requirements;
     private String humanityLoss;
+    private int size;
     private String installationPlace;
     private int price;
     private String availability;

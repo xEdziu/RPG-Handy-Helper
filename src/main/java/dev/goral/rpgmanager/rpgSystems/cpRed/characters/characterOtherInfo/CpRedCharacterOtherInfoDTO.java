@@ -11,7 +11,6 @@ import lombok.ToString;
 public class CpRedCharacterOtherInfoDTO {
     private Long characterId;
     private String notes;
-    private String criticalInjuries;
     private String addictions;
     private String reputation;
     private String style;

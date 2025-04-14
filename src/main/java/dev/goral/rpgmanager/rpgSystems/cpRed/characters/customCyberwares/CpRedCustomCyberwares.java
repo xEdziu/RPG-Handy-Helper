@@ -39,6 +39,7 @@ public class CpRedCustomCyberwares {
     private CpRedCyberwaresMountPlace mountPlace;
     private String requirements;
     private String humanityLoss;
+    private int size;
     @Enumerated(EnumType.STRING)
     private CpRedCyberwaresInstallationPlace installationPlace;
     private int price;

@@ -40,5 +40,5 @@ public class CpRedCharacterArmor {
     private CpRedCharacters characterId;
     @Enumerated(EnumType.STRING)
     private CpRedCharacterItemStatus status;
-    private String description;
+    private int currentArmorPoints;
 }
