@@ -24,6 +24,16 @@
         ::-ms-reveal {
             display: none;
         }
+
+        input[data-autocompleted] {
+            background-color: transparent !important;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:focus {
+            transition: background-color 0s 0s, color 0s 0s;
+            transition-delay: calc(infinity * 1s);
+        }
     </style>
 </head>
 <script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
