@@ -8,6 +8,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class CpRedCharacterCustomWeaponCustomAmmunitionDTO {
-    private int characterCustomWeaponId;
-    private int customAmmunitionId;
+    private Long characterCustomWeaponId;
+    private Long customAmmunitionId;
 }

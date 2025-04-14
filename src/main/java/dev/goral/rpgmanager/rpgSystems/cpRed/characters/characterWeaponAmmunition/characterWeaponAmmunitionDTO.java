@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class characterWeaponAmmunitionDTO {
-    private int characterWeaponId;
-    private int ammunitionId;
+    private Long characterWeaponId;
+    private Long ammunitionId;
     private int amount;
 }

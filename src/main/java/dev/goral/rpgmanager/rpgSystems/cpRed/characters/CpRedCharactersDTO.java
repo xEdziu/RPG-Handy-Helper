@@ -9,8 +9,8 @@ import lombok.ToString;
 @ToString
 public class CpRedCharactersDTO {
     private final Long id;
-    private final int gameId;
-    private final int userId;
+    private final Long gameId;
+    private final Long userId;
     private final String name;
     private final String nickname;
     private final String type;

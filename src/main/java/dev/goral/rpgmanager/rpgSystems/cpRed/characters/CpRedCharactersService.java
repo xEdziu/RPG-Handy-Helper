@@ -40,7 +40,8 @@ public class CpRedCharactersService {
                         character.getType().name(),
                         character.getExpAll(),
                         character.getExpAvailable(),
-                        character.getCash()
+                        character.getCash(),
+                        character.isAlive()
                 )
         ).toList();
     }
@@ -58,7 +59,8 @@ public class CpRedCharactersService {
                     cpRedCharacter.getType().name(),
                     cpRedCharacter.getExpAll(),
                     cpRedCharacter.getExpAvailable(),
-                    cpRedCharacter.getCash()
+                    cpRedCharacter.getCash(),
+                    cpRedCharacter.isAlive()
             );
         } else {
             throw new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje");
