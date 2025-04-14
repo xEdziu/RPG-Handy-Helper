@@ -1,7 +1,7 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.weaponCustomAmmunitionCompatibility;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.customWeaponCustomAmmunitionCompatibility;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.customAmmunition.CpRedCustomAmmunition;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weapons.CpRedWeapons;
+import dev.goral.rpgmanager.rpgSystems.cpRed.characters.customWeapons.CpRedCustomWeapons;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,24 +13,24 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class CpRedWeaponCustomAmmunitionCompatibility {
+public class CpRedCustomWeaponCustomAmmunitionCompatibility {
     @Id
     @SequenceGenerator(
-            name = "cpRedWeaponCustomAmmunitionCompatibility_sequence",
-            sequenceName = "cpRedWeaponCustomAmmunitionCompatibility_sequence",
+            name = "cpRedCustomWeaponCustomAmmunitionCompatibility_sequence",
+            sequenceName = "cpRedCustomWeaponCustomAmmunitionCompatibility_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "cpRedWeaponCustomAmmunitionCompatibility_sequence"
+            generator = "cpRedCustomWeaponCustomAmmunitionCompatibility_sequence"
     )
     private Long id;
     @ManyToOne
     @JoinColumn(
-            name = "weapon_id",
+            name = "custom_weapon_id",
             referencedColumnName = "id"
     )
-    private CpRedWeapons weaponId;
+    private CpRedCustomWeapons customWeaponId;
     @ManyToOne
     @JoinColumn(
             name = "custom_ammunition_id",
