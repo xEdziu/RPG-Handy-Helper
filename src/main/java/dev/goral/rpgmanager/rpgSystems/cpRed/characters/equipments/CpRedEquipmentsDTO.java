@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.Equipments;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.equipments;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

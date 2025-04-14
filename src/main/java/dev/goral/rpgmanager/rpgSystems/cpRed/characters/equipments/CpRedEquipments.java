@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.Equipments;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.equipments;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
 import jakarta.persistence.*;

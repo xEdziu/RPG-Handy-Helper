@@ -1,5 +1,6 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.characters.ammunition;
+package dev.goral.rpgmanager.rpgSystems.cpRed.characters.customAmmunition;
 
+import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,22 +9,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
-@Setter
+@NoArgsConstructor
 @Getter
-public class CpRedAmmunition {
+@Setter
+public class CpRedCustomAmmunition {
     @Id
     @SequenceGenerator(
-            name = "cpRedAmmunition_sequence",
-            sequenceName = "cpRedAmmunition_sequence",
+            name = "cpRedCustomAmmunition_sequence",
+            sequenceName = "cpRedCustomAmmunition_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "cpRedAmmunition_sequence"
+            generator = "cpRedCustomAmmunition_sequence"
     )
-    private Long id;
+    private long id;
+    @ManyToOne
+    @JoinColumn(
+            name="game_id",
+            referencedColumnName = "id"
+    )
+    private Game gameId;
     private String name;
     private String description;
     private int pricePerBullet;
