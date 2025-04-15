@@ -1,12 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Nie ma takiego pokoju</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-dark.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    },
+                },
+            },
+        };
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("switch-component");
+            const body = document.body;
+            const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+            const favicon = document.getElementById("favicon");
+            function updateFavicon(theme) {
+                if (favicon) {
+                    favicon.href = theme === "dark"
+                        ? "/img/logo/logo-dark.svg"
+                        : "/img/logo/logo-light.svg";
+                }
+            }
+            function applyTheme(theme) {
+                body.classList.toggle("dark", theme === "dark");
+                localStorage.setItem("theme", theme);
+                updateFavicon(theme);
+                if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+            }
+            const savedTheme = localStorage.getItem("theme") || "dark";
+            applyTheme(savedTheme);
+            if (toggleSwitch) {
+                toggleSwitch.addEventListener("change", function () {
+                    const newTheme = toggleSwitch.checked ? "dark" : "light";
+                    applyTheme(newTheme);
+                });
+            }
+            if (themeToggleDiv) {
+                themeToggleDiv.addEventListener("click", function (e) {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                    const savedTheme = localStorage.getItem("theme") || "dark";
+                    applyTheme(savedTheme);
+                });
+            }
+        });
+    </script>
 </head>
-<body>
-<h2>Dany pokój nie istnieje lub został już zamknięty :(</h2>
-<p>Może pora utworzyć nowy pokój?</p>
-<a href="/home">Wróć do strony głównej</a>
+
+<body class="min-h-screen flex flex-col dark">
+    <div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
+        <i class="fa-solid fa-sun text-light-accent dark:text-dark-accent"></i>
+        <label for="switch-component" class="relative inline-block w-12 h-6 cursor-pointer">
+            <input id="switch-component" type="checkbox" class="peer hidden" checked />
+            <div class="w-12 h-6 rounded-full transition-all duration-300 bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary"></div>
+            <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-light-accent dark:bg-dark-accent
+                shadow-md transition-all duration-300 peer-checked:translate-x-[1.5rem] pointer-events-none">
+            </div>
+        </label>
+        <i class="fa-solid fa-moon text-light-accent dark:text-dark-accent"></i>
+    </div>
+    <h2>Dany pokój nie istnieje lub został już zamknięty :(</h2>
+    <p>Może pora utworzyć nowy pokój?</p>
+    <a href="/home">Wróć do strony głównej</a>
+    <footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+        <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
+    </footer>
 </body>
+
 </html>
