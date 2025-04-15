@@ -93,7 +93,7 @@
     </script>
 </head>
 
-<body class="min-h-screen flex flex-col dark">
+<body class="m-0 p-0 h-screen w-screen flex flex-col justify-between font-league-spartan">
     <div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
         <i class="fa-solid fa-sun text-light-accent dark:text-dark-accent"></i>
         <label for="switch-component" class="relative inline-block w-12 h-6 cursor-pointer">
@@ -105,14 +105,44 @@
         </label>
         <i class="fa-solid fa-moon text-light-accent dark:text-dark-accent"></i>
     </div>
-    <h2>Błąd 500</h2>
-    <p>Coś poszło nie tak. Proszę spróbować ponownie później.</p>
+    <div class="fixed top-0 left-0 p-5 z-50">
+        <a href="/">
+            <div>
+                <img src="/img/logo/logo-light.svg" alt="Logo Light" class="block dark:hidden w-16 h-auto mx-auto md:hidden md:dark:hidden" />
+                <img src="/img/logo/logo-dark.svg" alt="Logo Dark" class="hidden dark:block w-16 h-auto mx-auto md:hidden md:dark:hidden" />
+                <img src="/img/logo/logo_with_text_light_version.svg" alt="Logo Light" class="hidden md:hidden md:dark:block w-64 h-auto"/>
+                <img src="/img/logo/logo_with_text_dark_version.svg" alt="Logo Dark" class="hidden md:block md:dark:hidden w-64 h-auto"/>
+            </div>
+        </a>
+    </div>
+    <main class="flex flex-col items-center justify-center h-full text-center p-4 bg-light-background dark:bg-dark-background">
+        <h1 class="text-6xl font-bold text-light-accent dark:text-dark-accent">500</h1>
+        <h2 class="text-4xl font-semibold text-light-textSecondary dark:text-dark-textSecondary">Coś poszło nie tak! <br><br> Spróbuj swojego szczęścia i załaduj stronę ponownie lub wróć na stronę główną.</h2>
+        <div class="flex items-center justify-center mt-5">
+            <div id="reloadWeb">
+                <img src="/img/assets/reload_button_light_version.svg" alt="Reload Light" class="block dark:hidden w-16 md:w-28 h-auto mx-auto" />
+                <img src="/img/assets/reload_button_dark_version.svg" alt="Reload Dark" class="hidden dark:block w-16 md:w-28 h-auto mx-auto" />
+            </div>
+            <div class="ml-5">
+                <a href="/">
+                    <img src="/img/assets/home_button_light_version.svg" alt="Home Light" class="block dark:hidden w-16 md:w-28 h-auto mx-auto" />
+                    <img src="/img/assets/home_button_dark_version.svg" alt="Home Dark" class="hidden dark:block w-16 md:w-28 h-auto mx-auto" />
+                </a>
+            </div>
+        </div>
+    </main>
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
         <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
         <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
-            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
+            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i>
+        </a>
     </footer>
 </body>
-
+<script>
+    const reloadButton = document.getElementById("reloadWeb");
+    reloadButton.addEventListener("click", function() {
+        location.reload();
+    });
+</script>
 </html>
