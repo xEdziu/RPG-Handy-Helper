@@ -31,7 +31,7 @@ public class CpRedCharacters {
             referencedColumnName = "id",
             nullable = false
     )
-    private Game game;
+    private Game gameId;
 
     @ManyToOne
     @JoinColumn(
