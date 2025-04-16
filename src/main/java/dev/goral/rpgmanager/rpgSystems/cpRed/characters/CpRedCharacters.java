@@ -31,7 +31,7 @@ public class CpRedCharacters {
             referencedColumnName = "id",
             nullable = false
     )
-    private Game gameId;
+    private Game game;
 
     @ManyToOne
     @JoinColumn(
@@ -63,7 +63,7 @@ public class CpRedCharacters {
                            Integer cash,
                            String characterPhotoPath) {
         this.id = id;
-        this.gameId = game;
+        this.game = game;
         this.name = name;
         this.nickname = nickname;
         this.type = type;
