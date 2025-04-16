@@ -63,7 +63,7 @@ public class CpRedCharacters {
                            Integer cash,
                            String characterPhotoPath) {
         this.id = id;
-        this.game = game;
+        this.gameId = game;
         this.name = name;
         this.nickname = nickname;
         this.type = type;
