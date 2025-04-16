@@ -29,16 +29,14 @@ public class CpRedCharacterCustomArmor {
     @ManyToOne
     @JoinColumn(
             name = "armor_id",
-            referencedColumnName = "id",
-            nullable = false
+            referencedColumnName = "id"
 
     )
     private CpRedCustomArmors armorId;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
-            referencedColumnName = "id",
-            nullable = false
+            referencedColumnName = "id"
     )
     private CpRedCharacters characterId;
     @Enumerated(EnumType.STRING)
