@@ -30,16 +30,14 @@ public class CpRedCharacterCustomCyberware {
     @ManyToOne
     @JoinColumn(
             name = "cyberware_id",
-            referencedColumnName = "id",
-            nullable = false
+            referencedColumnName = "id"
     )
     private CpRedCustomCyberwares cyberwareId;
 
     @ManyToOne
     @JoinColumn(
             name = "character_id",
-            referencedColumnName = "id",
-            nullable = false
+            referencedColumnName = "id"
     )
     private CpRedCharacters characterId;
 
