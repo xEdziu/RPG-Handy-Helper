@@ -19,8 +19,8 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y wget
-        wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.deb
-        sudo dpkg -i jdk-23_linux-x64_bin.deb
+        wget https://download.oracle.com/java/23/archive/jdk-23.0.2_linux-x64_bin.deb
+        sudo dpkg -i jdk-23.0.2_linux-x64_bin.deb
         sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-23.0.2-oracle-x64/bin/java 1
         sudo update-alternatives --set java /usr/lib/jvm/jdk-23.0.2-oracle-x64/bin/java
 
