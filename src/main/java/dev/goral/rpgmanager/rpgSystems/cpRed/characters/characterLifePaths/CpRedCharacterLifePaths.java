@@ -26,8 +26,7 @@ public class CpRedCharacterLifePaths {
     @ManyToOne
     @JoinColumn(
             name = "character_id",
-            referencedColumnName = "id",
-            nullable = false
+            referencedColumnName = "id"
     )
     private CpRedCharacters characterId;
     private String cultureOfOrigin;
