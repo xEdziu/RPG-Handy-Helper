@@ -3,10 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Nie ma takiego pokoju</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
-    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-dark.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
 
@@ -18,7 +17,12 @@
             font-family: 'JetBrains Mono', monospace;
         }
     </style>
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>// Ustawienia Tailwind CSS
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -57,53 +61,55 @@
             },
         };
         document.addEventListener("DOMContentLoaded", function () {
-            const toggleSwitch = document.getElementById("switch-component");
-            const body = document.body;
-            const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
-            const favicon = document.getElementById("favicon");
-            function updateFavicon(theme) {
-                if (favicon) {
-                    favicon.href = theme === "dark"
-                        ? "/img/logo/logo-dark.svg"
-                        : "/img/logo/logo-light.svg";
-                }
+        const toggleSwitch = document.getElementById("switch-component");
+        const body = document.body;
+        const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+        const favicon = document.getElementById("favicon");
+        function updateFavicon(theme) {
+            if (favicon) {
+                favicon.href = theme === "dark"
+                    ? "/img/logo/logo-dark.svg"
+                    : "/img/logo/logo-light.svg";
             }
-            function applyTheme(theme) {
-                body.classList.toggle("dark", theme === "dark");
-                localStorage.setItem("theme", theme);
-                updateFavicon(theme);
-                if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
-            }
-            const savedTheme = localStorage.getItem("theme") || "dark";
-            applyTheme(savedTheme);
-            if (toggleSwitch) {
-                toggleSwitch.addEventListener("change", function () {
-                    const newTheme = toggleSwitch.checked ? "dark" : "light";
-                    applyTheme(newTheme);
-                });
-            }
-            if (themeToggleDiv) {
-                themeToggleDiv.addEventListener("click", function (e) {
-                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
-                    const savedTheme = localStorage.getItem("theme") || "dark";
-                    applyTheme(savedTheme);
-                });
-            }
-        });
+        }
+        function applyTheme(theme) {
+            body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+            if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+        }
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        applyTheme(savedTheme);
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener("change", function () {
+                const newTheme = toggleSwitch.checked ? "dark" : "light";
+                applyTheme(newTheme);
+            });
+        }
+        if (themeToggleDiv) {
+            themeToggleDiv.addEventListener("click", function (e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                const savedTheme = localStorage.getItem("theme") || "dark";
+                applyTheme(savedTheme);
+            });
+        }
+    });
     </script>
 </head>
 
 <body class="m-0 p-0 h-screen w-screen flex flex-col justify-between font-league-spartan">
-    <div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
-        <i class="fa-solid fa-sun text-light-accent dark:text-dark-accent"></i>
-        <label for="switch-component" class="relative inline-block w-12 h-6 cursor-pointer">
-            <input id="switch-component" type="checkbox" class="peer hidden" checked />
-            <div class="w-12 h-6 rounded-full transition-all duration-300 bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary"></div>
-            <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-light-accent dark:bg-dark-accent
-                shadow-md transition-all duration-300 peer-checked:translate-x-[1.5rem] pointer-events-none">
-            </div>
-        </label>
-        <i class="fa-solid fa-moon text-light-accent dark:text-dark-accent"></i>
+    <div class="fixed top-4 right-4 z-50">
+        <div class="flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-sun text-light-accent dark:text-dark-accent"></i>
+            <label for="switch-component" class="relative inline-block w-12 h-6 cursor-pointer">
+                <input id="switch-component" type="checkbox" class="peer hidden" checked />
+                <div class="w-12 h-6 rounded-full transition-all duration-300 bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary"></div>
+                <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-light-accent dark:bg-dark-accent
+                    shadow-md transition-all duration-300 peer-checked:translate-x-[0.75rem] pointer-events-none">
+                </div>
+            </label>
+            <i class="fa-solid fa-moon text-light-accent dark:text-dark-accent"></i>
+        </div>
     </div>
     <div class="fixed top-0 left-0 p-5 z-50">
         <a href="/">
@@ -115,32 +121,34 @@
             </div>
         </a>
     </div>
-    <main class="flex flex-col items-center justify-center h-full text-center p-8 bg-light-background dark:bg-dark-background">
-        <h1 class="text-6xl md:text-8xl font-bold text-light-accent dark:text-dark-accent">
+    <main
+        class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
+        <h1 class="text-center text-6xl md:text-8xl font-bold text-light-accent dark:text-dark-accent">
             Pokój nie został
         </h1>
-        <h1 class="text-6xl md:text-8xl font-bold text-light-accent dark:text-dark-accent mb-8">
+        <h1 class="text-center text-6xl md:text-8xl font-bold text-light-accent dark:text-dark-accent mb-8">
             znaleziony
         </h1>
 
-        <h2 class="text-2xl md:text-4xl font-semibold text-light-textSecondary dark:text-dark-textSecondary mb-8">
+        <h2 class="text-center text-2xl md:text-4xl font-semibold text-light-textSecondary dark:text-dark-textSecondary mb-8">
             Dany pokój nie istnieje lub został zamknięty.
         </h2>
-        <h2 class="text-2xl md:text-4xl font-semibold text-light-textSecondary dark:text-dark-textSecondary">
+        <h2 class="text-center text-2xl md:text-4xl font-semibold text-light-textSecondary dark:text-dark-textSecondary">
             Poproś Twojego Mistrza Gry, aby utworzył nowy!
         </h2>
-        
+
         <a href="/">
-            <img src="/img/assets/home_button_light_version.svg" alt="Home Light" class="block dark:hidden w-12 md:w-16 h-auto mx-auto mt-8" />
-            <img src="/img/assets/home_button_dark_version.svg" alt="Home Dark" class="hidden dark:block w-12 md:w-16 h-auto mx-auto mt-8" />
+            <img src="/img/assets/home_button_light_version.svg" alt="Home Light"
+                class="block dark:hidden w-12 md:w-16 h-auto mx-auto mt-8" />
+            <img src="/img/assets/home_button_dark_version.svg" alt="Home Dark"
+                class="hidden dark:block w-12 md:w-16 h-auto mx-auto mt-8" />
         </a>
     </main>
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
         <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
         <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
-            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i>
-        </a>
+            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
     </footer>
 </body>
 
