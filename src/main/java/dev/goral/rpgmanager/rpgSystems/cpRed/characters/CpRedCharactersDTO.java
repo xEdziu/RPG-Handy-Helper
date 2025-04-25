@@ -17,4 +17,5 @@ public class CpRedCharactersDTO {
     private final Integer expAll;
     private final Integer expAvailable;
     private final Integer cash;
+    private final boolean alive;
 }

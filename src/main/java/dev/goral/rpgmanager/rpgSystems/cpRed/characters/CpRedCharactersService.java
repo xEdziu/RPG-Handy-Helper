@@ -40,7 +40,8 @@ public class CpRedCharactersService {
                         character.getType().name(),
                         character.getExpAll(),
                         character.getExpAvailable(),
-                        character.getCash()
+                        character.getCash(),
+                        character.isAlive()
                 )
         ).toList();
     }
@@ -58,7 +59,8 @@ public class CpRedCharactersService {
                     cpRedCharacter.getType().name(),
                     cpRedCharacter.getExpAll(),
                     cpRedCharacter.getExpAvailable(),
-                    cpRedCharacter.getCash()
+                    cpRedCharacter.getCash(),
+                    cpRedCharacter.isAlive()
             );
         } else {
             throw new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje");
@@ -94,7 +96,7 @@ public class CpRedCharactersService {
         GameUsers gameUser = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie jest przypisany do tej gry."));
         if (gameUser.getRole() == GameUsersRole.PLAYER) {
-            long characterCount = cpRedCharactersRepository.countByUserIdAndGameId(currentUser.getId(), game.getId());
+            Long characterCount = cpRedCharactersRepository.countByUserIdAndGameId(currentUser.getId(), game.getId());
             if (characterCount >= 1) {
                 throw new IllegalStateException("Gracz może stworzyć tylko jedną postać w tej grze.");
             }
