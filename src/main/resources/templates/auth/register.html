@@ -49,10 +49,12 @@
             -webkit-box-shadow: 0 0 0px 1000px var(--input-bg-dark) inset !important;
             -webkit-text-fill-color: var(--input-text-dark) !important;
         }
+
         :root {
             --input-bg-light: #E1E1E1;
             --input-text-light: #252525;
         }
+
         .dark {
             --input-bg-dark: #1E1E1E;
             --input-text-dark: #E1E1E1;
@@ -137,6 +139,14 @@
                 applyTheme(newTheme);
             });
         }
+        setTimeout(() => {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                if (input.matches(':-webkit-autofill')) {
+                    input.value = '';
+                }
+            });
+        }, 100);
     });
 </script>
 
