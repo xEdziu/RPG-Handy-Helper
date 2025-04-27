@@ -407,6 +407,11 @@
         icon.classList.replace(isPassword ? "fa-eye" : "fa-eye-slash", isPassword ? "fa-eye-slash" : "fa-eye");
     }
     document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('email').focus();
+        document.getElementById('password').focus();
+        document.getElementById('passwordConfirm').focus();
+        document.getElementById('username').focus();
+        document.activeElement.blur();
         const form = document.querySelector('form');
         const fields = [
             {
