@@ -62,10 +62,8 @@
 
         .peer-placeholder-shown:scale-100.peer-placeholder-shown:translate-y-0,
         input.not-empty~label {
-            /* Domyślne ustawienie labela na górze */
             transform: translateY(-1rem) scale(0.9);
             color: var(--your-accent-color);
-            /* opcjonalnie */
         }
     </style>
 </head>
@@ -113,6 +111,20 @@
             },
         },
     };
+    function fixLabelsForAutofill() {
+        document.querySelectorAll('input').forEach(input => {
+            if (input.value.trim() !== '') {
+                input.classList.add('filled');
+            }
+            input.addEventListener('input', () => {
+                if (input.value.trim() !== '') {
+                    input.classList.add('filled');
+                } else {
+                    input.classList.remove('filled');
+                }
+            });
+        });
+    }
     // Skrypt do przełączania motywu jasnego/ciemnego
     document.addEventListener("DOMContentLoaded", function () {
         const toggleSwitch = document.getElementById("switch-component");
@@ -147,18 +159,7 @@
                 applyTheme(newTheme);
             });
         }
-        document.querySelectorAll('input').forEach(input => {
-            if (input.value.trim() !== '') {
-                input.classList.add('not-empty');
-            }
-            input.addEventListener('input', () => {
-                if (input.value.trim() !== '') {
-                    input.classList.add('not-empty');
-                } else {
-                    input.classList.remove('not-empty');
-                }
-            });
-        });
+        fixLabelsForAutofill();
     });
 </script>
 
