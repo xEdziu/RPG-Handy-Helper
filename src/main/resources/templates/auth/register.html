@@ -59,6 +59,14 @@
             --input-bg-dark: #1E1E1E;
             --input-text-dark: #E1E1E1;
         }
+
+        .peer-placeholder-shown:scale-100.peer-placeholder-shown:translate-y-0,
+        input.not-empty~label {
+            /* Domyślne ustawienie labela na górze */
+            transform: translateY(-1rem) scale(0.9);
+            color: var(--your-accent-color);
+            /* opcjonalnie */
+        }
     </style>
 </head>
 <script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
@@ -139,12 +147,18 @@
                 applyTheme(newTheme);
             });
         }
-        setTimeout(() => {
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                    input.value = '';
+        document.querySelectorAll('input').forEach(input => {
+            if (input.value.trim() !== '') {
+                input.classList.add('not-empty');
+            }
+            input.addEventListener('input', () => {
+                if (input.value.trim() !== '') {
+                    input.classList.add('not-empty');
+                } else {
+                    input.classList.remove('not-empty');
+                }
             });
-        }, 100);
+        });
     });
 </script>
 
