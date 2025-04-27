@@ -142,9 +142,7 @@
         setTimeout(() => {
             const inputs = document.querySelectorAll('input');
             inputs.forEach(input => {
-                if (input.matches(':-webkit-autofill')) {
                     input.value = '';
-                }
             });
         }, 100);
     });
