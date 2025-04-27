@@ -8,12 +8,15 @@
     <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
         .font-league-spartan {
             font-family: 'League Spartan', sans-serif;
         }
+
         .font-jetbrains-mono {
             font-family: 'JetBrains Mono', monospace;
         }
+
         .grecaptcha-badge {
             /* Stylizacja reCAPTCHA */
             position: fixed !important;
@@ -21,6 +24,7 @@
             right: 10px;
             z-index: 9999;
         }
+
         ::-ms-reveal {
             display: none;
         }
@@ -30,9 +34,13 @@
         }
 
         input:-webkit-autofill,
-        input:-webkit-autofill:focus {
-            transition: background-color 0s 0s, color 0s 0s;
-            transition-delay: calc(infinity * 1s);
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+          box-shadow: 0 0 0px 1000px transparent inset !important;
+          -webkit-text-fill-color: inherit !important;
+          transition: background-color 9999s ease-in-out 0s !important;
         }
     </style>
 </head>
@@ -162,7 +170,8 @@
                 <input type="text" name="hidden" autocomplete="false" style="display:none;">
                 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" class="hiddenS" />
                 <div class="relative m-5">
-                    <input autocomplete="off" type="text" id="username" aria-describedby="username" name="username" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    <input autocomplete="off" type="text" id="username" aria-describedby="username" name="username"
+                        required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                                text-light-textPrimary dark:text-dark-textPrimary 
                                bg-light-background dark:bg-dark-background
                                border-0 border-b-2 border-light-border dark:border-dark-border
@@ -184,7 +193,8 @@
                     </p>
                 </div>
                 <div class="relative m-5">
-                    <input autocomplete="off" type="text" id="firstName" aria-describedby="firstName" name="firstName" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    <input autocomplete="off" type="text" id="firstName" aria-describedby="firstName" name="firstName"
+                        required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                     text-light-textPrimary dark:text-dark-textPrimary 
                     bg-light-background dark:bg-dark-surface
                     border-0 border-b-2 border-light-border dark:border-dark-border
@@ -206,7 +216,8 @@
                     </p>
                 </div>
                 <div class="relative m-5">
-                    <input autocomplete="off" type="text" id="surname" aria-describedby="surname" name="surname" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    <input autocomplete="off" type="text" id="surname" aria-describedby="surname" name="surname"
+                        required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                         text-light-textPrimary dark:text-dark-textPrimary 
                         bg-light-background dark:bg-dark-surface
                         border-0 border-b-2 border-light-border dark:border-dark-border
@@ -227,7 +238,8 @@
                     </p>
                 </div>
                 <div class="relative m-5">
-                    <input autocomplete="off" type="email" id="email" aria-describedby="email" name="email" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    <input autocomplete="off" type="email" id="email" aria-describedby="email" name="email" required
+                        class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                     text-light-textPrimary dark:text-dark-textPrimary 
                     bg-light-background dark:bg-dark-surface
                     border-0 border-b-2 border-light-border dark:border-dark-border
@@ -249,7 +261,8 @@
                     </p>
                 </div>
                 <div class="relative m-5">
-                    <input autocomplete="off" type="password" id="password" aria-describedby="password" name="password" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    <input autocomplete="off" type="password" id="password" aria-describedby="password" name="password"
+                        required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
                                text-light-textPrimary dark:text-dark-textPrimary 
                                bg-light-background dark:bg-dark-surface
                                border-0 border-b-2 border-light-border dark:border-dark-border
@@ -553,4 +566,5 @@
         }
     });
 </script>
+
 </html>
