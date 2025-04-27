@@ -37,10 +37,25 @@
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus,
         input:-webkit-autofill:active {
-          -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
-          box-shadow: 0 0 0px 1000px transparent inset !important;
-          -webkit-text-fill-color: inherit !important;
-          transition: background-color 9999s ease-in-out 0s !important;
+            -webkit-box-shadow: 0 0 0px 1000px var(--input-bg-light) inset !important;
+            -webkit-text-fill-color: var(--input-text-light) !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .dark input:-webkit-autofill,
+        .dark input:-webkit-autofill:hover,
+        .dark input:-webkit-autofill:focus,
+        .dark input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0px 1000px var(--input-bg-dark) inset !important;
+            -webkit-text-fill-color: var(--input-text-dark) !important;
+        }
+        :root {
+            --input-bg-light: #E1E1E1;
+            --input-text-light: #252525;
+        }
+        .dark {
+            --input-bg-dark: #1E1E1E;
+            --input-text-dark: #E1E1E1;
         }
     </style>
 </head>
