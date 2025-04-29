@@ -37,7 +37,8 @@ public class CpRedAmmunitionController {
     }
     // Modyfikować amunicje
     @PutMapping(path = "/admin/rpgSystems/cpRed/ammunition/update/{ammunitionId}")
-    public Map<String, Object> updateAmmunition(@PathVariable("ammunitionId") Long ammunitionId, @RequestBody CpRedAmmunition cpRedAmmunition) {
+    public Map<String, Object> updateAmmunition(@PathVariable("ammunitionId") Long ammunitionId,
+                                                @RequestBody CpRedAmmunition cpRedAmmunition) {
         return cpRedAmmunitionService.updateAmmunition(ammunitionId, cpRedAmmunition);
     }
 }

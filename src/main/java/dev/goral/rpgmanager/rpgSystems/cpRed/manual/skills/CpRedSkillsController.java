@@ -37,7 +37,8 @@ public class CpRedSkillsController {
     }
     // Modyfikować umiejętność
     @PutMapping(path = "/admin/rpgSystems/cpRed/skills/update/{skillId}")
-    public Map<String, Object> updateSkill(@PathVariable("skillId") Long skillId, @RequestBody CpRedSkills cpRedSkills) {
+    public Map<String, Object> updateSkill(@PathVariable("skillId") Long skillId,
+                                           @RequestBody CpRedSkills cpRedSkills) {
         return cpRedSkillsService.updateSkill(skillId, cpRedSkills);
     }
 }

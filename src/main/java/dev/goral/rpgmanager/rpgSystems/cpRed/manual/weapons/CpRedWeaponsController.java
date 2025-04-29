@@ -37,7 +37,8 @@ public class CpRedWeaponsController {
     }
     // Modyfikować broń
     @PutMapping(path = "/admin/rpgSystems/cpRed/weapons/update/{weaponId}")
-    public Map<String, Object> updateWeapon(@PathVariable("weaponId") Long weaponId, @RequestBody CpRedWeapons cpRedWeapons) {
+    public Map<String, Object> updateWeapon(@PathVariable("weaponId") Long weaponId,
+                                            @RequestBody CpRedWeapons cpRedWeapons) {
         return cpRedWeaponsService.updateWeapon(weaponId, cpRedWeapons);
     }
 }
