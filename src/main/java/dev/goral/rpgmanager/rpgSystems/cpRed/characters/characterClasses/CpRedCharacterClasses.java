@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
 
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.classes.CpRedClasses;
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.classes.CpRedClasses;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
