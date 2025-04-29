@@ -3,6 +3,9 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.manual.classes;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 @AllArgsConstructor
 public class CpRedClassesService {
@@ -10,7 +13,7 @@ public class CpRedClassesService {
     private final CpRedClassesRepository cpRedClassesRepository;
 
     // Pobierz wszystkie klasy
-    public CpRedClassesDTO getAllClasses() {
+    public List<CpRedClassesDTO> getAllClasses() {
         
     }
 
@@ -19,13 +22,18 @@ public class CpRedClassesService {
 
     }
 
+    // Pobierz wszystkie klasy dla admina
+    public List<CpRedClasses> getAllClassesForAdmin() {
+        return cpRedClassesRepository.findAll();
+    }
+
     // Dodać klase
-    public CpRedClassesDTO addClass(CpRedClassesDTO cpRedClassesDTO) {
+    public Map<String, Object> addClass(CpRedClasses cpRedClasses) {
 
     }
 
     // Modyfikować klasę
-    public CpRedClassesDTO updateClass(Long classId, CpRedClassesDTO cpRedClassesDTO) {
+    public Map<String, Object> updateClass(Long classId, CpRedClasses cpRedClasses) {
 
     }
 }
