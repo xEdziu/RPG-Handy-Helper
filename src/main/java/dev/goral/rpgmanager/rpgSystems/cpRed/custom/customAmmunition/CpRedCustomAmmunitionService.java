@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -21,12 +22,12 @@ public class CpRedCustomAmmunitionService {
     }
 
     // Dodaj amunicje
-    public CpRedCustomAmmunitionDTO addCustomAmmunition(CpRedCustomAmmunition cpRedCustomAmmunition) {
+    public Map<String, Object> addCustomAmmunition(CpRedCustomAmmunition cpRedCustomAmmunition) {
 
     }
 
     // Modyfikuj amunicje
-    public CpRedCustomAmmunitionDTO updateCustomAmmunition(Long ammunitionId,
+    public Map<String, Object> updateCustomAmmunition(Long ammunitionId,
                                                            CpRedCustomAmmunition cpRedCustomAmmunition) {
 
     }

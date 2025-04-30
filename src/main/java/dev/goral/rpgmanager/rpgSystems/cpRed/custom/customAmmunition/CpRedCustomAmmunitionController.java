@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/v1/authorized")
@@ -23,14 +24,14 @@ public class CpRedCustomAmmunitionController {
         return cpRedCustomAmmunitionService.getCustomAmmunitionById(ammunitionId);
     }
     // Dodaj amunicje
-    @PostMapping(path = "/admin/rpgSystems/cpRed/customAmmunition/add")
-    public CpRedCustomAmmunitionDTO addCustomAmmunition(@RequestBody CpRedCustomAmmunition cpRedCustomAmmunition) {
+    @PostMapping(path = "/rpgSystems/cpRed/customAmmunition/add")
+    public Map<String, Object> addCustomAmmunition(@RequestBody CpRedCustomAmmunition cpRedCustomAmmunition) {
         return cpRedCustomAmmunitionService.addCustomAmmunition(cpRedCustomAmmunition);
     }
     // Modyfikuj amunicje
-    @PutMapping(path = "/admin/rpgSystems/cpRed/customAmmunition/update/{ammunitionId}")
-    public CpRedCustomAmmunitionDTO updateCustomAmmunition(@PathVariable("ammunitionId") Long ammunitionId,
-                                                           @RequestBody CpRedCustomAmmunition cpRedCustomAmmunition) {
+    @PutMapping(path = "/rpgSystems/cpRed/customAmmunition/update/{ammunitionId}")
+    public Map<String, Object> updateCustomAmmunition(@PathVariable("ammunitionId") Long ammunitionId,
+                                                      @RequestBody CpRedCustomAmmunition cpRedCustomAmmunition) {
         return cpRedCustomAmmunitionService.updateCustomAmmunition(ammunitionId, cpRedCustomAmmunition);
     }
 
