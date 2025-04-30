@@ -18,7 +18,7 @@ public class CpRedCustomCyberwaresService {
 
     // Pobierz cyberware po id
     public CpRedCustomCyberwaresDTO getCyberwareById(Long cyberwareId) {
-        
+
     }
 
     // Doadaj cyberware
