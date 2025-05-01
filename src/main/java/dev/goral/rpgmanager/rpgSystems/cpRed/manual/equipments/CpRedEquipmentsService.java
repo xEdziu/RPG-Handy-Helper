@@ -11,28 +11,28 @@ import java.util.Map;
 public class CpRedEquipmentsService {
     private final CpRedEquipmentsRepository cpRedEquipmentsRepository;
 
-    // Pobierz wszystkie przedmioty
-    public List<CpRedEquipmentsDTO> getAllEquipments() {
-
-    }
-
-    // Pobierz przedmiot po id
-    public CpRedEquipmentsDTO getEquipmentById(Long equipmentId) {
-
-    }
-
-    // Pobierz wszystkie przedmioty dla admina
-    public List<CpRedEquipments> getAllEquipmentsForAdmin() {
-        return cpRedEquipmentsRepository.findAll();
-    }
-
-    // Dodaj przedmiot
-    public Map<String, Object> addEquipment(CpRedEquipments cpRedEquipments) {
-
-    }
-
-    // Modyfikuj przedmiot
-    public Map<String, Object> updateEquipment(Long equipmentId, CpRedEquipments cpRedEquipments) {
-
-    }
+//    // Pobierz wszystkie przedmioty
+//    public List<CpRedEquipmentsDTO> getAllEquipments() {
+//
+//    }
+//
+//    // Pobierz przedmiot po id
+//    public CpRedEquipmentsDTO getEquipmentById(Long equipmentId) {
+//
+//    }
+//
+//    // Pobierz wszystkie przedmioty dla admina
+//    public List<CpRedEquipments> getAllEquipmentsForAdmin() {
+//        return cpRedEquipmentsRepository.findAll();
+//    }
+//
+//    // Dodaj przedmiot
+//    public Map<String, Object> addEquipment(CpRedEquipments cpRedEquipments) {
+//
+//    }
+//
+//    // Modyfikuj przedmiot
+//    public Map<String, Object> updateEquipment(Long equipmentId, CpRedEquipments cpRedEquipments) {
+//
+//    }
 }

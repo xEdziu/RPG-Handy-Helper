@@ -11,30 +11,28 @@ import java.util.Map;
 public class CpRedCustomWeaponsService {
     private final CpRedCustomWeaponsRepository cpRedCustomWeaponsRepository;
 
-    // Pobierz wszystkie customowe bronie
-    public List<CpRedCustomWeaponsDTO> getAllCustomWeapons() {
-
-    }
-
-    // Pobierz customową broń po id
-    public CpRedCustomWeaponsDTO getCustomWeaponById(Long customWeaponId) {
-
-    }
-
-    // Dodaj customową broń
-    public Map<String, Object> addCustomWeapon(CpRedCustomWeapons cpRedCustomWeapons) {
-
-    }
-
-    // Modyfikuj customową broń
-    public Map<String, Object> updateCustomWeapon(Long customWeaponId, CpRedCustomWeapons cpRedCustomWeapons) {
-
-    }
-
-    // Pobierz wszystkie customowe bronie dla admina
-    public List<CpRedCustomWeapons> getAllCustomWeaponsForAdmin() {
-        return cpRedCustomWeaponsRepository.findAll();
-    }
-
-
+//    // Pobierz wszystkie customowe bronie
+//    public List<CpRedCustomWeaponsDTO> getAllCustomWeapons() {
+//
+//    }
+//
+//    // Pobierz customową broń po id
+//    public CpRedCustomWeaponsDTO getCustomWeaponById(Long customWeaponId) {
+//
+//    }
+//
+//    // Dodaj customową broń
+//    public Map<String, Object> addCustomWeapon(CpRedCustomWeapons cpRedCustomWeapons) {
+//
+//    }
+//
+//    // Modyfikuj customową broń
+//    public Map<String, Object> updateCustomWeapon(Long customWeaponId, CpRedCustomWeapons cpRedCustomWeapons) {
+//
+//    }
+//
+//    // Pobierz wszystkie customowe bronie dla admina
+//    public List<CpRedCustomWeapons> getAllCustomWeaponsForAdmin() {
+//        return cpRedCustomWeaponsRepository.findAll();
+//    }
 }

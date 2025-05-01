@@ -11,30 +11,28 @@ import java.util.Map;
 public class CpRedCustomEquipmentsService {
     private final CpRedCustomEquipmentsRepository cpRedCustomEquipmentsRepository;
 
-    // Pobierz wszystkie przedmioty
-    public List<CpRedCustomEquipmentsDTO> getAllEquipments(){
-
-    }
-
-    // Pobierz przedmiot po id
-    public CpRedCustomEquipmentsDTO getEquipmentById(Long equipmentId){
-
-    }
-
-    // Dodaj przedmiot
-    public Map<String, Object> addEquipment(CpRedCustomEquipments cpRedCustomEquipments){
-
-    }
-
-    // Modyfikować przedmiot
-    public Map<String, Object> updateEquipment(Long equipmentId, CpRedCustomEquipments cpRedCustomEquipments){
-
-    }
-
-    // Pobierz wszystkie przedmioty dla admina
-    public List<CpRedCustomEquipments> getAllEquipmentsForAdmin(){
-        return cpRedCustomEquipmentsRepository.findAll();
-    }
-
-
+//    // Pobierz wszystkie przedmioty
+//    public List<CpRedCustomEquipmentsDTO> getAllEquipments(){
+//
+//    }
+//
+//    // Pobierz przedmiot po id
+//    public CpRedCustomEquipmentsDTO getEquipmentById(Long equipmentId){
+//
+//    }
+//
+//    // Dodaj przedmiot
+//    public Map<String, Object> addEquipment(CpRedCustomEquipments cpRedCustomEquipments){
+//
+//    }
+//
+//    // Modyfikować przedmiot
+//    public Map<String, Object> updateEquipment(Long equipmentId, CpRedCustomEquipments cpRedCustomEquipments){
+//
+//    }
+//
+//    // Pobierz wszystkie przedmioty dla admina
+//    public List<CpRedCustomEquipments> getAllEquipmentsForAdmin(){
+//        return cpRedCustomEquipmentsRepository.findAll();
+//    }
 }
