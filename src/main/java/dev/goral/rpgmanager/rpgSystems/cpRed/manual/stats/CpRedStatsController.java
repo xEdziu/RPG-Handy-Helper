@@ -24,6 +24,7 @@ public class CpRedStatsController {
         return cpRedStatsService.getStatById(statId);
     }
 
+
     // ============ Admin methods ============
     // Pobierz wszystkie statystyki dla admina
     @GetMapping(path = "/admin/rpgSystems/cpRed/stats/all")
@@ -31,12 +32,12 @@ public class CpRedStatsController {
         return cpRedStatsService.getAllStatsForAdmin();
     }
     // Dodać statystykę
-    @GetMapping(path = "/admin/rpgSystems/cpRed/stats/add")
+    @PostMapping(path = "/admin/rpgSystems/cpRed/stats/add")
     public Map<String, Object> addStat(CpRedStats cpRedStats) {
         return cpRedStatsService.addStat(cpRedStats);
     }
     // Modyfikować statystykę
-    @GetMapping(path = "/admin/rpgSystems/cpRed/stats/update/{statId}")
+    @PutMapping(path = "/admin/rpgSystems/cpRed/stats/update/{statId}")
     public Map<String, Object> updateStat(@PathVariable("statId") Long statId,
                                           @RequestBody CpRedStats cpRedStats) {
         return cpRedStatsService.updateStat(statId, cpRedStats);
