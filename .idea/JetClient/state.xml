@@ -257,6 +257,42 @@
                 <option name="folders">
                   <list>
                     <folderState>
+                      <option name="folders">
+                        <list>
+                          <folderState>
+                            <option name="folders">
+                              <list>
+                                <folderState>
+                                  <option name="id" value="47ddc209-abfd-4d50-b623-d488bf806a5a" />
+                                  <option name="name" value="Stats" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja&quot;,&#10;  tag: &quot;INT&quot;,&#10;  description: &quot;Określa ogólną sprawność rozumowania. Według zasad to nie tylko czysta inteligencja, lecz także spryt, wiedza, spostrzegawczość i zdolność uczenia się&quot;,&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje statystyke" />
+                                        <option name="id" value="9f77ae3c-30a3-4b5d-83ab-0020324556c9" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj statystyke" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/add" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="1000000" />
+                                </folderState>
+                              </list>
+                            </option>
+                            <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />
+                            <option name="name" value="Manual" />
+                            <option name="sortWeight" value="1000000" />
+                          </folderState>
+                        </list>
+                      </option>
                       <option name="id" value="be9e305b-7eae-442e-9183-34c14c9991a5" />
                       <option name="name" value="CpRed" />
                       <option name="requests">
