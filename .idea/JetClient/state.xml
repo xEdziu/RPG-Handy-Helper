@@ -484,6 +484,22 @@
                 </option>
                 <option name="sortWeight" value="5000000" />
               </folderState>
+              <folderState>
+                <option name="id" value="cd8b508f-fff4-4182-b819-da9a00db5d98" />
+                <option name="name" value="CpRedClasses" />
+                <option name="requests">
+                  <list>
+                    <requestState>
+                      <option name="id" value="bba0cb71-43c4-476e-8c66-1f8547808664" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="All classes for Admin" />
+                      <option name="sortWeight" value="1000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/all" />
+                    </requestState>
+                  </list>
+                </option>
+                <option name="sortWeight" value="6000000" />
+              </folderState>
             </list>
           </option>
           <option name="id" value="8466bebc-89be-4082-a8f4-7567faaeae17" />
