@@ -4,6 +4,7 @@ import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
+import dev.goral.rpgmanager.user.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,7 +54,7 @@ public class CpRedStatsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         // Sprawdź, czy użytkownik ma rolę ADMIN
-        if (!currentUser.getRole().equals("ROLE_ADMIN")) {
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
             throw new IllegalStateException("Nie masz uprawnień do dodawania statystyk.");
         }
 
@@ -62,31 +63,39 @@ public class CpRedStatsService {
             throw new IllegalStateException("Statystyka o tej samej nazwie już istnieje.");
         }
 
-        // Sprawdź długość nazwy
-        if (cpRedStats.getName().length() > 255) {
-            throw new IllegalStateException("Nazwa statystyki jest za długa. Maksymalna długość to 255 znaków.");
+        if(cpRedStats.getName() == null || cpRedStats.getTag() == null || cpRedStats.getDescription() == null) {
+            throw new IllegalStateException("Nie wszystkie pola zostały wypełnione.");
         }
+
         // Sprawdzenie, czy nazwa nie jest pusta lub skłąda się tylko z białych znaków
         if (cpRedStats.getName().isEmpty() || cpRedStats.getName().trim().isEmpty()) {
             throw new IllegalStateException("Nazwa statystyki nie może być pusta.");
         }
+        // Sprawdź długość nazwy
+        if (cpRedStats.getName().length() > 255) {
+            throw new IllegalStateException("Nazwa statystyki jest za długa. Maksymalna długość to 255 znaków.");
+        }
 
-        // Strawdzenie długości tagu
-        if (cpRedStats.getTag().length() > 255) {
-            throw new IllegalStateException("Tag statystyki jest za długi. Maksymalna długość to 255 znaków.");
+        // Sprawdzenie, czy taki tag już istnieje
+        if (cpRedStatsRepository.existsByTag(cpRedStats.getTag())) {
+            throw new IllegalStateException("Statystyka o tym tagu już istnieje.");
         }
         // Sprawdzenie, czy tag nie jest pusty lub skłąda się tylko z białych znaków
         if (cpRedStats.getTag().isEmpty() || cpRedStats.getTag().trim().isEmpty()) {
             throw new IllegalStateException("Tag statystyki nie może być pusty.");
         }
-
-        // Sprawdź długość opisu
-        if (cpRedStats.getDescription().length() > 500) {
-            throw new IllegalStateException("Opis statystyki jest za długi. Maksymalna długość to 500 znaków.");
+        // Strawdzenie długości tagu
+        if (cpRedStats.getTag().length() > 255) {
+            throw new IllegalStateException("Tag statystyki jest za długi. Maksymalna długość to 255 znaków.");
         }
+
         // Sprawdzenie, czy opis nie jest pusty lub skłąda się tylko z białych znaków
         if (cpRedStats.getDescription().isEmpty() || cpRedStats.getDescription().trim().isEmpty()) {
             throw new IllegalStateException("Opis statystyki nie może być pusty.");
+        }
+        // Sprawdź długość opisu
+        if (cpRedStats.getDescription().length() > 500) {
+            throw new IllegalStateException("Opis statystyki jest za długi. Maksymalna długość to 500 znaków.");
         }
 
         // Zaspisanie statystyki do bazy danych
@@ -105,7 +114,7 @@ public class CpRedStatsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         // Sprawdź, czy użytkownik ma rolę ADMIN
-        if (!currentUser.getRole().equals("ROLE_ADMIN")) {
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
             throw new IllegalStateException("Nie masz uprawnień do dodawania statystyk.");
         }
 
@@ -129,6 +138,10 @@ public class CpRedStatsService {
 
         // Sprawdzenie tagu
         if (cpRedStats.getTag() != null) {
+            // Sprawdzenie, czy taki tag już istnieje
+            if (cpRedStatsRepository.existsByTag(cpRedStats.getTag())) {
+                throw new IllegalStateException("Statystyka o tym tagu już istnieje.");
+            }
             // Sprawdź długość tagu
             if (cpRedStats.getTag().length() > 255) {
                 throw new IllegalStateException("Tag statystyki jest za długi. Maksymalna długość to 255 znaków.");

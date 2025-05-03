@@ -33,7 +33,7 @@ public class CpRedStatsController {
     }
     // Dodać statystykę
     @PostMapping(path = "/admin/rpgSystems/cpRed/stats/add")
-    public Map<String, Object> addStat(CpRedStats cpRedStats) {
+    public Map<String, Object> addStat(@RequestBody CpRedStats cpRedStats) {
         return cpRedStatsService.addStat(cpRedStats);
     }
     // Modyfikować statystykę

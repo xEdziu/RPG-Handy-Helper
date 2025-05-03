@@ -270,7 +270,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja&quot;,&#10;  tag: &quot;INT&quot;,&#10;  description: &quot;Określa ogólną sprawność rozumowania. Według zasad to nie tylko czysta inteligencja, lecz także spryt, wiedza, spostrzegawczość i zdolność uczenia się&quot;,&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja 3&quot;,&#10;  tag: &quot;INT 3&quot;,&#10;  changeable: true,&#10;  description: &quot;Określa ogólną sprawność rozumowania. Według zasad to nie tylko czysta inteligencja, lecz także spryt, wiedza, spostrzegawczość i zdolność uczenia się&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -284,7 +284,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja zmodyfikowana&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja zmodyfikowana 4&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -293,7 +293,7 @@
                                         <option name="method" value="PUT" />
                                         <option name="name" value="Modyfikuj statystyke" />
                                         <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/update/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/update/2" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Pobiera listę statystyk" />
