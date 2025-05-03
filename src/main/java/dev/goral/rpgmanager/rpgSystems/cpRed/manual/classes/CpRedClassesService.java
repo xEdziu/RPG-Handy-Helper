@@ -39,6 +39,13 @@ public class CpRedClassesService {
 
 
     public List<CpRedClasses> getAllClassesForAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+        if (!currentUser.getRole().equals("ROLE_ADMIN")) {
+            throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
+        }
         return cpRedClassesRepository.findAll();
    }
 
@@ -48,6 +55,9 @@ public class CpRedClassesService {
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+        if (!currentUser.getRole().equals("ROLE_ADMIN")) {
+            throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
+        }
 
         if(cpRedClasses.getName() == null ||
                cpRedClasses.getDescription() == null){
@@ -83,10 +93,14 @@ public class CpRedClassesService {
     }
 
     public Map<String, Object> updateClass(Long classId, CpRedClasses cpRedClasses) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+        if (!currentUser.getRole().equals("ROLE_ADMIN")) {
+            throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
+        }
         CpRedClasses existingClass = cpRedClassesRepository.findById(classId)
                 .orElseThrow(() -> new ResourceNotFoundException("Klasa o id " + classId + " nie istnieje"));
         if(cpRedClasses.getName() == null ||
