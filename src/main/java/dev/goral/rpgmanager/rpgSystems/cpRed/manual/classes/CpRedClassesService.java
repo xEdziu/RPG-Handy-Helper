@@ -1,39 +1,118 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.manual.classes;
 
+import dev.goral.rpgmanager.rpgSystems.RpgSystemsDTO;
+import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
+import dev.goral.rpgmanager.user.User;
+import dev.goral.rpgmanager.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class CpRedClassesService {
 
     private final CpRedClassesRepository cpRedClassesRepository;
+    private final UserRepository userRepository;
 
-//    // Pobierz wszystkie klasy
-//    public List<CpRedClassesDTO> getAllClasses() {
-//
-//    }
-//
-//    // Pobierz klasę po id
-//    public CpRedClassesDTO getClassById(Long classId) {
-//
-//    }
-//
-//    // Pobierz wszystkie klasy dla admina
-//    public List<CpRedClasses> getAllClassesForAdmin() {
-//        return cpRedClassesRepository.findAll();
-//    }
-//
-//    // Dodać klase
-//    public Map<String, Object> addClass(CpRedClasses cpRedClasses) {
-//
-//    }
-//
-//    // Modyfikować klasę
-//    public Map<String, Object> updateClass(Long classId, CpRedClasses cpRedClasses) {
-//
-//    }
+   public List<CpRedClassesDTO> getAllClasses() {
+        return cpRedClassesRepository.findAll()
+                .stream()
+                .map(cpRedClasses -> new CpRedClassesDTO(
+                        cpRedClasses.getName(),
+                        cpRedClasses.getDescription()
+                ))
+                .collect(Collectors.toList());
+    }
+
+   public CpRedClassesDTO getClassById(Long classId) {
+        CpRedClasses classes= cpRedClassesRepository.findById(classId)
+                .orElseThrow(() -> new ResourceNotFoundException("Klasa o id " + classId + " nie istnieje"));
+        return new CpRedClassesDTO(classes.getName(), classes.getDescription());
+    }
+
+
+    public List<CpRedClasses> getAllClassesForAdmin() {
+        return cpRedClassesRepository.findAll();
+   }
+
+
+    public Map<String, Object> addClass(CpRedClasses cpRedClasses) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        if(cpRedClasses.getName() == null ||
+               cpRedClasses.getDescription() == null){
+            throw new IllegalStateException("Nie podano wszystkich parametrów");
+        }
+
+        String name = cpRedClasses.getName().trim();
+
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("Niewłaściwa nazwa klasy");
+        }
+
+        if (name.length() > 255) {
+            throw new IllegalArgumentException("Nazwa klasy nie może mieć więcej niż 255 znaków.");
+        }
+        String description = cpRedClasses.getDescription().trim();
+
+        if (description.isEmpty()) {
+            throw new IllegalArgumentException("Opis klasy jest wymagany.");
+        }
+
+        if (description.length() > 1000) {
+            throw new IllegalArgumentException("Opis klasy nie może mieć więcej niż 1000 znaków.");
+        }
+
+        if(cpRedClassesRepository.existsByName(name)) {
+            throw new IllegalStateException("Klasa o nazwie " + name + " już istnieje");
+        }
+        cpRedClasses.setName(name);
+        cpRedClasses.setDescription(description);
+        cpRedClassesRepository.save(cpRedClasses);
+        return CustomReturnables.getOkResponseMap("Klasa " + cpRedClasses.getName() + " została dodana");
+    }
+
+    public Map<String, Object> updateClass(Long classId, CpRedClasses cpRedClasses) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+        CpRedClasses existingClass = cpRedClassesRepository.findById(classId)
+                .orElseThrow(() -> new ResourceNotFoundException("Klasa o id " + classId + " nie istnieje"));
+        if(cpRedClasses.getName() == null ||
+                cpRedClasses.getDescription() == null){
+            throw new IllegalStateException("Nie podano wszystkich parametrów");
+        }
+        String name = cpRedClasses.getName().trim();
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("Niewłaściwa nazwa klasy");
+        }
+        if (name.length() > 255) {
+            throw new IllegalArgumentException("Nazwa klasy nie może mieć więcej niż 255 znaków.");
+        }
+        String description = cpRedClasses.getDescription().trim();
+        if (description.isEmpty()) {
+            throw new IllegalArgumentException("Opis klasy jest wymagany.");
+        }
+        if (description.length() > 1000) {
+            throw new IllegalArgumentException("Opis klasy nie może mieć więcej niż 1000 znaków.");
+        }
+        if(cpRedClassesRepository.existsByName(name)) {
+            throw new IllegalStateException("Klasa o nazwie " + name + " już istnieje");
+        }
+        existingClass.setName(name);
+        existingClass.setDescription(description);
+        cpRedClassesRepository.save(existingClass);
+        return CustomReturnables.getOkResponseMap("Klasa " + cpRedClasses.getName() + " została zaktualizowana");
+    }
 }
