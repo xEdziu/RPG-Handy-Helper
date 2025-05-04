@@ -284,7 +284,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja zmodyfikowana 4&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;}" />
+                                            <option name="raw" value="{&#10;  description: &quot;Inny opis&quot;&#10;}&#10;" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -293,7 +293,15 @@
                                         <option name="method" value="PUT" />
                                         <option name="name" value="Modyfikuj statystyke" />
                                         <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/update/2" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zmienia wartość isChengable " />
+                                        <option name="id" value="596a9d5a-0cfb-4e36-aa56-c8a517ca3727" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Zmień zmienność" />
+                                        <option name="sortWeight" value="2500000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/changeable/1" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Pobiera listę statystyk" />

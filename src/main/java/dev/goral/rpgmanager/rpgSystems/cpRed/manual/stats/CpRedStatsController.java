@@ -42,4 +42,9 @@ public class CpRedStatsController {
                                           @RequestBody CpRedStats cpRedStats) {
         return cpRedStatsService.updateStat(statId, cpRedStats);
     }
+    // Zmienić zmienność statystyki
+    @PutMapping(path = "/admin/rpgSystems/cpRed/stats/changeable/{statId}")
+    public Map<String, Object> changeStatChangeable(@PathVariable("statId") Long statId) {
+        return cpRedStatsService.changeStatChangeable(statId);
+    }
 }

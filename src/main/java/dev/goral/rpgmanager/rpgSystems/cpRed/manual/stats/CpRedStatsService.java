@@ -115,7 +115,7 @@ public class CpRedStatsService {
 
         // Sprawdź, czy użytkownik ma rolę ADMIN
         if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do dodawania statystyk.");
+            throw new IllegalStateException("Nie masz uprawnień do modyfikacji statystyk.");
         }
 
         // Sprawdzenie nazwy
@@ -166,12 +166,27 @@ public class CpRedStatsService {
             statToUpdate.setDescription(cpRedStats.getDescription());
         }
 
-        // Sprawdzenie zmienności
-        if (cpRedStats.isChangeable() != statToUpdate.isChangeable()) {
-            statToUpdate.setChangeable(cpRedStats.isChangeable());
-        }
-
         cpRedStatsRepository.save(statToUpdate);
         return CustomReturnables.getOkResponseMap("Statystyka została zaktualizowana.");
+    }
+
+    // Zmienić zmienność statystyki
+    public Map<String, Object> changeStatChangeable(Long id) {
+        CpRedStats statToUpdate = cpRedStatsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Statystyka o id " + id + " nie istnieje"));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        // Sprawdź, czy użytkownik ma rolę ADMIN
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
+            throw new IllegalStateException("Nie masz uprawnień do modyfikacji statystyk.");
+        }
+
+        statToUpdate.setChangeable(!statToUpdate.isChangeable());
+        cpRedStatsRepository.save(statToUpdate);
+        return CustomReturnables.getOkResponseMap("Zmienność statystyki została zmieniona.");
     }
 }
