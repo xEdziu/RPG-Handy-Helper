@@ -284,7 +284,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  description: &quot;Inny opis&quot;&#10;}&#10;" />
+                                            <option name="raw" value="{&#10;  tag: &quot;INT&quot;,&#10;  description: &quot;Inny opis&quot;&#10;}&#10;" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -323,7 +323,7 @@
                                         <option name="description" value="Pobiera listę wszystkich statystyk w wersji dla admina" />
                                         <option name="id" value="83906745-40b9-4567-b146-c178d5d853d4" />
                                         <option name="method" value="GET" />
-                                        <option name="name" value="Pobierz wszstkie statystyki dla Admina" />
+                                        <option name="name" value="Pobierz wszystkie statystyki dla Admina" />
                                         <option name="sortWeight" value="5000000" />
                                         <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/all" />
                                       </requestState>
