@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CpRedStatsRepository extends JpaRepository<CpRedStats, Long> {
 
-
+    boolean existsByName(String name);
+    boolean existsByTag(String tag);
 }

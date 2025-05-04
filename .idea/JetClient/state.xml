@@ -257,6 +257,88 @@
                 <option name="folders">
                   <list>
                     <folderState>
+                      <option name="folders">
+                        <list>
+                          <folderState>
+                            <option name="folders">
+                              <list>
+                                <folderState>
+                                  <option name="id" value="47ddc209-abfd-4d50-b623-d488bf806a5a" />
+                                  <option name="name" value="Stats" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja 3&quot;,&#10;  tag: &quot;INT 3&quot;,&#10;  changeable: true,&#10;  description: &quot;Określa ogólną sprawność rozumowania. Według zasad to nie tylko czysta inteligencja, lecz także spryt, wiedza, spostrzegawczość i zdolność uczenia się&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje statystyke" />
+                                        <option name="id" value="9f77ae3c-30a3-4b5d-83ab-0020324556c9" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj statystyke" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  tag: &quot;INT&quot;,&#10;  description: &quot;Inny opis&quot;&#10;}&#10;" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje statystyke o podanym id" />
+                                        <option name="id" value="ed78e2d1-c80c-4ffa-ad0c-795f66670a8a" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj statystyke" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zmienia wartość isChengable " />
+                                        <option name="id" value="596a9d5a-0cfb-4e36-aa56-c8a517ca3727" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Zmień zmienność" />
+                                        <option name="sortWeight" value="2500000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/changeable/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera listę statystyk" />
+                                        <option name="id" value="16cfbf22-7be1-4d81-a712-b90f11d0d967" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie statystyki" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/stats/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca konkretną statystykę o podanym id" />
+                                        <option name="id" value="da681b4c-840d-4092-8ab1-a5b302ddcbd9" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz statystykę po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/stats/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera listę wszystkich statystyk w wersji dla admina" />
+                                        <option name="id" value="83906745-40b9-4567-b146-c178d5d853d4" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie statystyki dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="1000000" />
+                                </folderState>
+                              </list>
+                            </option>
+                            <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />
+                            <option name="name" value="Manual" />
+                            <option name="sortWeight" value="1000000" />
+                          </folderState>
+                        </list>
+                      </option>
                       <option name="id" value="be9e305b-7eae-442e-9183-34c14c9991a5" />
                       <option name="name" value="CpRed" />
                       <option name="requests">
