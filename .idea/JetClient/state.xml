@@ -331,6 +331,67 @@
                                   </option>
                                   <option name="sortWeight" value="1000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="dd18a7fa-da1a-4026-a188-d976168f82fa" />
+                                  <option name="name" value="Ammunition" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Amunicja przeciwpancerna&quot;,&#10;  description: &quot;strzelby kal. 12, penetracja 20mm&quot;,&#10;  pricePerBullet: 10,&#10;  availability: &quot;PREMIUM&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje nową amunicje" />
+                                        <option name="id" value="1f4d0901-29a2-43fc-9be7-2480fe2548fd" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj amunicje" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/ammunition/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Amunicja zapalająca&quot;,&#10;  description: &quot;zmodyfikowany opis&quot;,&#10;  pricePerBullet: 225,&#10;  availability: &quot;CHEAP&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje dowolny parametr amunicji" />
+                                        <option name="id" value="e0fa4279-a410-486e-86e6-a29e7356eda4" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj Amunicje" />
+                                        <option name="sortWeight" value="1500000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/ammunition/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera wszystkie amunicje" />
+                                        <option name="id" value="14947ebf-80f4-46a7-b894-411bbd588d70" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie amunicje" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/ammunition/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca konkretną amunicję po id" />
+                                        <option name="id" value="ad603436-a270-45cc-9701-74f61a3b4182" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz amunicje po id" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/ammunition/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich amunicji dla admina" />
+                                        <option name="id" value="7f53733c-a857-4c96-afc6-82c7c56c0df1" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie amunicje dla Admina" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/ammunition/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="2000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />
