@@ -34,6 +34,9 @@ public class GameNoteService {
 
         Object principal = getAuthentication().getPrincipal();
 
+        Optional<Game> game = gameRepository.findGameById(gameNoteDto.getGameId());
+        Optional<User> user = userRepository.findById(gameNoteDto.getUserId());
+
         if (!(principal instanceof User loggedInUser))
             throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
 
@@ -58,14 +61,18 @@ public class GameNoteService {
         if (!userRepository.existsById(gameNoteDto.getUserId()))
             throw new IllegalStateException("Użytkownik o podanym ID nie istnieje.");
 
+        if (game.isEmpty())
+            throw new IllegalStateException("Gra o podanym ID nie istnieje.");
+
+        if (user.isEmpty())
+            throw new IllegalStateException("Użytkownik o podanym ID nie istnieje.");
+
         // Check if user has already added a note for this game with the same title
         Optional<GameNote> gameNoteTest = gameNoteRepository.findByUserIdAndTitleIgnoreCaseAndGameId((gameNoteDto.getUserId()), gameNoteDto.getTitle(), gameNoteDto.getGameId());
         if (gameNoteTest.isPresent())
             throw new IllegalStateException("Posiadasz już notatkę o takim tytule.");
 
         GameNote gameNote = new GameNote();
-        Optional<Game> game = gameRepository.findGameById(gameNoteDto.getGameId());
-        Optional<User> user = userRepository.findById(gameNoteDto.getUserId());
         gameNote.setGame(game.get());
         gameNote.setUser(user.get());
         gameNote.setTitle(gameNoteDto.getTitle());
@@ -90,6 +97,8 @@ public class GameNoteService {
             gameNoteDto.setContent(gameNote.getContent());
             gameNoteDto.setCreatedAt(gameNote.getCreatedAt());
             gameNoteDto.setUpdatedAt(gameNote.getUpdatedAt());
+            gameNoteDto.setGameName(gameNote.getGame().getName());
+            gameNoteDto.setRpgSystemName(gameNote.getGame().getRpgSystem().getName());
             gameNoteDtos.add(gameNoteDto);
         }
 
@@ -113,11 +122,19 @@ public class GameNoteService {
         if (!gameNotes.get().getUser().getId().equals(((User) principal).getId()))
             throw new IllegalStateException("Nie masz uprawnień do pobierania notatek innych użytkowników.");
 
+        //get game name and rpg system name
+        if (!gameRepository.existsById(gameNotes.get().getGame().getId()))
+            throw new IllegalStateException("Gra o podanym ID nie istnieje.");
+
+        Game game = gameRepository.findGameById(gameNotes.get().getGame().getId()).orElseThrow(() -> new IllegalStateException("Gra o podanym ID nie istnieje."));
+
         GameNoteViewDto gameNote = new GameNoteViewDto();
         gameNote.setTitle(gameNotes.get().getTitle());
         gameNote.setContent(gameNotes.get().getContent());
         gameNote.setCreatedAt(gameNotes.get().getCreatedAt());
         gameNote.setUpdatedAt(gameNotes.get().getUpdatedAt());
+        gameNote.setGameName(game.getName());
+        gameNote.setRpgSystemName(game.getRpgSystem().getName());
 
         Map<String, Object> result = CustomReturnables.getOkResponseMap("Notatka została pobrana");
         result.put("gameNote", gameNote);
@@ -155,6 +172,8 @@ public class GameNoteService {
             gameNoteDto.setContent(gameNote.getContent());
             gameNoteDto.setCreatedAt(gameNote.getCreatedAt());
             gameNoteDto.setUpdatedAt(gameNote.getUpdatedAt());
+            gameNoteDto.setGameName(gameNote.getGame().getName());
+            gameNoteDto.setRpgSystemName(gameNote.getGame().getRpgSystem().getName());
             gameNoteDtos.add(gameNoteDto);
         }
 
@@ -209,10 +228,13 @@ public class GameNoteService {
         if (!userRepository.existsById(gameNoteDto.getUserId()))
             throw new IllegalStateException("Użytkownik o podanym ID nie istnieje.");
 
+        Game game = gameRepository.findGameById(gameNoteDto.getGameId()).orElseThrow(() -> new IllegalStateException("Gra o podanym ID nie istnieje."));
+        User user = userRepository.findById(gameNoteDto.getUserId()).orElseThrow(() -> new IllegalStateException("Użytkownik o podanym ID nie istnieje."));
+
         gameNote.get().setTitle(gameNoteDto.getTitle());
         gameNote.get().setContent(gameNoteDto.getContent());
-        gameNote.get().setGame(gameRepository.findGameById(gameNoteDto.getGameId()).get());
-        gameNote.get().setUser(userRepository.findById(gameNoteDto.getUserId()).get());
+        gameNote.get().setGame(game);
+        gameNote.get().setUser(user);
 
         gameNoteRepository.save(gameNote.get());
 

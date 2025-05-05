@@ -12,4 +12,6 @@ public class GameNoteViewDto {
     private String content;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String gameName;
+    private String rpgSystemName;
 }
