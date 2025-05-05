@@ -3,6 +3,7 @@ package dev.goral.rpgmanager.scheduler.service;
 import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
+import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
 import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
 import dev.goral.rpgmanager.scheduler.entity.*;
 import dev.goral.rpgmanager.scheduler.repository.SchedulerRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -135,7 +137,7 @@ public class SchedulerService {
         }
 
         if (!request.getParticipantIds().contains(request.getCreatorId())) {
-            throw new IllegalArgumentException("Twórca schedulera powinien być również jego uczestnikiem");
+            throw new IllegalArgumentException("Twórca harmonogramu powinien być również jego uczestnikiem");
         }
 
         for (Long participantId : request.getParticipantIds()) {
@@ -144,5 +146,79 @@ public class SchedulerService {
             }
         }
     }
+
+    public List<SchedulerResponse> getSchedulersByGame(Long gameId, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+
+        if (!gameUsersRepository.existsByGameIdAndUserId(gameId, user.getId())) {
+            throw new IllegalArgumentException("Nie masz dostępu do tego harmonogramu");
+        }
+
+        return schedulerRepository.findByGameId(gameId).stream()
+                .map(SchedulerResponseMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public SchedulerResponse getSchedulerById(Long schedulerId, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+
+        Scheduler scheduler = schedulerRepository.findById(schedulerId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + schedulerId));
+
+        if (!gameUsersRepository.existsByGameIdAndUserId(scheduler.getGame().getId(), user.getId())) {
+            throw new IllegalArgumentException("Nie masz dostępu do tego harmonogramu");
+        }
+
+        return SchedulerResponseMapper.mapToDto(scheduler);
+    }
+
+    @Transactional
+    public void deleteScheduler(Long schedulerId, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+
+        Scheduler scheduler = schedulerRepository.findById(schedulerId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + schedulerId));
+
+        if (!scheduler.getCreator().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("Tylko twórca harmonogramu może go usunąć");
+        }
+
+        schedulerRepository.delete(scheduler);
+    }
+
+    @Transactional
+    public SchedulerResponse setFinalDecision(SetFinalDecisionRequest request, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+
+        Scheduler scheduler = schedulerRepository.findById(request.getSchedulerId())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
+
+        if (!scheduler.getCreator().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("Tylko twórca harmonogramu może ustawić ostateczny termin");
+        }
+
+        // Walidacja dat
+        if (request.getStart() == null || request.getEnd() == null) {
+            throw new IllegalArgumentException("Daty nie mogą być puste");
+        }
+        if (request.getStart().isAfter(request.getEnd())) {
+            throw new IllegalArgumentException("Data rozpoczęcia nie może być po dacie zakończenia");
+        }
+
+        FinalDecision decision = new FinalDecision();
+        decision.setStart(request.getStart());
+        decision.setEnd(request.getEnd());
+
+        scheduler.setFinalDecision(decision);
+
+        Scheduler saved = schedulerRepository.save(scheduler);
+        return SchedulerResponseMapper.mapToDto(saved);
+    }
+
+
 
 }
