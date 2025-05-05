@@ -29,6 +29,13 @@ public class SchedulerResponseMapper {
                                         p.isNotifiedByEmail()
                                 )).toList()
                 )
+                .status(s.getStatus())
+                .missingAvailabilitiesCount(
+                        (int) s.getParticipants().stream()
+                                .filter(p -> p.getAvailabilitySlots() == null || p.getAvailabilitySlots().isEmpty())
+                                .count()
+                )
+
                 .finalDecision(
                         s.getFinalDecision() == null ? null :
                                 new SchedulerResponse.FinalDecisionDto(

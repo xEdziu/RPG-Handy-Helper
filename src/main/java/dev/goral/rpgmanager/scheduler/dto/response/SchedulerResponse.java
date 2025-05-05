@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+
+import dev.goral.rpgmanager.scheduler.enums.SchedulerStatus;
 import lombok.*;
 
 /*
@@ -29,6 +31,8 @@ public class SchedulerResponse {
     private List<DateRangeDto> dateRanges;
     private List<ParticipantDto> participants;
     private FinalDecisionDto finalDecision;
+    private SchedulerStatus status;
+    private int missingAvailabilitiesCount;
     private String googleCalendarLink;
 
     @Getter

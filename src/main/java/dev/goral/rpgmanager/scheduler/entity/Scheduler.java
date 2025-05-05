@@ -1,6 +1,7 @@
 package dev.goral.rpgmanager.scheduler.entity;
 
 import dev.goral.rpgmanager.game.Game;
+import dev.goral.rpgmanager.scheduler.enums.SchedulerStatus;
 import dev.goral.rpgmanager.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -50,6 +51,9 @@ public class Scheduler {
     @OneToMany(mappedBy = "scheduler", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<SchedulerParticipant> participants = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private SchedulerStatus status = SchedulerStatus.AWAITING_AVAILABILITY;
 
     @Embedded
     private FinalDecision finalDecision;

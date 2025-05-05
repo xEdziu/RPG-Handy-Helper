@@ -11,6 +11,7 @@ import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
 import dev.goral.rpgmanager.scheduler.dto.response.SuggestedSlotResponse;
 import dev.goral.rpgmanager.scheduler.entity.*;
 import dev.goral.rpgmanager.scheduler.enums.AvailabilityType;
+import dev.goral.rpgmanager.scheduler.enums.SchedulerStatus;
 import dev.goral.rpgmanager.scheduler.repository.SchedulerRepository;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
@@ -362,6 +363,8 @@ public class SchedulerService {
         decision.setEnd(end);
 
         scheduler.setFinalDecision(decision);
+        scheduler.setStatus(SchedulerStatus.FINALIZED);
+
         Scheduler saved = schedulerRepository.save(scheduler);
         return SchedulerResponseMapper.mapToDto(saved);
     }
@@ -381,6 +384,14 @@ public class SchedulerService {
 
         Scheduler scheduler = schedulerRepository.findById(request.getSchedulerId())
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
+
+        // Sprawdź, czy harmonogram nie został już sfinalizowany
+        if (scheduler.getFinalDecision() != null) {
+            throw new IllegalArgumentException("Nie można zmienić dostępności po wybraniu finalnego terminu");
+        }
+
+        // Walidacja slotów
+        validateAvailabilitySlots(request.getSlots());
 
         // Sprawdź, czy użytkownik jest uczestnikiem harmonogramu
         SchedulerParticipant participant = scheduler.getParticipants().stream()
@@ -403,6 +414,56 @@ public class SchedulerService {
                 }).toList();
 
         participant.getAvailabilitySlots().addAll(slots);
+
+        // Po zaktualizowaniu dostępności danego gracza:
+        boolean allSubmitted = scheduler.getParticipants().stream()
+                .allMatch(p -> p.getAvailabilitySlots() != null && !p.getAvailabilitySlots().isEmpty());
+
+        if (allSubmitted) {
+            scheduler.setStatus(SchedulerStatus.READY_TO_DECIDE);
+        } else {
+            scheduler.setStatus(SchedulerStatus.AWAITING_AVAILABILITY);
+        }
+
+        // Zapisz zmiany
+        schedulerRepository.save(scheduler);
+    }
+
+    /**
+     * Validates availability slots to ensure they are correct.
+     *
+     * @param slots The slots to validate.
+     * @throws IllegalArgumentException If any validation fails.
+     */
+    private void validateAvailabilitySlots(List<SubmitAvailabilityRequest.AvailabilitySlotDto> slots) {
+        if (slots == null || slots.isEmpty()) {
+            throw new IllegalArgumentException("Lista dostępności nie może być pusta");
+        }
+
+        for (SubmitAvailabilityRequest.AvailabilitySlotDto slot : slots) {
+            if (slot.getStartDateTime() == null || slot.getEndDateTime() == null) {
+                throw new IllegalArgumentException("Daty początku i końca slotu nie mogą być puste");
+            }
+
+            if (slot.getStartDateTime().isAfter(slot.getEndDateTime())) {
+                throw new IllegalArgumentException("Data rozpoczęcia nie może być po dacie zakończenia");
+            }
+
+            if (slot.getAvailabilityType() == null) {
+                throw new IllegalArgumentException("Typ dostępności nie może być pusty");
+            }
+        }
+
+        // Sprawdzanie nakładania się slotów
+        List<SubmitAvailabilityRequest.AvailabilitySlotDto> sortedSlots = slots.stream()
+                .sorted(Comparator.comparing(SubmitAvailabilityRequest.AvailabilitySlotDto::getStartDateTime))
+                .toList();
+
+        for (int i = 0; i < sortedSlots.size() - 1; i++) {
+            if (sortedSlots.get(i).getEndDateTime().isAfter(sortedSlots.get(i+1).getStartDateTime())) {
+                throw new IllegalArgumentException("Sloty dostępności nie mogą na siebie nachodzić");
+            }
+        }
     }
 
     /**
@@ -436,6 +497,14 @@ public class SchedulerService {
         return new PlayerAvailabilityResponse(user.getId(), slots);
     }
 
+    /**
+     * Suggests time slots based on the availability of participants in a given scheduler.
+     *
+     * @param schedulerId The ID of the scheduler.
+     * @param principal   The user who is requesting the suggested slots.
+     * @return {@link SuggestedSlotResponse} The suggested time slots.
+     * @throws IllegalArgumentException If the user does not have access to the scheduler or if the scheduler is not found.
+     */
     @Transactional(readOnly = true)
     public SuggestedSlotResponse suggestTimeSlots(Long schedulerId, Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
@@ -508,6 +577,12 @@ public class SchedulerService {
         return new SuggestedSlotResponse(suggested);
     }
 
+    /**
+     * Merges user slots to remove gaps and combine adjacent slots of the same type.
+     *
+     * @param slots The list of availability slots to merge.
+     * @return A list of {@link AvailabilitySlot}.
+     */
     private List<AvailabilitySlot> mergeUserSlots(List<AvailabilitySlot> slots) {
         List<AvailabilitySlot> sorted = slots.stream()
                 .filter(s -> s.getAvailabilityType() != AvailabilityType.NO)
@@ -531,7 +606,9 @@ public class SchedulerService {
         return result;
     }
 
-
+    /**
+     * A helper class to represent a time point on the timeline with its weight (delta).
+     */
     private static class TimePoint {
         LocalDateTime time;
         double delta;
