@@ -22,6 +22,7 @@
     <!-- Dodanie Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
     <script>// Ustawienia Tailwind CSS
         tailwind.config = {
             darkMode: "class",
@@ -60,12 +61,24 @@
                 },
             },
         };
+        var noteInfo = {};
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleSwitch = document.getElementById("switch-component");
+            applyTheme(getSavedTheme());
+            toggleSwitch?.addEventListener("change", () => {
+                const newTheme = toggleSwitch.checked ? "dark" : "light";
+                applyTheme(newTheme);
+            });
+            loadNotes();
+        });
+
         function updateFavicon(theme) {
             const favicon = document.getElementById("favicon");
             if (favicon) {
                 favicon.href = `/img/logo/logo-${theme}.svg`;
             }
         }
+
         function applyTheme(theme) {
             document.body.classList.toggle("dark", theme === "dark");
             localStorage.setItem("theme", theme);
@@ -76,19 +89,162 @@
                 toggleSwitch.checked = (theme === "dark");
             }
         }
+
         function getSavedTheme() {
             return localStorage.getItem("theme") ||
                 (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
         }
-        document.addEventListener("DOMContentLoaded", () => {
-            const toggleSwitch = document.getElementById("switch-component");
-            applyTheme(getSavedTheme());
-            toggleSwitch?.addEventListener("change", () => {
-                const newTheme = toggleSwitch.checked ? "dark" : "light";
-                applyTheme(newTheme);
-            });
-        });
 
+        function getCsrfToken() {
+            const name = "XSRF-TOKEN=";
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name)) {
+                    return decodeURIComponent(cookie.substring(name.length));
+                }
+            }
+            return null;
+        }
+
+        async function apiGet(url) {
+            const csrfToken = getCsrfToken();
+            const res = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': csrfToken
+                }
+            });
+            return res.ok ? res.json() : Promise.reject(await res.json());
+        }
+
+        async function apiPost(url, data) {
+            const csrfToken = getCsrfToken();
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify(data)
+            });
+            return res.ok ? res.json() : Promise.reject(await res.json());
+        }
+
+        async function apiPut(url, data) {
+            const csrfToken = getCsrfToken();
+            const res = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify(data)
+            });
+            return res.ok ? res.json() : Promise.reject(await res.json());
+        }
+
+        async function apiDelete(url) {
+            const csrfToken = getCsrfToken();
+            const res = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'X-XSRF-TOKEN': csrfToken
+                }
+            });
+            return res.ok ? res.json() : Promise.reject(await res.json());
+        }
+
+        function parseMarkdown(markdownText) {
+            return marked.parse(markdownText);
+        }
+        function truncateText(text, maxLength = 80) {
+            console.log('truncateText:', text, maxLength);
+            return text.length > maxLength
+                ? text.slice(0, maxLength) + '...'
+                : text;
+        }
+        function displayNote(idNote) { //NIE DZIALA FUNKCJA DO WYŚWIETLANIA NOTATKI PO KLIKNIĘCIU NA NIEJ 
+            const note = noteInfo.find(note => note.id === idNote);
+            console.log('Szukana notatka:', note);
+            if (!note) {
+                console.error('Nie znaleziono notatki o podanym ID:', idNote);
+                return;
+            }
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.innerHTML = '';
+            noteEditor.innerHTML = `
+              <h2 class="text-2xl font-semibold mb-4">${note.title}</h2>
+              <div class="prose dark:prose-invert max-w-none mb-4">${marked.parse(note.content)}</div>
+              <small class="block text-xs text-gray-400 mb-4">Utworzono: ${new Date(note.createdAt).toLocaleString()}</small>
+              <button id="edit-note" class="bg-light-accent dark:bg-dark-accent text-light-text dark:text-dark-text p-2 rounded">Edytuj</button>
+            `;
+            showNoteEditor();
+            console.log('noteEditor.innerHTML:', noteEditor.innerHTML);
+            console.log('noteEditor.offsetHeight:', noteEditor.offsetHeight);
+        }
+
+        async function loadNotes() {
+            try {
+                const notes = await apiGet('/api/v1/authorized/gameNotes');
+                const container = document.getElementById('notes-container');
+                container.innerHTML = '';
+                if (!notes.gameNotes || notes.gameNotes.length === 0) {
+                    container.innerHTML = '<p>Brak notatek.</p>';
+                    return;
+                }
+                noteInfo = notes.gameNotes;
+                notes.gameNotes.forEach(note => {
+                    const div = document.createElement('div');
+                    div.className = 'w-[75vw] max-w-2xl p-4 bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
+                    div.onclick = function () {
+                        displayNote(note.id);
+                    };
+                    div.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-semibold mb-1 font-jetbrains-mono">${note.rpgSystemName} <span class="text-light-accent dark:text-dark-accent"> ${note.gameName} </span></h3> 
+                    <small>${new Date(note.createdAt).toLocaleString()}</small>
+                    </div>
+                    <h2 class= "text-2xl font-semibold mb-2 font-jetbrains-mono">${note.title}</h3>
+                    <p class="ml-8">${parseMarkdown(truncateText(note.content))}</p>
+                `;
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Błąd podczas pobierania notatek:', error);
+            }
+        }
+
+        function createNote() { // BEZ DODANIA NOTATKI DO BAZY DANYCH ALE WYŚWIETLA OKNO DO DODAWANIA NOTATKI BEZ STYLIZACJI
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.innerHTML = `
+                <h2 class="text-2xl font-semibold mb-4">Dodaj nową notatkę</h2>
+                <input id="note-title" type="text" placeholder="Tytuł notatki" class="w-full p-2 mb-4 border rounded">
+                <textarea id="note-content" rows="5" placeholder="Treść notatki" class="w-full p-2 mb-4 border rounded"></textarea>
+                <button id="save-note" class="bg-light-accent dark:bg-dark-accent text-light-text dark:text-dark-text p-2 rounded">Zapisz</button>
+            `;
+            showNoteEditor();
+        }
+
+
+        function showNoteEditor() {
+            const backdrop = document.getElementById('note-editor-backdrop');
+            backdrop.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+            backdrop.classList.add('opacity-100', 'scale-100');
+        }
+        function hideNoteEditor() {
+            const backdrop = document.getElementById('note-editor-backdrop');
+            backdrop.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            backdrop.classList.remove('opacity-100', 'scale-100');
+        }
+        document.addEventListener('click', function (event) {
+            const editor = document.getElementById('note-editor');
+            if (!editor.classList.contains('pointer-events-none')) {
+                if (!editor.contains(event.target) && event.target.id !== 'add-note') {
+                    hideNoteEditor();
+                }
+            }
+        });
     </script>
 </head>
 
@@ -109,7 +265,7 @@
             <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
             <div class="relative inline-block w-12 h-6">
                 <input id="switch-component" type="checkbox" class="peer hidden m-1" />
-                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full 
+                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
                        bg-light-accent dark:bg-dark-accent
                        shadow-md transition-all duration-300 
                        peer-checked:translate-x-[0.75rem] 
@@ -125,14 +281,40 @@
         </div>
     </nav>
     <main
-        class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
+        class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
         <div class="flex flex-col items-center justify-center w-full p-6">
-            <h2 class="text-2xl font-bold text-light-textPrimary dark:text-dark-textPrimary font-league-spartan">
-                Moje Notatki
-            </h2>
-            <div class="w-full max">
-
+            <div
+                class="p-4 m-3 flex items-center justify-center text-3xl border-b-4 border-light-accentDark dark:border-dark-accentDark">
+                <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    Moje Notatki
+                </h1>
             </div>
+            <div class="flex flex-row items-center justify-center w-[90vw] max-w-2xl p-4 rounded-lg">
+                <div id="notes-container" class="w-[100%] min-h-auto max flex flex-col items-center justify-center p-4">
+
+                </div>
+                <div id="note-settings"
+                    class="flex flex-col items-center justify-center w-[30%] max-w-2xl p-4 rounded-lg">
+                    <button id="add-note"
+                        class="text-lg p-2 m-2 bg-light-accent dark:bg-dark-accent text-light-text dark:text-dark-text rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 w-50"
+                        onclick="createNote()">
+                        Dodaj Notatkę
+                    </button>
+                </div>
+            </div>
+            <div id="note-editor-backdrop" class="fixed inset-0 z-50 flex items-center justify-center 
+                   opacity-0 scale-95 pointer-events-none 
+                   transition-all duration-300 ease-in-out">
+
+                <div id="note-editor" class="w-[90vw] h-[90vh] bg-white dark:bg-dark-surface 
+                           text-black dark:text-white p-6 rounded-lg shadow-xl 
+                           overflow-auto">
+
+                </div>
+            </div>
+
+        </div>
+
         </div>
     </main>
     <footer
