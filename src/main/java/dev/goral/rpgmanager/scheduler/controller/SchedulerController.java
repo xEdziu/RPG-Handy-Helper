@@ -3,6 +3,7 @@ package dev.goral.rpgmanager.scheduler.controller;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SubmitAvailabilityRequest;
+import dev.goral.rpgmanager.scheduler.dto.response.PlayerAvailabilityResponse;
 import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
 import dev.goral.rpgmanager.scheduler.service.SchedulerService;
 import dev.goral.rpgmanager.security.CustomReturnables;
@@ -20,6 +21,11 @@ import java.util.Map;
 public class SchedulerController {
 
     private final SchedulerService schedulerService;
+
+    /*
+     =========================== SCHEDULER ===========================
+     */
+
 
     @PostMapping("/create")
     public Map<String, Object> createScheduler(
@@ -74,6 +80,10 @@ public class SchedulerController {
         return response;
     }
 
+    /*
+     =========================== PLAYER AVAILABILITY ===========================
+     */
+
     @PostMapping("/submitAvailability")
     public Map<String, Object> submitAvailability(
             @RequestBody SubmitAvailabilityRequest request,
@@ -83,5 +93,15 @@ public class SchedulerController {
         return CustomReturnables.getOkResponseMap("Dostępność została zapisana.");
     }
 
+    @GetMapping("/availability/{schedulerId}")
+    public Map<String, Object> getPlayerAvailability(
+            @PathVariable Long schedulerId,
+            @AuthenticationPrincipal Principal principal
+    ) {
+        PlayerAvailabilityResponse responseData = schedulerService.getPlayerAvailability(schedulerId, principal);
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano dostępność gracza.");
+        response.put("availability", responseData);
+        return response;
+    }
 
 }

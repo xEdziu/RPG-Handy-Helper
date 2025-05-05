@@ -5,6 +5,7 @@ import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SubmitAvailabilityRequest;
+import dev.goral.rpgmanager.scheduler.dto.response.PlayerAvailabilityResponse;
 import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
 import dev.goral.rpgmanager.scheduler.entity.*;
 import dev.goral.rpgmanager.scheduler.repository.SchedulerRepository;
@@ -53,6 +54,18 @@ public class SchedulerService {
         // Sprawdź, czy użytkownik jest uczestnikiem gry
         if (!gameUsersRepository.existsByGameIdAndUserId(request.getGameId(), creator.getId())) {
             throw new IllegalArgumentException("Użytkownik nie jest uczestnikiem gry");
+        }
+
+        // Sprawdź, czy gra istnieje
+        if (!gameRepository.existsById(request.getGameId())) {
+            throw new IllegalArgumentException("Nie znaleziono gry o id: " + request.getGameId());
+        }
+
+        // Sprawdź, czy twórca harmonogramu to GameMaster
+        if (!gameRepository.findById(request.getGameId())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono gry o id: " + request.getGameId()))
+                .getGameMaster().getId().equals(creator.getId())) {
+            throw new IllegalArgumentException("Tylko GameMaster może stworzyć harmonogram");
         }
 
         // Walidacja
@@ -303,6 +316,38 @@ public class SchedulerService {
 
         participant.getAvailabilitySlots().addAll(slots);
     }
+
+    /**
+     * Gets the availability of a player for a given scheduler.
+     *
+     * @param schedulerId The ID of the scheduler.
+     * @param principal   The user who is requesting the availability.
+     * @return {@link PlayerAvailabilityResponse} The availability response containing the player's availability slots.
+     * @throws IllegalArgumentException If the user is not a participant of the scheduler or if the scheduler is not found.
+     */
+    @Transactional(readOnly = true)
+    public PlayerAvailabilityResponse getPlayerAvailability(Long schedulerId, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika " + principal.getName()));
+
+        Scheduler scheduler = schedulerRepository.findById(schedulerId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + schedulerId));
+
+        SchedulerParticipant participant = scheduler.getParticipants().stream()
+                .filter(p -> p.getPlayer().getId().equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Użytkownik nie jest uczestnikiem tego harmonogramu"));
+
+        List<PlayerAvailabilityResponse.AvailabilitySlotDto> slots = participant.getAvailabilitySlots().stream()
+                .map(s -> new PlayerAvailabilityResponse.AvailabilitySlotDto(
+                        s.getStartDateTime(),
+                        s.getEndDateTime(),
+                        s.getAvailabilityType()
+                )).toList();
+
+        return new PlayerAvailabilityResponse(user.getId(), slots);
+    }
+
 
 
 }
