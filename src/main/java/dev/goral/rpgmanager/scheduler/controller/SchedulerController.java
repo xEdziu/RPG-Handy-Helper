@@ -127,6 +127,15 @@ public class SchedulerController {
         return CustomReturnables.getOkResponseMap("Dostępność została zapisana.");
     }
 
+    @PutMapping("/editAvailability")
+    public Map<String, Object> editAvailability(
+            @RequestBody SubmitAvailabilityRequest request,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        schedulerService.editAvailability(request, currentUser);
+        return CustomReturnables.getOkResponseMap("Dostępność została zaktualizowana.");
+    }
+
     @GetMapping("/availability/{schedulerId}")
     public Map<String, Object> getPlayerAvailability(
             @PathVariable Long schedulerId,

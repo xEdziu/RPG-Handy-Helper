@@ -171,7 +171,7 @@ public class EmailService {
                 <p>Twoja sesja <strong>%s</strong> została zaplanowana:</p>
                 <p><strong>%s – %s</strong></p>
                 <p>Dodaj wydarzenie do swojego kalendarza:</p>
-                <p><a href="%s" class="button">Dodaj do Google Kalendarza</a></p>
+                <p><a href="%s" class="button">Dodaj do Kalendarza Google</a></p>
                 <hr>
                 <p><strong>RPG Handy Helper Team</strong></p>
             </body>

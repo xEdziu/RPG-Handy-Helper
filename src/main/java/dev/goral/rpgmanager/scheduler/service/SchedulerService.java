@@ -658,14 +658,14 @@ public class SchedulerService {
                     suggested.add(new SuggestedSlotResponse.TimeSlotDto(
                             windowStart,
                             point.time,
-                            (int) Math.round(currentWeight)  // można też zwracać dokładnie
+                            currentWeight  // można też zwracać dokładnie
                     ));
                 }
                 windowStart = null;
             }
         }
 
-        suggested.sort(Comparator.comparingInt(SuggestedSlotResponse.TimeSlotDto::getNumberOfAvailableParticipants).reversed());
+        suggested.sort(Comparator.comparingDouble(SuggestedSlotResponse.TimeSlotDto::getWeightOfTimeSlot).reversed());
 
         return new SuggestedSlotResponse(suggested);
     }
@@ -722,7 +722,71 @@ public class SchedulerService {
             throw new IllegalStateException("Nie można wysłać maili bez wybrania terminu");
         }
 
+        if (scheduler.isEmailsSent()) {
+            throw new IllegalArgumentException("Maile z potwierdzeniem zostały już wysłane");
+        }
+
+        scheduler.setEmailsSent(true);
         emailService.sendFinalDecisionNotification(scheduler);
+        schedulerRepository.save(scheduler);
+    }
+
+    /**
+     * Edits the availability of a player for a given scheduler.
+     *
+     * @param request   The request containing the updated availability slots.
+     * @param currentUser The user who is editing the availability.
+     * @throws IllegalStateException If the user is not a participant of the scheduler or if the scheduler is not found.
+     */
+    public void editAvailability(SubmitAvailabilityRequest request, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
+
+        Scheduler scheduler = schedulerRepository.findById(request.getSchedulerId())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
+
+        // Sprawdź, czy harmonogram nie został już sfinalizowany
+        if (scheduler.getFinalDecision() != null) {
+            throw new IllegalStateException("Nie można zmienić dostępności po wybraniu finalnego terminu");
+        }
+
+        // Walidacja slotów
+        validateAvailabilitySlots(request.getSlots());
+
+        // Sprawdź, czy użytkownik jest uczestnikiem harmonogramu
+        SchedulerParticipant participant = scheduler.getParticipants().stream()
+                .filter(p -> p.getPlayer().getId().equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Użytkownik nie jest uczestnikiem tego harmonogramu"));
+
+        // Wyczyść poprzednie dostępności
+        participant.getAvailabilitySlots().clear();
+
+        // Dodaj nowe
+        List<AvailabilitySlot> slots = request.getSlots().stream()
+                .map(dto -> {
+                    AvailabilitySlot slot = new AvailabilitySlot();
+                    slot.setParticipant(participant);
+                    slot.setStartDateTime(dto.getStartDateTime());
+                    slot.setEndDateTime(dto.getEndDateTime());
+                    slot.setAvailabilityType(dto.getAvailabilityType());
+                    return slot;
+                }).toList();
+
+        participant.getAvailabilitySlots().addAll(slots);
+
+        // Po zaktualizowaniu dostępności danego gracza:
+        boolean allSubmitted = scheduler.getParticipants().stream()
+                .allMatch(p -> p.getAvailabilitySlots() != null && !p.getAvailabilitySlots().isEmpty());
+
+        if (allSubmitted) {
+            scheduler.setStatus(SchedulerStatus.READY_TO_DECIDE);
+        } else {
+            scheduler.setStatus(SchedulerStatus.AWAITING_AVAILABILITY);
+        }
+
+        // Zapisz zmiany
+        schedulerRepository.save(scheduler);
     }
 
     /**
