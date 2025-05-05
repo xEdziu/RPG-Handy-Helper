@@ -34,6 +34,7 @@ public class SchedulerResponse {
     private SchedulerStatus status;
     private int missingAvailabilitiesCount;
     private String googleCalendarLink;
+    private boolean emailsSent;
 
     @Getter
     @Setter

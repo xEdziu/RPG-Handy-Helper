@@ -61,5 +61,9 @@ public class Scheduler {
 
     @Nullable
     private String googleCalendarLink;
+
+    @Column(nullable = false)
+    private boolean emailsSent = false;
+
 }
 

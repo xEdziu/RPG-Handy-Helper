@@ -21,7 +21,7 @@ public class SuggestedSlotResponse {
     public static class TimeSlotDto {
         private LocalDateTime start;
         private LocalDateTime end;
-        private int numberOfAvailableParticipants;
+        private double weightOfTimeSlot;
     }
 }
 

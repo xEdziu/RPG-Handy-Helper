@@ -44,6 +44,7 @@ public class SchedulerResponseMapper {
                                 )
                 )
                 .googleCalendarLink( s.getGoogleCalendarLink())
+                .emailsSent(s.isEmailsSent())
                 .build();
     }
 }
