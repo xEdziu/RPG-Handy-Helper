@@ -4,6 +4,7 @@ import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
+import dev.goral.rpgmanager.scheduler.dto.request.SubmitAvailabilityRequest;
 import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
 import dev.goral.rpgmanager.scheduler.entity.*;
 import dev.goral.rpgmanager.scheduler.repository.SchedulerRepository;
@@ -28,6 +29,16 @@ public class SchedulerService {
     private final GameUsersRepository gameUsersRepository;
     private final UserRepository userRepository;
 
+    /**
+     * Creates a new scheduler based on the provided request and user principal and validates the request using
+     * {@link #validateRequest(CreateSchedulerRequest)}.
+     *
+     * @param request   An object containing the details of the scheduler to be created.
+     * @param principal A principal object representing the currently authenticated user.
+     * @return {@link SchedulerResponse} An object containing the details of the created scheduler.
+     * @throws IllegalArgumentException If the user is not the creator of the game,
+     * if the user is not a participant of the game, or if the request is invalid.
+     */
     @Transactional
     public SchedulerResponse createScheduler(CreateSchedulerRequest request, @AuthenticationPrincipal Principal principal) {
 
@@ -95,6 +106,11 @@ public class SchedulerService {
         return SchedulerResponseMapper.mapToDto(saved);
     }
 
+    /**
+     * Validates the given request for creating a scheduler.
+     * @param request The request to validate.
+     * @throws IllegalArgumentException If the request is invalid.
+     */
     private void validateRequest(CreateSchedulerRequest request) {
         if (request.getTitle() == null || request.getTitle().isBlank()) {
             throw new IllegalArgumentException("Tytuł nie może być pusty");
@@ -147,6 +163,14 @@ public class SchedulerService {
         }
     }
 
+    /**
+     * Downloads all schedulers for a given game.
+     *
+     * @param gameId The ID of the game for which to download schedulers.
+     * @param principal The user who is requesting the schedulers.
+     * @return A list of schedulers as {@link SchedulerResponse} objects.
+     * @throws IllegalArgumentException If the user does not have access to the game or if the game is not found.
+     */
     public List<SchedulerResponse> getSchedulersByGame(Long gameId, Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
@@ -160,6 +184,14 @@ public class SchedulerService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Gets a scheduler by its ID.
+     *
+     * @param schedulerId The ID of the scheduler to retrieve.
+     * @param principal The user who is requesting the scheduler.
+     * @return The scheduler as a {@link SchedulerResponse}.
+     * @throws IllegalArgumentException If the user does not have access to the scheduler or if the scheduler is not found.
+     */
     public SchedulerResponse getSchedulerById(Long schedulerId, Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
@@ -174,6 +206,13 @@ public class SchedulerService {
         return SchedulerResponseMapper.mapToDto(scheduler);
     }
 
+    /**
+     * Deletes a scheduler by its ID.
+     *
+     * @param schedulerId The ID of the scheduler to delete.
+     * @param principal The user who is submitting the final decision.
+     * @throws IllegalArgumentException If the user is not the creator of the scheduler or if the scheduler is not found.
+     */
     @Transactional
     public void deleteScheduler(Long schedulerId, Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
@@ -189,6 +228,14 @@ public class SchedulerService {
         schedulerRepository.delete(scheduler);
     }
 
+    /**
+     * Sets the final decision for a given scheduler.
+     *
+     * @param request   The request containing the final decision details.
+     * @param principal The user who is submitting the final decision.
+     * @return The updated scheduler as a {@link SchedulerResponse}.
+     * @throws IllegalArgumentException If the user is not the creator of the scheduler or if the scheduler is not found.
+     */
     @Transactional
     public SchedulerResponse setFinalDecision(SetFinalDecisionRequest request, Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
@@ -219,6 +266,43 @@ public class SchedulerService {
         return SchedulerResponseMapper.mapToDto(saved);
     }
 
+    /**
+     * Sets the availability for a given scheduler.
+     *
+     * @param request   The request containing the availability slots.
+     * @param principal The user who is submitting the availability.
+     * @throws IllegalArgumentException If the user is not a participant of the scheduler or if the scheduler is not found.
+     */
+    @Transactional
+    public void submitAvailability(SubmitAvailabilityRequest request, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+
+        Scheduler scheduler = schedulerRepository.findById(request.getSchedulerId())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
+
+        // Sprawdź, czy użytkownik jest uczestnikiem harmonogramu
+        SchedulerParticipant participant = scheduler.getParticipants().stream()
+                .filter(p -> p.getPlayer().getId().equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Użytkownik nie jest uczestnikiem tego harmonogramu"));
+
+        // Wyczyść poprzednie dostępności
+        participant.getAvailabilitySlots().clear();
+
+        // Dodaj nowe
+        List<AvailabilitySlot> slots = request.getSlots().stream()
+                .map(dto -> {
+                    AvailabilitySlot slot = new AvailabilitySlot();
+                    slot.setParticipant(participant);
+                    slot.setStartDateTime(dto.getStartDateTime());
+                    slot.setEndDateTime(dto.getEndDateTime());
+                    slot.setAvailabilityType(dto.getAvailabilityType());
+                    return slot;
+                }).toList();
+
+        participant.getAvailabilitySlots().addAll(slots);
+    }
 
 
 }

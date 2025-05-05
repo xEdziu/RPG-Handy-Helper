@@ -2,6 +2,7 @@ package dev.goral.rpgmanager.scheduler.controller;
 
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
+import dev.goral.rpgmanager.scheduler.dto.request.SubmitAvailabilityRequest;
 import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
 import dev.goral.rpgmanager.scheduler.service.SchedulerService;
 import dev.goral.rpgmanager.security.CustomReturnables;
@@ -72,5 +73,15 @@ public class SchedulerController {
         response.put("scheduler", updated);
         return response;
     }
+
+    @PostMapping("/submitAvailability")
+    public Map<String, Object> submitAvailability(
+            @RequestBody SubmitAvailabilityRequest request,
+            @AuthenticationPrincipal Principal principal
+    ) {
+        schedulerService.submitAvailability(request, principal);
+        return CustomReturnables.getOkResponseMap("Dostępność została zapisana.");
+    }
+
 
 }
