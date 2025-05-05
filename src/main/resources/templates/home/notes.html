@@ -62,6 +62,8 @@
             },
         };
         var noteInfo = {};
+        var accessibleGame = {};
+        var userId = null;
         document.addEventListener("DOMContentLoaded", () => {
             const toggleSwitch = document.getElementById("switch-component");
             applyTheme(getSavedTheme());
@@ -70,6 +72,8 @@
                 applyTheme(newTheme);
             });
             loadNotes();
+            getAccessibleGameForUser();
+            getUserId();
         });
 
         function updateFavicon(theme) {
@@ -117,7 +121,28 @@
             });
             return res.ok ? res.json() : Promise.reject(await res.json());
         }
-
+        async function getAccessibleGameForUser() {
+            try {
+                const response = await apiGet('/api/v1/authorized/game/userGames');
+                if (Array.isArray(response)) {
+                    accessibleGame = response;
+                } else {
+                    console.warn('Nieoczekiwany format odpowiedzi:', response);
+                    accessibleGame = [];
+                }
+            } catch (err) {
+                console.error("Nie udało się pobrać gier:", err);
+                accessibleGame = [];
+            }
+        }
+        async function getUserId() {
+            try {
+                const response = await apiGet('/api/v1/authorized/user');
+                userId = response.id;
+            } catch (err) {
+                console.error("Nie udało się informacji o użytkowniku:", err);
+            }
+        }
         async function apiPost(url, data) {
             const csrfToken = getCsrfToken();
             const res = await fetch(url, {
@@ -136,7 +161,6 @@
             const res = await fetch(url, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-XSRF-TOKEN': csrfToken
                 },
                 body: JSON.stringify(data)
@@ -159,16 +183,13 @@
             return marked.parse(markdownText);
         }
         function truncateText(text, maxLength = 80) {
-            console.log('truncateText:', text, maxLength);
             return text.length > maxLength
                 ? text.slice(0, maxLength) + '...'
                 : text;
         }
         function displayNote(idNote) { //NIE DZIALA FUNKCJA DO WYŚWIETLANIA NOTATKI PO KLIKNIĘCIU NA NIEJ 
             const note = noteInfo.find(note => note.id === idNote);
-            console.log('Szukana notatka:', note);
             if (!note) {
-                console.error('Nie znaleziono notatki o podanym ID:', idNote);
                 return;
             }
             const noteEditor = document.getElementById('note-editor');
@@ -180,10 +201,7 @@
               <button id="edit-note" class="bg-light-accent dark:bg-dark-accent text-light-text dark:text-dark-text p-2 rounded">Edytuj</button>
             `;
             showNoteEditor();
-            console.log('noteEditor.innerHTML:', noteEditor.innerHTML);
-            console.log('noteEditor.offsetHeight:', noteEditor.offsetHeight);
         }
-
         async function loadNotes() {
             try {
                 const notes = await apiGet('/api/v1/authorized/gameNotes');
@@ -211,21 +229,84 @@
                     container.appendChild(div);
                 });
             } catch (error) {
-                console.error('Błąd podczas pobierania notatek:', error);
+                console.error('Nie udało się załadować notatek:', error);
             }
         }
 
-        function createNote() { // BEZ DODANIA NOTATKI DO BAZY DANYCH ALE WYŚWIETLA OKNO DO DODAWANIA NOTATKI BEZ STYLIZACJI
+        function saveNote() {
+            const noteTitle = document.getElementById('note-title').value.trim();
+            const noteContent = document.getElementById('note-content').value.trim();
+            const gameIdRaw = document.getElementById('game-name').value;
+            const gameId = parseInt(gameIdRaw);
+            if (!noteTitle || !noteContent || !gameId || isNaN(gameId)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Brak danych!',
+                    text: 'Uzupełnij wszystkie pola.',
+                });
+                return;
+            }
+            const note = {
+                title: noteTitle,
+                content: noteContent,
+                gameId: gameId,
+                userId: userId
+            };
+            console.log("Wysyłana notatka:", note);
+            apiPost('/api/v1/authorized/gameNotes/add', note)
+                .then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notatka została zapisana!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    loadNotes();
+                    hideNoteEditor();
+                })
+                .catch((error) => {
+                    console.error('Nie udało się zapisać notatki:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Błąd!',
+                        text: 'Nie udało się zapisać notatki. Spróbuj ponownie.',
+                    });
+                });
+        }
+        function createNote() {
             const noteEditor = document.getElementById('note-editor');
             noteEditor.innerHTML = `
-                <h2 class="text-2xl font-semibold mb-4">Dodaj nową notatkę</h2>
-                <input id="note-title" type="text" placeholder="Tytuł notatki" class="w-full p-2 mb-4 border rounded">
-                <textarea id="note-content" rows="5" placeholder="Treść notatki" class="w-full p-2 mb-4 border rounded"></textarea>
-                <button id="save-note" class="bg-light-accent dark:bg-dark-accent text-light-text dark:text-dark-text p-2 rounded">Zapisz</button>
+                <div class="flex justify-between items-center mb-4 border-b pb-2 border-light-accentDark dark:border-dark-accentDark">
+                    <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">Dodaj nową notatkę</h2>
+                </div>
+                <h2>Wybierz grę:</h2>
+                <select id="game-name" class="w-full p-2 mb-4 border rounded text-black dark:text-white bg-white dark:bg-dark-surface">
+                    ${accessibleGame.map(game => `<option value="${game.id}">${game.name}</option>`).join('')}
+                </select>
+                <input id="note-title" type="text" placeholder="Tytuł notatki"
+                    class="w-full p-2 mb-4 border rounded text-black dark:text-white bg-white dark:bg-dark-surface">
+                <div class="flex flex-row gap-4 min-h-[32vh]">
+                    <textarea id="note-content" rows="10" placeholder="Treść notatki"
+                        class="w-1/2 p-4 border rounded resize-none font-jetbrains-mono text-sm text-black dark:text-white bg-white dark:bg-dark-surface        overflow-auto"></textarea>
+                    <div id="note-preview"
+                        class="w-1/2 p-4 border rounded overflow-auto prose dark:prose-invert bg-white dark:bg-dark-surface">
+                        <p class="text-gray-500 italic">Podgląd notatki</p>
+                    </div>
+                </div>
+                <div class="mt-4 flex justify-end p-2">
+                    <button id="save-note"
+                        class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark  dark:hover:bg-dark-accentDark" onclick="saveNote()">
+                        Zapisz
+                    </button>
+                </div>
             `;
             showNoteEditor();
+            const textarea = document.getElementById('note-content');
+            const preview = document.getElementById('note-preview');
+            textarea.addEventListener('input', () => {
+                preview.innerHTML = parseMarkdown(textarea.value || "*Podgląd pusty...*");
+            });
         }
-
 
         function showNoteEditor() {
             const backdrop = document.getElementById('note-editor-backdrop');
@@ -306,9 +387,9 @@
                    opacity-0 scale-95 pointer-events-none 
                    transition-all duration-300 ease-in-out">
 
-                <div id="note-editor" class="w-[90vw] h-[90vh] bg-white dark:bg-dark-surface 
+                <div id="note-editor" class="w-[60vw] h-[60vh] bg-white dark:bg-dark-surface 
                            text-black dark:text-white p-6 rounded-lg shadow-xl 
-                           overflow-auto">
+                           overflow-auto flex-col justify-between">
 
                 </div>
             </div>
