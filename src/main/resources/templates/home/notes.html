@@ -161,6 +161,7 @@
             const res = await fetch(url, {
                 method: 'PUT',
                 headers: {
+                    'Content-Type': 'application/json',
                     'X-XSRF-TOKEN': csrfToken
                 },
                 body: JSON.stringify(data)
@@ -187,20 +188,150 @@
                 ? text.slice(0, maxLength) + '...'
                 : text;
         }
-        function displayNote(idNote) { //NIE DZIALA FUNKCJA DO WYŚWIETLANIA NOTATKI PO KLIKNIĘCIU NA NIEJ 
-            const note = noteInfo.find(note => note.id === idNote);
+        function forceReload() {
+            location.reload();
+        }
+        function displayNote(idNote) {
+            const note = noteInfo.find(note => note.id == idNote);
             if (!note) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: 'Nie znaleziono notatki.',
+                });
                 return;
             }
             const noteEditor = document.getElementById('note-editor');
-            noteEditor.innerHTML = '';
             noteEditor.innerHTML = `
-              <h2 class="text-2xl font-semibold mb-4">${note.title}</h2>
-              <div class="prose dark:prose-invert max-w-none mb-4">${marked.parse(note.content)}</div>
-              <small class="block text-xs text-gray-400 mb-4">Utworzono: ${new Date(note.createdAt).toLocaleString()}</small>
-              <button id="edit-note" class="bg-light-accent dark:bg-dark-accent text-light-text dark:text-dark-text p-2 rounded">Edytuj</button>
+                <div class="flex justify-between items-center mb-4 border-b pb-2 border-light-accentDark dark:border-dark-accentDark">
+                    <div class="flex-col items-center">
+                        <h2 class="text-2xl font-bold font-jetbrains-mono text-light-accent dark:text-dark-accent">${note.gameName}</h2>
+                        <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${note.rpgSystemName}</h2>
+                    </div>
+                    <div class="flex-col items-center">
+                        <small class="text-light-textSecondary dark:text-dark-textSecondary">Ostatnia Modyfikacja: ${new Date(note.updatedAt).toLocaleString()}</small> <br>
+                        <small class="text-light-textSecondary dark:text-dark-textSecondary">Utworzono: ${new Date(note.createdAt).toLocaleString()}</small>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center"> 
+                    <h1 class="text-3xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${note.title}</h1>
+                    <div>
+                        <button id="delete-note" class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark     dark:hover:bg-dark-accentDark" onclick="deleteNote(${note.id})">Usuń</button>
+                        <button id="edit-note" class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark   dark:hover:bg-dark-accentDark" onclick="editNote(${note.id})">Edytuj</button>
+                    </div>
+                </div>
+                    <p class="text-light-textSecondary dark:text-dark-textSecondary font-jetbrains-mono text-sm">${parseMarkdown(note.content)}</p>
             `;
+            noteEditor.onclick = (event) => event.stopPropagation();
             showNoteEditor();
+        }
+        function editNote(idNote) {
+            const note = noteInfo.find(note => note.id == idNote);
+            if (!note) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: 'Nie znaleziono notatki.',
+                });
+                return;
+            }
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.innerHTML = `
+                <div class="flex justify-between items-center mb-4 border-b pb-2 border-light-accentDark dark:border-dark-accentDark">
+                    <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">Edytuj notatkę</h2>
+                </div>
+                <input id="edit-note-title" type="text" value="${note.title.replace(/"/g, '&quot;')}"
+                    class="w-full p-2 mb-4 border rounded text-black dark:text-white bg-white dark:bg-dark-surface">
+                <div class="flex flex-row gap-4 min-h-[32vh]">
+                    <textarea id="edit-note-content" rows="10"
+                        class="w-1/2 p-4 border rounded resize-none font-jetbrains-mono text-sm text-black dark:text-white bg-white dark:bg-dark-surface overflow-auto">${note.content}</textarea>
+
+                    <div id="edit-note-preview"
+                        class="w-1/2 p-4 border rounded overflow-auto prose dark:prose-invert bg-white dark:bg-dark-surface">
+                        ${parseMarkdown(note.content)}
+                    </div>
+                </div>
+                <div class="mt-4 flex justify-end p-2">
+                    <button id="save-edited-note"
+                        class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                        onclick="saveEditedNote(${note.id})">
+                        Zapisz zmiany
+                    </button>
+                </div>
+            `;
+            console.log("test1")
+            const textarea = document.getElementById('edit-note-content');
+            const preview = document.getElementById('edit-note-preview');
+            textarea.addEventListener('input', () => {
+                preview.innerHTML = parseMarkdown(textarea.value || "*Podgląd pusty...*");
+            });
+        }
+        function saveEditedNote(idNote) {
+            const noteTitle = document.getElementById('edit-note-title').value.trim();
+            const noteContent = document.getElementById('edit-note-content').value.trim();
+            if (!noteTitle || !noteContent) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Brak danych!',
+                    text: 'Uzupełnij wszystkie pola.',
+                });
+                return;
+            }
+            const note = {
+                gameId: accessibleGame.find(gameName => noteInfo.find(note => note.id == idNote).gameName).id,
+                userId: userId,
+                title: noteTitle,
+                content: noteContent
+            };
+            apiPut(`/api/v1/authorized/gameNotes/update/${idNote}`,note)
+                .then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notatka została zaktualizowana!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    loadNotes();
+                    hideNoteEditor();
+                })
+                .catch((error) => {
+                    console.error('Nie udało się zaktualizować notatki:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Błąd!',
+                        text: 'Nie udało się zaktualizować notatki. Spróbuj ponownie.',
+                    });
+                });
+        }
+        function deleteNote(idNote) {
+            Swal.fire({
+                title: 'Czy na pewno chcesz usunąć tę notatkę?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Tak, usuń!',
+                cancelButtonText: 'Anuluj'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    apiDelete(`/api/v1/authorized/gameNotes/delete/${idNote}`)
+                        .then(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Notatka została usunięta!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            forceReload();
+                        })
+                        .catch((error) => {
+                            console.error('Nie udało się usunąć notatki:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Błąd!',
+                                text: 'Nie udało się usunąć notatki. Spróbuj ponownie.',
+                            });
+                        });
+                }
+            });
         }
         async function loadNotes() {
             try {
@@ -214,10 +345,11 @@
                 noteInfo = notes.gameNotes;
                 notes.gameNotes.forEach(note => {
                     const div = document.createElement('div');
-                    div.className = 'w-[75vw] max-w-2xl p-4 bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
-                    div.onclick = function () {
+                    div.className = 'note-box w-[75vw] max-w-2xl p-4 bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
+                    div.addEventListener("click", (e) => {
+                        e.stopPropagation();
                         displayNote(note.id);
-                    };
+                    });
                     div.innerHTML = `
                     <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xl font-semibold mb-1 font-jetbrains-mono">${note.rpgSystemName} <span class="text-light-accent dark:text-dark-accent"> ${note.gameName} </span></h3> 
@@ -232,8 +364,7 @@
                 console.error('Nie udało się załadować notatek:', error);
             }
         }
-
-        function saveNote() {
+        function saveNote(idNote) {
             const noteTitle = document.getElementById('note-title').value.trim();
             const noteContent = document.getElementById('note-content').value.trim();
             const gameIdRaw = document.getElementById('game-name').value;
@@ -252,7 +383,6 @@
                 gameId: gameId,
                 userId: userId
             };
-            console.log("Wysyłana notatka:", note);
             apiPost('/api/v1/authorized/gameNotes/add', note)
                 .then(() => {
                     Swal.fire({
@@ -315,13 +445,14 @@
         }
         function hideNoteEditor() {
             const backdrop = document.getElementById('note-editor-backdrop');
-            backdrop.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
             backdrop.classList.remove('opacity-100', 'scale-100');
+            backdrop.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            const noteEditor = document.getElementById('note-editor');
         }
         document.addEventListener('click', function (event) {
             const editor = document.getElementById('note-editor');
             if (!editor.classList.contains('pointer-events-none')) {
-                if (!editor.contains(event.target) && event.target.id !== 'add-note') {
+                if (!editor.contains(event.target) && !event.target.closest('.note-box') && event.target.id !== 'add-note') {
                     hideNoteEditor();
                 }
             }
