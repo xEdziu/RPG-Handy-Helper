@@ -267,23 +267,42 @@ public class SchedulerService {
             throw new IllegalArgumentException("Tylko twórca harmonogramu może ustawić ostateczny termin");
         }
 
-        // Walidacja dat
-        if (request.getStart() == null || request.getEnd() == null) {
+        LocalDateTime start = request.getStart();
+        LocalDateTime end = request.getEnd();
+
+        if (start == null || end == null) {
             throw new IllegalArgumentException("Daty nie mogą być puste");
         }
-        if (request.getStart().isAfter(request.getEnd())) {
+
+        if (start.isAfter(end)) {
             throw new IllegalArgumentException("Data rozpoczęcia nie może być po dacie zakończenia");
         }
 
+        long minutes = Duration.between(start, end).toMinutes();
+        if (minutes < scheduler.getMinimumSessionDurationMinutes()) {
+            throw new IllegalArgumentException("Wybrany slot jest zbyt krótki");
+        }
+
+        // WALIDACJA: Czy mieści się w którymkolwiek slocie z dostępności uczestników?
+        boolean isCovered = scheduler.getParticipants().stream()
+                .flatMap(p -> p.getAvailabilitySlots().stream())
+                .filter(s -> s.getAvailabilityType() != AvailabilityType.NO)
+                .anyMatch(s -> !s.getStartDateTime().isAfter(start) &&
+                        !s.getEndDateTime().isBefore(end));
+
+        if (!isCovered) {
+            throw new IllegalArgumentException("Żaden uczestnik nie jest dostępny w tym przedziale");
+        }
+
         FinalDecision decision = new FinalDecision();
-        decision.setStart(request.getStart());
-        decision.setEnd(request.getEnd());
+        decision.setStart(start);
+        decision.setEnd(end);
 
         scheduler.setFinalDecision(decision);
-
         Scheduler saved = schedulerRepository.save(scheduler);
         return SchedulerResponseMapper.mapToDto(saved);
     }
+
 
     /**
      * Sets the availability for a given scheduler.
