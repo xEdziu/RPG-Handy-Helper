@@ -125,13 +125,14 @@ public class EmailService {
     }
 
     public void sendFinalDecisionNotification(Scheduler scheduler) {
+
+        if (scheduler.getFinalDecision() == null) {
+            throw new IllegalStateException("Nie ustanowiono jeszcze głównego terminu spotkania.");
+        }
+
         for (SchedulerParticipant participant : scheduler.getParticipants()) {
             String email = participant.getPlayer().getEmail();
             if (email == null || email.isBlank()) continue;
-
-            if (scheduler.getFinalDecision() == null) {
-                throw new IllegalStateException("Final decision is not set for the scheduler.");
-            }
 
             String subject = "Potwierdzono termin sesji | RPG Handy Helper";
             String htmlContent = generateFinalDecisionEmailTemplate(
