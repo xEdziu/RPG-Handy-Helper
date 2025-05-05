@@ -25,8 +25,11 @@ public class CpRedAmmunition {
     )
     private Long id;
     private String name;
+
+    @Column(length = 500)
     private String description;
-    private int pricePerBullet;
+
+    private int pricePerBullet = -1;
     @Enumerated(EnumType.STRING)
     private CpRedItemsAvailability availability;
 }
