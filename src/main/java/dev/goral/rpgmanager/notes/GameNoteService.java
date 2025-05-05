@@ -93,6 +93,7 @@ public class GameNoteService {
 
         for (GameNote gameNote : gameNotes) {
             GameNoteViewDto gameNoteDto = new GameNoteViewDto();
+            gameNoteDto.setId(gameNote.getId());
             gameNoteDto.setTitle(gameNote.getTitle());
             gameNoteDto.setContent(gameNote.getContent());
             gameNoteDto.setCreatedAt(gameNote.getCreatedAt());
@@ -129,6 +130,7 @@ public class GameNoteService {
         Game game = gameRepository.findGameById(gameNotes.get().getGame().getId()).orElseThrow(() -> new IllegalStateException("Gra o podanym ID nie istnieje."));
 
         GameNoteViewDto gameNote = new GameNoteViewDto();
+        gameNote.setId(gameNotes.get().getId());
         gameNote.setTitle(gameNotes.get().getTitle());
         gameNote.setContent(gameNotes.get().getContent());
         gameNote.setCreatedAt(gameNotes.get().getCreatedAt());
@@ -168,6 +170,7 @@ public class GameNoteService {
         List<GameNoteViewDto> gameNoteDtos = new ArrayList<>();
         for (GameNote gameNote : gameNotes) {
             GameNoteViewDto gameNoteDto = new GameNoteViewDto();
+            gameNoteDto.setId(gameNote.getId());
             gameNoteDto.setTitle(gameNote.getTitle());
             gameNoteDto.setContent(gameNote.getContent());
             gameNoteDto.setCreatedAt(gameNote.getCreatedAt());

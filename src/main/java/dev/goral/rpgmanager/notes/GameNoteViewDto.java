@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 @Data
 @ToString
 public class GameNoteViewDto {
+    private Long id;
     private String title;
     private String content;
     private Timestamp createdAt;
