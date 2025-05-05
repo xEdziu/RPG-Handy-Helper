@@ -9,11 +9,10 @@ import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
 import dev.goral.rpgmanager.scheduler.dto.response.SuggestedSlotResponse;
 import dev.goral.rpgmanager.scheduler.service.SchedulerService;
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +31,9 @@ public class SchedulerController {
     @PostMapping("/create")
     public Map<String, Object> createScheduler(
             @RequestBody CreateSchedulerRequest request,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        SchedulerResponse scheduler = schedulerService.createScheduler(request, principal);
+        SchedulerResponse scheduler = schedulerService.createScheduler(request, currentUser);
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Utworzono harmonogram.");
         response.put("scheduler", scheduler);
         return response;
@@ -43,9 +42,9 @@ public class SchedulerController {
     @GetMapping("/forGame/{gameId}")
     public Map<String, Object> getSchedulersByGame(
             @PathVariable Long gameId,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        List<SchedulerResponse> schedulers = schedulerService.getSchedulersByGame(gameId, principal);
+        List<SchedulerResponse> schedulers = schedulerService.getSchedulersByGame(gameId, currentUser);
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę harmonogramów.");
         response.put("schedulers", schedulers);
         return response;
@@ -54,9 +53,9 @@ public class SchedulerController {
     @GetMapping("/{schedulerId}")
     public Map<String, Object> getSchedulerById(
             @PathVariable Long schedulerId,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        SchedulerResponse scheduler = schedulerService.getSchedulerById(schedulerId, principal);
+        SchedulerResponse scheduler = schedulerService.getSchedulerById(schedulerId, currentUser);
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano harmonogram.");
         response.put("scheduler", scheduler);
         return response;
@@ -65,9 +64,9 @@ public class SchedulerController {
     @PutMapping("/edit")
     public Map<String, Object> editScheduler(
             @RequestBody EditSchedulerRequest request,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        SchedulerResponse scheduler = schedulerService.editScheduler(request, principal);
+        SchedulerResponse scheduler = schedulerService.editScheduler(request, currentUser);
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Zaktualizowano scheduler.");
         response.put("scheduler", scheduler);
         return response;
@@ -77,18 +76,18 @@ public class SchedulerController {
     @DeleteMapping("/delete/{schedulerId}")
     public Map<String, Object> deleteScheduler(
             @PathVariable Long schedulerId,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        schedulerService.deleteScheduler(schedulerId, principal);
+        schedulerService.deleteScheduler(schedulerId, currentUser);
         return CustomReturnables.getOkResponseMap("Scheduler został usunięty.");
     }
 
     @PutMapping("/setFinalDecision")
     public Map<String, Object> setFinalDecision(
             @RequestBody SetFinalDecisionRequest request,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        SchedulerResponse updated = schedulerService.setFinalDecision(request, principal);
+        SchedulerResponse updated = schedulerService.setFinalDecision(request, currentUser);
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Ustawiono ostateczny termin.");
         response.put("scheduler", updated);
         return response;
@@ -97,9 +96,9 @@ public class SchedulerController {
     @GetMapping("/suggestedSlots/{schedulerId}")
     public Map<String, Object> suggestTimeSlots(
             @PathVariable Long schedulerId,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        SuggestedSlotResponse responseData = schedulerService.suggestTimeSlots(schedulerId, principal);
+        SuggestedSlotResponse responseData = schedulerService.suggestTimeSlots(schedulerId, currentUser);
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano proponowane przedziały.");
         response.put("suggestedSlots", responseData.getSuggestedSlots());
         return response;
@@ -108,9 +107,9 @@ public class SchedulerController {
     @PostMapping("/sendFinalDecisionMails/{schedulerId}")
     public Map<String, Object> sendFinalDecisionMails(
             @PathVariable Long schedulerId,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        schedulerService.sendFinalDecisionMails(schedulerId, principal);
+        schedulerService.sendFinalDecisionMails(schedulerId, currentUser);
         return CustomReturnables.getOkResponseMap("Wysłano wiadomości e-mail z potwierdzeniem terminu.");
     }
 
@@ -122,18 +121,18 @@ public class SchedulerController {
     @PostMapping("/submitAvailability")
     public Map<String, Object> submitAvailability(
             @RequestBody SubmitAvailabilityRequest request,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        schedulerService.submitAvailability(request, principal);
+        schedulerService.submitAvailability(request, currentUser);
         return CustomReturnables.getOkResponseMap("Dostępność została zapisana.");
     }
 
     @GetMapping("/availability/{schedulerId}")
     public Map<String, Object> getPlayerAvailability(
             @PathVariable Long schedulerId,
-            @AuthenticationPrincipal Principal principal
+            @AuthenticationPrincipal User currentUser
     ) {
-        PlayerAvailabilityResponse responseData = schedulerService.getPlayerAvailability(schedulerId, principal);
+        PlayerAvailabilityResponse responseData = schedulerService.getPlayerAvailability(schedulerId, currentUser);
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano dostępność gracza.");
         response.put("availability", responseData);
         return response;

@@ -14,6 +14,7 @@ import dev.goral.rpgmanager.scheduler.entity.*;
 import dev.goral.rpgmanager.scheduler.enums.AvailabilityType;
 import dev.goral.rpgmanager.scheduler.enums.SchedulerStatus;
 import dev.goral.rpgmanager.scheduler.repository.SchedulerRepository;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.Principal;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,41 +43,41 @@ public class SchedulerService {
     private final EmailService emailService;
 
     /**
-     * Creates a new scheduler based on the provided request and user principal and validates the request using
+     * Creates a new scheduler based on the provided request and user currentUser and validates the request using
      * {@link #validateRequest(CreateSchedulerRequest)}.
      *
      * @param request   An object containing the details of the scheduler to be created.
-     * @param principal A principal object representing the currently authenticated user.
+     * @param currentUser A currentUser object representing the currently authenticated user.
      * @return {@link SchedulerResponse} An object containing the details of the created scheduler.
-     * @throws IllegalArgumentException If the user is not the creator of the game,
+     * @throws IllegalStateException If the user is not the creator of the game,
      * if the user is not a participant of the game, or if the request is invalid.
      */
     @Transactional
-    public SchedulerResponse createScheduler(CreateSchedulerRequest request, @AuthenticationPrincipal Principal principal) {
+    public SchedulerResponse createScheduler(CreateSchedulerRequest request, @AuthenticationPrincipal User currentUser) {
 
-        User creator = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika: " + principal.getName()));
+        User creator = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika: " + currentUser.getUsername()));
 
         // Sprawdź, czy użytkownik jest twórcą gry
         if (!creator.getId().equals(request.getCreatorId())) {
-            throw new IllegalArgumentException("Użytkownik nie jest twórcą gry");
+            throw new IllegalStateException("Użytkownik nie jest twórcą gry");
         }
 
         // Sprawdź, czy użytkownik jest uczestnikiem gry
         if (!gameUsersRepository.existsByGameIdAndUserId(request.getGameId(), creator.getId())) {
-            throw new IllegalArgumentException("Użytkownik nie jest uczestnikiem gry");
+            throw new IllegalStateException("Użytkownik nie jest uczestnikiem gry");
         }
 
         // Sprawdź, czy gra istnieje
         if (!gameRepository.existsById(request.getGameId())) {
-            throw new IllegalArgumentException("Nie znaleziono gry o id: " + request.getGameId());
+            throw new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId());
         }
 
         // Sprawdź, czy twórca harmonogramu to GameMaster
         if (!gameRepository.findById(request.getGameId())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono gry o id: " + request.getGameId()))
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId()))
                 .getGameMaster().getId().equals(creator.getId())) {
-            throw new IllegalArgumentException("Tylko GameMaster może stworzyć harmonogram");
+            throw new IllegalStateException("Tylko GameMaster może stworzyć harmonogram");
         }
 
         // Walidacja
@@ -94,10 +91,10 @@ public class SchedulerService {
 
         // Pobierz Game i Creator
         scheduler.setGame(gameRepository.findById(request.getGameId())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono gry o id: " + request.getGameId())));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId())));
 
         scheduler.setCreator(userRepository.findById(request.getCreatorId())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono twórcy gry: " + request.getCreatorId())));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono twórcy gry: " + request.getCreatorId())));
 
         // Zakresy dat
         scheduler.setDateRanges(
@@ -120,7 +117,7 @@ public class SchedulerService {
                             SchedulerParticipant participant = new SchedulerParticipant();
                             participant.setScheduler(scheduler);
                             participant.setPlayer(userRepository.findById(pid)
-                                    .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono gracza: " + pid)));
+                                    .orElseThrow(() -> new IllegalStateException("Nie znaleziono gracza: " + pid)));
                             participant.setNotifiedByEmail(true);
                             return participant;
                         })
@@ -137,56 +134,60 @@ public class SchedulerService {
     /**
      * Validates the given request for creating a scheduler.
      * @param request The request to validate.
-     * @throws IllegalArgumentException If the request is invalid.
+     * @throws IllegalStateException If the request is invalid.
      */
     private void validateRequest(CreateSchedulerRequest request) {
         if (request.getTitle() == null || request.getTitle().isBlank()) {
-            throw new IllegalArgumentException("Tytuł nie może być pusty");
+            throw new IllegalStateException("Tytuł nie może być pusty");
         }
 
         if (request.getDeadline() == null || request.getDeadline().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Termin wypełnienia dostępności nie może być w przeszłości");
+            throw new IllegalStateException("Termin wypełnienia dostępności nie może być w przeszłości");
         }
 
         if (request.getMinimumSessionDurationMinutes() == null || request.getMinimumSessionDurationMinutes() <= 0) {
-            throw new IllegalArgumentException("Minimalny czas sesji musi być większy od 0");
+            throw new IllegalStateException("Minimalny czas sesji musi być większy od 0");
         }
 
         if (request.getDateRanges() == null || request.getDateRanges().isEmpty()) {
-            throw new IllegalArgumentException("Musi być podany przynajmniej jeden zakres dat");
+            throw new IllegalStateException("Musi być podany przynajmniej jeden zakres dat");
         }
 
         for (CreateSchedulerRequest.DateRangeDto range : request.getDateRanges()) {
             if (range.getStartDate() == null || range.getEndDate() == null ||
                     range.getStartTime() == null || range.getEndTime() == null) {
-                throw new IllegalArgumentException("Zakresy dat i godzin nie mogą być puste");
+                throw new IllegalStateException("Zakresy dat i godzin nie mogą być puste");
             }
 
             if (range.getStartDate().isAfter(range.getEndDate())) {
-                throw new IllegalArgumentException("Data początkowa nie może być po dacie końcowej");
+                throw new IllegalStateException("Data początkowa nie może być po dacie końcowej");
             }
 
             if (range.getStartDate().isEqual(range.getEndDate()) && range.getStartTime().isAfter(range.getEndTime())) {
-                throw new IllegalArgumentException("Dla tej samej daty, czas początkowy nie może być po czasie końcowym");
+                throw new IllegalStateException("Dla tej samej daty, czas początkowy nie może być po czasie końcowym");
+            }
+
+            if (range.getEndDate().isBefore(LocalDate.now())) {
+                throw new IllegalStateException("Data końcowa nie może być w przeszłości");
             }
         }
 
         if (request.getParticipantIds() == null || request.getParticipantIds().isEmpty()) {
-            throw new IllegalArgumentException("Musi być przynajmniej jeden uczestnik");
+            throw new IllegalStateException("Musi być przynajmniej jeden uczestnik");
         }
 
         long uniqueCount = request.getParticipantIds().stream().distinct().count();
         if (uniqueCount != request.getParticipantIds().size()) {
-            throw new IllegalArgumentException("Na liście uczestników znajdują się duplikaty");
+            throw new IllegalStateException("Na liście uczestników znajdują się duplikaty");
         }
 
         if (!request.getParticipantIds().contains(request.getCreatorId())) {
-            throw new IllegalArgumentException("Twórca harmonogramu powinien być również jego uczestnikiem");
+            throw new IllegalStateException("Twórca harmonogramu powinien być również jego uczestnikiem");
         }
 
         for (Long participantId : request.getParticipantIds()) {
             if (!this.gameUsersRepository.existsByGameIdAndUserId(request.getGameId(), participantId)) {
-                throw new IllegalArgumentException("Uczestnik o id " + participantId + " nie jest uczestnikiem gry");
+                throw new IllegalStateException("Uczestnik o id " + participantId + " nie jest uczestnikiem gry");
             }
         }
     }
@@ -195,16 +196,16 @@ public class SchedulerService {
      * Downloads all schedulers for a given game.
      *
      * @param gameId The ID of the game for which to download schedulers.
-     * @param principal The user who is requesting the schedulers.
+     * @param currentUser The user who is requesting the schedulers.
      * @return A list of schedulers as {@link SchedulerResponse} objects.
-     * @throws IllegalArgumentException If the user does not have access to the game or if the game is not found.
+     * @throws IllegalStateException If the user does not have access to the game or if the game is not found.
      */
-    public List<SchedulerResponse> getSchedulersByGame(Long gameId, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+    public List<SchedulerResponse> getSchedulersByGame(Long gameId, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
         if (!gameUsersRepository.existsByGameIdAndUserId(gameId, user.getId())) {
-            throw new IllegalArgumentException("Nie masz dostępu do tego harmonogramu");
+            throw new IllegalStateException("Nie masz dostępu do tego harmonogramu");
         }
 
         return schedulerRepository.findByGameId(gameId).stream()
@@ -216,47 +217,51 @@ public class SchedulerService {
      * Gets a scheduler by its ID.
      *
      * @param schedulerId The ID of the scheduler to retrieve.
-     * @param principal The user who is requesting the scheduler.
+     * @param currentUser The user who is requesting the scheduler.
      * @return The scheduler as a {@link SchedulerResponse}.
-     * @throws IllegalArgumentException If the user does not have access to the scheduler or if the scheduler is not found.
+     * @throws IllegalStateException If the user does not have access to the scheduler
+     * @throws ResourceNotFoundException If the scheduler is not found or the user is not found.
      */
-    public SchedulerResponse getSchedulerById(Long schedulerId, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+    public SchedulerResponse getSchedulerById(Long schedulerId, @AuthenticationPrincipal User currentUser) {
+
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
 
         Scheduler scheduler = schedulerRepository.findById(schedulerId)
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + schedulerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono harmonogramu o id: " + schedulerId));
 
         if (!gameUsersRepository.existsByGameIdAndUserId(scheduler.getGame().getId(), user.getId())) {
-            throw new IllegalArgumentException("Nie masz dostępu do tego harmonogramu");
+            throw new IllegalStateException("Nie masz dostępu do tego harmonogramu");
         }
 
         return SchedulerResponseMapper.mapToDto(scheduler);
     }
 
     /**
-     * Edits an existing scheduler based on the provided request and user principal.
+     * Edits an existing scheduler based on the provided request and user currentUser.
      *
      * @param request   The request containing the updated details of the scheduler.
-     * @param principal The user who is editing the scheduler.
+     * @param currentUser The user who is editing the scheduler.
      * @return The updated scheduler as a {@link SchedulerResponse}.
-     * @throws IllegalArgumentException If the user is not the creator of the scheduler or if the scheduler is not found.
+     * @throws IllegalStateException If the user is not the creator of the scheduler or if the scheduler is not found.
      */
     @Transactional
-    public SchedulerResponse editScheduler(EditSchedulerRequest request, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+    public SchedulerResponse editScheduler(EditSchedulerRequest request, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
         Scheduler scheduler = schedulerRepository.findById(request.getSchedulerId())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
 
         if (!scheduler.getCreator().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("Tylko twórca harmonogramu może go edytować");
+            throw new IllegalStateException("Tylko twórca harmonogramu może go edytować");
         }
 
         if (scheduler.getFinalDecision() != null) {
-            throw new IllegalArgumentException("Nie można edytować harmonogramu po wybraniu terminu");
+            throw new IllegalStateException("Nie można edytować harmonogramu po wybraniu terminu");
         }
+
+        validateEditRequest(request, scheduler);
 
         // Aktualizacja pól
         scheduler.setTitle(request.getTitle());
@@ -282,7 +287,7 @@ public class SchedulerService {
         scheduler.getParticipants().clear();
         for (Long pid : request.getParticipantIds()) {
             User participantUser = userRepository.findById(pid)
-                    .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono uczestnika o ID: " + pid));
+                    .orElseThrow(() -> new IllegalStateException("Nie znaleziono uczestnika o ID: " + pid));
 
             SchedulerParticipant participant = new SchedulerParticipant();
             participant.setPlayer(participantUser);
@@ -295,24 +300,88 @@ public class SchedulerService {
         return SchedulerResponseMapper.mapToDto(updated);
     }
 
+    /**
+     * Validates the edit request for a scheduler.
+     * @param request The request to validate.
+     * @param scheduler The scheduler to validate against.
+     * @throws IllegalStateException If the request is invalid.
+     */
+    private void validateEditRequest(EditSchedulerRequest request, Scheduler scheduler) {
+        if (request.getTitle() == null || request.getTitle().isBlank()) {
+            throw new IllegalStateException("Tytuł nie może być pusty");
+        }
+
+        if (request.getDeadline() == null || request.getDeadline().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Termin wypełnienia dostępności nie może być w przeszłości");
+        }
+
+        if (request.getMinimumSessionDurationMinutes() == null || request.getMinimumSessionDurationMinutes() <= 0) {
+            throw new IllegalStateException("Minimalny czas sesji musi być większy od 0");
+        }
+
+        if (request.getDateRanges() == null || request.getDateRanges().isEmpty()) {
+            throw new IllegalStateException("Musi być podany przynajmniej jeden zakres dat");
+        }
+
+        for (CreateSchedulerRequest.DateRangeDto range : request.getDateRanges()) {
+            if (range.getStartDate() == null || range.getEndDate() == null ||
+                    range.getStartTime() == null || range.getEndTime() == null) {
+                throw new IllegalStateException("Zakresy dat i godzin nie mogą być puste");
+            }
+
+            if (range.getStartDate().isAfter(range.getEndDate())) {
+                throw new IllegalStateException("Data początkowa nie może być po dacie końcowej");
+            }
+
+            if (range.getStartDate().isEqual(range.getEndDate()) && range.getStartTime().isAfter(range.getEndTime())) {
+                throw new IllegalStateException("Dla tej samej daty, czas początkowy nie może być po czasie końcowym");
+            }
+
+            if (range.getEndDate().isBefore(LocalDate.now())) {
+                throw new IllegalStateException("Data końcowa nie może być w przeszłości");
+            }
+        }
+
+        if (request.getParticipantIds() == null || request.getParticipantIds().isEmpty()) {
+            throw new IllegalStateException("Musi być przynajmniej jeden uczestnik");
+        }
+
+        long uniqueCount = request.getParticipantIds().stream().distinct().count();
+        if (uniqueCount != request.getParticipantIds().size()) {
+            throw new IllegalStateException("Na liście uczestników znajdują się duplikaty");
+        }
+
+        // Sprawdź, czy twórca harmonogramu jest na liście uczestników
+        if (!request.getParticipantIds().contains(scheduler.getCreator().getId())) {
+            throw new IllegalStateException("Twórca harmonogramu powinien być również jego uczestnikiem");
+        }
+
+        // Sprawdź, czy wszyscy uczestnicy są w grze
+        for (Long participantId : request.getParticipantIds()) {
+            if (!gameUsersRepository.existsByGameIdAndUserId(scheduler.getGame().getId(), participantId)) {
+                throw new IllegalStateException("Uczestnik o id " + participantId + " nie jest uczestnikiem gry");
+            }
+        }
+    }
+
 
     /**
      * Deletes a scheduler by its ID.
      *
      * @param schedulerId The ID of the scheduler to delete.
-     * @param principal The user who is submitting the final decision.
-     * @throws IllegalArgumentException If the user is not the creator of the scheduler or if the scheduler is not found.
+     * @param currentUser The user who is submitting the final decision.
+     * @throws IllegalStateException If the user is not the creator of the scheduler or if the scheduler is not found.
      */
     @Transactional
-    public void deleteScheduler(Long schedulerId, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+    public void deleteScheduler(Long schedulerId, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
         Scheduler scheduler = schedulerRepository.findById(schedulerId)
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + schedulerId));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono harmonogramu o id: " + schedulerId));
 
         if (!scheduler.getCreator().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("Tylko twórca harmonogramu może go usunąć");
+            throw new IllegalStateException("Tylko twórca harmonogramu może go usunąć");
         }
 
         schedulerRepository.delete(scheduler);
@@ -322,36 +391,36 @@ public class SchedulerService {
      * Sets the final decision for a given scheduler.
      *
      * @param request   The request containing the final decision details.
-     * @param principal The user who is submitting the final decision.
+     * @param currentUser The user who is submitting the final decision.
      * @return The updated scheduler as a {@link SchedulerResponse}.
-     * @throws IllegalArgumentException If the user is not the creator of the scheduler or if the scheduler is not found.
+     * @throws IllegalStateException If the user is not the creator of the scheduler or if the scheduler is not found.
      */
     @Transactional
-    public SchedulerResponse setFinalDecision(SetFinalDecisionRequest request, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+    public SchedulerResponse setFinalDecision(SetFinalDecisionRequest request, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
         Scheduler scheduler = schedulerRepository.findById(request.getSchedulerId())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
 
         if (!scheduler.getCreator().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("Tylko twórca harmonogramu może ustawić ostateczny termin");
+            throw new IllegalStateException("Tylko twórca harmonogramu może ustawić ostateczny termin");
         }
 
         LocalDateTime start = request.getStart();
         LocalDateTime end = request.getEnd();
 
         if (start == null || end == null) {
-            throw new IllegalArgumentException("Daty nie mogą być puste");
+            throw new IllegalStateException("Daty nie mogą być puste");
         }
 
         if (start.isAfter(end)) {
-            throw new IllegalArgumentException("Data rozpoczęcia nie może być po dacie zakończenia");
+            throw new IllegalStateException("Data rozpoczęcia nie może być po dacie zakończenia");
         }
 
         long minutes = Duration.between(start, end).toMinutes();
         if (minutes < scheduler.getMinimumSessionDurationMinutes()) {
-            throw new IllegalArgumentException("Wybrany slot jest zbyt krótki");
+            throw new IllegalStateException("Wybrany slot jest zbyt krótki");
         }
 
         // WALIDACJA: Czy mieści się w którymkolwiek slocie z dostępności uczestników?
@@ -362,7 +431,7 @@ public class SchedulerService {
                         !s.getEndDateTime().isBefore(end));
 
         if (!isCovered) {
-            throw new IllegalArgumentException("Żaden uczestnik nie jest dostępny w tym przedziale");
+            throw new IllegalStateException("Żaden uczestnik nie jest dostępny w tym przedziale");
         }
 
         FinalDecision decision = new FinalDecision();
@@ -398,20 +467,20 @@ public class SchedulerService {
      * Sets the availability for a given scheduler.
      *
      * @param request   The request containing the availability slots.
-     * @param principal The user who is submitting the availability.
-     * @throws IllegalArgumentException If the user is not a participant of the scheduler or if the scheduler is not found.
+     * @param currentUser The user who is submitting the availability.
+     * @throws IllegalStateException If the user is not a participant of the scheduler or if the scheduler is not found.
      */
     @Transactional
-    public void submitAvailability(SubmitAvailabilityRequest request, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+    public void submitAvailability(SubmitAvailabilityRequest request, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
         Scheduler scheduler = schedulerRepository.findById(request.getSchedulerId())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
 
         // Sprawdź, czy harmonogram nie został już sfinalizowany
         if (scheduler.getFinalDecision() != null) {
-            throw new IllegalArgumentException("Nie można zmienić dostępności po wybraniu finalnego terminu");
+            throw new IllegalStateException("Nie można zmienić dostępności po wybraniu finalnego terminu");
         }
 
         // Walidacja slotów
@@ -421,7 +490,7 @@ public class SchedulerService {
         SchedulerParticipant participant = scheduler.getParticipants().stream()
                 .filter(p -> p.getPlayer().getId().equals(user.getId()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Użytkownik nie jest uczestnikiem tego harmonogramu"));
+                .orElseThrow(() -> new IllegalStateException("Użytkownik nie jest uczestnikiem tego harmonogramu"));
 
         // Wyczyść poprzednie dostępności
         participant.getAvailabilitySlots().clear();
@@ -457,24 +526,24 @@ public class SchedulerService {
      * Validates availability slots to ensure they are correct.
      *
      * @param slots The slots to validate.
-     * @throws IllegalArgumentException If any validation fails.
+     * @throws IllegalStateException If any validation fails.
      */
     private void validateAvailabilitySlots(List<SubmitAvailabilityRequest.AvailabilitySlotDto> slots) {
         if (slots == null || slots.isEmpty()) {
-            throw new IllegalArgumentException("Lista dostępności nie może być pusta");
+            throw new IllegalStateException("Lista dostępności nie może być pusta");
         }
 
         for (SubmitAvailabilityRequest.AvailabilitySlotDto slot : slots) {
             if (slot.getStartDateTime() == null || slot.getEndDateTime() == null) {
-                throw new IllegalArgumentException("Daty początku i końca slotu nie mogą być puste");
+                throw new IllegalStateException("Daty początku i końca slotu nie mogą być puste");
             }
 
             if (slot.getStartDateTime().isAfter(slot.getEndDateTime())) {
-                throw new IllegalArgumentException("Data rozpoczęcia nie może być po dacie zakończenia");
+                throw new IllegalStateException("Data rozpoczęcia nie może być po dacie zakończenia");
             }
 
             if (slot.getAvailabilityType() == null) {
-                throw new IllegalArgumentException("Typ dostępności nie może być pusty");
+                throw new IllegalStateException("Typ dostępności nie może być pusty");
             }
         }
 
@@ -485,7 +554,7 @@ public class SchedulerService {
 
         for (int i = 0; i < sortedSlots.size() - 1; i++) {
             if (sortedSlots.get(i).getEndDateTime().isAfter(sortedSlots.get(i+1).getStartDateTime())) {
-                throw new IllegalArgumentException("Sloty dostępności nie mogą na siebie nachodzić");
+                throw new IllegalStateException("Sloty dostępności nie mogą na siebie nachodzić");
             }
         }
     }
@@ -494,22 +563,22 @@ public class SchedulerService {
      * Gets the availability of a player for a given scheduler.
      *
      * @param schedulerId The ID of the scheduler.
-     * @param principal   The user who is requesting the availability.
+     * @param currentUser   The user who is requesting the availability.
      * @return {@link PlayerAvailabilityResponse} The availability response containing the player's availability slots.
-     * @throws IllegalArgumentException If the user is not a participant of the scheduler or if the scheduler is not found.
+     * @throws IllegalStateException If the user is not a participant of the scheduler or if the scheduler is not found.
      */
     @Transactional(readOnly = true)
-    public PlayerAvailabilityResponse getPlayerAvailability(Long schedulerId, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika " + principal.getName()));
+    public PlayerAvailabilityResponse getPlayerAvailability(Long schedulerId, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika " + currentUser.getUsername()));
 
         Scheduler scheduler = schedulerRepository.findById(schedulerId)
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + schedulerId));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono harmonogramu o id: " + schedulerId));
 
         SchedulerParticipant participant = scheduler.getParticipants().stream()
                 .filter(p -> p.getPlayer().getId().equals(user.getId()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Użytkownik nie jest uczestnikiem tego harmonogramu"));
+                .orElseThrow(() -> new IllegalStateException("Użytkownik nie jest uczestnikiem tego harmonogramu"));
 
         List<PlayerAvailabilityResponse.AvailabilitySlotDto> slots = participant.getAvailabilitySlots().stream()
                 .map(s -> new PlayerAvailabilityResponse.AvailabilitySlotDto(
@@ -525,20 +594,20 @@ public class SchedulerService {
      * Suggests time slots based on the availability of participants in a given scheduler.
      *
      * @param schedulerId The ID of the scheduler.
-     * @param principal   The user who is requesting the suggested slots.
+     * @param currentUser   The user who is requesting the suggested slots.
      * @return {@link SuggestedSlotResponse} The suggested time slots.
-     * @throws IllegalArgumentException If the user does not have access to the scheduler or if the scheduler is not found.
+     * @throws IllegalStateException If the user does not have access to the scheduler or if the scheduler is not found.
      */
     @Transactional(readOnly = true)
-    public SuggestedSlotResponse suggestTimeSlots(Long schedulerId, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+    public SuggestedSlotResponse suggestTimeSlots(Long schedulerId, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
         Scheduler scheduler = schedulerRepository.findById(schedulerId)
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + schedulerId));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono harmonogramu o id: " + schedulerId));
 
         if (!gameUsersRepository.existsByGameIdAndUserId(scheduler.getGame().getId(), user.getId())) {
-            throw new IllegalArgumentException("Nie masz dostępu do tego harmonogramu");
+            throw new IllegalStateException("Nie masz dostępu do tego harmonogramu");
         }
 
         int minDuration = scheduler.getMinimumSessionDurationMinutes();
@@ -634,23 +703,23 @@ public class SchedulerService {
      * Sends final decision emails to all participants of a given scheduler.
      *
      * @param schedulerId The ID of the scheduler.
-     * @param principal   The user who is sending the emails.
-     * @throws IllegalArgumentException If the user is not the creator of the scheduler or if the scheduler is not found.
+     * @param currentUser   The user who is sending the emails.
+     * @throws IllegalStateException If the user is not the creator of the scheduler or if the scheduler is not found.
      */
     @Transactional
-    public void sendFinalDecisionMails(Long schedulerId, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+    public void sendFinalDecisionMails(Long schedulerId, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
         Scheduler scheduler = schedulerRepository.findById(schedulerId)
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono scheduler'a"));
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono harmonogramu o id: " + schedulerId));
 
         if (!scheduler.getCreator().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("Tylko twórca może wysłać maile");
+            throw new IllegalStateException("Tylko twórca może wysłać maile");
         }
 
         if (scheduler.getFinalDecision() == null) {
-            throw new IllegalArgumentException("Nie można wysłać maili bez wybrania terminu");
+            throw new IllegalStateException("Nie można wysłać maili bez wybrania terminu");
         }
 
         emailService.sendFinalDecisionNotification(scheduler);
