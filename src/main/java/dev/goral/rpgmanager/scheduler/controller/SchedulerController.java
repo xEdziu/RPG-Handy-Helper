@@ -105,6 +105,15 @@ public class SchedulerController {
         return response;
     }
 
+    @PostMapping("/sendFinalDecisionMails/{schedulerId}")
+    public Map<String, Object> sendFinalDecisionMails(
+            @PathVariable Long schedulerId,
+            @AuthenticationPrincipal Principal principal
+    ) {
+        schedulerService.sendFinalDecisionMails(schedulerId, principal);
+        return CustomReturnables.getOkResponseMap("Wysłano wiadomości e-mail z potwierdzeniem terminu.");
+    }
+
 
     /*
      =========================== PLAYER AVAILABILITY ===========================

@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.scheduler.service;
 
+import dev.goral.rpgmanager.email.EmailService;
 import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
@@ -42,6 +43,7 @@ public class SchedulerService {
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     /**
      * Creates a new scheduler based on the provided request and user principal and validates the request using
@@ -626,6 +628,32 @@ public class SchedulerService {
             }
         }
         return result;
+    }
+
+    /**
+     * Sends final decision emails to all participants of a given scheduler.
+     *
+     * @param schedulerId The ID of the scheduler.
+     * @param principal   The user who is sending the emails.
+     * @throws IllegalArgumentException If the user is not the creator of the scheduler or if the scheduler is not found.
+     */
+    @Transactional
+    public void sendFinalDecisionMails(Long schedulerId, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+
+        Scheduler scheduler = schedulerRepository.findById(schedulerId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono scheduler'a"));
+
+        if (!scheduler.getCreator().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("Tylko twórca może wysłać maile");
+        }
+
+        if (scheduler.getFinalDecision() == null) {
+            throw new IllegalArgumentException("Nie można wysłać maili bez wybrania terminu");
+        }
+
+        emailService.sendFinalDecisionNotification(scheduler);
     }
 
     /**

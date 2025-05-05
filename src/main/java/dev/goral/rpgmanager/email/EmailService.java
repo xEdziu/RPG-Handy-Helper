@@ -1,5 +1,7 @@
 package dev.goral.rpgmanager.email;
 
+import dev.goral.rpgmanager.scheduler.entity.Scheduler;
+import dev.goral.rpgmanager.scheduler.entity.SchedulerParticipant;
 import dev.goral.rpgmanager.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -54,11 +59,11 @@ public class EmailService {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Aktywacja Konta</title>
                 <style>
-                    body { background-color: #070d29; color: #f3f4f4; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+                    body { background-color: #1e1e1e; color: #f3f4f4; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
                     h1 { color: #12e1b9; }
                     p { font-size: 18px; line-height: 1.5; }
                     .button {
-                        display: inline-block; background-color: #12e1b9; color: #070d29;
+                        display: inline-block; background-color: #12e1b9; color: #1e1e1e;
                         padding: 10px 20px; border-radius: 4px; text-decoration: none;
                         font-size: 18px; font-weight: bold;
                     }
@@ -95,11 +100,11 @@ public class EmailService {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Resetowanie Hasła</title>
                 <style>
-                    body { background-color: #070d29; color: #f3f4f4; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+                    body { background-color: #1e1e1e; color: #f3f4f4; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
                     h1 { color: #12e1b9; }
                     p { font-size: 18px; line-height: 1.5; }
                     .button {
-                        display: inline-block; background-color: #12e1b9; color: #070d29;
+                        display: inline-block; background-color: #12e1b9; color: #1e1e1e;
                         padding: 10px 20px; border-radius: 4px; text-decoration: none;
                         font-size: 18px; font-weight: bold;
                     }
@@ -118,4 +123,61 @@ public class EmailService {
                 </html>
                 """.formatted(resetUrl);
     }
+
+    public void sendFinalDecisionNotification(Scheduler scheduler) {
+        for (SchedulerParticipant participant : scheduler.getParticipants()) {
+            String email = participant.getPlayer().getEmail();
+            if (email == null || email.isBlank()) continue;
+
+            String subject = "Potwierdzono termin sesji | RPG Handy Helper";
+            String htmlContent = generateFinalDecisionEmailTemplate(
+                    participant.getPlayer().getUsername(),
+                    scheduler.getTitle(),
+                    scheduler.getFinalDecision().getStart(),
+                    scheduler.getFinalDecision().getEnd(),
+                    scheduler.getGoogleCalendarLink()
+            );
+
+            sendEmail(email, subject, htmlContent);
+        }
+    }
+
+    private String generateFinalDecisionEmailTemplate(String username, String title, LocalDateTime start, LocalDateTime end, String calendarLink) {
+        String formattedStart = start.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        String formattedEnd = end.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+
+        return """
+            <!DOCTYPE html>
+            <html lang="pl">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Termin Sesji</title>
+                <style>
+                    body { background-color: #1e1e1e; color: #f3f4f4; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+                    h1 { color: #12e1b9; }
+                    p { font-size: 18px; line-height: 1.5; }
+                    .button {
+                        display: inline-block; background-color: #12e1b9; color: #1e1e1e;
+                        padding: 10px 20px; border-radius: 4px; text-decoration: none;
+                        font-size: 18px; font-weight: bold;
+                    }
+                </style>
+            </head>
+            <body>
+                <img src="https://github.com/xEdziu/RPG-Handy-Helper/raw/main/banner-rpg.png" alt="Logo" width="500">
+                <h1>TERMIN SESJI POTWIERDZONY</h1>
+                <p>Cześć %s!</p>
+                <p>Twoja sesja <strong>%s</strong> została zaplanowana:</p>
+                <p><strong>%s – %s</strong></p>
+                <p>Dodaj wydarzenie do swojego kalendarza:</p>
+                <p><a href="%s" class="button">Dodaj do Google Kalendarza</a></p>
+                <hr>
+                <p><strong>RPG Handy Helper Team</strong></p>
+            </body>
+            </html>
+            """.formatted(username, title, formattedStart, formattedEnd, calendarLink);
+    }
+
+
 }
