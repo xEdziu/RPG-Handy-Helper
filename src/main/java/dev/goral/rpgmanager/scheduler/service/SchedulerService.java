@@ -628,6 +628,7 @@ public class SchedulerService {
                 double weight = switch (slot.getAvailabilityType()) {
                     case AvailabilityType.YES -> 1.0;
                     case AvailabilityType.MAYBE -> 0.5;
+                    case AvailabilityType.NO -> -1.0;
                     default -> 0.0;
                 };
                 if (weight > 0) {
