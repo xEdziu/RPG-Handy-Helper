@@ -3,6 +3,7 @@ package dev.goral.rpgmanager.scheduler.entity;
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.scheduler.enums.SchedulerStatus;
 import dev.goral.rpgmanager.user.User;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -58,6 +59,7 @@ public class Scheduler {
     @Embedded
     private FinalDecision finalDecision;
 
+    @Nullable
     private String googleCalendarLink;
 }
 

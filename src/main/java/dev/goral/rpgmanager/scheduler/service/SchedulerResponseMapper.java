@@ -43,6 +43,7 @@ public class SchedulerResponseMapper {
                                         s.getFinalDecision().getEnd()
                                 )
                 )
+                .googleCalendarLink( s.getGoogleCalendarLink())
                 .build();
     }
 }

@@ -20,9 +20,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -364,6 +369,23 @@ public class SchedulerService {
 
         scheduler.setFinalDecision(decision);
         scheduler.setStatus(SchedulerStatus.FINALIZED);
+
+        // Link do Google Calendar
+        String title = URLEncoder.encode(scheduler.getTitle(), StandardCharsets.UTF_8);
+        String details = URLEncoder.encode("Spotkanie RPG przez aplikację RPG Handy Helper", StandardCharsets.UTF_8);
+
+        String startUtc = start.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'"));
+
+        String endUtc = end.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'"));
+
+        String calendarLink = String.format(
+                "https://calendar.google.com/calendar/render?action=TEMPLATE&text=%s&dates=%s/%s&details=%s",
+                title, startUtc, endUtc, details
+        );
+
+        scheduler.setGoogleCalendarLink(calendarLink);
 
         Scheduler saved = schedulerRepository.save(scheduler);
         return SchedulerResponseMapper.mapToDto(saved);
