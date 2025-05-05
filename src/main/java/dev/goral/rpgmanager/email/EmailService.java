@@ -129,6 +129,10 @@ public class EmailService {
             String email = participant.getPlayer().getEmail();
             if (email == null || email.isBlank()) continue;
 
+            if (scheduler.getFinalDecision() == null) {
+                throw new IllegalStateException("Final decision is not set for the scheduler.");
+            }
+
             String subject = "Potwierdzono termin sesji | RPG Handy Helper";
             String htmlContent = generateFinalDecisionEmailTemplate(
                     participant.getPlayer().getUsername(),
