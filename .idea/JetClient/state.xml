@@ -523,6 +523,20 @@
                             <option name="sortWeight" value="2000000" />
                             <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/availability/{schedulerId}" />
                           </requestState>
+                          <requestState>
+                            <option name="body">
+                              <bodyState>
+                                <option name="raw" value="{&#10;  &quot;schedulerId&quot;: 1,&#10;  &quot;slots&quot;: [&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2023-12-20T17:00:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2023-12-20T21:00:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;YES&quot;&#10;    },&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2023-12-22T19:30:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2023-12-22T23:00:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;YES&quot;&#10;    },&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2023-12-25T15:00:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2023-12-25T19:00:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;MAYBE&quot;&#10;    },&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2023-12-29T18:00:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2023-12-29T22:30:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;NO&quot;&#10;    }&#10;  ]&#10;}" />
+                                <option name="type" value="JSON" />
+                              </bodyState>
+                            </option>
+                            <option name="description" value="Edytuj dyspozycję" />
+                            <option name="id" value="26a3bdf4-a5a0-4d9a-8ae4-a8e3753d71ca" />
+                            <option name="method" value="PUT" />
+                            <option name="name" value="Edit Availability" />
+                            <option name="sortWeight" value="3000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/editAvailability" />
+                          </requestState>
                         </list>
                       </option>
                       <option name="sortWeight" value="1000000" />
