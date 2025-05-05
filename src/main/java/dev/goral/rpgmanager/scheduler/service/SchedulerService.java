@@ -3,6 +3,7 @@ package dev.goral.rpgmanager.scheduler.service;
 import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
+import dev.goral.rpgmanager.scheduler.dto.request.EditSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SubmitAvailabilityRequest;
 import dev.goral.rpgmanager.scheduler.dto.response.PlayerAvailabilityResponse;
@@ -224,6 +225,68 @@ public class SchedulerService {
 
         return SchedulerResponseMapper.mapToDto(scheduler);
     }
+
+    /**
+     * Edits an existing scheduler based on the provided request and user principal.
+     *
+     * @param request   The request containing the updated details of the scheduler.
+     * @param principal The user who is editing the scheduler.
+     * @return The updated scheduler as a {@link SchedulerResponse}.
+     * @throws IllegalArgumentException If the user is not the creator of the scheduler or if the scheduler is not found.
+     */
+    @Transactional
+    public SchedulerResponse editScheduler(EditSchedulerRequest request, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+
+        Scheduler scheduler = schedulerRepository.findById(request.getSchedulerId())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + request.getSchedulerId()));
+
+        if (!scheduler.getCreator().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("Tylko twórca harmonogramu może go edytować");
+        }
+
+        if (scheduler.getFinalDecision() != null) {
+            throw new IllegalArgumentException("Nie można edytować harmonogramu po wybraniu terminu");
+        }
+
+        // Aktualizacja pól
+        scheduler.setTitle(request.getTitle());
+        scheduler.setDeadline(request.getDeadline());
+        scheduler.setMinimumSessionDurationMinutes(request.getMinimumSessionDurationMinutes());
+
+        // Nadpisz dateRanges
+        scheduler.getDateRanges().clear();
+        scheduler.getDateRanges().addAll(
+                request.getDateRanges().stream()
+                        .map(dto -> new SchedulerDateRange(
+                                null,
+                                dto.getStartDate(),
+                                dto.getEndDate(),
+                                dto.getStartTime(),
+                                dto.getEndTime(),
+                                scheduler
+                        ))
+                        .toList()
+        );
+
+        // Nadpisz uczestników + ich dostępność
+        scheduler.getParticipants().clear();
+        for (Long pid : request.getParticipantIds()) {
+            User participantUser = userRepository.findById(pid)
+                    .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono uczestnika o ID: " + pid));
+
+            SchedulerParticipant participant = new SchedulerParticipant();
+            participant.setPlayer(participantUser);
+            participant.setScheduler(scheduler);
+            participant.setNotifiedByEmail(true); // domyślnie
+            scheduler.getParticipants().add(participant);
+        }
+
+        Scheduler updated = schedulerRepository.save(scheduler);
+        return SchedulerResponseMapper.mapToDto(updated);
+    }
+
 
     /**
      * Deletes a scheduler by its ID.

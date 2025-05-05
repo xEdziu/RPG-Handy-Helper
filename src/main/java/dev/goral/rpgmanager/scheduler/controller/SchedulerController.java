@@ -1,6 +1,7 @@
 package dev.goral.rpgmanager.scheduler.controller;
 
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
+import dev.goral.rpgmanager.scheduler.dto.request.EditSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SubmitAvailabilityRequest;
 import dev.goral.rpgmanager.scheduler.dto.response.PlayerAvailabilityResponse;
@@ -60,6 +61,18 @@ public class SchedulerController {
         response.put("scheduler", scheduler);
         return response;
     }
+
+    @PutMapping("/edit")
+    public Map<String, Object> editScheduler(
+            @RequestBody EditSchedulerRequest request,
+            @AuthenticationPrincipal Principal principal
+    ) {
+        SchedulerResponse scheduler = schedulerService.editScheduler(request, principal);
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Zaktualizowano scheduler.");
+        response.put("scheduler", scheduler);
+        return response;
+    }
+
 
     @DeleteMapping("/delete/{schedulerId}")
     public Map<String, Object> deleteScheduler(
