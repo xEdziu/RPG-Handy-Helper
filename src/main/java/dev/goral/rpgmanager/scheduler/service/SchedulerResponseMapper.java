@@ -13,7 +13,6 @@ public class SchedulerResponseMapper {
                 .minimumSessionDurationMinutes(s.getMinimumSessionDurationMinutes())
                 .gameId(s.getGame().getId())
                 .creatorId(s.getCreator().getId())
-                .googleCalendarLink(s.getGoogleCalendarLink())
                 .dateRanges(
                         s.getDateRanges().stream()
                                 .map(d -> new SchedulerResponse.DateRangeDto(
