@@ -270,7 +270,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja 3&quot;,&#10;  tag: &quot;INT 3&quot;,&#10;  changeable: true,&#10;  description: &quot;Określa ogólną sprawność rozumowania. Według zasad to nie tylko czysta inteligencja, lecz także spryt, wiedza, spostrzegawczość i zdolność uczenia się&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja&quot;,&#10;  tag: &quot;INT&quot;,&#10;  changeable: true,&#10;  description: &quot;Określa ogólną sprawność rozumowania. Według zasad to nie tylko czysta inteligencja, lecz także spryt, wiedza, spostrzegawczość i zdolność uczenia się&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -330,6 +330,67 @@
                                     </list>
                                   </option>
                                   <option name="sortWeight" value="1000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="0525a4d1-4dcf-40a9-8155-50d3a3a94397" />
+                                  <option name="name" value="Skils" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa 4&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 1,&#10;  category: &quot;FIGHTIN&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje umiejętność" />
+                                        <option name="id" value="a35b61d0-fda6-4cad-a4e6-238e114f9c4d" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj umiejętność" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/skills/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa zmodyfikowana 2&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;  connectedStatId: 2,&#10;  category: &quot;BODY&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje podane parametry umiejętności" />
+                                        <option name="id" value="dee1302d-4165-46b5-a714-2514fce40c79" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj umiejętność" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/skills/update/2" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich umiejętności" />
+                                        <option name="id" value="bda26d0c-bcf5-41bb-ad80-06eba5e4355d" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie umiejętności" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/skills/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca umiejętność o podanym id" />
+                                        <option name="id" value="2b941a79-9035-4c6c-b302-9c63db23bf9c" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz konkretną umiejętność po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/skills/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich umiejętności dla Admina" />
+                                        <option name="id" value="b2116262-c279-4744-87f4-8926952ff107" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie umiejętności dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/skills/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="2000000" />
                                 </folderState>
                               </list>
                             </option>

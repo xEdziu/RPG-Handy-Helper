@@ -2,14 +2,16 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.manual.skills;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class CpRedSkillsDTO {
-    private String category;
+public class AddSkillRequest {
+    private CpRedSkillsCategory category;
     private String name;
-    private String connectedStatTag;
+    private Long connectedStatId;
     private String description;
 }

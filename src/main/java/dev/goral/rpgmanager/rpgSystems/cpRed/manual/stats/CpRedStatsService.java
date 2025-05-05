@@ -101,6 +101,7 @@ public class CpRedStatsService {
         // Zaspisanie statystyki do bazy danych
         cpRedStatsRepository.save(cpRedStats);
         return CustomReturnables.getOkResponseMap("Statystyka została dodana.");
+
     }
 
     // Modyfikować statystyke
