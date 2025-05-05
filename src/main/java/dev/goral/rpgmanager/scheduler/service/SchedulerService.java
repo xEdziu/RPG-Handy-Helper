@@ -7,7 +7,9 @@ import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SubmitAvailabilityRequest;
 import dev.goral.rpgmanager.scheduler.dto.response.PlayerAvailabilityResponse;
 import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
+import dev.goral.rpgmanager.scheduler.dto.response.SuggestedSlotResponse;
 import dev.goral.rpgmanager.scheduler.entity.*;
+import dev.goral.rpgmanager.scheduler.enums.AvailabilityType;
 import dev.goral.rpgmanager.scheduler.repository.SchedulerRepository;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
@@ -17,8 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -346,6 +352,112 @@ public class SchedulerService {
                 )).toList();
 
         return new PlayerAvailabilityResponse(user.getId(), slots);
+    }
+
+    @Transactional(readOnly = true)
+    public SuggestedSlotResponse suggestTimeSlots(Long schedulerId, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+
+        Scheduler scheduler = schedulerRepository.findById(schedulerId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono harmonogramu o id: " + schedulerId));
+
+        if (!gameUsersRepository.existsByGameIdAndUserId(scheduler.getGame().getId(), user.getId())) {
+            throw new IllegalArgumentException("Nie masz dostępu do tego harmonogramu");
+        }
+
+        int minDuration = scheduler.getMinimumSessionDurationMinutes();
+
+        // Krok 1: Zgrupuj sloty per uczestnik i scal sąsiadujące
+        Map<Long, List<AvailabilitySlot>> mergedByUser = scheduler.getParticipants().stream()
+                .collect(Collectors.toMap(
+                        p -> p.getPlayer().getId(),
+                        p -> mergeUserSlots(p.getAvailabilitySlots())
+                ));
+
+        // Krok 2: Stwórz oś czasu z punktami start/stop z wagami
+        List<TimePoint> timeline = new ArrayList<>();
+        for (var entry : mergedByUser.entrySet()) {
+            for (AvailabilitySlot slot : entry.getValue()) {
+                double weight = switch (slot.getAvailabilityType()) {
+                    case AvailabilityType.YES -> 1.0;
+                    case AvailabilityType.MAYBE -> 0.5;
+                    default -> 0.0;
+                };
+                if (weight > 0) {
+                    timeline.add(new TimePoint(slot.getStartDateTime(), weight));
+                    timeline.add(new TimePoint(slot.getEndDateTime(), -weight));
+                }
+            }
+        }
+
+        timeline.sort(Comparator.comparing(tp -> tp.time));
+
+        // Krok 3: Przejdź po punktach i zbuduj przedziały
+        List<SuggestedSlotResponse.TimeSlotDto> suggested = new ArrayList<>();
+        double currentWeight = 0.0;
+        LocalDateTime windowStart = null;
+
+        for (TimePoint point : timeline) {
+            currentWeight += point.delta;
+
+            boolean isWindowStart = (windowStart == null && currentWeight >= 1.5); // prog można regulować
+            boolean isWindowEnd = (windowStart != null && currentWeight < 1.5);
+
+            if (isWindowStart) {
+                windowStart = point.time;
+            }
+
+            if (isWindowEnd) {
+                long minutes = Duration.between(windowStart, point.time).toMinutes();
+                if (minutes >= minDuration) {
+                    suggested.add(new SuggestedSlotResponse.TimeSlotDto(
+                            windowStart,
+                            point.time,
+                            (int) Math.round(currentWeight)  // można też zwracać dokładnie
+                    ));
+                }
+                windowStart = null;
+            }
+        }
+
+        suggested.sort(Comparator.comparingInt(SuggestedSlotResponse.TimeSlotDto::getNumberOfAvailableParticipants).reversed());
+
+        return new SuggestedSlotResponse(suggested);
+    }
+
+    private List<AvailabilitySlot> mergeUserSlots(List<AvailabilitySlot> slots) {
+        List<AvailabilitySlot> sorted = slots.stream()
+                .filter(s -> s.getAvailabilityType() != AvailabilityType.NO)
+                .sorted(Comparator.comparing(AvailabilitySlot::getStartDateTime))
+                .toList();
+
+        List<AvailabilitySlot> result = new ArrayList<>();
+        for (AvailabilitySlot slot : sorted) {
+            if (result.isEmpty()) {
+                result.add(slot);
+                continue;
+            }
+            AvailabilitySlot last = result.getLast();
+            long gap = Duration.between(last.getEndDateTime(), slot.getStartDateTime()).toMinutes();
+            if (gap <= 10 && slot.getAvailabilityType() == last.getAvailabilityType()) {
+                last.setEndDateTime(slot.getEndDateTime());
+            } else {
+                result.add(slot);
+            }
+        }
+        return result;
+    }
+
+
+    private static class TimePoint {
+        LocalDateTime time;
+        double delta;
+
+        public TimePoint(LocalDateTime time, double delta) {
+            this.time = time;
+            this.delta = delta;
+        }
     }
 
 

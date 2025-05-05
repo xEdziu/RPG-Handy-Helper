@@ -5,6 +5,7 @@ import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SubmitAvailabilityRequest;
 import dev.goral.rpgmanager.scheduler.dto.response.PlayerAvailabilityResponse;
 import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
+import dev.goral.rpgmanager.scheduler.dto.response.SuggestedSlotResponse;
 import dev.goral.rpgmanager.scheduler.service.SchedulerService;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,18 @@ public class SchedulerController {
         response.put("scheduler", updated);
         return response;
     }
+
+    @GetMapping("/suggestedSlots/{schedulerId}")
+    public Map<String, Object> suggestTimeSlots(
+            @PathVariable Long schedulerId,
+            @AuthenticationPrincipal Principal principal
+    ) {
+        SuggestedSlotResponse responseData = schedulerService.suggestTimeSlots(schedulerId, principal);
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano proponowane przedziały.");
+        response.put("suggestedSlots", responseData.getSuggestedSlots());
+        return response;
+    }
+
 
     /*
      =========================== PLAYER AVAILABILITY ===========================
