@@ -566,24 +566,23 @@
                       <option name="id" value="9d7e0c51-6c4a-4f34-9c2f-1999b00c1114" />
                       <option name="method" value="GET" />
                       <option name="name" value="Get Scheduler" />
+                      <option name="pathVariables">
+                        <list>
+                          <pathVariableState>
+                            <option name="key" value="schedulerId" />
+                          </pathVariableState>
+                        </list>
+                      </option>
                       <option name="sortWeight" value="1000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/forGame/1" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/{schedulerId}" />
                     </requestState>
                     <requestState>
                       <option name="description" value="Pobierz schedulery dla konkretnej gry" />
                       <option name="id" value="73d75294-bb3b-42df-990b-cfbbf77782de" />
                       <option name="method" value="GET" />
                       <option name="name" value="Get Scheduler for Game" />
-                      <option name="pathVariables">
-                        <list>
-                          <pathVariableState>
-                            <option name="key" value="schedulerId" />
-                            <option name="value" value="2" />
-                          </pathVariableState>
-                        </list>
-                      </option>
                       <option name="sortWeight" value="1500000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/{schedulerId}" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/forGame/1" />
                     </requestState>
                     <requestState>
                       <option name="body">
