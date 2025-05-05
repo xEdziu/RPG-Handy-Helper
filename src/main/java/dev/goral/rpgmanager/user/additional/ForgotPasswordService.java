@@ -28,13 +28,19 @@ public class ForgotPasswordService {
         if (user.isEmpty()) {
             throw new IllegalStateException("Nie znaleziono użytkownika o podanym adresie e-mail.");
         }
+
+        //check if a user is enabled
+        if (!user.get().getEnabled()) {
+            throw new IllegalStateException("Konto użytkownika nie jest aktywne.");
+        }
+
         //generate token
         String token = UUID.randomUUID().toString();
         //save token to user
         User userToUpdate = user.get();
         userToUpdate.setToken(token);
         userRepository.save(userToUpdate);
-        //send email with token
+        //send email with a token
         emailService.sendResetPasswordEmail(userToUpdate);
         //return response
         return CustomReturnables.getOkResponseMap("E-mail z linkiem do resetowania hasła został wysłany.");
@@ -57,7 +63,7 @@ public class ForgotPasswordService {
             throw new IllegalStateException("Nie znaleziono użytkownika o podanym tokenie.");
         }
 
-        //check if password is valid
+        //check if the password is valid
         if (!validatePassword(password.get("password"))) {
             throw new IllegalStateException("Hasło musi zawierać co najmniej 8 znaków, jedną cyfrę, jedną małą literę, jedną dużą literę oraz jeden znak specjalny.");
         }
