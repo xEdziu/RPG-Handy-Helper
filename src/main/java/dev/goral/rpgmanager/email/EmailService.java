@@ -179,5 +179,53 @@ public class EmailService {
             """.formatted(username, title, formattedStart, formattedEnd, calendarLink);
     }
 
+    public void sendSchedulerCreatedNotification(Scheduler scheduler) {
+        for (SchedulerParticipant participant : scheduler.getParticipants()) {
+            String email = participant.getPlayer().getEmail();
+            if (email == null || email.isBlank()) continue;
+
+            String subject = "Nowy terminarz sesji RPG | RPG Handy Helper";
+
+            String htmlContent = generateSchedulerCreatedEmailTemplate(
+                    participant.getPlayer().getUsername(),
+                    scheduler.getTitle(),
+                    scheduler.getDeadline()
+            );
+
+            sendEmail(email, subject, htmlContent);
+        }
+    }
+
+    private String generateSchedulerCreatedEmailTemplate(String username, String title, LocalDateTime deadline) {
+        String formattedDeadline = deadline.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+
+        return """
+            <!DOCTYPE html>
+            <html lang="pl">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Nowy Terminarz</title>
+                <style>
+                    body { background-color: #1e1e1e; color: #f3f4f4; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+                    h1 { color: #12e1b9; }
+                    p { font-size: 18px; line-height: 1.5; }
+                </style>
+            </head>
+            <body>
+                <img src="https://github.com/xEdziu/RPG-Handy-Helper/raw/main/banner-rpg.png" alt="Logo" width="500">
+                <h1>NOWY TERMINARZ SESJI</h1>
+                <p>Cześć %s!</p>
+                <p>GameMaster właśnie utworzył nowy terminarz sesji: <strong>%s</strong>.</p>
+                <p>Prosimy, uzupełnij swoją dostępność do <strong>%s</strong>.</p>
+                <hr>
+                <p><strong>RPG Handy Helper Team</strong></p>
+            </body>
+            </html>
+            """.formatted(username, title, formattedDeadline);
+    }
+
+
+
 
 }

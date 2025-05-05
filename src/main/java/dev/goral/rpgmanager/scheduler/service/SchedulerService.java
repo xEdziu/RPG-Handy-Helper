@@ -127,6 +127,8 @@ public class SchedulerService {
         // Zapisz scheduler
         Scheduler saved = schedulerRepository.save(scheduler);
 
+        emailService.sendSchedulerCreatedNotification(saved);
+
         // Mapowanie do DTO
         return SchedulerResponseMapper.mapToDto(saved);
     }
