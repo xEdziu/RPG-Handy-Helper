@@ -468,7 +468,7 @@
                 preview.innerHTML = parseMarkdown(textarea.value || "*Podgląd pusty...*");
             });
         }
-        function populateFilters() { 
+        function populateFilters() {
             const systemSelect = document.getElementById('game-name-filter');
             const campaignSelect = document.getElementById('campaign-name-filter');
             userSystems.forEach(system => {
@@ -562,6 +562,7 @@
                                     class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
                                     Wyszukaj
                                 </label>
+                                <!-- TYLKO PO NAZWIE-->
                                 <div class="relative w-full">
                                     <input type="text" placeholder="--Słowo klucz--"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none   focus:ring-0" />
@@ -573,18 +574,19 @@
                                     Sortuj po
                                 </label>
                                 <select
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
-                                    <option>Data Modyfikacji</option>
-                                    <option>Data Utworzenia</option>
-                                    <option>Tytuł</option>
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0"
+                                    id="sort-by">
+                                    <option value="data-modify" selected>Data Modyfikacji</option>
+                                    <option value="data-creation">Data Utworzenia</option>
+                                    <option value="title">Tytuł</option>
                                 </select>
                                 <select
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
-                                    <option value="" disabled selected></option> 
-                                    <option>Od Najnowszych</option>
-                                    <option>Od Najstarszych</option>
-                                    <option>Sortuj od A do Z</option>
-                                    <option>Sortuj od Z do A</option>
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0"
+                                    id="sort-order">
+                                    <option id="" value="ASC" class="block" selected>Od Najnowszych</option>
+                                    <option id="" value="DESC" class="block">Od Najstarszych</option>
+                                    <option id="" value="ASC" class="hidden">Sortuj od A do Z</option>
+                                    <option id="" value="DESC" class="hidden">Sortuj od Z do A</option>
                                 </select>
                             </div>
                             <div class="flex items-center space-x-2">
@@ -605,7 +607,8 @@
                             </div>
                             <div class="flex justify-end">
                                 <button
-                                    class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm" onclick="clearFilters()">
+                                    class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm"
+                                    onclick="clearFilters()">
                                     Wyczyść filtry
                                 </button>
                             </div>
@@ -640,5 +643,31 @@
         </a>
     </footer>
 </body>
-
+<script>
+    document.getElementById('sort-by').addEventListener('change', function () {
+            const sortBy = this.value;
+            const sortOrder = document.getElementById('sort-order');
+            console.log(sortBy);
+            const options = sortOrder.options;
+            for (let option of options) {
+                option.classList.add('hidden');
+                option.selected = false;
+            }
+            if (sortBy === 'title') {
+                for (let option of options) {
+                    if (option.textContent.includes('A do Z') || option.textContent.includes('Z do A')) {
+                        option.classList.remove('hidden');
+                    }
+                }
+                options[2].selected = true;
+            } else {
+                for (let option of options) {
+                    if (option.textContent.includes('Najnowszych') || option.textContent.includes('Najstarszych')) {
+                        option.classList.remove('hidden');
+                    }
+                }
+                options[0].selected = true;
+            }
+        });
+</script>
 </html>
