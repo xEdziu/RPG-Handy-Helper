@@ -8,14 +8,6 @@ import java.util.List;
 import dev.goral.rpgmanager.scheduler.enums.SchedulerStatus;
 import lombok.*;
 
-/*
- * SchedulerResponse.java
- *
- * This class represents the response object for a scheduler.
- * It contains information about the scheduler, including its ID,
- * title, deadline, minimum session duration, game ID, creator ID,
- * date ranges, participants, final decision, and Google Calendar link.
- */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,6 +21,7 @@ public class SchedulerResponse {
     private Long gameId;
     private Long creatorId;
     private List<DateRangeDto> dateRanges;
+    private List<TimeRangeDto> timeRanges;
     private List<ParticipantDto> participants;
     private FinalDecisionDto finalDecision;
     private SchedulerStatus status;
@@ -43,6 +36,13 @@ public class SchedulerResponse {
     public static class DateRangeDto {
         private LocalDate startDate;
         private LocalDate endDate;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TimeRangeDto {
         private LocalTime startTime;
         private LocalTime endTime;
     }

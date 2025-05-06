@@ -3,6 +3,7 @@ package dev.goral.rpgmanager.scheduler.service;
 import dev.goral.rpgmanager.email.EmailService;
 import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
+import dev.goral.rpgmanager.scheduler.dto.common.TimeRangeDto;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.EditSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.SetFinalDecisionRequest;
@@ -103,9 +104,17 @@ public class SchedulerService {
                                 null,
                                 dto.getStartDate(),
                                 dto.getEndDate(),
-                                dto.getStartTime(),
-                                dto.getEndTime(),
                                 scheduler
+                        ))
+                        .collect(Collectors.toList())
+        );
+
+        // Zakresy czasowe
+        scheduler.setTimeRanges(
+                request.getTimeRanges().stream()
+                        .map(dto -> new TimeRange(
+                                dto.getStartTime(),
+                                dto.getEndTime()
                         ))
                         .collect(Collectors.toList())
         );
@@ -156,21 +165,30 @@ public class SchedulerService {
         }
 
         for (CreateSchedulerRequest.DateRangeDto range : request.getDateRanges()) {
-            if (range.getStartDate() == null || range.getEndDate() == null ||
-                    range.getStartTime() == null || range.getEndTime() == null) {
-                throw new IllegalStateException("Zakresy dat i godzin nie mogą być puste");
+            if (range.getStartDate() == null || range.getEndDate() == null) {
+                throw new IllegalStateException("Zakresy dat nie mogą być puste");
             }
 
             if (range.getStartDate().isAfter(range.getEndDate())) {
                 throw new IllegalStateException("Data początkowa nie może być po dacie końcowej");
             }
 
-            if (range.getStartDate().isEqual(range.getEndDate()) && range.getStartTime().isAfter(range.getEndTime())) {
-                throw new IllegalStateException("Dla tej samej daty, czas początkowy nie może być po czasie końcowym");
-            }
-
             if (range.getEndDate().isBefore(LocalDate.now())) {
                 throw new IllegalStateException("Data końcowa nie może być w przeszłości");
+            }
+        }
+
+        if (request.getTimeRanges() == null || request.getTimeRanges().isEmpty()) {
+            throw new IllegalStateException("Musi być podany przynajmniej jeden zakres godzin");
+        }
+
+        for (TimeRangeDto timeRange : request.getTimeRanges()) {
+            if (timeRange.getStartTime() == null || timeRange.getEndTime() == null) {
+                throw new IllegalStateException("Zakresy godzin nie mogą być puste");
+            }
+
+            if (timeRange.getStartTime().isAfter(timeRange.getEndTime())) {
+                throw new IllegalStateException("Godzina początkowa nie może być po godzinie końcowej");
             }
         }
 
@@ -265,12 +283,12 @@ public class SchedulerService {
 
         validateEditRequest(request, scheduler);
 
-        // Aktualizacja pól
+        // Aktualizacja podstawowych pól
         scheduler.setTitle(request.getTitle());
         scheduler.setDeadline(request.getDeadline());
         scheduler.setMinimumSessionDurationMinutes(request.getMinimumSessionDurationMinutes());
 
-        // Nadpisz dateRanges
+        // Aktualizuj zakresy dat
         scheduler.getDateRanges().clear();
         scheduler.getDateRanges().addAll(
                 request.getDateRanges().stream()
@@ -278,24 +296,75 @@ public class SchedulerService {
                                 null,
                                 dto.getStartDate(),
                                 dto.getEndDate(),
-                                dto.getStartTime(),
-                                dto.getEndTime(),
                                 scheduler
                         ))
                         .toList()
         );
 
-        // Nadpisz uczestników + ich dostępność
-        scheduler.getParticipants().clear();
-        for (Long pid : request.getParticipantIds()) {
-            User participantUser = userRepository.findById(pid)
-                    .orElseThrow(() -> new IllegalStateException("Nie znaleziono uczestnika o ID: " + pid));
+        // Aktualizuj zakresy czasowe
+        scheduler.getTimeRanges().clear();
+        scheduler.getTimeRanges().addAll(
+                request.getTimeRanges().stream()
+                        .map(dto -> new TimeRange(
+                                dto.getStartTime(),
+                                dto.getEndTime()
+                        ))
+                        .toList()
+        );
 
-            SchedulerParticipant participant = new SchedulerParticipant();
-            participant.setPlayer(participantUser);
-            participant.setScheduler(scheduler);
-            participant.setNotifiedByEmail(true); // domyślnie
-            scheduler.getParticipants().add(participant);
+        // 1. Zachowaj referencję do aktualnych uczestników
+        List<SchedulerParticipant> existingParticipants = new ArrayList<>(scheduler.getParticipants());
+
+        // 2. Usuń uczestników, których nie ma w nowym requestcie
+        scheduler.getParticipants().removeIf(participant ->
+                !request.getParticipantIds().contains(participant.getPlayer().getId()));
+
+        // 3. Dodaj nowych uczestników
+        for (Long participantId : request.getParticipantIds()) {
+            // Sprawdź, czy uczestnik już istnieje
+            boolean exists = scheduler.getParticipants().stream()
+                    .anyMatch(p -> p.getPlayer().getId().equals(participantId));
+
+            if (!exists) {
+                User participantUser = userRepository.findById(participantId)
+                        .orElseThrow(() -> new IllegalStateException("Nie znaleziono uczestnika o ID: " + participantId));
+
+                SchedulerParticipant participant = new SchedulerParticipant();
+                participant.setPlayer(participantUser);
+                participant.setScheduler(scheduler);
+                participant.setNotifiedByEmail(true);
+                scheduler.getParticipants().add(participant);
+            }
+        }
+
+        // 4. Przytnij dostępności do nowych zakresów dat i godzin
+        for (SchedulerParticipant participant : scheduler.getParticipants()) {
+            if (participant.getAvailabilitySlots() == null || participant.getAvailabilitySlots().isEmpty()) {
+                continue;
+            }
+
+            List<AvailabilitySlot> validSlots = new ArrayList<>();
+            for (AvailabilitySlot slot : participant.getAvailabilitySlots()) {
+                // Sprawdź, czy slot mieści się w nowych zakresach dat i czasów
+                LocalDate slotDate = slot.getStartDateTime().toLocalDate();
+                LocalTime slotStartTime = slot.getStartDateTime().toLocalTime();
+                LocalTime slotEndTime = slot.getEndDateTime().toLocalTime();
+
+                boolean dateInRange = scheduler.getDateRanges().stream()
+                        .anyMatch(dr -> (slotDate.isEqual(dr.getStartDate()) || slotDate.isAfter(dr.getStartDate()))
+                                && (slotDate.isEqual(dr.getEndDate()) || slotDate.isBefore(dr.getEndDate())));
+
+                boolean timeInRange = scheduler.getTimeRanges().stream()
+                        .anyMatch(tr -> (slotStartTime.equals(tr.getStartTime()) || slotStartTime.isAfter(tr.getStartTime()))
+                                && (slotEndTime.equals(tr.getEndTime()) || slotEndTime.isBefore(tr.getEndTime())));
+
+                if (dateInRange && timeInRange) {
+                    validSlots.add(slot);
+                }
+            }
+
+            participant.getAvailabilitySlots().clear();
+            participant.getAvailabilitySlots().addAll(validSlots);
         }
 
         Scheduler updated = schedulerRepository.save(scheduler);
@@ -325,22 +394,31 @@ public class SchedulerService {
             throw new IllegalStateException("Musi być podany przynajmniej jeden zakres dat");
         }
 
-        for (CreateSchedulerRequest.DateRangeDto range : request.getDateRanges()) {
-            if (range.getStartDate() == null || range.getEndDate() == null ||
-                    range.getStartTime() == null || range.getEndTime() == null) {
-                throw new IllegalStateException("Zakresy dat i godzin nie mogą być puste");
+        for (EditSchedulerRequest.DateRangeDto range : request.getDateRanges()) {
+            if (range.getStartDate() == null || range.getEndDate() == null) {
+                throw new IllegalStateException("Zakresy dat nie mogą być puste");
             }
 
             if (range.getStartDate().isAfter(range.getEndDate())) {
                 throw new IllegalStateException("Data początkowa nie może być po dacie końcowej");
             }
 
-            if (range.getStartDate().isEqual(range.getEndDate()) && range.getStartTime().isAfter(range.getEndTime())) {
-                throw new IllegalStateException("Dla tej samej daty, czas początkowy nie może być po czasie końcowym");
-            }
-
             if (range.getEndDate().isBefore(LocalDate.now())) {
                 throw new IllegalStateException("Data końcowa nie może być w przeszłości");
+            }
+        }
+
+        if (request.getTimeRanges() == null || request.getTimeRanges().isEmpty()) {
+            throw new IllegalStateException("Musi być podany przynajmniej jeden zakres godzin");
+        }
+
+        for (TimeRangeDto timeRange : request.getTimeRanges()) {
+            if (timeRange.getStartTime() == null || timeRange.getEndTime() == null) {
+                throw new IllegalStateException("Zakresy godzin nie mogą być puste");
+            }
+
+            if (timeRange.getStartTime().isAfter(timeRange.getEndTime())) {
+                throw new IllegalStateException("Godzina początkowa nie może być po godzinie końcowej");
             }
         }
 
@@ -486,7 +564,7 @@ public class SchedulerService {
         }
 
         // Walidacja slotów
-        validateAvailabilitySlots(request.getSlots());
+        validateAvailabilitySlots(request.getSlots(), scheduler);
 
         // Sprawdź, czy użytkownik jest uczestnikiem harmonogramu
         SchedulerParticipant participant = scheduler.getParticipants().stream()
@@ -530,11 +608,12 @@ public class SchedulerService {
      * @param slots The slots to validate.
      * @throws IllegalStateException If any validation fails.
      */
-    private void validateAvailabilitySlots(List<SubmitAvailabilityRequest.AvailabilitySlotDto> slots) {
+    private void validateAvailabilitySlots(List<SubmitAvailabilityRequest.AvailabilitySlotDto> slots, Scheduler scheduler) {
         if (slots == null || slots.isEmpty()) {
             throw new IllegalStateException("Lista dostępności nie może być pusta");
         }
 
+        // Sprawdzenie, czy każdy slot mieści się w zakresach dat i godzin schedulera
         for (SubmitAvailabilityRequest.AvailabilitySlotDto slot : slots) {
             if (slot.getStartDateTime() == null || slot.getEndDateTime() == null) {
                 throw new IllegalStateException("Daty początku i końca slotu nie mogą być puste");
@@ -546,6 +625,34 @@ public class SchedulerService {
 
             if (slot.getAvailabilityType() == null) {
                 throw new IllegalStateException("Typ dostępności nie może być pusty");
+            }
+
+            // Walidacja czy slot mieści się w zakresach dat schedulera
+            LocalDate slotDate = slot.getStartDateTime().toLocalDate();
+            LocalTime slotStartTime = slot.getStartDateTime().toLocalTime();
+            LocalTime slotEndTime = slot.getEndDateTime().toLocalTime();
+
+            // Sprawdź, czy data mieści się w którymkolwiek zakresie dat
+            boolean dateInRange = scheduler.getDateRanges().stream()
+                    .anyMatch(dr ->
+                            (slotDate.isEqual(dr.getStartDate()) || slotDate.isAfter(dr.getStartDate()))
+                                    && (slotDate.isEqual(dr.getEndDate()) || slotDate.isBefore(dr.getEndDate()))
+                    );
+
+            if (!dateInRange) {
+                throw new IllegalStateException("Slot o dacie " + slotDate + " nie mieści się w żadnym z zakresów dat harmonogramu");
+            }
+
+            // Sprawdź, czy godziny mieszczą się w którymkolwiek zakresie godzin
+            boolean timeInRange = scheduler.getTimeRanges().stream()
+                    .anyMatch(tr ->
+                            (slotStartTime.equals(tr.getStartTime()) || slotStartTime.isAfter(tr.getStartTime()))
+                                    && (slotEndTime.equals(tr.getEndTime()) || slotEndTime.isBefore(tr.getEndTime()))
+                    );
+
+            if (!timeInRange) {
+                throw new IllegalStateException("Slot o godzinach " + slotStartTime + " - " + slotEndTime
+                        + " nie mieści się w żadnym z zakresów godzin harmonogramu");
             }
         }
 
@@ -613,6 +720,10 @@ public class SchedulerService {
         }
 
         int minDuration = scheduler.getMinimumSessionDurationMinutes();
+        int participantsCount = scheduler.getParticipants().size();
+
+        // Dynamiczny próg - dla małych grup (1-2 osoby) obniżamy wymaganie
+        double threshold = Math.min(1.5, participantsCount * 0.6);
 
         // Krok 1: Zgrupuj sloty per uczestnik i scal sąsiadujące
         Map<Long, List<AvailabilitySlot>> mergedByUser = scheduler.getParticipants().stream()
@@ -644,15 +755,18 @@ public class SchedulerService {
         List<SuggestedSlotResponse.TimeSlotDto> suggested = new ArrayList<>();
         double currentWeight = 0.0;
         LocalDateTime windowStart = null;
+        double windowStartWeight = 0.0; // Zapamiętaj wagę podczas rozpoczęcia okna
 
         for (TimePoint point : timeline) {
+            double previousWeight = currentWeight;
             currentWeight += point.delta;
 
-            boolean isWindowStart = (windowStart == null && currentWeight >= 1.5); // prog można regulować
-            boolean isWindowEnd = (windowStart != null && currentWeight < 1.5);
+            boolean isWindowStart = (windowStart == null && currentWeight >= threshold);
+            boolean isWindowEnd = (windowStart != null && currentWeight < threshold);
 
             if (isWindowStart) {
                 windowStart = point.time;
+                windowStartWeight = currentWeight;
             }
 
             if (isWindowEnd) {
@@ -661,10 +775,25 @@ public class SchedulerService {
                     suggested.add(new SuggestedSlotResponse.TimeSlotDto(
                             windowStart,
                             point.time,
-                            currentWeight  // można też zwracać dokładnie
+                            previousWeight // Używamy wagi przed zmianą punktu końcowego
                     ));
                 }
                 windowStart = null;
+            }
+        }
+
+        // Sprawdź, czy nie mamy niezamkniętego przedziału na końcu
+        if (windowStart != null && currentWeight >= threshold) {
+            LocalDateTime lastTime = timeline.isEmpty() ? null : timeline.get(timeline.size() - 1).time;
+            if (lastTime != null) {
+                long minutes = Duration.between(windowStart, lastTime).toMinutes();
+                if (minutes >= minDuration) {
+                    suggested.add(new SuggestedSlotResponse.TimeSlotDto(
+                            windowStart,
+                            lastTime,
+                            currentWeight
+                    ));
+                }
             }
         }
 
@@ -754,7 +883,7 @@ public class SchedulerService {
         }
 
         // Walidacja slotów
-        validateAvailabilitySlots(request.getSlots());
+        validateAvailabilitySlots(request.getSlots(), scheduler);
 
         // Sprawdź, czy użytkownik jest uczestnikiem harmonogramu
         SchedulerParticipant participant = scheduler.getParticipants().stream()

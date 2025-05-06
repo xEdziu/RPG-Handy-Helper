@@ -3,6 +3,8 @@ package dev.goral.rpgmanager.scheduler.service;
 import dev.goral.rpgmanager.scheduler.dto.response.SchedulerResponse;
 import dev.goral.rpgmanager.scheduler.entity.Scheduler;
 
+import java.util.stream.Collectors;
+
 public class SchedulerResponseMapper {
 
     public static SchedulerResponse mapToDto(Scheduler s) {
@@ -13,22 +15,34 @@ public class SchedulerResponseMapper {
                 .minimumSessionDurationMinutes(s.getMinimumSessionDurationMinutes())
                 .gameId(s.getGame().getId())
                 .creatorId(s.getCreator().getId())
+
                 .dateRanges(
                         s.getDateRanges().stream()
                                 .map(d -> new SchedulerResponse.DateRangeDto(
-                                        d.getStartDate(), d.getEndDate(),
-                                        d.getStartTime(), d.getEndTime()))
-                                .toList()
+                                        d.getStartDate(),
+                                        d.getEndDate()
+                                )).collect(Collectors.toList())
                 )
+
+                .timeRanges(
+                        s.getTimeRanges().stream()
+                                .map(t -> new SchedulerResponse.TimeRangeDto(
+                                        t.getStartTime(),
+                                        t.getEndTime()
+                                )).collect(Collectors.toList())
+                )
+
                 .participants(
                         s.getParticipants().stream()
                                 .map(p -> new SchedulerResponse.ParticipantDto(
                                         p.getId(),
                                         p.getPlayer().getId(),
                                         p.isNotifiedByEmail()
-                                )).toList()
+                                )).collect(Collectors.toList())
                 )
+
                 .status(s.getStatus())
+
                 .missingAvailabilitiesCount(
                         (int) s.getParticipants().stream()
                                 .filter(p -> p.getAvailabilitySlots() == null || p.getAvailabilitySlots().isEmpty())
@@ -42,9 +56,10 @@ public class SchedulerResponseMapper {
                                         s.getFinalDecision().getEnd()
                                 )
                 )
-                .googleCalendarLink( s.getGoogleCalendarLink())
+
+                .googleCalendarLink(s.getGoogleCalendarLink())
                 .emailsSent(s.isEmailsSent())
+
                 .build();
     }
 }
-

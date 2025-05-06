@@ -30,9 +30,6 @@ public class SchedulerDateRange {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    private LocalTime startTime; // np. 17:00
-    private LocalTime endTime;   // np. 22:00
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scheduler_id", nullable = false)
     @ToString.Exclude

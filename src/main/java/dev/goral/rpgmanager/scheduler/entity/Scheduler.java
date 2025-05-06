@@ -53,6 +53,11 @@ public class Scheduler {
     @ToString.Exclude
     private List<SchedulerParticipant> participants = new ArrayList<>();
 
+    @ElementCollection
+    @CollectionTable(name = "scheduler_time_ranges", joinColumns = @JoinColumn(name = "scheduler_id"))
+    private List<TimeRange> timeRanges = new ArrayList<>();
+
+
     @Enumerated(EnumType.STRING)
     private SchedulerStatus status = SchedulerStatus.AWAITING_AVAILABILITY;
 
