@@ -1,43 +1,146 @@
+
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mój Profil</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=League+Spartan&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
 </head>
-<body>
-<a href="/home">Powrót</a>
-<h1>Mój Profil</h1>
 
-<!-- Widok danych użytkownika -->
-<div id="profileView">
-    <img id="profilePhoto" src="" alt="Zdjęcie profilowe" width="150" height="150" /><br/>
-    <p>Username: <span id="viewUsername"></span></p>
-    <p>Imię: <span id="viewFirstName"></span></p>
-    <p>Nazwisko: <span id="viewSurname"></span></p>
-    <p>Email: <span id="viewEmail"></span></p>
-</div>
+<body class="font-league-spartan bg-light-background dark:bg-dark-background text-light-textPrimary dark:text-dark-textPrimary min-h-screen flex flex-col">
+<nav class="flex justify-between items-center p-4 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+    <a href="/">
+        <div class="flex items-center">
+            <img src="/img/logo/logo-light.svg" alt="Logo" class="h-10 dark:hidden">
+            <img src="/img/logo/logo-dark.svg" alt="Logo" class="h-10 hidden dark:block">
+            <span class="ml-3 font-jetbrains-mono text-xl">RPG Handy Helper</span>
+        </div>
+    </a>
+    <div class="flex items-center justify-center cursor-pointer" onclick="toggleTheme()">
+        <i class="fa-solid fa-sun text-light-accent dark:text-dark-accent mr-2"></i>
+        <div class="relative inline-block w-12 h-6">
+            <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-light-accent dark:bg-dark-accent shadow-md transition-all duration-300 transform" id="theme-thumb"></div>
+            <div class="w-full h-full rounded-full bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary border border-light-accent dark:border-dark-accent"></div>
+        </div>
+        <i class="fa-solid fa-moon text-light-accent dark:text-dark-accent ml-2"></i>
+    </div>
+</nav>
 
-<hr />
+<main class="flex-grow flex flex-col items-center py-10 px-4">
+    <h1 class="text-3xl font-bold border-b-4 border-light-accentDark dark:border-dark-accentDark mb-6 font-jetbrains-mono">MÓJ PROFIL</h1>
 
-<!-- Formularz aktualizacji profilu -->
-<h2>Edycja profilu</h2>
-<form id="updateForm">
-    <label>Username: <input type="text" id="username" /></label><br />
-    <label>Imię: <input type="text" id="firstName" /></label><br />
-    <label>Nazwisko: <input type="text" id="surname" /></label><br />
-    <button type="submit">Zapisz zmiany</button>
-</form>
+    <div class="bg-light-surface dark:bg-dark-surface rounded-xl shadow-md p-6 max-w-3xl w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col items-center">
+            <div class="relative">
+                <img id="profilePhoto" src="" alt="Zdjęcie profilowe" class="w-40 h-40 rounded bg-dark-backgroundSecondary">
+                <button class="absolute top-0 right-0 bg-light-accent dark:bg-dark-accent p-2 rounded-full text-white">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+            </div>
+            <form id="photoForm" class="mt-4 w-full text-center" enctype="multipart/form-data">
+                <input type="file" id="photoInput" name="file" accept="image/png, image/jpeg" class="block mb-2 text-sm mx-auto" />
+                <img id="photoPreview" src="" alt="Podgląd" class="hidden w-40 h-40 rounded mt-2 mx-auto" />
+                <button type="submit" class="mt-2 px-4 py-2 bg-light-accent dark:bg-dark-accent text-white rounded">Prześlij zdjęcie</button>
+            </form>
+        </div>
 
-<hr />
+        <div>
+            <form id="updateForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Nazwa użytkownika:</label>
+                    <input type="text" id="username" class="w-full p-2 rounded bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Imię:</label>
+                    <input type="text" id="firstName" class="w-full p-2 rounded bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Nazwisko:</label>
+                    <input type="text" id="surname" class="w-full p-2 rounded bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">E-mail:</label>
+                    <p id="viewEmail" class="w-full p-2 rounded bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border"></p>
+                </div>
+                <button type="submit" class="w-full mt-2 py-2 px-4 bg-light-accent dark:bg-dark-accent text-white rounded">Zapisz zmiany</button>
+            </form>
+        </div>
+    </div>
+</main>
 
-<!-- Formularz uploadu zdjęcia z podglądem -->
-<h2>Aktualizacja zdjęcia profilowego</h2>
-<form id="photoForm" enctype="multipart/form-data">
-    <label>Wybierz zdjęcie: <input type="file" accept="image/png, image/jpeg" name="file" id="photoInput" /></label><br />
-    <img id="photoPreview" src="" alt="Podgląd zdjęcia" width="150" height="150" style="display:none;" /><br/>
-    <button type="submit">Prześlij zdjęcie</button>
-</form>
+<footer class="text-center p-4 bg-light-surface dark:bg-dark-surface border-t border-light-border dark:border-dark-border font-jetbrains-mono">
+    <h3>Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+    <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank" class="text-light-accent dark:text-dark-accent">
+        <i class="fa-brands fa-github"></i>
+    </a>
+</footer>
+
+<script>
+    function toggleTheme() {
+        const body = document.body;
+        body.classList.toggle('dark');
+        localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        if (savedTheme === "dark") document.body.classList.add("dark");
+    });
+</script>
 
 <script>
     function getCookie(name) {
@@ -65,18 +168,14 @@
             const data = await response.json();
             Swal.close();
 
-            document.getElementById("viewUsername").textContent = data.username;
-            document.getElementById("viewFirstName").textContent = data.firstName;
-            document.getElementById("viewSurname").textContent = data.surname;
             document.getElementById("viewEmail").textContent = data.email;
+            document.getElementById("username").value = data.username;
+            document.getElementById("firstName").value = data.firstName;
+            document.getElementById("surname").value = data.surname;
 
             const filename = data.userPhotoPath?.split("/").pop();
             currentPhotoFilename = filename;
             updateProfilePhoto(filename);
-
-            document.getElementById("username").value = data.username;
-            document.getElementById("firstName").value = data.firstName;
-            document.getElementById("surname").value = data.surname;
         } catch (error) {
             Swal.close();
             Swal.fire({ icon: 'error', text: 'Nie udało się załadować danych użytkownika.' });
@@ -93,7 +192,6 @@
 
     document.getElementById("updateForm").addEventListener("submit", async function (e) {
         e.preventDefault();
-
         Swal.fire({
             title: 'Zapisywanie...',
             allowOutsideClick: false,
@@ -133,9 +231,9 @@
     document.getElementById("photoInput").addEventListener("change", function(e) {
         const file = e.target.files[0];
         if (file) {
-            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            if (file.size > 5 * 1024 * 1024) {
                 Swal.fire({ icon: 'warning', text: 'Plik jest za duży. Maksymalny rozmiar to 5 MB.' });
-                e.target.value = ""; // Clear the input
+                e.target.value = "";
                 return;
             }
             const reader = new FileReader();
@@ -143,6 +241,7 @@
                 const preview = document.getElementById("photoPreview");
                 preview.src = e.target.result;
                 preview.style.display = "block";
+                preview.classList.remove("hidden");
             }
             reader.readAsDataURL(file);
         }
@@ -187,7 +286,6 @@
             } else {
                 Swal.fire({ icon: 'error', text: result.message || "Błąd podczas przesyłania zdjęcia." });
             }
-
         } catch (error) {
             Swal.close();
             Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
@@ -195,4 +293,5 @@
     });
 </script>
 </body>
+
 </html>
