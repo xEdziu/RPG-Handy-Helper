@@ -27,10 +27,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -283,12 +280,10 @@ public class SchedulerService {
 
         validateEditRequest(request, scheduler);
 
-        // Aktualizacja podstawowych pól
         scheduler.setTitle(request.getTitle());
         scheduler.setDeadline(request.getDeadline());
         scheduler.setMinimumSessionDurationMinutes(request.getMinimumSessionDurationMinutes());
 
-        // Aktualizuj zakresy dat
         scheduler.getDateRanges().clear();
         scheduler.getDateRanges().addAll(
                 request.getDateRanges().stream()
@@ -301,7 +296,6 @@ public class SchedulerService {
                         .toList()
         );
 
-        // Aktualizuj zakresy czasowe
         scheduler.getTimeRanges().clear();
         scheduler.getTimeRanges().addAll(
                 request.getTimeRanges().stream()
@@ -312,16 +306,10 @@ public class SchedulerService {
                         .toList()
         );
 
-        // 1. Zachowaj referencję do aktualnych uczestników
-        List<SchedulerParticipant> existingParticipants = new ArrayList<>(scheduler.getParticipants());
-
-        // 2. Usuń uczestników, których nie ma w nowym requestcie
         scheduler.getParticipants().removeIf(participant ->
                 !request.getParticipantIds().contains(participant.getPlayer().getId()));
 
-        // 3. Dodaj nowych uczestników
         for (Long participantId : request.getParticipantIds()) {
-            // Sprawdź, czy uczestnik już istnieje
             boolean exists = scheduler.getParticipants().stream()
                     .anyMatch(p -> p.getPlayer().getId().equals(participantId));
 
@@ -337,32 +325,55 @@ public class SchedulerService {
             }
         }
 
-        // 4. Przytnij dostępności do nowych zakresów dat i godzin
         for (SchedulerParticipant participant : scheduler.getParticipants()) {
             if (participant.getAvailabilitySlots() == null || participant.getAvailabilitySlots().isEmpty()) {
                 continue;
             }
 
             List<AvailabilitySlot> validSlots = new ArrayList<>();
+
             for (AvailabilitySlot slot : participant.getAvailabilitySlots()) {
-                // Sprawdź, czy slot mieści się w nowych zakresach dat i czasów
-                LocalDate slotDate = slot.getStartDateTime().toLocalDate();
-                LocalTime slotStartTime = slot.getStartDateTime().toLocalTime();
-                LocalTime slotEndTime = slot.getEndDateTime().toLocalTime();
+                LocalDateTime originalStart = slot.getStartDateTime();
+                LocalDateTime originalEnd = slot.getEndDateTime();
 
-                boolean dateInRange = scheduler.getDateRanges().stream()
-                        .anyMatch(dr -> (slotDate.isEqual(dr.getStartDate()) || slotDate.isAfter(dr.getStartDate()))
-                                && (slotDate.isEqual(dr.getEndDate()) || slotDate.isBefore(dr.getEndDate())));
+                Optional<SchedulerDateRange> matchingDateRange = scheduler.getDateRanges().stream()
+                        .filter(dr -> !(originalEnd.toLocalDate().isBefore(dr.getStartDate()) ||
+                                originalStart.toLocalDate().isAfter(dr.getEndDate())))
+                        .findFirst();
 
-                boolean timeInRange = scheduler.getTimeRanges().stream()
-                        .anyMatch(tr -> (slotStartTime.equals(tr.getStartTime()) || slotStartTime.isAfter(tr.getStartTime()))
-                                && (slotEndTime.equals(tr.getEndTime()) || slotEndTime.isBefore(tr.getEndTime())));
+                Optional<TimeRange> matchingTimeRange = scheduler.getTimeRanges().stream()
+                        .filter(tr -> !(originalEnd.toLocalTime().isBefore(tr.getStartTime()) ||
+                                originalStart.toLocalTime().isAfter(tr.getEndTime())))
+                        .findFirst();
 
-                if (dateInRange && timeInRange) {
-                    validSlots.add(slot);
+                if (matchingDateRange.isPresent() && matchingTimeRange.isPresent()) {
+                    LocalDateTime clippedStart = originalStart;
+                    LocalDateTime clippedEnd = originalEnd;
+
+                    if (clippedStart.toLocalTime().isBefore(matchingTimeRange.get().getStartTime())) {
+                        clippedStart = LocalDateTime.of(clippedStart.toLocalDate(), matchingTimeRange.get().getStartTime());
+                    }
+                    if (clippedEnd.toLocalTime().isAfter(matchingTimeRange.get().getEndTime())) {
+                        clippedEnd = LocalDateTime.of(clippedEnd.toLocalDate(), matchingTimeRange.get().getEndTime());
+                    }
+
+                    if (clippedStart.toLocalDate().isBefore(matchingDateRange.get().getStartDate())) {
+                        clippedStart = LocalDateTime.of(matchingDateRange.get().getStartDate(), clippedStart.toLocalTime());
+                    }
+                    if (clippedEnd.toLocalDate().isAfter(matchingDateRange.get().getEndDate())) {
+                        clippedEnd = LocalDateTime.of(matchingDateRange.get().getEndDate(), clippedEnd.toLocalTime());
+                    }
+
+                    if (clippedEnd.isAfter(clippedStart)) {
+                        AvailabilitySlot newSlot = new AvailabilitySlot();
+                        newSlot.setStartDateTime(clippedStart);
+                        newSlot.setEndDateTime(clippedEnd);
+                        newSlot.setAvailabilityType(slot.getAvailabilityType());
+                        newSlot.setParticipant(participant);
+                        validSlots.add(newSlot);
+                    }
                 }
             }
-
             participant.getAvailabilitySlots().clear();
             participant.getAvailabilitySlots().addAll(validSlots);
         }
@@ -722,7 +733,7 @@ public class SchedulerService {
         int minDuration = scheduler.getMinimumSessionDurationMinutes();
         int participantsCount = scheduler.getParticipants().size();
 
-        // Dynamiczny próg - dla małych grup (1-2 osoby) obniżamy wymaganie
+        // Dynamiczny próg — dla małych grup (1-2 osoby) obniżamy wymaganie
         double threshold = Math.min(1.5, participantsCount * 0.6);
 
         // Krok 1: Zgrupuj sloty per uczestnik i scal sąsiadujące
@@ -740,7 +751,6 @@ public class SchedulerService {
                     case AvailabilityType.YES -> 1.0;
                     case AvailabilityType.MAYBE -> 0.5;
                     case AvailabilityType.NO -> -1.0;
-                    default -> 0.0;
                 };
                 if (weight > 0) {
                     timeline.add(new TimePoint(slot.getStartDateTime(), weight));
@@ -755,7 +765,6 @@ public class SchedulerService {
         List<SuggestedSlotResponse.TimeSlotDto> suggested = new ArrayList<>();
         double currentWeight = 0.0;
         LocalDateTime windowStart = null;
-        double windowStartWeight = 0.0; // Zapamiętaj wagę podczas rozpoczęcia okna
 
         for (TimePoint point : timeline) {
             double previousWeight = currentWeight;
@@ -766,7 +775,6 @@ public class SchedulerService {
 
             if (isWindowStart) {
                 windowStart = point.time;
-                windowStartWeight = currentWeight;
             }
 
             if (isWindowEnd) {
@@ -784,7 +792,7 @@ public class SchedulerService {
 
         // Sprawdź, czy nie mamy niezamkniętego przedziału na końcu
         if (windowStart != null && currentWeight >= threshold) {
-            LocalDateTime lastTime = timeline.isEmpty() ? null : timeline.get(timeline.size() - 1).time;
+            LocalDateTime lastTime = timeline.getLast().time;
             if (lastTime != null) {
                 long minutes = Duration.between(windowStart, lastTime).toMinutes();
                 if (minutes >= minDuration) {
