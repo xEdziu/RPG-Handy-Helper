@@ -33,25 +33,25 @@ public class CpRedWeapons {
             referencedColumnName = "id"
     )
     private CpRedSkills requiredSkillId;
-    @Enumerated(EnumType.STRING)
-    private CpRedWeaponsType type;
-    private int damage; //quantity of d6
-    private int magazineCapacity;
+    private String name;
+    private int damage = -1; //quantity of d6
+    private int magazineCapacity = -1;
     @ManyToOne
     @JoinColumn(
             name="standard_ammunition_id",
             referencedColumnName = "id"
     )
     private CpRedAmmunition standardAmmunitionId;
-    private short numberOfAttacks;
-    private short handType;
+    private short numberOfAttacks = -1;
+    private short handType = -1;
     private boolean isHidden;
     @Enumerated(EnumType.STRING)
     private CpRedItemsQuality quality;
-    private int price;
+    private int price = -1;
     @Enumerated(EnumType.STRING)
     private CpRedItemsAvailability availability;
     private boolean isModifiable;
+    @Column(length = 500)
     private String description;
 
 
