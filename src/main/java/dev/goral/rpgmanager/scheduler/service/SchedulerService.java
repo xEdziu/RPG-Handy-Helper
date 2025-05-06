@@ -921,6 +921,32 @@ public class SchedulerService {
         schedulerRepository.save(scheduler);
     }
 
+    public List<PlayerAvailabilityResponse> getAllPlayerAvailability(Long schedulerId, User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika " + currentUser.getUsername()));
+
+        Scheduler scheduler = schedulerRepository.findById(schedulerId)
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono harmonogramu o id: " + schedulerId));
+
+        if (!gameUsersRepository.existsByGameIdAndUserId(scheduler.getGame().getId(), user.getId())) {
+            throw new IllegalStateException("Nie masz dostępu do tego harmonogramu");
+        }
+
+        List<PlayerAvailabilityResponse> responses = new ArrayList<>();
+        for (SchedulerParticipant participant : scheduler.getParticipants()) {
+            PlayerAvailabilityResponse response = new PlayerAvailabilityResponse();
+            response.setPlayerId(participant.getPlayer().getId());
+            response.setAvailability(participant.getAvailabilitySlots().stream()
+                    .map(slot -> new PlayerAvailabilityResponse.AvailabilitySlotDto(
+                            slot.getStartDateTime(),
+                            slot.getEndDateTime(),
+                            slot.getAvailabilityType()
+                    )).toList());
+            responses.add(response);
+        }
+        return responses;
+    }
+
     /**
      * A helper class to represent a time point on the timeline with its weight (delta).
      */

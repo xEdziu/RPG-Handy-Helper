@@ -147,4 +147,15 @@ public class SchedulerController {
         return response;
     }
 
+    @GetMapping("/availability/{schedulerId}/all")
+    public Map<String, Object> getAllPlayerAvailability(
+            @PathVariable Long schedulerId,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        List<PlayerAvailabilityResponse> responseData = schedulerService.getAllPlayerAvailability(schedulerId, currentUser);
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano dostępność graczy.");
+        response.put("availability", responseData);
+        return response;
+    }
+
 }
