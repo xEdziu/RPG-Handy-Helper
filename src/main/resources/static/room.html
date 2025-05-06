@@ -6,10 +6,13 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
     <style>
-        body {
+        html, body {
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
-            padding: 2rem;
+            height: 100%;
+            overflow-x: hidden;
         }
 
         #chat {
@@ -19,19 +22,20 @@
             height: 300px;
             overflow-y: auto;
             margin-bottom: 1rem;
+            position: relative;
+            z-index: 5;
         }
 
-        #chat .message {
-            margin-bottom: 0.5rem;
-        }
-
-        #chat .message strong {
-            color: #333;
+        .message.important {
+            color: darkred;
+            font-weight: bold;
         }
 
         #message-form {
             display: flex;
             gap: 0.5rem;
+            position: relative;
+            z-index: 5;
         }
 
         #message-input {
@@ -47,31 +51,70 @@
         #online-users {
             margin-top: 1rem;
             padding-left: 1.2rem;
+            position: relative;
+            z-index: 5;
         }
 
         h2, h4 {
             margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        .dice-box-canvas {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999 !important;
+            pointer-events: none;
+        }
+
+        #dice-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        .controls, #dice-result {
+            position: relative;
+            z-index: 10;
         }
     </style>
 </head>
-<body>
-
+<body id="body">
 <h2>Pokój czatowy: <span id="room-id"></span></h2>
 
 <div id="chat"></div>
 
 <form id="message-form">
-    <input type="text" id="message-input" placeholder="Napisz wiadomość..." autocomplete="off" required />
+    <input type="text" id="message-input" placeholder="Napisz wiadomość." autocomplete="off" required />
     <button type="submit">Wyślij</button>
 </form>
 
 <h4>Uczestnicy online</h4>
 <ul id="online-users"></ul>
 
+<div class="controls">
+    <button id="roll1d6">1d6</button>
+    <button id="roll2d20">2d20</button>
+    <button id="roll3d10">3d10</button>
+    <input type="text" id="dice-input" placeholder="Np. 4d10+3">
+    <button id="rollCustom">Rzuć</button>
+    <select id="dice-theme"></select>
+</div>
+
+<div id="dice-result"></div>
+<div id="dice-container"></div>
+
 <script>
     const roomId = window.location.pathname.split("/").pop();
     document.getElementById("room-id").textContent = roomId;
-
     let username = null;
     let stompClient = null;
 
@@ -80,49 +123,47 @@
         .then(data => {
             username = data.username;
             connectWebSocket();
-        })
-        .catch(err => {
-            alert("Nie udało się pobrać danych użytkownika – czy jesteś zalogowany?");
         });
 
     function connectWebSocket() {
         const socket = new SockJS("/ws");
         stompClient = Stomp.over(socket);
-        stompClient.debug = null; // wyłączenie logowania
+        stompClient.debug = null;
 
         stompClient.connect({}, function () {
             stompClient.subscribe(`/topic/chat/${roomId}`, function (message) {
                 const msg = JSON.parse(message.body);
-                displayMessage(msg.from, msg.content);
+                displayMessage(msg.from, msg.content, false);
             });
 
             stompClient.subscribe(`/topic/chat/${roomId}/users`, function (message) {
                 const users = JSON.parse(message.body);
                 updateOnlineUsers(users);
             });
+
+            stompClient.subscribe(`/topic/dice/${roomId}`, function (message) {
+                const dice = JSON.parse(message.body);
+                if (dice.from !== username) {
+                    const [notation, theme] = dice.content.split("|");
+                    rollDice(notation, theme, dice.from);
+                }
+            });
+
             stompClient.send(`/app/join/${roomId}`, {}, {});
         });
     }
 
-
     function escapeHtml(unsafe) {
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    function displayMessage(from, content) {
+    function displayMessage(from, content, isImportant) {
         const chat = document.getElementById("chat");
         const div = document.createElement("div");
         div.classList.add("message");
+        if (isImportant) div.classList.add("important");
 
-        const safeFrom = escapeHtml(from);
-        const safeContent = escapeHtml(content);
-
-        div.innerHTML = `<strong>${safeFrom}</strong>: ${safeContent}`;
+        div.innerHTML = `<strong>${escapeHtml(from)}</strong>: ${escapeHtml(content)}`;
         chat.appendChild(div);
         chat.scrollTop = chat.scrollHeight;
     }
@@ -149,7 +190,102 @@
             input.value = "";
         }
     });
+
+    function getDynamicScale() {
+        const width = window.innerWidth;
+        if (width < 600) return 5;
+        if (width < 900) return 6;
+        if (width < 1200) return 7;
+        return 9;
+    }
 </script>
 
+<script type="module">
+    import DiceBox from "https://cdn.jsdelivr.net/npm/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
+
+    const availableThemes = [
+        { id: "default", label: "Domyślny" },
+        { id: "gemstoneMarble", label: "Gemstone Rainbow Marble" },
+        { id: "blueGreenMetal", label: "Blue Green Metal" },
+    ];
+
+    const select = document.getElementById("dice-theme");
+    const savedTheme = localStorage.getItem("selectedDiceTheme") || "default";
+    availableThemes.forEach(theme => {
+        const option = document.createElement("option");
+        option.value = theme.id;
+        option.textContent = theme.label;
+        if (theme.id === savedTheme) {
+            option.selected = true;
+        }
+        select.appendChild(option);
+    });
+    select.addEventListener("change", () => {
+        localStorage.setItem("selectedDiceTheme", select.value);
+    });
+
+    const diceBox = new DiceBox("#dice-container", {
+        assetPath: "/assets/",
+        origin: window.location.origin,
+        scale: getDynamicScale(),
+        gravity: 3,
+        friction: 0.5,
+        strength: 10,
+        spinForce: 6,
+        throwForce: 6,
+        mass: 3
+    });
+
+    await diceBox.init();
+    await diceBox.loadTheme("default");
+
+    const resultDiv = document.getElementById("dice-result");
+
+    async function rollDice(notation, theme, sender) {
+        const localTheme = theme || select.value;
+        const localSender = sender || username;
+
+        if (!diceBox.themesLoadedData[localTheme]) {
+            await diceBox.loadTheme(localTheme);
+        }
+
+        const results = await diceBox.roll(notation, { theme: localTheme });
+        const sum = results.reduce((acc, die) => acc + die.value, 0);
+        resultDiv.textContent = `Wynik: ${sum}`;
+
+        const natMessages = results.map(die => {
+            if (die.sides === 20 && (die.value === 1 || die.value === 20)) {
+                return die.value === 20 ? `🎯 NAT20` : `💀 NAT1`;
+            }
+            return `d${die.sides}: ${die.value}`;
+        });
+
+        const message = `${localSender} wylosował ${sum} (${natMessages.join(", ")})`;
+        stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({
+            from: "🧊 System",
+            content: message
+        }));
+
+        if (!sender) {
+            stompClient.send(`/app/dice/${roomId}`, {}, JSON.stringify({
+                from: username,
+                content: `${notation}|${localTheme}`
+            }));
+        }
+
+        setTimeout(() => {
+            diceBox.clear();
+        }, 5000);
+    }
+
+    document.getElementById("roll1d6").addEventListener("click", () => rollDice("1d6"));
+    document.getElementById("roll2d20").addEventListener("click", () => rollDice("2d20"));
+    document.getElementById("roll3d10").addEventListener("click", () => rollDice("3d10"));
+    document.getElementById("rollCustom").addEventListener("click", () => {
+        const input = document.getElementById("dice-input").value.trim();
+        if (input) rollDice(input);
+    });
+    window.rollDice = rollDice;
+</script>
 </body>
 </html>
