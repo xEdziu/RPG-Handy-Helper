@@ -30,6 +30,8 @@ public class CpRedSkills {
             name = "stat_id",
             referencedColumnName = "id"
     )
-    private CpRedStats connectedStatId;
+    private CpRedStats connectedStat;
+
+    @Column(length = 500)
     private String description;
 }

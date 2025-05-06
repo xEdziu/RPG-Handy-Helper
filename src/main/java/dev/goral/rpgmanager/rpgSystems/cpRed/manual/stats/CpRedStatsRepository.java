@@ -8,4 +8,5 @@ public interface CpRedStatsRepository extends JpaRepository<CpRedStats, Long> {
 
     boolean existsByName(String name);
     boolean existsByTag(String tag);
+    boolean existsById(Long id);
 }
