@@ -2,6 +2,7 @@ package dev.goral.rpgmanager.scheduler.service;
 
 import dev.goral.rpgmanager.email.EmailService;
 import dev.goral.rpgmanager.game.GameRepository;
+import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.scheduler.dto.common.TimeRangeDto;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
@@ -76,6 +77,13 @@ public class SchedulerService {
                 .orElseThrow(() -> new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId()))
                 .getGameMaster().getId().equals(creator.getId())) {
             throw new IllegalStateException("Tylko GameMaster może stworzyć harmonogram");
+        }
+
+        // Sprawdź, czy gra ma status ACTIVE
+        if (gameRepository.findById(request.getGameId())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId()))
+                .getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra musi być aktywna, aby stworzyć dla niej harmonogram.");
         }
 
         // Walidacja
