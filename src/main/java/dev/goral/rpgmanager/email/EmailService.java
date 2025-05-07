@@ -24,9 +24,6 @@ public class EmailService {
     @Value("${baseUrl}")
     private String baseUrl;
 
-    @Value("${spring.mail.username}")
-    private String fromMail;
-
     public void sendVerificationEmail(User user) {
         String subject = "Aktywacja Konta | RPG Handy Helper";
         String confirmationUrl = baseUrl + "/activate?token=" + user.getToken();
@@ -39,11 +36,11 @@ public class EmailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
+            String setFromMail = String.format("%s <%s>", "RPG Handy Helper Team", "rpg@adrian-goral.dev");
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(htmlContent, true);
-            helper.setFrom(fromMail);
+            message.setFrom(setFromMail);
             mailSender.send(message);
         } catch (MessagingException e) {
             throw new IllegalStateException("Failed to send email", e);
