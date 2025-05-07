@@ -342,7 +342,7 @@
                 container.innerHTML = '';
                 if (accessibleGame.length == 0) {
                     const div = document.createElement('div');
-                    div.className = 'note-box w-[75vw] max-w-2xl p-4 bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface  hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
+                    div.className = 'note-box w-[75vw] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface  hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
                     div.innerHTML = `
                         <div class="flex-col items-center justify-between mb-2 font-jetbrains-mono">
                             <p class="mb-2"> Nie masz jeszcze żadnych notatek! </p>
@@ -355,7 +355,7 @@
                 }
                 if (!notes.gameNotes || notes.gameNotes.length === 0) {
                     const div = document.createElement('div');
-                    div.className = 'note-box w-[75vw] max-w-2xl p-4 bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface  hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
+                    div.className = 'note-box w-[75vw] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface  hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
                     div.innerHTML = `
                         <div class="flex-col items-center justify-between mb-2 font-jetbrains-mono">
                             <p class="mb-2"> Nie masz jeszcze żadnych notatek! </p>
@@ -367,7 +367,6 @@
                     return;
                 }
                 noteInfo = notes.gameNotes.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-
                 noteInfo.forEach(note => {
                     if (!userSystems.includes(note.rpgSystemName)) {
                         userSystems.push(note.rpgSystemName);
@@ -375,17 +374,24 @@
                     if (!userGameName.includes(note.gameName)) {
                         userGameName.push(note.gameName);
                     }
-
                     const div = document.createElement('div');
-                    div.className = 'note-box w-[75vw] max-w-2xl p-4 bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
+                    div.className = 'note-box w-[75vw] max-w-2xl p-4  border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
                     div.addEventListener("click", (e) => {
                         e.stopPropagation();
                         displayNote(note.id);
                     });
                     div.innerHTML = `
                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-xl font-semibold mb-1 font-jetbrains-mono">${note.rpgSystemName} <span class="text-light-accent dark:text-dark-accent"> ${note.             gameName} </span></h3> 
-                            <small>${new Date(note.createdAt).toLocaleString()}</small>
+                            <h3 class="text-xl font-semibold mb-1 font-jetbrains-mono">
+                                <span class="text-light-accent dark:text-dark-accent"> ${note.gameName}</span>
+                                ${note.rpgSystemName} </h3> 
+                            <small>${new Date(note.updatedAt).toLocaleString('pl-PL', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}</small>
                         </div>
                         <h2 class= "text-2xl font-semibold mb-2 font-jetbrains-mono">${note.title}</h2>
                         <p class="ml-8">${parseMarkdown(truncateText(note.content))}</p>
@@ -437,38 +443,97 @@
                     });
                 });
         }
-        function createNote() {
-            const noteEditor = document.getElementById('note-editor');
-            noteEditor.innerHTML = `
-                <div class="flex justify-between items-center mb-4 border-b pb-2 border-light-accentDark dark:border-dark-accentDark">
-                    <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">Dodaj nową notatkę</h2>
-                </div>
-                <h2>Wybierz grę:</h2>
-                <select id="game-name" class="w-full p-2 mb-4 border rounded text-black dark:text-white bg-white dark:bg-dark-surface">
-                    ${accessibleGame.map(game => `<option value="${game.id}">${game.name}</option>`).join('')}
-                </select>
-                <input id="note-title" type="text" placeholder="Tytuł notatki"
-                    class="w-full p-2 mb-4 border rounded text-black dark:text-white bg-white dark:bg-dark-surface">
-                <div class="flex flex-row gap-4 min-h-[32vh]">
-                    <textarea id="note-content" rows="10" placeholder="Treść notatki"
-                        class="w-1/2 p-4 border rounded resize-none font-jetbrains-mono text-sm text-black dark:text-white bg-white dark:bg-dark-surface        overflow-auto"></textarea>
-                    <div id="note-preview"
-                        class="w-1/2 p-4 border rounded overflow-auto prose dark:prose-invert bg-white dark:bg-dark-surface">
-                        <p class="text-gray-500 italic">Podgląd notatki</p>
-                    </div>
-                </div>
-                <div class="mt-4 flex justify-end p-2">
-                    <button id="save-note"
-                        class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark  dark:hover:bg-dark-accentDark" onclick="saveNote()">
-                        Zapisz
-                    </button>
+        function showPreviewNote() {
+            const preview = document.getElementById('note-preview');
+            const textarea = document.getElementById('note-content');
+            const button = document.getElementById('preview-note');
+            var title = document.getElementById('note-title').value.trim();
+            const editorColumn = textarea.closest('.flex-col');
+            const isHidden = preview.classList.contains('hidden');
+            preview.innerHTML = `
+                <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${title || "Notatki bez tytułu?"}</h2>
+                <div class =" h-[30vh] overflow-auto font-jetbrains-mono">
+                    <p class ="break-words whitespace-pre-wrap mt-[-2em] ">
+                        ${parseMarkdown(textarea.value || "*Podgląd pusty...*")}
+                    </p>
                 </div>
             `;
+            preview.classList.toggle('hidden');
+            button.textContent = isHidden ? 'Zamknij podgląd' : 'Podgląd';
+            if (isHidden) {
+                editorColumn.classList.remove('lg:w-full');
+                editorColumn.classList.add('lg:w-1/2');
+            } else {
+                editorColumn.classList.remove('lg:w-1/2');
+                editorColumn.classList.add('lg:w-full');
+            }
+        }
+
+        function createNote() {
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.classList.remove('flex-row');
+            noteEditor.classList.add('flex-col');
+            noteEditor.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex flex-col items-start w-1/2">
+                        <p id="game-system" class="text-sm font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">Nazwa systemu gry</p>
+                        <select id="game-name" class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-light-accent       dark:text-dark-accent bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
+                            <option value="" disabled selected>-- Kampania --</option>
+                            ${accessibleGame.map(game => `<option value="${game.name}">${game.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="flex flex-row gap-2 items-center">
+                        <button id="preview-note"
+                            class="text-sm font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                            onclick="showPreviewNote()">Podgląd</button>
+                        <button id="save-note"
+                            class="text-sm font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                            onclick="saveNote()">Zapisz</button>
+                    </div>
+                </div>
+                <div class="flex flex-col lg:flex-row gap-4 min-h-[32vh]">
+                    <div class="flex flex-col w-full">
+                        <input id="note-title" type="text" placeholder="Tytuł notatki"
+                            class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white        dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
+                        <textarea id="note-content" rows="10" placeholder="Treść notatki"
+                            class="h-[30vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 overflow-auto font-jetbrains-mono"></textarea>
+                    </div>
+                    <div id="note-preview"
+                        class="hidden w-full lg:w-1/2 p-4 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words">
+
+                    </div>
+                </div>
+            `;
+
             showNoteEditor();
             const textarea = document.getElementById('note-content');
             const preview = document.getElementById('note-preview');
+            const titleChange = document.getElementById('note-title');
+            document.getElementById('game-name').addEventListener('change', (e) => {
+                const selectedGame = noteInfo.find(note => note.gameName === e.target.value);
+                document.getElementById('game-system').textContent = selectedGame ? selectedGame.rpgSystemName : 'Nazwa systemu gry';
+            });
+            titleChange.addEventListener('input', () => {
+                const title = document.getElementById('note-title').value.trim();
+                preview.innerHTML = `
+                    <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${title || "Notatki bez tytułu?"}</h2>
+                    <div class =" h-[30vh] overflow-auto font-jetbrains-mono">
+                        <p class ="break-words whitespace-pre-wrap mt-[-2em] ">
+                            ${parseMarkdown(textarea.value || "*Podgląd pusty...*")}
+                        </p>
+                    </div>
+                `;
+            });
             textarea.addEventListener('input', () => {
-                preview.innerHTML = parseMarkdown(textarea.value || "*Podgląd pusty...*");
+                const title = document.getElementById('note-title').value.trim();
+                preview.innerHTML = `
+                    <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${title || "Notatki bez tytułu?"}</h2>
+                    <div class =" h-[30vh] overflow-auto font-jetbrains-mono">
+                        <p class ="break-words whitespace-pre-wrap mt-[-2em] ">
+                            ${parseMarkdown(textarea.value || "*Podgląd pusty...*")}
+                        </p>
+                    </div>
+                `;
             });
         }
         function populateFilters() {
@@ -562,7 +627,6 @@
                                     class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
                                     Wyszukaj
                                 </label>
-                                <!-- TYLKO PO NAZWIE-->
                                 <div class="relative w-full">
                                     <input type="text" placeholder="--Słowo klucz--" id="search-input"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none   focus:ring-0" />
@@ -623,8 +687,8 @@
                    opacity-0 scale-95 pointer-events-none 
                    transition-all duration-300 ease-in-out">
 
-                <div id="note-editor" class="w-[60vw] h-[60vh] bg-white dark:bg-dark-surface 
-                           text-black dark:text-white p-6 rounded-lg shadow-xl 
+                <div id="note-editor" class=" w-[50vw] bg-white dark:bg-dark-surface 
+                           text-black dark:text-white p-6 px-10 rounded-lg shadow-xl 
                            overflow-auto flex-col justify-between">
 
                 </div>
@@ -697,7 +761,7 @@
             });
             div.innerHTML = `
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-xl font-semibold mb-1 font-jetbrains-mono">${note.rpgSystemName} <span class="text-light-accent dark:text-dark-accent"> ${note. gameName} </span></h3> 
+                    <h3 class="text-xl font-semibold mb-1 font-jetbrains-mono">${note.rpgSystemName} <span class="text-light-accent dark:text-dark-accent"> ${note.gameName} </span></h3> 
                     <small>${new Date(note.createdAt).toLocaleString()}</small>
                 </div>
                 <h2 class="text-2xl font-semibold mb-2 font-jetbrains-mono">${note.title}</h2>
@@ -763,4 +827,5 @@
         applyFilters();
     });
 </script>
+
 </html>
