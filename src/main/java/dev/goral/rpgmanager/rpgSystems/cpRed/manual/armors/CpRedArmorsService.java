@@ -11,10 +11,20 @@ import java.util.Map;
 public class CpRedArmorsService {
     private final CpRedArmorsRepository cpRedArmorsRepository;
 
-//    // Pobierz wszystkie pancerze
-//    public List<CpRedArmorsDTO> getAllArmors() {
-//
-//    }
+    // Pobierz wszystkie pancerze
+    public List<CpRedArmorsDTO> getAllArmors() {
+        List<CpRedArmors> armors = cpRedArmorsRepository.findAll();
+        return armors.stream().map(armor ->
+                new CpRedArmorsDTO(
+                        armor.getType().toString(),
+                        armor.getArmorPoints(),
+                        armor.getPenalty(),
+                        armor.getPrice(),
+                        armor.getAvailability().toString(),
+                        armor.getDescription()
+                )
+        ).toList();
+    }
 //
 //    // Pobierz pancerz po id
 //    public CpRedArmorsDTO getArmorById(Long armorId) {
