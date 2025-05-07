@@ -392,6 +392,62 @@
                                   </option>
                                   <option name="sortWeight" value="2000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="7dbdf7d8-b7ef-42b0-8b6a-1b5296131584" />
+                                  <option name="name" value="Armors" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="id" value="3b4237b7-bd30-4445-ba37-23e8b39ade5a" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="get all armors" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/armors/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="c80aba6a-73d3-435a-88e8-3ed7c0a269ee" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="get armor by id" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/armors/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="d0a2a12d-27b5-4b61-a688-51aca0f2c137" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="get all for admin" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;type&quot;: &quot;KEVLAR&quot;,&#10;  &quot;armorPoints&quot;: 3,&#10;  &quot;penalty&quot;: 1,&#10;  &quot;price&quot;: 100,&#10;  &quot;availability&quot;: &quot;CHEAP&quot;,&#10;  &quot;description&quot;: &quot;A lightweight armor made of synthetic fibers, providing decent protection without sacrificing mobility.&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="1ee33249-c43c-4fb2-b96a-25aa3ca4033f" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="add armor" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;type&quot;: &quot;KEVLAR&quot;,&#10;  &quot;armorPoints&quot;: 4,&#10;  &quot;penalty&quot;: 1,&#10;  &quot;price&quot;: 120,&#10;  &quot;availability&quot;: &quot;CHEAP&quot;,&#10;  &quot;description&quot;: &quot;Update.&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="2512b6e0-0b36-4173-b540-22ffce8fdbcd" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="update armor" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="3000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />
