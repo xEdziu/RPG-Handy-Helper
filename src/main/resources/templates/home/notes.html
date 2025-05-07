@@ -407,9 +407,12 @@
         function saveNote(idNote) {
             const noteTitle = document.getElementById('note-title').value.trim();
             const noteContent = document.getElementById('note-content').value.trim();
-            const gameIdRaw = document.getElementById('game-name').value;
-            const gameId = parseInt(gameIdRaw);
+            const gameNameRow = document.getElementById('game-name').value;
+            const gameId = accessibleGame.find(game => game.name === gameNameRow)?.id;
             if (!noteTitle || !noteContent || !gameId || isNaN(gameId)) {
+                console.log(noteTitle);
+                console.log(noteContent);
+                console.log(gameId);
                 Swal.fire({
                     icon: 'warning',
                     title: 'Brak danych!',
