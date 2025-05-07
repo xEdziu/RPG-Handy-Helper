@@ -3,8 +3,12 @@ package dev.goral.rpgmanager.game;
 
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.rpgSystems.RpgSystems;
+import dev.goral.rpgmanager.scheduler.entity.Scheduler;
+import java.util.List;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 
 @Entity
 @Table
@@ -46,6 +50,11 @@ public class Game {
             nullable = false
     )
     private RpgSystems rpgSystem;
+
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Scheduler> schedulers = new ArrayList<>();
+
 
     @Enumerated(EnumType.STRING)
     private GameStatus status = GameStatus.ACTIVE;
