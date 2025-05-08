@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pl">
 
@@ -19,34 +18,24 @@
                         dark: {
                             background: "#1E1E1E",
                             backgroundSecondary: "#181818",
-                            backgroundTertiary: "#101010",
                             textPrimary: "#E1E1E1",
                             textSecondary: "#AFAFAF",
                             accent: "#12e1b9",
-                            border: "#333333",
-                            surface: "#1E1E1E",
                             accentDark: "#00B189",
-                            success: "#00EE00",
-                            error: "#D00000",
-                            warning: "#FF9831",
+                            border: "#333333"
                         },
                         light: {
                             background: "#E1E1E1",
                             backgroundSecondary: "#C1C1C1",
-                            backgroundTertiary: "#818181",
                             textPrimary: "#252525",
-                            surface: "#F5F5F5",
-                            border: "#CCCCCC",
                             textSecondary: "#505050",
                             accent: "#ED1E46",
                             accentDark: "#BD0016",
-                            success: "#009688",
-                            error: "#b388FF",
-                            warning: "#FF6F00",
-                        },
-                    },
-                },
-            },
+                            border: "#CCCCCC"
+                        }
+                    }
+                }
+            }
         };
     </script>
     <style>
@@ -63,6 +52,7 @@
 </head>
 
 <body class="font-league-spartan bg-light-background dark:bg-dark-background text-light-textPrimary dark:text-dark-textPrimary min-h-screen flex flex-col">
+
 <nav class="flex justify-between items-center p-4 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
     <a href="/">
         <div class="flex items-center">
@@ -82,46 +72,115 @@
 </nav>
 
 <main class="flex-grow flex flex-col items-center py-10 px-4">
-    <h1 class="text-3xl font-bold border-b-4 border-light-accentDark dark:border-dark-accentDark mb-6 font-jetbrains-mono">MÓJ PROFIL</h1>
+    <h1 class="text-4xl font-bold tracking-wide border-b-4 border-light-accentDark dark:border-dark-accentDark mb-10 text-center font-jetbrains-mono">
+        MÓJ PROFIL
+    </h1>
 
     <div class="bg-light-surface dark:bg-dark-surface rounded-xl shadow-md p-6 max-w-3xl w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="flex flex-col items-center">
-            <div class="relative">
-                <img id="profilePhoto" src="" alt="Zdjęcie profilowe" class="w-40 h-40 rounded bg-dark-backgroundSecondary">
-                <button class="absolute top-0 right-0 bg-light-accent dark:bg-dark-accent p-2 rounded-full text-white">
+        <!-- Sekcja zdjęcia -->
+        <div class="flex flex-col items-center justify-between">
+            <div class="relative mb-4">
+                <img id="profilePhoto" src="" alt="Zdjęcie profilowe"
+                     class="w-40 h-40 rounded-full bg-dark-backgroundSecondary object-cover">
+                <button class="absolute -top-2 -right-2 bg-light-accent dark:bg-dark-accent p-2 rounded-full text-white shadow-lg">
                     <i class="fa-solid fa-pen"></i>
                 </button>
             </div>
-            <form id="photoForm" class="mt-4 w-full text-center" enctype="multipart/form-data">
-                <input type="file" id="photoInput" name="file" accept="image/png, image/jpeg" class="block mb-2 text-sm mx-auto" />
+
+            <!-- Formularz zdjęcia z przyciskiem -->
+            <form id="photoForm" class="w-full flex flex-col items-center" enctype="multipart/form-data">
+                <input type="file" id="photoInput" name="file" accept="image/png, image/jpeg"
+                       class="block mb-2 text-sm mx-auto" />
                 <img id="photoPreview" src="" alt="Podgląd" class="hidden w-40 h-40 rounded mt-2 mx-auto" />
-                <button type="submit" class="mt-2 px-4 py-2 bg-light-accent dark:bg-dark-accent text-white rounded">Prześlij zdjęcie</button>
+                <button type="submit"
+                        class="w-full mt-4 px-6 py-3 text-sm font-semibold text-dark-textPrimary dark:text-light-textPrimary
+                bg-light-accent dark:bg-dark-accent border border-light-border dark:border-dark-border
+                rounded-lg transition-all duration-300 hover:bg-light-accentDark hover:dark:bg-dark-accentDark
+                focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
+                active:scale-95 font-jetbrains-mono">
+                    Prześlij zdjęcie
+                </button>
             </form>
         </div>
 
-        <div>
-            <form id="updateForm" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-1">Nazwa użytkownika:</label>
-                    <input type="text" id="username" class="w-full p-2 rounded bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border" />
+        <!-- Formularz danych użytkownika -->
+        <form id="updateForm" class="flex flex-col justify-between">
+            <div class="space-y-4">
+                <div class="relative">
+                    <input type="text" id="username" name="username" required placeholder=" "
+                           class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary
+                 bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border
+                 focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent" />
+                    <label for="username" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary
+                 duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5
+                 peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-90 peer-focus:-translate-y-4">
+                        <i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:
+                    </label>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Imię:</label>
-                    <input type="text" id="firstName" class="w-full p-2 rounded bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border" />
+
+                <div class="relative">
+                    <input type="text" id="firstName" name="firstName" required placeholder=" "
+                           class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary
+                 bg-light-background dark:bg-dark-surface border-0 border-b-2 border-light-border dark:border-dark-border
+                 focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent" />
+                    <label for="firstName" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary
+                 duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5
+                 peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-90 peer-focus:-translate-y-4">
+                        <i class="fa-solid fa-user"></i> Imię:
+                    </label>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Nazwisko:</label>
-                    <input type="text" id="surname" class="w-full p-2 rounded bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border" />
+
+                <div class="relative">
+                    <input type="text" id="surname" name="surname" required placeholder=" "
+                           class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary
+                 bg-light-background dark:bg-dark-surface border-0 border-b-2 border-light-border dark:border-dark-border
+                 focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent" />
+                    <label for="surname" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary
+                 duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5
+                 peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-90 peer-focus:-translate-y-4">
+                        <i class="fa-solid fa-id-badge"></i> Nazwisko:
+                    </label>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">E-mail:</label>
-                    <p id="viewEmail" class="w-full p-2 rounded bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border"></p>
+
+                <div class="relative">
+                    <input type="email" id="email" name="email" required placeholder=" "
+                           class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary
+                 bg-light-background dark:bg-dark-surface border-0 border-b-2 border-light-border dark:border-dark-border
+                 focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent" />
+                    <label for="email" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary
+                 duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5
+                 peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-90 peer-focus:-translate-y-4">
+                        <i class="fa-solid fa-envelope"></i> E-mail:
+                    </label>
                 </div>
-                <button type="submit" class="w-full mt-2 py-2 px-4 bg-light-accent dark:bg-dark-accent text-white rounded">Zapisz zmiany</button>
-            </form>
-        </div>
+            </div>
+
+            <button type="submit"
+                    class="w-full mt-6 px-6 py-3 text-sm font-semibold text-dark-textPrimary dark:text-light-textPrimary
+              bg-light-accent dark:bg-dark-accent border border-light-border dark:border-dark-border
+              rounded-lg transition-all duration-300 hover:bg-light-accentDark hover:dark:bg-dark-accentDark
+              focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
+              active:scale-95 font-jetbrains-mono">
+                Zapisz zmiany
+            </button>
+        </form>
     </div>
+
+    <p class="text-center mt-6 text-sm">
+        Sprawdź też: <a href="/my-games" class="text-light-accent dark:text-dark-accent underline">Moje gry</a> lub wróć na:
+        <a href="/" class="text-light-accent dark:text-dark-accent underline">Stronę główną</a>
+    </p>
 </main>
+
+
 
 <footer class="text-center p-4 bg-light-surface dark:bg-dark-surface border-t border-light-border dark:border-dark-border font-jetbrains-mono">
     <h3>Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
