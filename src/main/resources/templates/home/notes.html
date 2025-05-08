@@ -204,37 +204,53 @@
                 return;
             }
             const noteEditor = document.getElementById('note-editor');
+            noteEditor.classList.remove('flex-row');
+            noteEditor.classList.add('flex-col');
             noteEditor.innerHTML = `
-                    <div class="flex justify-between items-center mb-4 border-b pb-2 border-light-accentDark dark:border-dark-accentDark">
-                        <div class="flex-col items-center">
-                            <h2 class="text-2xl font-bold font-jetbrains-mono text-light-accent dark:text-dark-accent">${note.gameName}</h2>
-                            <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${note.rpgSystemName}</h2>
+                <div class="flex flex-row justify-end lg:flex-row gap-4">
+                    <div class="flex flex-col w-full">
+                        <p class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${note.rpgSystemName}</p>
+                        <p class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
+                    </div>
+                    <div class="flex flex-col items-start justify-start text-xs text-light-textSecondary dark:text-dark-textSecondary whitespace-nowrap">
+                        <p>Ostatnia modyfikacja: ${new Date(note.updatedAt).toLocaleString("pl-PL", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })}</p>
+                        <p>Utworzono: ${new Date(note.createdAt).toLocaleString("pl-PL", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })}</p>
+                    </div>
+                </div>
+                <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
+                    <div class="flex flex-col w-full">
+                        <div class="flex flex-row justify-between items-start w-full mb-4">
+                            <h1 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary leading-tight">
+                                ${note.title}
+                            </h1>
+                            <div class="flex gap-2">
+                                <button onclick="editNote(${note.id})"
+                                    class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark   whitespace-nowrap">
+                                    Edytuj
+                                </button>
+                                <button onclick="deleteNote(${note.id})"
+                                    class="w-fit text-base font-bold bg-light-error dark:bg-dark-error text-white px-4 py-2 rounded hover:bg-red-600 whitespace-nowrap">
+                                    Usuń
+                                </button>
+                            </div>
                         </div>
-                        <div class="flex-col items-center">
-                            <small class="text-light-textSecondary dark:text-dark-textSecondary">Ostatnia Modyfikacja: ${new Date(note.updatedAt).toLocaleString("pl-PL", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit"
-            })}</small> <br>
-                            <small class="text-light-textSecondary dark:text-dark-textSecondary">Utworzono: ${new Date(note.createdAt).toLocaleString("pl-PL", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit"
-            })}</small>
+                        <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                            ${parseMarkdown(note.content)}
                         </div>
                     </div>
-                    <div class="flex justify-between items-center"> 
-                        <h1 class="text-3xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${note.title}</h1>
-                        <div>
-                            <button id="delete-note" class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark         dark:hover:bg-dark-accentDark" onclick="deleteNote(${note.id})">Usuń</button>
-                            <button id="edit-note" class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark       dark:hover:bg-dark-accentDark" onclick="editNote(${note.id})">Edytuj</button>
-                        </div>
-                    </div>
-                    <p class="text-light-textSecondary dark:text-dark-textSecondary font-jetbrains-mono text-sm">${parseMarkdown(note.content)}</p>
+                </div>
             `;
             noteEditor.onclick = (event) => event.stopPropagation();
             showNoteEditor();
@@ -267,12 +283,12 @@
                             onclick="saveEditedNote(${note.id})">Zapisz</button>
                     </div>
                 </div>
-                <div class="flex flex-col lg:flex-row gap-4 min-h-[32vh]">
+                <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
                     <div class="flex flex-col w-full">
                         <input id="edit-note-title" type="text" value="${note.title.replace(/"/g, '&quot;')}" placeholder="Tytuł notatki"
                             class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400      dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
                         <textarea id="edit-note-content" rows="10" placeholder="Treść notatki"
-                            class="h-[30vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none         focus:ring-0 overflow-auto font-jetbrains-mono">${note.content}</textarea>
+                            class="h-[32vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none         focus:ring-0 overflow-auto font-jetbrains-mono">${note.content}</textarea>
                     </div>
                     <div id="note-preview"
                         class="hidden w-full lg:w-1/2 p-4 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left">
@@ -288,7 +304,7 @@
                 const content = contentInput.value.trim();
                 preview.innerHTML = `
                     <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title || "Notatki bez tytułu?"}</h2>
-                    <div class="h-[30vh] overflow-auto font-jetbrains-mono text-left">
+                    <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left">
                         <p class="break-words whitespace-pre-wrap mt-[-2em] text-left">
                             ${parseMarkdown(content || "*Podgląd pusty...*")}
                         </p>
@@ -503,7 +519,7 @@
             const isHidden = preview.classList.contains('hidden');
             preview.innerHTML = `
                 <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title || "Notatki bez tytułu?"}</h2>
-                <div class="h-[30vh] overflow-auto font-jetbrains-mono text-left">
+                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left">
                     <span class="break-words whitespace-pre-wrap mt-[-2em]">
                         ${parseMarkdown(content || "*Podgląd pusty...*")}
                     </span>
@@ -545,12 +561,12 @@
                             onclick="saveNote()">Zapisz</button>
                     </div>
                 </div>
-                <div class="flex flex-col lg:flex-row gap-4 min-h-[32vh]">
+                <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
                     <div class="flex flex-col w-full">
                         <input id="note-title" type="text" placeholder="Tytuł notatki"
                             class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white        dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
                         <textarea id="note-content" rows="10" placeholder="Treść notatki"
-                            class="h-[30vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 overflow-auto font-jetbrains-mono"></textarea>
+                            class="h-[32vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 overflow-auto font-jetbrains-mono"></textarea>
                     </div>
                     <div id="note-preview"
                         class="hidden w-full lg:w-1/2 p-4 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left">
@@ -570,7 +586,7 @@
                 const title = document.getElementById('note-title').value.trim();
                 preview.innerHTML = `
                     <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${title || "Notatki bez tytułu?"}</h2>
-                    <div class =" h-[30vh] overflow-auto font-jetbrains-mono">
+                    <div class =" h-[32vh] overflow-auto font-jetbrains-mono">
                             ${parseMarkdown(textarea.value || "*Podgląd pusty...*")}
                     </div>
                 `;
@@ -579,7 +595,7 @@
                 const title = document.getElementById('note-title').value.trim();
                 preview.innerHTML = `
                     <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${title || "Notatki bez tytułu?"}</h2>
-                    <div class =" h-[30vh] overflow-auto font-jetbrains-mono">
+                    <div class =" h-[32vh] overflow-auto font-jetbrains-mono">
                         <p class ="break-words whitespace-pre-wrap mt-[-2em] ">
                             ${parseMarkdown(textarea.value || "*Podgląd pusty...*")}
                         </p>
