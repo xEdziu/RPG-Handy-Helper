@@ -77,20 +77,20 @@
     </h1>
 
     <div class="bg-light-background dark:bg-dark-surface rounded-xl shadow-md p-6 max-w-3xl w-full grid md:grid-cols-2 gap-6 items-stretch">
-        <!-- Sekcja zdjęcia -->
-        <div class="flex flex-col items-center justify-between h-full">
-            <form id="photoForm" class="w-full flex flex-col items-center" enctype="multipart/form-data">
-                <input type="file" id="photoInput" name="file" accept="image/png, image/jpeg"
-                       class="block mb-2 text-sm mx-auto hidden" />
-                <img id="photoPreview" src="" alt="Podgląd" class="hidden w-full h-full rounded mt-2 mx-auto" />
-            </form>
-            <div class="">
-                <label for="photoInput" class="-top-200 -right-2 bg-light-accent dark:bg-dark-accent p-2 rounded-full text-white shadow-lg cursor-pointer">
-                    <i class="fa-solid fa-pen"></i>
-                </label>
-            </div>
+        <div class="relative w-full h-full rounded-xl overflow-hidden">
+            <img id="profilePhoto" src=""
+                 class="absolute inset-0 w-full h-full object-cover z-10 bg-dark-backgroundSecondary" />
 
-            <!-- Formularz zdjęcia z przyciskiem -->
+            <img id="photoPreview" src=""
+                 class="absolute inset-0 w-full h-full object-cover z-20 hidden" />
+
+            <label for="photoInput"
+                   class="absolute top-2 right-2 z-30 bg-light-accent dark:bg-dark-accent p-2 rounded-full text-white shadow-lg cursor-pointer">
+                <i class="fa-solid fa-pen"></i>
+            </label>
+            <form id="photoForm" enctype="multipart/form-data">
+                <input type="file" id="photoInput" name="file" accept="image/png, image/jpeg" class="hidden" />
+            </form>
         </div>
 
 
