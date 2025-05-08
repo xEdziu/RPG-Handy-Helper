@@ -51,7 +51,7 @@
     </style>
 </head>
 
-<body class="font-league-spartan bg-light-background dark:bg-dark-background text-light-textPrimary dark:text-dark-textPrimary min-h-screen flex flex-col">
+<body class="font-league-spartan bg-light-backgroundSecondary dark:bg-dark-background text-light-textPrimary dark:text-dark-textPrimary min-h-screen flex flex-col">
 
 <nav class="flex justify-between items-center p-4 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
     <a href="/">
@@ -76,12 +76,12 @@
         MÓJ PROFIL
     </h1>
 
-    <div class="bg-light-surface dark:bg-dark-surface rounded-xl shadow-md p-6 max-w-3xl w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-light-background dark:bg-dark-surface rounded-xl shadow-md p-6 max-w-3xl w-full grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Sekcja zdjęcia -->
         <div class="flex flex-col items-center justify-between">
             <div class="relative mb-4">
-                <img id="profilePhoto" src="" alt="Zdjęcie profilowe"
-                     class="w-40 h-40 rounded-full bg-dark-backgroundSecondary object-cover">
+                <img id="profilePhoto" src=""
+                     class="w-40 h-40 bg-dark-backgroundSecondary object-cover">
                 <button class="absolute -top-2 -right-2 bg-light-accent dark:bg-dark-accent p-2 rounded-full text-white shadow-lg">
                     <i class="fa-solid fa-pen"></i>
                 </button>
@@ -92,14 +92,6 @@
                 <input type="file" id="photoInput" name="file" accept="image/png, image/jpeg"
                        class="block mb-2 text-sm mx-auto" />
                 <img id="photoPreview" src="" alt="Podgląd" class="hidden w-40 h-40 rounded mt-2 mx-auto" />
-                <button type="submit"
-                        class="w-full mt-4 px-6 py-3 text-sm font-semibold text-dark-textPrimary dark:text-light-textPrimary
-                bg-light-accent dark:bg-dark-accent border border-light-border dark:border-dark-border
-                rounded-lg transition-all duration-300 hover:bg-light-accentDark hover:dark:bg-dark-accentDark
-                focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
-                active:scale-95 font-jetbrains-mono">
-                    Prześlij zdjęcie
-                </button>
             </form>
         </div>
 
@@ -163,21 +155,12 @@
                 </div>
             </div>
 
-            <button type="submit"
-                    class="w-full mt-6 px-6 py-3 text-sm font-semibold text-dark-textPrimary dark:text-light-textPrimary
-              bg-light-accent dark:bg-dark-accent border border-light-border dark:border-dark-border
-              rounded-lg transition-all duration-300 hover:bg-light-accentDark hover:dark:bg-dark-accentDark
-              focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
-              active:scale-95 font-jetbrains-mono">
-                Zapisz zmiany
-            </button>
         </form>
+        <p class="text-center mt-6 text-sm col-span-2">
+            Sprawdź też: <a href="/my-games" class="text-light-accent dark:text-dark-accent underline">Moje gry</a> lub wróć na:
+            <a href="/" class="text-light-accent dark:text-dark-accent underline">Stronę główną</a>
+        </p>
     </div>
-
-    <p class="text-center mt-6 text-sm">
-        Sprawdź też: <a href="/my-games" class="text-light-accent dark:text-dark-accent underline">Moje gry</a> lub wróć na:
-        <a href="/" class="text-light-accent dark:text-dark-accent underline">Stronę główną</a>
-    </p>
 </main>
 
 
