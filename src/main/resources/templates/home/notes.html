@@ -8,6 +8,7 @@
     <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
         .font-league-spartan {
             font-family: 'League Spartan', sans-serif;
         }
@@ -17,7 +18,8 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
-    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script><!-- Dodanie Font Awesome -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
@@ -203,23 +205,35 @@
             }
             const noteEditor = document.getElementById('note-editor');
             noteEditor.innerHTML = `
-                <div class="flex justify-between items-center mb-4 border-b pb-2 border-light-accentDark dark:border-dark-accentDark">
-                    <div class="flex-col items-center">
-                        <h2 class="text-2xl font-bold font-jetbrains-mono text-light-accent dark:text-dark-accent">${note.gameName}</h2>
-                        <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${note.rpgSystemName}</h2>
+                    <div class="flex justify-between items-center mb-4 border-b pb-2 border-light-accentDark dark:border-dark-accentDark">
+                        <div class="flex-col items-center">
+                            <h2 class="text-2xl font-bold font-jetbrains-mono text-light-accent dark:text-dark-accent">${note.gameName}</h2>
+                            <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${note.rpgSystemName}</h2>
+                        </div>
+                        <div class="flex-col items-center">
+                            <small class="text-light-textSecondary dark:text-dark-textSecondary">Ostatnia Modyfikacja: ${new Date(note.updatedAt).toLocaleString("pl-PL", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            })}</small> <br>
+                            <small class="text-light-textSecondary dark:text-dark-textSecondary">Utworzono: ${new Date(note.createdAt).toLocaleString("pl-PL", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            })}</small>
+                        </div>
                     </div>
-                    <div class="flex-col items-center">
-                        <small class="text-light-textSecondary dark:text-dark-textSecondary">Ostatnia Modyfikacja: ${new Date(note.updatedAt).toLocaleString()}</small> <br>
-                        <small class="text-light-textSecondary dark:text-dark-textSecondary">Utworzono: ${new Date(note.createdAt).toLocaleString()}</small>
+                    <div class="flex justify-between items-center"> 
+                        <h1 class="text-3xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${note.title}</h1>
+                        <div>
+                            <button id="delete-note" class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark         dark:hover:bg-dark-accentDark" onclick="deleteNote(${note.id})">Usuń</button>
+                            <button id="edit-note" class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark       dark:hover:bg-dark-accentDark" onclick="editNote(${note.id})">Edytuj</button>
+                        </div>
                     </div>
-                </div>
-                <div class="flex justify-between items-center"> 
-                    <h1 class="text-3xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${note.title}</h1>
-                    <div>
-                        <button id="delete-note" class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark     dark:hover:bg-dark-accentDark" onclick="deleteNote(${note.id})">Usuń</button>
-                        <button id="edit-note" class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark   dark:hover:bg-dark-accentDark" onclick="editNote(${note.id})">Edytuj</button>
-                    </div>
-                </div>
                     <p class="text-light-textSecondary dark:text-dark-textSecondary font-jetbrains-mono text-sm">${parseMarkdown(note.content)}</p>
             `;
             noteEditor.onclick = (event) => event.stopPropagation();
@@ -236,39 +250,68 @@
                 return;
             }
             const noteEditor = document.getElementById('note-editor');
+            noteEditor.classList.remove('flex-row');
+            noteEditor.classList.add('flex-col');
             noteEditor.innerHTML = `
-                <div class="flex justify-between items-center mb-4 border-b pb-2 border-light-accentDark dark:border-dark-accentDark">
-                    <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">Edytuj notatkę</h2>
-                </div>
-                <input id="edit-note-title" type="text" value="${note.title.replace(/"/g, '&quot;')}"
-                    class="w-full p-2 mb-4 border rounded text-black dark:text-white bg-white dark:bg-dark-surface">
-                <div class="flex flex-row gap-4 min-h-[32vh]">
-                    <textarea id="edit-note-content" rows="10"
-                        class="w-1/2 p-4 border rounded resize-none font-jetbrains-mono text-sm text-black dark:text-white bg-white dark:bg-dark-surface overflow-auto">${note.content}</textarea>
-
-                    <div id="edit-note-preview"
-                        class="w-1/2 p-4 border rounded overflow-auto prose dark:prose-invert bg-white dark:bg-dark-surface">
-                        ${parseMarkdown(note.content)}
+                <div class="flex flex-row justify-end lg:flex-row gap-4">
+                    <div class="flex flex-col w-full">
+                        <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${note.rpgSystemName}</p>
+                        <p id="game-name" class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
+                    </div>
+                    <div class="flex flex-row gap-2 items-center">
+                        <button id="preview-note"
+                            class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap"
+                            onclick="showPreviewNote('edit')">Podgląd</button>
+                        <button id="save-note"
+                            class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap"
+                            onclick="saveEditedNote(${note.id})">Zapisz</button>
                     </div>
                 </div>
-                <div class="mt-4 flex justify-end p-2">
-                    <button id="save-edited-note"
-                        class="text-xl bg-light-accent dark:bg-dark-accent text-light-textPrimary dark:text-dark-textPrimary p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
-                        onclick="saveEditedNote(${note.id})">
-                        Zapisz zmiany
-                    </button>
+                <div class="flex flex-col lg:flex-row gap-4 min-h-[32vh]">
+                    <div class="flex flex-col w-full">
+                        <input id="edit-note-title" type="text" value="${note.title.replace(/"/g, '&quot;')}" placeholder="Tytuł notatki"
+                            class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400      dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
+                        <textarea id="edit-note-content" rows="10" placeholder="Treść notatki"
+                            class="h-[30vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none         focus:ring-0 overflow-auto font-jetbrains-mono">${note.content}</textarea>
+                    </div>
+                    <div id="note-preview"
+                        class="hidden w-full lg:w-1/2 p-4 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left">
+                    </div>
                 </div>
             `;
-            console.log("test1")
-            const textarea = document.getElementById('edit-note-content');
-            const preview = document.getElementById('edit-note-preview');
-            textarea.addEventListener('input', () => {
-                preview.innerHTML = parseMarkdown(textarea.value || "*Podgląd pusty...*");
-            });
+            showNoteEditor();
+            const titleInput = document.getElementById('edit-note-title');
+            const contentInput = document.getElementById('edit-note-content');
+            const preview = document.getElementById('note-preview');
+            function updatePreview() {
+                const title = titleInput.value.trim();
+                const content = contentInput.value.trim();
+                preview.innerHTML = `
+                    <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title || "Notatki bez tytułu?"}</h2>
+                    <div class="h-[30vh] overflow-auto font-jetbrains-mono text-left">
+                        <p class="break-words whitespace-pre-wrap mt-[-2em] text-left">
+                            ${parseMarkdown(content || "*Podgląd pusty...*")}
+                        </p>
+                    </div>
+                `;
+            }
+            updatePreview();
+            titleInput.addEventListener('input', updatePreview);
+            contentInput.addEventListener('input', updatePreview);
         }
         function saveEditedNote(idNote) {
-            const noteTitle = document.getElementById('edit-note-title').value.trim();
-            const noteContent = document.getElementById('edit-note-content').value.trim();
+            const titleInput = document.getElementById('edit-note-title');
+            const contentInput = document.getElementById('edit-note-content');
+            if (!titleInput || !contentInput) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: 'Brakuje pól edycji.',
+                });
+                return;
+            }
+            const noteTitle = titleInput.value.trim();
+            const noteContent = contentInput.value.trim();
             if (!noteTitle || !noteContent) {
                 Swal.fire({
                     icon: 'warning',
@@ -277,13 +320,23 @@
                 });
                 return;
             }
-            const note = {
-                gameId: accessibleGame.find(gameName => noteInfo.find(note => note.id == idNote).gameName).id,
+            const note = noteInfo.find(note => note.id == idNote);
+            const gameId = accessibleGame.find(game => game.name === note.gameName)?.id;
+            if (!gameId) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: 'Nie udało się powiązać notatki z kampanią.',
+                });
+                return;
+            }
+            const updatedNote = {
+                gameId: gameId,
                 userId: userId,
                 title: noteTitle,
                 content: noteContent
             };
-            apiPut(`/api/v1/authorized/gameNotes/update/${idNote}`, note)
+            apiPut(`/api/v1/authorized/gameNotes/update/${idNote}`, updatedNote)
                 .then(() => {
                     Swal.fire({
                         icon: 'success',
@@ -303,36 +356,6 @@
                     });
                 });
         }
-        function deleteNote(idNote) {
-            Swal.fire({
-                title: 'Czy na pewno chcesz usunąć tę notatkę?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Tak, usuń!',
-                cancelButtonText: 'Anuluj'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    apiDelete(`/api/v1/authorized/gameNotes/delete/${idNote}`)
-                        .then(() => {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Notatka została usunięta!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            forceReload();
-                        })
-                        .catch((error) => {
-                            console.error('Nie udało się usunąć notatki:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Błąd!',
-                                text: 'Nie udało się usunąć notatki. Spróbuj ponownie.',
-                            });
-                        });
-                }
-            });
-        }
         async function loadNotes() {
             try {
                 const notes = await apiGet('/api/v1/authorized/gameNotes');
@@ -340,6 +363,12 @@
                 container.innerHTML = '';
                 if (accessibleGame.length == 0) {
                     document.getElementById('add-note').disabled = true;
+                    document.getElementById('search-input').disabled = true;
+                    document.getElementById('sort-by').disabled = true;
+                    document.getElementById('sort-order').disabled = true;
+                    document.getElementById('game-name-filter').disabled = true;
+                    document.getElementById('campaign-name-filter').disabled = true;
+                    document.getElementById('clear-filters').disabled = true;
                     const div = document.createElement('div');
                     div.className = 'note-box w-[75vw] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface  hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
                     div.innerHTML = `
@@ -354,6 +383,12 @@
                 }
                 if (!notes.gameNotes || notes.gameNotes.length === 0) {
                     const div = document.createElement('div');
+                    document.getElementById('search-input').disabled = true;
+                    document.getElementById('sort-by').disabled = true;
+                    document.getElementById('sort-order').disabled = true;
+                    document.getElementById('game-name-filter').disabled = true;
+                    document.getElementById('campaign-name-filter').disabled = true;
+                    document.getElementById('clear-filters').disabled = true;
                     div.className = 'note-box w-[75vw] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface  hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
                     div.innerHTML = `
                         <div class="flex-col items-center justify-between mb-2 font-jetbrains-mono">
@@ -435,6 +470,12 @@
                     });
                     loadNotes();
                     hideNoteEditor();
+                    document.getElementById('search-input').disabled = false;
+                    document.getElementById('sort-by').disabled = false;
+                    document.getElementById('sort-order').disabled = false;
+                    document.getElementById('game-name-filter').disabled = false;
+                    document.getElementById('campaign-name-filter').disabled = false;
+                    document.getElementById('clear-filters').disabled = false;
                 })
                 .catch((error) => {
                     console.error('Nie udało się zapisać notatki:', error);
@@ -445,51 +486,62 @@
                     });
                 });
         }
-        function showPreviewNote() {
+        function showPreviewNote(mode) {
+            console.log(mode);
+            const isEdit = mode === "edit";
+            const textarea = document.getElementById(isEdit ? 'edit-note-content' : 'note-content');
+            const titleInput = document.getElementById(isEdit ? 'edit-note-title' : 'note-title');
             const preview = document.getElementById('note-preview');
-            const textarea = document.getElementById('note-content');
             const button = document.getElementById('preview-note');
-            var title = document.getElementById('note-title').value.trim();
-            const editorColumn = textarea.closest('.flex-col');
+            if (!textarea || !titleInput || !preview || !button) {
+                console.warn("Brak jednego z wymaganych elementów podglądu.");
+                return;
+            }
+            const title = titleInput.value.trim();
+            const content = textarea.value.trim();
+            const editorContainer = textarea.closest('.flex.flex-col.lg\\:flex-row');
             const isHidden = preview.classList.contains('hidden');
             preview.innerHTML = `
-                <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${title || "Notatki bez tytułu?"}</h2>
-                <div class =" h-[30vh] overflow-auto font-jetbrains-mono">
-                    <p class ="break-words whitespace-pre-wrap mt-[-2em] ">
-                        ${parseMarkdown(textarea.value || "*Podgląd pusty...*")}
-                    </p>
+                <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title || "Notatki bez tytułu?"}</h2>
+                <div class="h-[30vh] overflow-auto font-jetbrains-mono text-left">
+                    <span class="break-words whitespace-pre-wrap mt-[-2em]">
+                        ${parseMarkdown(content || "*Podgląd pusty...*")}
+                    </span>
                 </div>
             `;
             preview.classList.toggle('hidden');
             button.textContent = isHidden ? 'Zamknij podgląd' : 'Podgląd';
-            if (isHidden) {
-                editorColumn.classList.remove('lg:w-full');
-                editorColumn.classList.add('lg:w-1/2');
-            } else {
-                editorColumn.classList.remove('lg:w-1/2');
-                editorColumn.classList.add('lg:w-full');
+            if (editorContainer) {
+                const parent = textarea.parentElement;
+                if (isHidden) {
+                    parent.classList.remove('lg:w-full');
+                    parent.classList.add('lg:w-1/2');
+                } else {
+                    parent.classList.remove('lg:w-1/2');
+                    parent.classList.add('lg:w-full');
+                }
             }
         }
 
         function createNote() {
             const noteEditor = document.getElementById('note-editor');
             noteEditor.classList.remove('flex-row');
-            noteEditor.classList.add('flex-col');
+            noteEditor.classList.add('flex-colv');
             noteEditor.innerHTML = `
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex flex-col items-start w-1/2">
-                        <p id="game-system" class="text-sm font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">Nazwa systemu gry</p>
-                        <select id="game-name" class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-light-accent       dark:text-dark-accent bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
+                        <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">Nazwa systemu gry</p>
+                        <select id="game-name" class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-light-accent       dark:text-dark-accent bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
                             <option value="" disabled selected>-- Kampania --</option>
                             ${accessibleGame.map(game => `<option value="${game.name}">${game.name}</option>`).join('')}
                         </select>
                     </div>
                     <div class="flex flex-row gap-2 items-center">
                         <button id="preview-note"
-                            class="text-sm font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
-                            onclick="showPreviewNote()">Podgląd</button>
+                            class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                            onclick="showPreviewNote('')">Podgląd</button>
                         <button id="save-note"
-                            class="text-sm font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                            class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
                             onclick="saveNote()">Zapisz</button>
                     </div>
                 </div>
@@ -501,7 +553,7 @@
                             class="h-[30vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 overflow-auto font-jetbrains-mono"></textarea>
                     </div>
                     <div id="note-preview"
-                        class="hidden w-full lg:w-1/2 p-4 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words">
+                        class="hidden w-full lg:w-1/2 p-4 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left">
 
                     </div>
                 </div>
@@ -519,9 +571,7 @@
                 preview.innerHTML = `
                     <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${title || "Notatki bez tytułu?"}</h2>
                     <div class =" h-[30vh] overflow-auto font-jetbrains-mono">
-                        <p class ="break-words whitespace-pre-wrap mt-[-2em] ">
                             ${parseMarkdown(textarea.value || "*Podgląd pusty...*")}
-                        </p>
                     </div>
                 `;
             });
@@ -617,7 +667,7 @@
                 <div id="note-settings" class="flex flex-col items-center justify-center p-4 rounded-lg ml-18">
                     <div class="flex flex-col items-center">
                         <button id="add-note"
-                            class="text-3xl py-4 px-10 m-2 mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:bg-dark-accentDark disabled:cursor-not-allowed disabled:opacity-50"
+                            class="text-3xl py-4 px-10 m-2 mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
                             onclick="createNote()">
                             STWÓRZ NOWĄ NOTATKĘ
                         </button>
@@ -672,8 +722,8 @@
                             </div>
                             <div class="flex justify-end">
                                 <button
-                                    class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm"
-                                    onclick="clearFilters()">
+                                    class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
+                                    id="clear-filters" onclick="clearFilters()">
                                     Wyczyść filtry
                                 </button>
                             </div>
@@ -828,4 +878,5 @@
         applyFilters();
     });
 </script>
+
 </html>
