@@ -8,7 +8,6 @@
     <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
-
         .font-league-spartan {
             font-family: 'League Spartan', sans-serif;
         }
@@ -18,8 +17,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
-    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
-    <!-- Dodanie Font Awesome -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script><!-- Dodanie Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
@@ -341,6 +339,7 @@
                 const container = document.getElementById('notes-container');
                 container.innerHTML = '';
                 if (accessibleGame.length == 0) {
+                    document.getElementById('add-note').disabled = true;
                     const div = document.createElement('div');
                     div.className = 'note-box w-[75vw] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface  hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
                     div.innerHTML = `
@@ -507,7 +506,6 @@
                     </div>
                 </div>
             `;
-
             showNoteEditor();
             const textarea = document.getElementById('note-content');
             const preview = document.getElementById('note-preview');
@@ -619,7 +617,7 @@
                 <div id="note-settings" class="flex flex-col items-center justify-center p-4 rounded-lg ml-18">
                     <div class="flex flex-col items-center">
                         <button id="add-note"
-                            class="text-3xl py-4 px-10 m-2 mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono"
+                            class="text-3xl py-4 px-10 m-2 mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:bg-dark-accentDark disabled:cursor-not-allowed disabled:opacity-50"
                             onclick="createNote()">
                             STWÓRZ NOWĄ NOTATKĘ
                         </button>
@@ -830,5 +828,4 @@
         applyFilters();
     });
 </script>
-
 </html>
