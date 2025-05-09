@@ -664,14 +664,23 @@
         }
         function showNoteEditor() {
             const backdrop = document.getElementById('note-editor-backdrop');
-            backdrop.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-            backdrop.classList.add('opacity-100', 'scale-100');
+            const editor = document.getElementById('note-editor');
+
+            backdrop.classList.remove('pointer-events-none', 'opacity-0');
+            backdrop.classList.add('opacity-100');
+
+            editor.classList.remove('scale-95', 'opacity-0');
+            editor.classList.add('scale-100', 'opacity-100');
         }
         function hideNoteEditor() {
             const backdrop = document.getElementById('note-editor-backdrop');
-            backdrop.classList.remove('opacity-100', 'scale-100');
-            backdrop.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-            const noteEditor = document.getElementById('note-editor');
+            const editor = document.getElementById('note-editor');
+
+            backdrop.classList.add('opacity-0', 'pointer-events-none');
+            backdrop.classList.remove('opacity-100');
+
+            editor.classList.add('scale-95', 'opacity-0');
+            editor.classList.remove('scale-100', 'opacity-100');
         }
         document.addEventListener('click', function (event) {
             const editor = document.getElementById('note-editor');
@@ -792,9 +801,9 @@
             </div>
             <!-- Edytor notatki -->
             <div id="note-editor-backdrop"
-                class="fixed inset-0 z-50 flex items-center justify-center opacity-0 scale-95 pointer-events-none transition-all duration-300 ease-in-out">
+                class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none bg-black/30 dark:bg-black/50">
                 <div id="note-editor"
-                    class="w-[90vw] sm:w-[95vw] md:w-[70vw] lg:w-[50vw] bg-white dark:bg-dark-surface text-black dark:text-white p-6 px-10 rounded-lg shadow-xl overflow-auto flex-col justify-between">
+                    class="w-[90vw] sm:w-[95vw] md:w-[70vw] lg:w-[50vw] bg-white dark:bg-dark-surface text-black dark:text-white p-6 px-10 rounded-lg shadow-xl overflow-auto flex-col justify-between transition-all duration-300 ease-in-out scale-95 opacity-0">
                 </div>
             </div>
         </div>
