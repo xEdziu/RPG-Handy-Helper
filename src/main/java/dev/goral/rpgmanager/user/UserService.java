@@ -242,7 +242,7 @@ public class UserService implements UserDetailsService {
 
             // Przetwarzanie obrazu
             BufferedImage image = ImageIO.read(file.getInputStream());
-            BufferedImage resized = resizeImage(image);
+            BufferedImage resized = resizeImage(image, formatName);
             ImageIO.write(resized, formatName, filepath.toFile());
 
             user.setUserPhotoPath("/img/profilePics/" + filename);
@@ -254,9 +254,14 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    private BufferedImage resizeImage(BufferedImage originalImage) {
+    private BufferedImage resizeImage(BufferedImage originalImage, String extension) {
         Image tmp = originalImage.getScaledInstance(512, 512, Image.SCALE_SMOOTH);
-        BufferedImage resized = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage resized;
+        if (extension.equals("png"))
+            resized = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
+        else
+            resized = new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
+
         Graphics2D g2d = resized.createGraphics();
         g2d.drawImage(tmp, 0, 0, null);
         g2d.dispose();
