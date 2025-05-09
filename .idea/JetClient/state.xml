@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -233,7 +233,7 @@
                       <option name="method" value="PUT" />
                       <option name="name" value="Modyfikuj role użytkownika w grze" />
                       <option name="sortWeight" value="5000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/3" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/1" />
                     </requestState>
                     <requestState>
                       <option name="body">
