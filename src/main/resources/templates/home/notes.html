@@ -232,20 +232,20 @@
                 </div>
                 <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
                     <div class="flex flex-col w-full">
-                        <div class="flex flex-row justify-between items-start w-full mb-4">
-                            <h1 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary leading-tight">
-                                ${note.title}
-                            </h1>
-                            <div class="flex gap-2">
-                                <button onclick="editNote(${note.id})"
-                                    class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark   whitespace-nowrap">
-                                    Edytuj
-                                </button>
-                                <button onclick="deleteNote(${note.id})"
-                                    class="w-fit text-base font-bold bg-light-error dark:bg-dark-error text-white px-4 py-2 rounded hover:bg-red-600 whitespace-nowrap">
-                                    Usuń 
-                                </button>
-                            </div>
+                        <div class="w-full mb-4 flex justify-between items-start gap-4">
+                          <h1 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary leading-tight break-words whitespace-normal w-[70%]">
+                            ${note.title}
+                          </h1>
+                          <div class="flex-shrink-0 flex gap-2 xl:flex-row flex-col align-end">
+                            <button onclick="editNote(${note.id})"
+                              class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap">
+                              Edytuj
+                            </button>
+                            <button onclick="deleteNote(${note.id})"
+                              class="w-[80px] text-base font-bold bg-light-error dark:bg-dark-error text-white px-4 py-2 rounded hover:bg-red-600 whitespace-nowrap">
+                              Usuń 
+                            </button>
+                          </div>
                         </div>
                         <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
                             ${parseMarkdown(note.content)}
@@ -300,6 +300,7 @@
             const titleInput = document.getElementById('edit-note-title');
             const contentInput = document.getElementById('edit-note-content');
             const preview = document.getElementById('note-preview');
+            
             function updatePreview() {
                 const title = titleInput.value.trim();
                 const content = contentInput.value.trim();
@@ -589,25 +590,25 @@
             noteEditor.innerHTML = `
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex flex-col items-start w-1/2">
-                        <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">Nazwa systemu gry</p>
+                        <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1"></p>
                         <select id="game-name" class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-light-accent       dark:text-dark-accent bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
                             <option value="" disabled selected>-- Kampania --</option>
                             ${accessibleGame.map(game => `<option value="${game.name}">${game.name}</option>`).join('')}
                         </select>
                     </div>
-                    <div class="flex flex-row gap-2 items-center">
-                        <button id="preview-note"
-                            class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
-                            onclick="showPreviewNote('')">Podgląd</button>
+                    <div class="flex flex-col lg:flex-row gap-2 items-right">
                         <button id="save-note"
                             class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
                             onclick="saveNote()">Zapisz</button>
+                        <button id="preview-note"
+                            class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                            onclick="showPreviewNote('')">Podgląd</button>
                     </div>
                 </div>
                 <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
                     <div class="flex flex-col w-full">
                         <input id="note-title" type="text" placeholder="Tytuł notatki"
-                            class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white        dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
+                            class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
                         <textarea id="note-content" rows="10" placeholder="Treść notatki"
                             class="h-[32vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 overflow-auto font-jetbrains-mono"></textarea>
                     </div>
@@ -623,7 +624,7 @@
             const titleChange = document.getElementById('note-title');
             document.getElementById('game-name').addEventListener('change', (e) => {
                 const selectedGame = noteInfo.find(note => note.gameName === e.target.value);
-                document.getElementById('game-system').textContent = selectedGame ? selectedGame.rpgSystemName : 'Nazwa systemu gry';
+                document.getElementById('game-system').textContent = selectedGame ? selectedGame.rpgSystemName : '';
             });
             titleChange.addEventListener('input', () => {
                 const title = document.getElementById('note-title').value.trim();
@@ -787,7 +788,7 @@
                         <!-- Wyczyść -->
                         <div class="flex justify-end hidden sm:flex">
                             <button id="clear-filters"
-                                class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50">
+                                class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50" onclick="clearFilters()">
                                 Wyczyść filtry
                             </button>
                         </div>
@@ -865,7 +866,7 @@
         }
         filteredNotes.forEach(note => {
             const div = document.createElement('div');
-            div.className = 'note-box w-[75vw] max-w-2xl p-4 bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
+            div.className = 'note-box w-[75vw] max-w-2xl p-4 min-h-[8rem] border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary break-words whitespace-normal overflow-hidden text-ellipsis';
             div.addEventListener("click", (e) => {
                 e.stopPropagation();
                 displayNote(note.id);
