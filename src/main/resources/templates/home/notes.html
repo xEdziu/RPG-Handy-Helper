@@ -215,19 +215,19 @@
                     </div>
                     <div class="flex flex-col items-start justify-start text-xs text-light-textSecondary dark:text-dark-textSecondary whitespace-nowrap">
                         <p>Ostatnia modyfikacja: ${new Date(note.updatedAt).toLocaleString("pl-PL", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    })}</p>
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            })}</p>
                         <p>Utworzono: ${new Date(note.createdAt).toLocaleString("pl-PL", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    })}</p>
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            })}</p>
                     </div>
                 </div>
                 <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
@@ -463,10 +463,11 @@
                     });
                     div.innerHTML = `
                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-xl font-semibold mb-1 font-jetbrains-mono">
+                            <div class="flex flex-col sm:flex-row text-xl font-semibold mb-1 font-jetbrains-mono gap-x-4">
                                 <span class="text-light-accent dark:text-dark-accent"> ${note.gameName}</span>
-                                ${note.rpgSystemName} </h3> 
-                            <small>${new Date(note.updatedAt).toLocaleString('pl-PL', {
+                                ${note.rpgSystemName} 
+                            </div>
+                            <small class="hidden sm:block">${new Date(note.updatedAt).toLocaleString('pl-PL', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',
@@ -556,9 +557,20 @@
                     </span>
                 </div>
             `;
-            preview.classList.toggle('hidden');
-            button.textContent = isHidden ? 'Zamknij podgląd' : 'Podgląd';
-            if (editorContainer) {
+            const isMobile = window.innerWidth < 1024;
+            if (isMobile) {
+                const editorWrapper = textarea.closest('.flex.flex-col');
+                if (!editorWrapper) return;
+
+                if (isHidden) {
+                    editorWrapper.classList.add('hidden');
+                    preview.classList.remove('hidden');
+                } else {
+                    editorWrapper.classList.remove('hidden');
+                    preview.classList.add('hidden');
+                }
+            } else {
+                preview.classList.toggle('hidden');
                 const parent = textarea.parentElement;
                 if (isHidden) {
                     parent.classList.remove('lg:w-full');
@@ -568,8 +580,8 @@
                     parent.classList.add('lg:w-full');
                 }
             }
+            button.textContent = isHidden ? 'Zamknij podgląd' : 'Podgląd';
         }
-
         function createNote() {
             const noteEditor = document.getElementById('note-editor');
             noteEditor.classList.remove('flex-row');
@@ -706,96 +718,88 @@
     </nav>
     <main
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
-        <div class="flex flex-col items-center justify-center w-full p-6">
-            <div class="flex flex-row items-strech justify-center w-[90vw] max-w-2xl p-4 rounded-lg">
-                <div id="notes-container" class="w-[100%] min-h-auto max flex flex-col items-center justify-center p-4">
-
-                </div>
-                <div id="note-settings" class="flex flex-col items-center justify-center p-4 rounded-lg ml-18">
-                    <div class="flex flex-col items-center">
-                        <button id="add-note"
-                            class="text-3xl py-4 px-10 m-2 mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
-                            onclick="createNote()">
-                            STWÓRZ NOWĄ NOTATKĘ
-                        </button>
-                        <div
-                            class="w-[96.7%] p-4 rounded-lg bg-light-surface dark:bg-dark-surface space-y-4 border border-light-border dark:border-dark-border">
-                            <div class="flex items-center space-x-2">
-                                <label
-                                    class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
-                                    Wyszukaj
-                                </label>
-                                <div class="relative w-full">
-                                    <input type="text" placeholder="--Słowo klucz--" id="search-input"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none   focus:ring-0" />
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <label
-                                    class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
-                                    Sortuj po
-                                </label>
-                                <select
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0"
-                                    id="sort-by">
-                                    <option value="data-modify" selected>Data Modyfikacji</option>
-                                    <option value="data-creation">Data Utworzenia</option>
-                                    <option value="title">Tytuł</option>
-                                </select>
-                                <select
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0"
-                                    id="sort-order">
-                                    <option value="ASC" class="block" selected>Od Najnowszych</option>
-                                    <option value="DESC" class="block">Od Najstarszych</option>
-                                    <option value="ASC" class="hidden">Sortuj od A do Z</option>
-                                    <option value="DESC" class="hidden">Sortuj od Z do A</option>
-                                </select>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <label
-                                    class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
-                                    Filtruj po
-                                </label>
-                                <select
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0"
-                                    id="game-name-filter">
-                                    <option value="" disabled selected>--System gry--</option>
-                                </select>
-                                <select
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0"
-                                    id="campaign-name-filter">
-                                    <option value="" disabled selected>--Kampania--</option>
-                                </select>
-                            </div>
-                            <div class="flex justify-end">
-                                <button
-                                    class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
-                                    id="clear-filters" onclick="clearFilters()">
-                                    Wyczyść filtry
-                                </button>
+        <div class="w-full p-6 flex flex-col items-center">
+            <div class="w-[100vw] max-w-6xl flex flex-col lg:flex-row-reverse items-start justify-center gap-6">
+                <!-- Ustawienia -->
+                <div id="note-settings" class="w-full lg:w-[35%] flex flex-col items-center p-4">
+                    <button id="add-note"
+                        class="text-2xl sm:text-3xl py-4 px-5 sm:px-10 mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
+                        onclick="createNote()">
+                        STWÓRZ NOWĄ NOTATKĘ
+                    </button>
+                    <div
+                        class="w-[313.61px]  sm:w-[422px] p-4 rounded-lg bg-light-surface dark:bg-dark-surface space-y-4 border border-light-border dark:border-dark-border">
+                        <!-- Wyszukiwanie -->
+                        <div class="sm:w-full flex items-center space-x-2">
+                            <label
+                                class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
+                                Wyszukaj
+                            </label>
+                            <div class="w-full">
+                                <input type="text" placeholder="--Słowo klucz--" id="search-input"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0" />
                             </div>
                         </div>
-
+                        <!-- Sortowanie -->
+                        <div class="flex items-center space-x-2 hidden sm:flex">
+                            <label
+                                class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
+                                Sortuj po
+                            </label>
+                            <select id="sort-by"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
+                                <option value="data-modify" selected>Data Modyfikacji</option>
+                                <option value="data-creation">Data Utworzenia</option>
+                                <option value="title">Tytuł</option>
+                            </select>
+                            <select id="sort-order"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
+                                <option value="ASC" class="block" selected>Od Najnowszych</option>
+                                <option value="DESC" class="block">Od Najstarszych</option>
+                                <option value="ASC" class="hidden">Sortuj od A do Z</option>
+                                <option value="DESC" class="hidden">Sortuj od Z do A</option>
+                            </select>
+                        </div>
+                        <!-- Filtry -->
+                        <div class="flex items-center space-x-2 hidden sm:flex">
+                            <label
+                                class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
+                                Filtruj po
+                            </label>
+                            <select id="game-name-filter"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
+                                <option value="" disabled selected>--System gry--</option>
+                            </select>
+                            <select id="campaign-name-filter"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
+                                <option value="" disabled selected>--Kampania--</option>
+                            </select>
+                        </div>
+                        <!-- Wyczyść -->
+                        <div class="flex justify-end hidden sm:flex">
+                            <button id="clear-filters"
+                                class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50">
+                                Wyczyść filtry
+                            </button>
+                        </div>
                     </div>
                 </div>
-
+                <!-- Notatki -->
+                <div id="notes-container" class="w-full flex flex-col items-center p-4">
+                    <!-- Dynamicznie dodawane notatki -->
+                </div>
 
             </div>
-            <div id="note-editor-backdrop" class="fixed inset-0 z-50 flex items-center justify-center 
-                   opacity-0 scale-95 pointer-events-none 
-                   transition-all duration-300 ease-in-out">
-
-                <div id="note-editor" class=" w-[50vw] bg-white dark:bg-dark-surface 
-                           text-black dark:text-white p-6 px-10 rounded-lg shadow-xl 
-                           overflow-auto flex-col justify-between">
-
+            <!-- Edytor notatki -->
+            <div id="note-editor-backdrop"
+                class="fixed inset-0 z-50 flex items-center justify-center opacity-0 scale-95 pointer-events-none transition-all duration-300 ease-in-out">
+                <div id="note-editor"
+                    class="w-[90vw] sm:w-[95vw] md:w-[70vw] lg:w-[50vw] bg-white dark:bg-dark-surface text-black dark:text-white p-6 px-10 rounded-lg shadow-xl overflow-auto flex-col justify-between">
                 </div>
             </div>
-
-        </div>
-
         </div>
     </main>
+
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
         <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
