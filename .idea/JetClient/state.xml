@@ -409,7 +409,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  gameId: 2,&#10;  name: &quot;Amunicja EMP&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 20,&#10;  availability: &quot;SUPER_LUXURY&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Amunicja EMP 3&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 20,&#10;  availability: &quot;SUPER_LUXURY&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -457,6 +457,14 @@
                                         <option name="name" value="Pobierz wszystkie customowe amunicje dla admina" />
                                         <option name="sortWeight" value="4000000" />
                                         <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customAmmunition/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera liste amunicji dla podanego id gry" />
+                                        <option name="id" value="0d41bfdc-f568-49df-9d75-d11e0accf09a" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz amunicje dla danej gry" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customAmmunition/game/1" />
                                       </requestState>
                                     </list>
                                   </option>

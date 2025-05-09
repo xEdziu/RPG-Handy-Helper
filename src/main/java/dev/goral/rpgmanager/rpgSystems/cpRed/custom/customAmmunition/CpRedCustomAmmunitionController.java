@@ -23,6 +23,11 @@ public class CpRedCustomAmmunitionController {
     public CpRedCustomAmmunitionDTO getCustomAmmunitionById(@PathVariable("ammunitionId") Long ammunitionId) {
         return cpRedCustomAmmunitionService.getCustomAmmunitionById(ammunitionId);
     }
+    // Pobierz amunicje po grze
+    @GetMapping(path = "/rpgSystems/cpRed/customAmmunition/game/{gameId}")
+    public List<CpRedCustomAmmunitionDTO> getCustomAmmunitionByGameId(@PathVariable("gameId") Long gameId) {
+        return cpRedCustomAmmunitionService.getCustomAmmunitionByGameId(gameId);
+    }
     // Dodaj amunicje
     @PostMapping(path = "/rpgSystems/cpRed/customAmmunition/add")
     public Map<String, Object> addCustomAmmunition(@RequestBody AddCustomAmmunitionRequest cpRedCustomAmmunition) {

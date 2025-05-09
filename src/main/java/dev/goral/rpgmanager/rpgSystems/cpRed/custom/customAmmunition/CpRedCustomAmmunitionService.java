@@ -2,6 +2,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.custom.customAmmunition;
 
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.game.GameRepository;
+import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.security.CustomReturnables;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -50,6 +50,32 @@ public class CpRedCustomAmmunitionService {
                 )).orElseThrow(() -> new ResourceNotFoundException("Customowa amunicja o id " + ammunitionId + " nie istnieje") );
     }
 
+    // Pobierz amunicje po grze
+    public List<CpRedCustomAmmunitionDTO> getCustomAmmunitionByGameId(Long gameId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        // Sprawdź, czy gra o podanym id istnieje
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + gameId + " nie istnieje."));
+
+        // Sprawdź, czy użytkownik należy do tej gry
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), gameId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie jesteś graczem wybranej gry."));
+
+        List<CpRedCustomAmmunition> gameCustomAmmunitionList = cpRedCustomAmmunitionRepository.findAllByGameId(game);
+        return gameCustomAmmunitionList.stream()
+                .map( cpRedCustomAmmunition -> new CpRedCustomAmmunitionDTO(
+                        cpRedCustomAmmunition.getGameId().getId(),
+                        cpRedCustomAmmunition.getName(),
+                        cpRedCustomAmmunition.getDescription(),
+                        cpRedCustomAmmunition.getPricePerBullet(),
+                        cpRedCustomAmmunition.getAvailability().toString()
+                )).toList();
+    }
+
     // Dodaj amunicje
     public Map<String, Object> addCustomAmmunition(AddCustomAmmunitionRequest cpRedCustomAmmunition) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -67,6 +93,11 @@ public class CpRedCustomAmmunitionService {
         // Sprawdź, czy podana gra istnieje
         Game game = gameRepository.findById(cpRedCustomAmmunition.getGameId())
                 .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + cpRedCustomAmmunition.getGameId() + " nie istnieje."));
+
+        // Sprawdź, czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra o id " + cpRedCustomAmmunition.getGameId() + " nie jest aktywna.");
+        }
 
         // Sprawdź, GM chce dokonać zmiany
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), cpRedCustomAmmunition.getGameId())
