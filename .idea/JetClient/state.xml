@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;SPECTATOR&quot;,&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -248,6 +248,14 @@
                       <option name="name" value="Zmień status DELETED/ACTIVE" />
                       <option name="sortWeight" value="6000000" />
                       <option name="url" value="http://localhost:8888/api/v1/authorized/game/changeStatus/1" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Zwraca id, nazwe i opis gier d otórych należy zalogowany gracz" />
+                      <option name="id" value="bc5e0f27-f494-456c-8455-b4595db94201" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Gry dla gracza" />
+                      <option name="sortWeight" value="7000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/userGames" />
                     </requestState>
                   </list>
                 </option>

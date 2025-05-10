@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -36,7 +37,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/room/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                                 .requestMatchers("/api/v1/**").permitAll() // Publicly accessible, no login required
                                 .requestMatchers("/admin", "/admin/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/home", "/home/**").hasAuthority("ROLE_USER")
+                                .requestMatchers("/home", "/home/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                                 .requestMatchers("/login", "/api/v1/**", "/register", "/activate").permitAll()
                                 .requestMatchers("/forgotPassword", "/resetPassword").permitAll()
                                 .requestMatchers("/", "/index.html", "/static/**", "/resources/**").permitAll() // Allow access to static resources
