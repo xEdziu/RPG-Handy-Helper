@@ -654,7 +654,7 @@
                 const parsedMarkdown = parseMarkdown(content || "").replace(/^(\s*\n)+/, "");
                 preview.innerHTML = `
             <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">
-                ${title || "Notatki bez tytułu?"}
+                ${title || "Notatka bez tytułu?"}
             </h2>
             <div class="h-[32vh] overflow-auto font-jetbrains-mono">
                 ${parsedMarkdown.length > 0
