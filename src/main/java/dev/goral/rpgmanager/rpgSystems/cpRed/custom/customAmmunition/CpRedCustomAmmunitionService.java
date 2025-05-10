@@ -5,6 +5,7 @@ import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
@@ -99,9 +100,14 @@ public class CpRedCustomAmmunitionService {
             throw new IllegalStateException("Gra o id " + cpRedCustomAmmunition.getGameId() + " nie jest aktywna.");
         }
 
-        // Sprawdź, GM chce dokonać zmiany
+        // Sprawdź, czy użytkownik należy do tej gry
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), cpRedCustomAmmunition.getGameId())
-                .orElseThrow(() -> new ResourceNotFoundException("Tylko GM może dodawać amunicję do swojej gry."));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
+
+        // Sprawdź, czy użytkownik jest GM
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalStateException("Tylko GM może dodać amunicję do gry.");
+        }
 
         // Sprawdzenie, czy w danej grze jest już broń o tej nazwie
         if (cpRedCustomAmmunitionRepository.existsByNameAndGameId(cpRedCustomAmmunition.getName(), game)) {
