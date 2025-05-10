@@ -15,11 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -199,7 +195,15 @@ public class UserService implements UserDetailsService {
             }
 
             String contentType = file.getContentType();
-            if (contentType == null || (!contentType.equals("image/jpeg") && !contentType.equals("image/png"))) {
+            String extension;
+            String formatName;
+            if ("image/jpeg".equals(contentType)) {
+                extension = ".jpg";
+                formatName = "jpg";
+            } else if ("image/png".equals(contentType)) {
+                extension = ".png";
+                formatName = "png";
+            } else {
                 throw new IllegalStateException("Nieprawidłowy typ pliku. Dozwolone są tylko JPEG i PNG.");
             }
 
@@ -214,7 +218,7 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
             }
 
-            // Usuń poprzednie zdjęcie, jeśli nie domyślne
+            // Usuń poprzednie zdjęcie, jeśli nie jest domyślne
             String oldPath = user.getUserPhotoPath();
             if (oldPath != null &&
                     !oldPath.equals("/img/profilePics/defaultProfilePic.png") &&
@@ -232,27 +236,14 @@ public class UserService implements UserDetailsService {
             }
 
             // Nowa nazwa pliku
-            String filename = UUID.randomUUID() + ".webp";
+            String filename = UUID.randomUUID() + extension;
             Path filepath = Paths.get("src/main/resources/static/img/profilePics", filename);
             Files.createDirectories(filepath.getParent());
 
-            // Konwersja i zapis do WebP
+            // Przetwarzanie obrazu
             BufferedImage image = ImageIO.read(file.getInputStream());
-            BufferedImage resized = resizeImage(image, 512, 512);
-
-            try (ImageOutputStream output = ImageIO.createImageOutputStream(Files.newOutputStream(filepath))) {
-
-                if (!ImageIO.getImageWritersByFormatName("webp").hasNext()) {
-                    throw new IllegalStateException("Nie można znaleźć ImageWriter dla formatu WebP.");
-                }
-
-                ImageWriter writer = ImageIO.getImageWritersByFormatName("webp").next();
-                writer.setOutput(output);
-
-                ImageWriteParam param = writer.getDefaultWriteParam();
-                writer.write(null, new IIOImage(resized, null, null), param);
-                writer.dispose();
-            }
+            BufferedImage resized = resizeImage(image, formatName);
+            ImageIO.write(resized, formatName, filepath.toFile());
 
             user.setUserPhotoPath("/img/profilePics/" + filename);
             userRepository.save(user);
@@ -263,10 +254,14 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    private BufferedImage resizeImage(BufferedImage originalImage, String extension) {
+        Image tmp = originalImage.getScaledInstance(512, 512, Image.SCALE_SMOOTH);
+        BufferedImage resized;
+        if (extension.equals("png"))
+            resized = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
+        else
+            resized = new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
 
-    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
-        Image tmp = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = resized.createGraphics();
         g2d.drawImage(tmp, 0, 0, null);
         g2d.dispose();
