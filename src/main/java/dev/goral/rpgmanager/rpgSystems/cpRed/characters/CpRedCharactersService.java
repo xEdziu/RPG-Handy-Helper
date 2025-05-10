@@ -172,14 +172,16 @@ public class CpRedCharactersService {
 
         Game game = cpRedCharacterToUpdate.getGame();
 
+        GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(game.getId(), currentUser.getId());
+
         if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())) {
-            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
+            if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
                 throw new IllegalArgumentException("Nie masz uprawnień do modyfikacji tej postaci.");
             }
         }
 
         if (cpRedCharacterToUpdate.getUser() == null) {
-            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
+            if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
                 throw new IllegalArgumentException("Tylko GameMaster może modyfikować tę postać.");
             }
         }
@@ -271,7 +273,7 @@ public class CpRedCharactersService {
         }
 
         if(character.getUser() != null) {
-            GameUsers gameUser = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+            gameUser = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie jest przypisany do tej gry."));
             if (gameUser.getRole() != GameUsersRole.GAMEMASTER) {
                 throw new IllegalArgumentException("Tylko GameMaster może zmienić właściciela postaci.");
