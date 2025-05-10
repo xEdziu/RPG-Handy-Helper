@@ -18,7 +18,8 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
-    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script> <!-- Dodanie Font Awesome -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
@@ -69,17 +70,25 @@
         var userId = null;
 
         document.addEventListener("DOMContentLoaded", () => {
+            const toggleWrapper = document.getElementById("theme-toggle-wrapper");
             const toggleSwitch = document.getElementById("switch-component");
+            if (toggleWrapper && toggleSwitch) {
+                toggleWrapper.addEventListener("click", () => {
+                    const isChecked = toggleSwitch.checked;
+                    const newTheme = isChecked ? "light" : "dark";
+                    applyTheme(newTheme);
+                });
+            }
             applyTheme(getSavedTheme());
             toggleSwitch?.addEventListener("change", () => {
                 const newTheme = toggleSwitch.checked ? "dark" : "light";
                 applyTheme(newTheme);
             });
+
             loadNotes();
             getAccessibleGameForUser();
             getUserId();
         });
-
         function updateFavicon(theme) {
             const favicon = document.getElementById("favicon");
             if (favicon) {
@@ -307,7 +316,7 @@
             const titleInput = document.getElementById('edit-note-title');
             const contentInput = document.getElementById('edit-note-content');
             const preview = document.getElementById('note-preview');
-            
+
             function updatePreview() {
                 const title = titleInput.value.trim();
                 const content = contentInput.value.trim();
@@ -316,8 +325,8 @@
                     <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title || "Notatki bez tytułu?"}</h2>
                     <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left">
                             ${parsedMarkdown.length > 0
-                            ? `<div class="break-words whitespace-pre-wrap">${parsedMarkdown}</div>`
-                            : `<p><em>*Podgląd pusty...*</em></p>`}
+                        ? `<div class="break-words whitespace-pre-wrap">${parsedMarkdown}</div>`
+                        : `<p><em>*Podgląd pusty...*</em></p>`}
                         </p>
                     </div>
                 `;
@@ -564,8 +573,8 @@
                 <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title || "Notatki bez tytułu?"}</h2>
                 <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left">
                     ${parsedMarkdown.length > 0
-                            ? `<div class="break-words whitespace-pre-wrap">${parsedMarkdown}</div>`
-                            : `<p><em>*Podgląd pusty...*</em></p>`}
+                    ? `<div class="break-words whitespace-pre-wrap">${parsedMarkdown}</div>`
+                    : `<p><em>*Podgląd pusty...*</em></p>`}
                 </div>
             `;
 
@@ -649,8 +658,8 @@
             </h2>
             <div class="h-[32vh] overflow-auto font-jetbrains-mono">
                 ${parsedMarkdown.length > 0
-                    ? `<div class="break-words whitespace-pre-wrap">${parsedMarkdown}</div>`
-                    : `<p><em>*Podgląd pusty...*</em></p>`}
+                        ? `<div class="break-words whitespace-pre-wrap">${parsedMarkdown}</div>`
+                        : `<p><em>*Podgląd pusty...*</em></p>`}
             </div>
         `;
             }
@@ -718,7 +727,7 @@
                 </h1>
             </div>
         </a>
-        <div class="flex items-center justify-center">
+        <div id="theme-toggle-wrapper" class="flex items-center justify-center">
             <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
             <div class="relative inline-block w-12 h-6">
                 <input id="switch-component" type="checkbox" class="peer hidden m-1" />
@@ -799,7 +808,8 @@
                         <!-- Wyczyść -->
                         <div class="flex justify-end hidden sm:flex">
                             <button id="clear-filters"
-                                class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50" onclick="clearFilters()">
+                                class="bg-light-accent dark:bg-dark-accent text-white font-semibold py-2 px-4 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-sm disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
+                                onclick="clearFilters()">
                                 Wyczyść filtry
                             </button>
                         </div>
