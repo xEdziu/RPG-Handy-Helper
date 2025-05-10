@@ -447,7 +447,7 @@
                     container.appendChild(div);
                     return;
                 }
-                if (!notes.gameNotes || notes.gameNotes.length === 0) {
+                if (!notes.gameNotes || notes.gameNotes.length === 0 || accessibleGame.length === 0) {
                     const div = document.createElement('div');
                     document.getElementById('search-input').disabled = true;
                     document.getElementById('sort-by').disabled = true;
@@ -455,7 +455,7 @@
                     document.getElementById('game-name-filter').disabled = true;
                     document.getElementById('campaign-name-filter').disabled = true;
                     document.getElementById('clear-filters').disabled = true;
-                    div.className = 'note-box w-[75vw] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface  hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
+                    div.className = 'note-box w-[75vw] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary';
                     div.innerHTML = `
                         <div class="flex-col items-center justify-between mb-2 font-jetbrains-mono">
                             <p class="mb-2"> Nie masz jeszcze żadnych notatek! </p>
@@ -475,7 +475,7 @@
                         userGameName.push(note.gameName);
                     }
                     const div = document.createElement('div');
-                    div.className = 'note-box w-[75vw] max-w-2xl p-4 min-h-[8rem] border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary break-words whitespace-normal overflow-hidden text-ellipsis';
+                    div.className = 'note-box w-[75vw] max-w-2xl p-4 min-h-[8rem] border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface  transition duration-300 text-light-textPrimary dark:text-dark-textPrimary break-words whitespace-normal overflow-hidden text-ellipsis';
                     div.addEventListener("click", (e) => {
                         e.stopPropagation();
                         displayNote(note.id);
