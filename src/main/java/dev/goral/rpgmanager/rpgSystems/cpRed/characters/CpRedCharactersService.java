@@ -104,6 +104,10 @@ public class CpRedCharactersService {
             throw new IllegalStateException("Spectator nie może tworzyć postaci w tej grze.");
         }
 
+        if (character.getType() == CpRedCharactersType.NPC && gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalStateException("Tylko GameMaster może tworzyć postacie NPC.");
+        }
+
         String characterName = character.getName().trim();
         if(characterName.isEmpty()) {
             throw new IllegalStateException("Nazwa postaci nie może być pusta");
@@ -175,7 +179,7 @@ public class CpRedCharactersService {
         GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(game.getId(), currentUser.getId());
 
         if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())) {
-            if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            if (gameUser == null) {
                 throw new IllegalArgumentException("Nie masz uprawnień do modyfikacji tej postaci.");
             }
         }
@@ -326,6 +330,40 @@ public class CpRedCharactersService {
         cpRedCharactersRepository.save(cpRedCharacter);
 
         return CustomReturnables.getOkResponseMap("Postać " + cpRedCharacterToUpdateName + " została zaktualizowana");
+    }
+
+    public Map<String, Object> changeAlive(Long characterId) {
+        if (characterId == null) {
+            throw new IllegalStateException("Należy podać id postaci");
+        }
+
+        CpRedCharacters cpRedCharacter = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje"));
+
+        // Sprawdzenie, czy GM dokonuje zmiany
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        Game game = cpRedCharacter.getGame();
+
+        GameUsers gameUser = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie jest przypisany do tej gry."));
+
+        if (gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalArgumentException("Tylko GameMaster może zmienić, czy postać żyje.");
+        }
+
+        String cpRedCharacterToUpdateName = cpRedCharacter.getName();
+
+        if (cpRedCharacter.isAlive()) {
+            cpRedCharacter.setAlive(false);
+        } else {
+            cpRedCharacter.setAlive(true);
+        }
+
+        return CustomReturnables.getOkResponseMap("Zmieniono status postaci " + cpRedCharacter.getName() + " na " + !cpRedCharacter.isAlive());
     }
 }
 
