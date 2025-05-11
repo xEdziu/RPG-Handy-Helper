@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.manual.cyberwares;
 
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +31,21 @@ public class CpRedCyberwaresService {
                 cpRedCyberwares.getDescription()
         )).toList();
     }
-//
-//    // Pobierz cyberware po id
-//    public CpRedCyberwaresDTO getCyberwareById(Long cyberwareId) {
-//
-//    }
+    // Pobierz cyberware po id
+    public CpRedCyberwaresDTO getCyberwareById(Long cyberwareId) {
+        return cpRedCyberwaresRepository.findById(cyberwareId).map(
+                cpRedCyberwares -> new CpRedCyberwaresDTO(
+                        cpRedCyberwares.getName(),
+                        cpRedCyberwares.getMountPlace().toString(),
+                        cpRedCyberwares.getRequirements(),
+                        cpRedCyberwares.getHumanityLoss(),
+                        cpRedCyberwares.getSize(),
+                        cpRedCyberwares.getInstallationPlace().toString(),
+                        cpRedCyberwares.getPrice(),
+                        cpRedCyberwares.getAvailability().toString(),
+                        cpRedCyberwares.getDescription()
+                )).orElseThrow(() -> new ResourceNotFoundException("Wszczep o id " +cyberwareId + " nie istnieje"));
+    }
 //
 //    // Pobierz wszystkie cyberware dla admina
 //    public List<CpRedCyberwares> getAllCyberwaresForAdmin() {
