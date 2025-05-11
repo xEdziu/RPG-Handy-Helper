@@ -73,6 +73,7 @@ public class GameService {
     public List<UserGamesDTO> getUserGames(User currentUser) {
         List<GameUsers> gameUsers = gameUsersRepository.findAllByUserId(currentUser.getId());
         return gameUsers.stream()
+                .filter(gameUser -> gameUser.getGame().getStatus() == GameStatus.ACTIVE)
                 .map(gameUser -> new UserGamesDTO(
                         gameUser.getGame().getId(),
                         gameUser.getGame().getName(),
