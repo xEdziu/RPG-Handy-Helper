@@ -3,6 +3,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.manual.equipments;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +12,18 @@ import java.util.Map;
 public class CpRedEquipmentsService {
     private final CpRedEquipmentsRepository cpRedEquipmentsRepository;
 
-//    // Pobierz wszystkie przedmioty
-//    public List<CpRedEquipmentsDTO> getAllEquipments() {
-//
-//    }
+    // Pobierz wszystkie przedmioty
+    public List<CpRedEquipmentsDTO> getAllEquipments() {
+        List<CpRedEquipments> cpRedEquipmentsList = cpRedEquipmentsRepository.findAll();
+        return cpRedEquipmentsList.stream().map(
+                cpRedEquipments -> new CpRedEquipmentsDTO(
+                        cpRedEquipments.getName(),
+                        cpRedEquipments.getPrice(),
+                        cpRedEquipments.getAvailability().toString(),
+                        cpRedEquipments.getDescription()
+                )
+        ).toList();
+    }
 //
 //    // Pobierz przedmiot po id
 //    public CpRedEquipmentsDTO getEquipmentById(Long equipmentId) {
