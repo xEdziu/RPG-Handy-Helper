@@ -271,12 +271,17 @@ public class GameService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
-        // Sprawdzenie, czy na pewno to GM próbuje zmienić swoja gre
-        GameUsers gameUser = gameUsersRepository.findById(currentUser.getId())
+        // Gracz od zmiany
+        GameUsers gameUser = gameUsersRepository.findById(gameUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik gry o podanym ID nie istnieje."));
+
+        // Gra, do której przypisany jest gracz
         Game game = gameRepository.findById(gameUser.getGame().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Gra o podanym ID nie istnieje."));
-        GameUsers gameUserGM = gameUsersRepository.findByGameIdAndUserId(gameUser.getGame().getId(), currentUser.getId());
+
+        // Sprawdzenie, czy na pewno to GM próbuje zmienić swoja gre
+        GameUsers gameUserGM = gameUsersRepository.findByGameIdAndUserId(game.getId(), currentUser.getId());
+
         if (gameUserGM == null || gameUserGM.getRole() != GameUsersRole.GAMEMASTER) {
             throw new IllegalArgumentException("Nie możesz zmienić roli użytkownika, gdy nie jesteś jej GameMasterem.");
         }
