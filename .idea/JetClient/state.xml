@@ -263,82 +263,335 @@
                             <option name="folders">
                               <list>
                                 <folderState>
-                                  <option name="id" value="cd8b508f-fff4-4182-b819-da9a00db5d98" />
-                                  <option name="name" value="CpRedClasses" />
+                                  <option name="id" value="47ddc209-abfd-4d50-b623-d488bf806a5a" />
+                                  <option name="name" value="Stats" />
                                   <option name="requests">
                                     <list>
                                       <requestState>
-                                        <option name="id" value="bba0cb71-43c4-476e-8c66-1f8547808664" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Zwróć wszystkie klasy dla Admina" />
-                                        <option name="sortWeight" value="1000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/all" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="id" value="793ae350-cbdb-4b36-9563-3cfc785a4eb2" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Zwróć wszystkie klasy" />
-                                        <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/classes/all" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="id" value="4e6d422f-1667-4204-98c2-e934febe7cd7" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Zwróć klase po id" />
-                                        <option name="pathVariables">
-                                          <list>
-                                            <pathVariableState>
-                                              <option name="key" value="classId" />
-                                              <option name="value" value="1" />
-                                            </pathVariableState>
-                                          </list>
-                                        </option>
-                                        <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized//rpgSystems/cpRed/classes/{classId}" />
-                                      </requestState>
-                                      <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Kowal&quot;,&#10;  &quot;description&quot;: &quot;Kowal co kuje przedmioty&quot;,&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Inteligencja&quot;,&#10;  tag: &quot;INT&quot;,&#10;  changeable: true,&#10;  description: &quot;Określa ogólną sprawność rozumowania. Według zasad to nie tylko czysta inteligencja, lecz także spryt, wiedza, spostrzegawczość i zdolność uczenia się&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
-                                        <option name="id" value="2cab42b0-7cb9-42c4-a6ca-be8f8f73a8ac" />
+                                        <option name="description" value="Dodaje statystyke" />
+                                        <option name="id" value="9f77ae3c-30a3-4b5d-83ab-0020324556c9" />
                                         <option name="method" value="POST" />
-                                        <option name="name" value="Dodaj klasę" />
-                                        <option name="sortWeight" value="4000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/add" />
+                                        <option name="name" value="Dodaj statystyke" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/add" />
                                       </requestState>
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Runiczny kowal&quot;,&#10;  &quot;description&quot;: &quot;Inny kowal, przyklad edycji&quot;,&#10;}" />
+                                            <option name="raw" value="{&#10;  tag: &quot;INT&quot;,&#10;  description: &quot;Inny opis&quot;&#10;}&#10;" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
-                                        <option name="id" value="269a4959-2f52-4b72-b960-11c1aa75878d" />
+                                        <option name="description" value="Modyfikuje statystyke o podanym id" />
+                                        <option name="id" value="ed78e2d1-c80c-4ffa-ad0c-795f66670a8a" />
                                         <option name="method" value="PUT" />
-                                        <option name="name" value="Zmodyfikuj klasę" />
-                                        <option name="pathVariables">
-                                          <list>
-                                            <pathVariableState>
-                                              <option name="key" value="classId" />
-                                              <option name="value" value="1" />
-                                            </pathVariableState>
-                                          </list>
-                                        </option>
+                                        <option name="name" value="Modyfikuj statystyke" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zmienia wartość isChengable " />
+                                        <option name="id" value="596a9d5a-0cfb-4e36-aa56-c8a517ca3727" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Zmień zmienność" />
+                                        <option name="sortWeight" value="2500000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/changeable/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera listę statystyk" />
+                                        <option name="id" value="16cfbf22-7be1-4d81-a712-b90f11d0d967" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie statystyki" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/stats/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca konkretną statystykę o podanym id" />
+                                        <option name="id" value="da681b4c-840d-4092-8ab1-a5b302ddcbd9" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz statystykę po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/stats/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera listę wszystkich statystyk w wersji dla admina" />
+                                        <option name="id" value="83906745-40b9-4567-b146-c178d5d853d4" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie statystyki dla Admina" />
                                         <option name="sortWeight" value="5000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/update/{classId}" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/stats/all" />
                                       </requestState>
                                     </list>
                                   </option>
                                   <option name="sortWeight" value="1000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="dd18a7fa-da1a-4026-a188-d976168f82fa" />
+                                  <option name="name" value="Ammunition" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Amunicja zapalająca&quot;,&#10;  description: &quot;strzelby kal. 12, penetracja 20mm&quot;,&#10;  pricePerBullet: 10,&#10;  availability: &quot;PREMIUM&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje nową amunicje" />
+                                        <option name="id" value="1f4d0901-29a2-43fc-9be7-2480fe2548fd" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj amunicje" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/ammunition/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Amunicja zapalająca&quot;,&#10;  description: &quot;zmodyfikowany opis&quot;,&#10;  pricePerBullet: 225,&#10;  availability: &quot;CHEAP&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje dowolny parametr amunicji" />
+                                        <option name="id" value="e0fa4279-a410-486e-86e6-a29e7356eda4" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj Amunicje" />
+                                        <option name="sortWeight" value="1500000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/ammunition/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera wszystkie amunicje" />
+                                        <option name="id" value="14947ebf-80f4-46a7-b894-411bbd588d70" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie amunicje" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/ammunition/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca konkretną amunicję po id" />
+                                        <option name="id" value="ad603436-a270-45cc-9701-74f61a3b4182" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz amunicje po id" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/ammunition/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich amunicji dla admina" />
+                                        <option name="id" value="7f53733c-a857-4c96-afc6-82c7c56c0df1" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie amunicje dla Admina" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/ammunition/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="2000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="0525a4d1-4dcf-40a9-8155-50d3a3a94397" />
+                                  <option name="name" value="Skils" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 2,&#10;  category: &quot;FIGHTING&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje umiejętność" />
+                                        <option name="id" value="a35b61d0-fda6-4cad-a4e6-238e114f9c4d" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj umiejętność" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/skills/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa zmodyfikowana 2&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;  connectedStatId: 2,&#10;  category: &quot;BODY&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje podane parametry umiejętności" />
+                                        <option name="id" value="dee1302d-4165-46b5-a714-2514fce40c79" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj umiejętność" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/skills/update/2" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich umiejętności" />
+                                        <option name="id" value="bda26d0c-bcf5-41bb-ad80-06eba5e4355d" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie umiejętności" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/skills/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca umiejętność o podanym id" />
+                                        <option name="id" value="2b941a79-9035-4c6c-b302-9c63db23bf9c" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz konkretną umiejętność po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/skills/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich umiejętności dla Admina" />
+                                        <option name="id" value="b2116262-c279-4744-87f4-8926952ff107" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie umiejętności dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/skills/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="2000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="3c8286a2-5515-4db1-9e1d-592bd0bf0cc4" />
+                                  <option name="name" value="Weapons" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  requiredSkillId: 1,&#10;  name: &quot;Średni pistolet 2&quot;,&#10;  damage: 3,&#10;  magazineCapacity: 8,&#10;  standardAmmunitionId: 1,&#10;  numberOfAttacks: 2,&#10;  handType: 1,&#10;  hidden: true,&#10;  quality: &quot;STANDARD&quot;,&#10;  price: 300,&#10;  availability: &quot;EVERYDAY&quot;,&#10;  modifiable: true,&#10;  description: &quot;Mała lekka broń palna, która nie wymaga dużej siły do użycia. Idealna do walki w bliskim zasięgu.&quot;,&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje nową broń" />
+                                        <option name="id" value="45a1d939-d6cd-413c-8724-d6ce1282a83a" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj broń" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  requiredSkillId: 2,&#10;  name: &quot;Średni pistolet zmodyfikowany&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 16,&#10;  standardAmmunitionId: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 2,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 4000,&#10;  availability: &quot;LUXURY&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje podane parametry broni" />
+                                        <option name="id" value="3d68536f-7350-417f-b7be-dde3ea324f4e" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj broń" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zmienia parametry ukrywalności" />
+                                        <option name="id" value="e5c69d47-73ed-4725-a9d6-e71c6721aee0" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Zmień ukrywalność broni" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/update/hide/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zmienia parametr odpowiedzialny za ukrywanie broni" />
+                                        <option name="id" value="59d2ed1b-8001-46cc-8e02-f4249216d6e4" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Zmień modyfikowalność broni" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/update/modifiable/2" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera liste wszystkich broni" />
+                                        <option name="id" value="7baf1631-b49b-4cb2-9f93-861f93b9f94b" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie bronie" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/weapons/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera konkretną broń o podanym id" />
+                                        <option name="id" value="814e5c24-258f-41a5-a72c-7fbd1be0f7ba" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz broń po id" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/weapons/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera listę wszystkich broni dla admina" />
+                                        <option name="id" value="d5fa156a-f6ae-4e88-a0a7-ed45c69bd4b2" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie bronie dla Admina" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="3000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="988306f3-77b6-4361-9b94-aa9a0533f527" />
+                                  <option name="name" value="Classes" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Kowal&quot;,&#10;  description: &quot;Kuje przedmioty&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="2762614a-a8a0-4bf2-a164-acbbfe0fb601" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz klasę" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Nowy Kowal&quot;,&#10;  description: &quot;Kuje lepsze przedmioty&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="e0bc59a4-c4bc-4fd2-bd41-e33146f5cf35" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj klasę" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="194c44c8-2d7e-4b70-8fa2-bdf5a07e0f10" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie klasy" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/classes/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="9d04b42c-38a6-4759-b96f-fa79a4684cbe" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć klasę po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/classes/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="824bb2b1-be60-4d13-aa79-493d2ab904bb" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie klasy dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="4000000" />
+                                </folderState>
                               </list>
                             </option>
-                            <option name="id" value="3cbb6a36-4c5e-405b-9f54-0a3269d911e4" />
+                            <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />
                             <option name="name" value="Manual" />
-                            <option name="sortWeight" value="2000000" />
+                            <option name="sortWeight" value="1000000" />
                           </folderState>
                         </list>
                       </option>
