@@ -1,8 +1,10 @@
 package dev.goral.rpgmanager.notes;
 
 import dev.goral.rpgmanager.game.Game;
+import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,9 @@ public class GameNoteService {
 
         Object principal = getAuthentication().getPrincipal();
 
-        Optional<Game> game = gameRepository.findGameById(gameNoteDto.getGameId());
+        Game game = gameRepository.findById(gameNoteDto.getGameId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + gameNoteDto.getGameId() + " nie istnieje."));
+
         Optional<User> user = userRepository.findById(gameNoteDto.getUserId());
 
         if (!(principal instanceof User loggedInUser))
@@ -46,6 +50,10 @@ public class GameNoteService {
         if (!loggedInUser.getId().equals(gameNoteDto.getUserId()))
             throw new IllegalStateException("Nie masz uprawnień do dodawania notatek dla innych użytkowników.");
 
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra o id " + gameNoteDto.getGameId() + " nie jest aktywna.");
+        }
+
         if (gameNoteDto.getGameId() == null)
             throw new IllegalStateException("Notatka musi być przypisana do gry.");
 
@@ -55,14 +63,8 @@ public class GameNoteService {
         if (gameNoteDto.getContent() == null || gameNoteDto.getContent().isEmpty())
             throw new IllegalStateException("Notatka nie może być pusta.");
 
-        if (!gameRepository.existsById(gameNoteDto.getGameId()))
-            throw new IllegalStateException("Gra o podanym ID nie istnieje.");
-
         if (!userRepository.existsById(gameNoteDto.getUserId()))
             throw new IllegalStateException("Użytkownik o podanym ID nie istnieje.");
-
-        if (game.isEmpty())
-            throw new IllegalStateException("Gra o podanym ID nie istnieje.");
 
         if (user.isEmpty())
             throw new IllegalStateException("Użytkownik o podanym ID nie istnieje.");
@@ -73,7 +75,7 @@ public class GameNoteService {
             throw new IllegalStateException("Posiadasz już notatkę o takim tytule.");
 
         GameNote gameNote = new GameNote();
-        gameNote.setGame(game.get());
+        gameNote.setGame(game);
         gameNote.setUser(user.get());
         gameNote.setTitle(gameNoteDto.getTitle());
         gameNote.setContent(gameNoteDto.getContent());
@@ -211,6 +213,13 @@ public class GameNoteService {
         if (!(principal instanceof User loggedInUser))
             throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
 
+        Game game = gameRepository.findById(gameNoteDto.getGameId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + gameNoteDto.getGameId() + " nie istnieje."));
+
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra o id " + gameNoteDto.getGameId() + " nie jest aktywna.");
+        }
+
         Optional<GameNote> gameNote = gameNoteRepository.findById(id);
 
         if (gameNote.isEmpty())
@@ -231,7 +240,6 @@ public class GameNoteService {
         if (!userRepository.existsById(gameNoteDto.getUserId()))
             throw new IllegalStateException("Użytkownik o podanym ID nie istnieje.");
 
-        Game game = gameRepository.findGameById(gameNoteDto.getGameId()).orElseThrow(() -> new IllegalStateException("Gra o podanym ID nie istnieje."));
         User user = userRepository.findById(gameNoteDto.getUserId()).orElseThrow(() -> new IllegalStateException("Użytkownik o podanym ID nie istnieje."));
 
         gameNote.get().setTitle(gameNoteDto.getTitle());
