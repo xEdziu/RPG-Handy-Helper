@@ -162,9 +162,23 @@ public class CpRedCustomAmmunitionService {
         CpRedCustomAmmunition ammunitionToUpdate = cpRedCustomAmmunitionRepository.findById(ammunitionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customowa amunicja o id " + ammunitionId + " nie istnieje"));
 
-        // Sprawdź, GM chce dokonać zmiany
+        // Sprawdź, czy podana gra istnieje
+        Game game = gameRepository.findById(ammunitionToUpdate.getGameId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + ammunitionToUpdate.getGameId().getId() + " nie istnieje."));
+
+        // Sprawdź, czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra o id " + ammunitionToUpdate.getGameId().getId() + " nie jest aktywna.");
+        }
+
+        // Sprawdź, czy użytkownik należy do tej gry
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), ammunitionToUpdate.getGameId().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Możesz modyfikować bronie tylko w grach, w których jesteś GM."));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
+
+        // Sprawdź, czy użytkownik jest GM
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalStateException("Tylko GM może modyfikować amunicję.");
+        }
 
         // Sprawdź nazwę
         if(cpRedCustomAmmunition.getName() != null) {

@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -409,7 +409,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Amunicja EMP 3&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 20,&#10;  availability: &quot;SUPER_LUXURY&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Amunicja EMP 2&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 20,&#10;  availability: &quot;SUPER_LUXURY&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -423,7 +423,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Amunicja EMP zmodyfikowany 2&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 2000,&#10;  availability: &quot;COSTLY&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Amunicja EMP zmodyfikowany 3&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 2000,&#10;  availability: &quot;COSTLY&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
