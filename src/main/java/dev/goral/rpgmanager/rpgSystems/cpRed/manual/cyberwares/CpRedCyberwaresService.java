@@ -46,11 +46,10 @@ public class CpRedCyberwaresService {
                         cpRedCyberwares.getDescription()
                 )).orElseThrow(() -> new ResourceNotFoundException("Wszczep o id " +cyberwareId + " nie istnieje"));
     }
-//
-//    // Pobierz wszystkie cyberware dla admina
-//    public List<CpRedCyberwares> getAllCyberwaresForAdmin() {
-//        return cpRedCyberwaresRepository.findAll();
-//    }
+    // Pobierz wszystkie cyberware dla admina
+    public List<CpRedCyberwares> getAllCyberwaresForAdmin() {
+        return cpRedCyberwaresRepository.findAll();
+    }
 //
 //    // Dodać cyberware
 //    public Map<String, Object> addCyberware(CpRedCyberwares cpRedCyberwares) {
