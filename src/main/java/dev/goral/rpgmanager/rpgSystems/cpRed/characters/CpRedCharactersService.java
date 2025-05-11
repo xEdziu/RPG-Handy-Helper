@@ -95,6 +95,12 @@ public class CpRedCharactersService {
         // Check if the user is a player and ensure they can only create one character
         GameUsers gameUser = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie jest przypisany do tej gry."));
+
+        // Sprawdź, czy to GM chce utworzyć NPC
+        if (character.getType() == CpRedCharactersType.NPC && gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalStateException("Tylko GameMaster może tworzyć postacie NPC.");
+        }
+
         if (gameUser.getRole() == GameUsersRole.PLAYER) {
             Long characterCount = cpRedCharactersRepository.countByUserIdAndGameId(currentUser.getId(), game.getId());
             if (characterCount >= 1) {
@@ -102,10 +108,6 @@ public class CpRedCharactersService {
             }
         } else if (gameUser.getRole() == GameUsersRole.SPECTATOR) {
             throw new IllegalStateException("Spectator nie może tworzyć postaci w tej grze.");
-        }
-
-        if (character.getType() == CpRedCharactersType.NPC && gameUser.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GameMaster może tworzyć postacie NPC.");
         }
 
         String characterName = character.getName().trim();
@@ -363,7 +365,9 @@ public class CpRedCharactersService {
             cpRedCharacter.setAlive(true);
         }
 
-        return CustomReturnables.getOkResponseMap("Zmieniono status postaci " + cpRedCharacter.getName() + " na " + !cpRedCharacter.isAlive());
+        cpRedCharactersRepository.save(cpRedCharacter);
+
+        return CustomReturnables.getOkResponseMap("Zmieniono status postaci " + cpRedCharacter.getName() + " na " + cpRedCharacter.isAlive());
     }
 }
 
