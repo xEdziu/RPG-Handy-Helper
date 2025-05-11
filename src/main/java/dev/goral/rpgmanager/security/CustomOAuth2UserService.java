@@ -40,16 +40,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user;
 
         if (existingUserByOAuthId.isPresent()) {
-            // Użytkownik już logował się przez Discord - aktualizujemy jego dane (np. nazwę użytkownika)
             user = existingUserByOAuthId.get();
-
-            if (!user.getUsername().equals(username)) {
-                if (userRepository.findByUsername(username).isPresent()) {
-                    username = generateUniqueUsername(username);
-                }
-                user.setUsername(username);
-                userRepository.save(user);
-            }
         } else if (existingUserByEmail.isPresent()) {
             // Użytkownik ma już konto w bazie przez e-mail, ale loguje się pierwszy raz przez Discord -> Powiązanie konta!
             user = existingUserByEmail.get();
