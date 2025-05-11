@@ -454,43 +454,6 @@
                                   <option name="sortWeight" value="2000000" />
                                 </folderState>
                                 <folderState>
-                                  <option name="id" value="7dbdf7d8-b7ef-42b0-8b6a-1b5296131584" />
-                                  <option name="name" value="Armors" />
-                                  <option name="requests">
-                                    <list>
-                                      <requestState>
-                                        <option name="id" value="3b4237b7-bd30-4445-ba37-23e8b39ade5a" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Pobierz wszystkie pancerze" />
-                                        <option name="sortWeight" value="1000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/armors/all" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="id" value="c80aba6a-73d3-435a-88e8-3ed7c0a269ee" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Pobierz konkretny pancerz po id" />
-                                        <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/armors/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="id" value="d0a2a12d-27b5-4b61-a688-51aca0f2c137" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Pobierz wszystkie pancerze dla Admina" />
-                                        <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/all" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="body">
-                                          <bodyState>
-                                            <option name="raw" value="{&#10;  &quot;type&quot;: &quot;KEVLAR&quot;,&#10;  &quot;armorPoints&quot;: 3,&#10;  &quot;penalty&quot;: 1,&#10;  &quot;price&quot;: 100,&#10;  &quot;availability&quot;: &quot;CHEAP&quot;,&#10;  &quot;description&quot;: &quot;A lightweight armor made of synthetic fibers, providing decent protection without sacrificing mobility.&quot;&#10;}" />
-                                            <option name="type" value="JSON" />
-                                          </bodyState>
-                                        </option>
-                                        <option name="id" value="1ee33249-c43c-4fb2-b96a-25aa3ca4033f" />
-                                        <option name="method" value="POST" />
-                                        <option name="name" value="Dodaj pancerz" />
-                                        <option name="sortWeight" value="4000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/add" />
                                   <option name="id" value="3c8286a2-5515-4db1-9e1d-592bd0bf0cc4" />
                                   <option name="name" value="Weapons" />
                                   <option name="requests">
@@ -512,15 +475,6 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  &quot;type&quot;: &quot;KEVLAR&quot;,&#10;  &quot;armorPoints&quot;: 4,&#10;  &quot;penalty&quot;: 1,&#10;  &quot;price&quot;: 120,&#10;  &quot;availability&quot;: &quot;CHEAP&quot;,&#10;  &quot;description&quot;: &quot;Update.&quot;&#10;}" />
-                                            <option name="type" value="JSON" />
-                                          </bodyState>
-                                        </option>
-                                        <option name="id" value="2512b6e0-0b36-4173-b540-22ffce8fdbcd" />
-                                        <option name="method" value="PUT" />
-                                        <option name="name" value="Modyfikuj pancerz" />
-                                        <option name="sortWeight" value="5000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/update/1" />
                                             <option name="raw" value="{&#10;  requiredSkillId: 2,&#10;  name: &quot;Średni pistolet zmodyfikowany&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 16,&#10;  standardAmmunitionId: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 2,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 4000,&#10;  availability: &quot;LUXURY&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
@@ -571,11 +525,67 @@
                                         <option name="name" value="Pobierz wszystkie bronie dla Admina" />
                                         <option name="sortWeight" value="7000000" />
                                         <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/all" />
-
                                       </requestState>
                                     </list>
                                   </option>
                                   <option name="sortWeight" value="3000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="274c9f59-ca2e-4256-b0b5-7073416b938b" />
+                                  <option name="name" value="Armors" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="id" value="efe64b72-0780-42e4-b6e3-dc69a07a3778" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie pancerze" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/armors/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="6efdec34-ee05-4fdf-a8d9-065f6b7011d7" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć pancerz po id" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/armors/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="bba76c18-0ed2-4bc4-8dca-b2a37b129a67" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie pancerze dla Admina" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  type: &quot;KEVLAR&quot;,&#10;  armorPoints: 5,&#10;  penalty: 0,&#10;  price: 100,&#10;  available: &quot;CHEAP&quot;,&#10;  description: &quot;A lightweight armor made of Kevlar, providing decent protection against small arms fire.&quot;,&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="f77d9752-7a1a-4d68-a4bb-4f6c5d9ddc28" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj pancerz" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  type: &quot;KEVLAR&quot;,&#10;  armorPoints: 6,&#10;  penalty: 1,&#10;  price: 120,&#10;  available: &quot;CHEAP&quot;,&#10;  description: &quot;New armor.&quot;,&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="9e262ca3-1912-40d2-87ac-95d9cbcd6144" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj pancerz" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="4000000" />
                                 </folderState>
                               </list>
                             </option>
