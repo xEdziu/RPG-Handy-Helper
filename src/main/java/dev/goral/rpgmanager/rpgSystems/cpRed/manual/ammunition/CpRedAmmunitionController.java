@@ -12,33 +12,33 @@ import java.util.Map;
 public class CpRedAmmunitionController {
     private CpRedAmmunitionService cpRedAmmunitionService;
 
-//    // ============ User methods ============
-//    // Pobierz wszystkie amunicje
-//    @GetMapping(path = "/rpgSystems/cpRed/ammunition/all")
-//    public List<CpRedAmmunitionDTO> getAllAmmunition() {
-//        return cpRedAmmunitionService.getAllAmmunition();
-//    }
-//    // Pobierz amunicje po id
-//    @GetMapping(path = "/rpgSystems/cpRed/ammunition/{ammunitionId}")
-//    public CpRedAmmunitionDTO getAmmunitionById(@PathVariable("ammunitionId") Long ammunitionId) {
-//        return cpRedAmmunitionService.getAmmunitionById(ammunitionId);
-//    }
-//
-//    // ============ Admin methods ============
-//    // Pobierz wszystkie amunicje dla admina
-//    @GetMapping(path = "/admin/rpgSystems/cpRed/ammunition/all")
-//    public List<CpRedAmmunition> getAllAmmunitionForAdmin() {
-//        return cpRedAmmunitionService.getAllAmmunitionForAdmin();
-//    }
-//    // Dodać amunicje
-//    @PostMapping(path = "/admin/rpgSystems/cpRed/ammunition/add")
-//    public Map<String, Object> addAmmunition(CpRedAmmunition cpRedAmmunition) {
-//        return cpRedAmmunitionService.addAmmunition(cpRedAmmunition);
-//    }
-//    // Modyfikować amunicje
-//    @PutMapping(path = "/admin/rpgSystems/cpRed/ammunition/update/{ammunitionId}")
-//    public Map<String, Object> updateAmmunition(@PathVariable("ammunitionId") Long ammunitionId,
-//                                                @RequestBody CpRedAmmunition cpRedAmmunition) {
-//        return cpRedAmmunitionService.updateAmmunition(ammunitionId, cpRedAmmunition);
-//    }
+    // ============ User methods ============
+    // Pobierz wszystkie amunicje
+    @GetMapping(path = "/rpgSystems/cpRed/ammunition/all")
+    public List<CpRedAmmunitionDTO> getAllAmmunition() {
+        return cpRedAmmunitionService.getAllAmmunition();
+    }
+    // Pobierz amunicje po id
+    @GetMapping(path = "/rpgSystems/cpRed/ammunition/{ammunitionId}")
+    public CpRedAmmunitionDTO getAmmunitionById(@PathVariable("ammunitionId") Long ammunitionId) {
+        return cpRedAmmunitionService.getAmmunitionById(ammunitionId);
+    }
+
+    // ============ Admin methods ============
+    // Pobierz wszystkie amunicje dla admina
+    @GetMapping(path = "/admin/rpgSystems/cpRed/ammunition/all")
+    public List<CpRedAmmunition> getAllAmmunitionForAdmin() {
+        return cpRedAmmunitionService.getAllAmmunitionForAdmin();
+    }
+    // Dodać amunicje
+    @PostMapping(path = "/admin/rpgSystems/cpRed/ammunition/add")
+    public Map<String, Object> addAmmunition(@RequestBody CpRedAmmunition cpRedAmmunition) {
+        return cpRedAmmunitionService.addAmmunition(cpRedAmmunition);
+    }
+    // Modyfikować amunicje
+    @PutMapping(path = "/admin/rpgSystems/cpRed/ammunition/update/{ammunitionId}")
+    public Map<String, Object> updateAmmunition(@PathVariable("ammunitionId") Long ammunitionId,
+                                                @RequestBody CpRedAmmunition cpRedAmmunition) {
+        return cpRedAmmunitionService.updateAmmunition(ammunitionId, cpRedAmmunition);
+    }
 }

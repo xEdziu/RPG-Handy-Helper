@@ -22,6 +22,11 @@ public class CpRedStats {
     )
     private Long id;
     private String name;
+    private String tag;
+
     private boolean changeable;
+
+    @Column(length = 500)
     private String description;
+
 }

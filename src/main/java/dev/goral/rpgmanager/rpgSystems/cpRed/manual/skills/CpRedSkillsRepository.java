@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CpRedSkillsRepository extends JpaRepository<CpRedSkills, Long> {
+    boolean existsByName(String name);
 }
