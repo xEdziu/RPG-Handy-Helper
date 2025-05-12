@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.manual.cyberwares;
 
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.armors.CpRedArmorsDTO;
 import dev.goral.rpgmanager.rpgSystems.cpRed.manual.weapons.CpRedWeapons;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
@@ -24,24 +25,27 @@ public class CpRedCyberwaresService {
     private final UserRepository userRepository;
 
     // Pobierz wszystkie cyberware
-    public List<CpRedCyberwaresDTO> getAllCyberwares() {
-        List<CpRedCyberwares> cpRedCyberwaresList= cpRedCyberwaresRepository.findAll();
-        return cpRedCyberwaresList.stream().map(
-                cpRedCyberwares-> new CpRedCyberwaresDTO(
-                cpRedCyberwares.getName(),
-                cpRedCyberwares.getMountPlace().toString(),
-                cpRedCyberwares.getRequirements(),
-                cpRedCyberwares.getHumanityLoss(),
-                cpRedCyberwares.getSize(),
-                cpRedCyberwares.getInstallationPlace().toString(),
-                cpRedCyberwares.getPrice(),
-                cpRedCyberwares.getAvailability().toString(),
-                cpRedCyberwares.getDescription()
-        )).toList();
+    public Map<String,Object> getAllCyberwares() {
+        List<CpRedCyberwaresDTO> cpRedCyberwaresList = cpRedCyberwaresRepository.findAll().stream().
+                map(cpRedCyberwares-> new CpRedCyberwaresDTO(
+                        cpRedCyberwares.getName(),
+                        cpRedCyberwares.getMountPlace().toString(),
+                        cpRedCyberwares.getRequirements(),
+                        cpRedCyberwares.getHumanityLoss(),
+                        cpRedCyberwares.getSize(),
+                        cpRedCyberwares.getInstallationPlace().toString(),
+                        cpRedCyberwares.getPrice(),
+                        cpRedCyberwares.getAvailability().toString(),
+                        cpRedCyberwares.getDescription()
+                )).toList();
+        Map<String, Object> respone = CustomReturnables.getOkResponseMap("Pobrano wszystkie wszczepy.");
+        respone.put("cyberwares", cpRedCyberwaresList);
+        return respone;
+
     }
     // Pobierz cyberware po id
-    public CpRedCyberwaresDTO getCyberwareById(Long cyberwareId) {
-        return cpRedCyberwaresRepository.findById(cyberwareId).map(
+    public Map<String,Object> getCyberwareById(Long cyberwareId) {
+        CpRedCyberwaresDTO cyberware = cpRedCyberwaresRepository.findById(cyberwareId).map(
                 cpRedCyberwares -> new CpRedCyberwaresDTO(
                         cpRedCyberwares.getName(),
                         cpRedCyberwares.getMountPlace().toString(),
@@ -52,19 +56,17 @@ public class CpRedCyberwaresService {
                         cpRedCyberwares.getPrice(),
                         cpRedCyberwares.getAvailability().toString(),
                         cpRedCyberwares.getDescription()
-                )).orElseThrow(() -> new ResourceNotFoundException("Wszczep o id " +cyberwareId + " nie istnieje"));
+                )).orElseThrow(() -> new ResourceNotFoundException("Wszczep o id " + cyberwareId + " nie istnieje"));
+        Map<String, Object> respone = CustomReturnables.getOkResponseMap("Pobrano wszczep o id " + cyberwareId);
+        respone.put("cyberware", cyberware);
+        return respone;
     }
     // Pobierz wszystkie cyberware dla admina
-    public List<CpRedCyberwares> getAllCyberwaresForAdmin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-
-        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do tej czynności.");
-        }
-        return cpRedCyberwaresRepository.findAll();
+    public Map<String,Object> getAllCyberwaresForAdmin() {
+        List<CpRedCyberwares> allCyberwaresList = cpRedCyberwaresRepository.findAll();
+        Map<String, Object> respone = CustomReturnables.getOkResponseMap("Pobrano wszystkie wszczepy.");
+        respone.put("cyberwares", allCyberwaresList);
+        return respone;
     }
 
     // Dodać cyberware

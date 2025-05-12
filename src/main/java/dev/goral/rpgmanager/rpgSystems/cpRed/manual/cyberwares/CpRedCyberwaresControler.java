@@ -15,19 +15,19 @@ public class CpRedCyberwaresControler {
     // ============ User methods ============
     // Pobierz wszystkie cyberware
     @GetMapping(path = "/rpgSystems/cpRed/cyberwares/all")
-    public List<CpRedCyberwaresDTO> getAllCyberwares() {
+    public Map<String,Object> getAllCyberwares() {
         return cpRedCyberwaresService.getAllCyberwares();
     }
     // Pobierz cyberware po id
     @GetMapping(path = "/rpgSystems/cpRed/cyberwares/{cyberwareId}")
-    public CpRedCyberwaresDTO getCyberwareById(@PathVariable("cyberwareId") Long cyberwareId) {
+    public Map<String,Object> getCyberwareById(@PathVariable("cyberwareId") Long cyberwareId) {
         return cpRedCyberwaresService.getCyberwareById(cyberwareId);
     }
 
     // ============ Admin methods ============
     // Pobierz wszystkie cyberware dla admina
     @GetMapping(path = "/admin/rpgSystems/cpRed/cyberwares/all")
-    public List<CpRedCyberwares> getAllCyberwaresForAdmin() {
+    public Map<String,Object> getAllCyberwaresForAdmin() {
         return cpRedCyberwaresService.getAllCyberwaresForAdmin();
     }
     // Dodać cyberware
