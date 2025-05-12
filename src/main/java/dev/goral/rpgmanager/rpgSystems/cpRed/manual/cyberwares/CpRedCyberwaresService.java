@@ -56,6 +56,14 @@ public class CpRedCyberwaresService {
     }
     // Pobierz wszystkie cyberware dla admina
     public List<CpRedCyberwares> getAllCyberwaresForAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
+            throw new IllegalStateException("Nie masz uprawnień do tej czynności.");
+        }
         return cpRedCyberwaresRepository.findAll();
     }
 
