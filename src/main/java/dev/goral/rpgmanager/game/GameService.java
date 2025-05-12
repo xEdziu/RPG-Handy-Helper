@@ -132,6 +132,11 @@ public class GameService {
             throw new IllegalArgumentException("Użytkownik jest już w grze.");
         }
 
+        // Sprawdź, czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalArgumentException("Nie można dodać użytkownika do nieaktywnej gry.");
+        }
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
@@ -169,6 +174,11 @@ public class GameService {
         GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(gameId, currentUser.getId());
         if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
             throw new IllegalArgumentException("Nie możesz zmienić gry gdy nie jesteś jej GameMasterem.");
+        }
+
+        // Sprawdź, czy gra jest aktywna
+        if (gameToUpdate.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalArgumentException("Nie można edytować nieaktywnej gry.");
         }
 
         if(game.getName() == null && game.getOwner() == null && game.getDescription() == null) {
@@ -284,6 +294,11 @@ public class GameService {
 
         if (gameUserGM == null || gameUserGM.getRole() != GameUsersRole.GAMEMASTER) {
             throw new IllegalArgumentException("Nie możesz zmienić roli użytkownika, gdy nie jesteś jej GameMasterem.");
+        }
+
+        // Sprawdzenie, czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalArgumentException("Nie można zmienić roli w nieaktywnej grze.");
         }
 
         if (request == null || request.isEmpty()) {
