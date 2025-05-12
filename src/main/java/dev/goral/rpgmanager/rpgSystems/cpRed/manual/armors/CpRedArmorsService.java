@@ -1,5 +1,7 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.manual.armors;
 
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.classes.CpRedClasses;
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.classes.CpRedClassesDTO;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
@@ -20,9 +22,9 @@ public class CpRedArmorsService {
     private final UserRepository userRepository;
 
     // Pobierz wszystkie pancerze
-    public List<CpRedArmorsDTO> getAllArmors() {
-        List<CpRedArmors> armors = cpRedArmorsRepository.findAll();
-        return armors.stream().map(armor ->
+    public Map<String,Object> getAllArmors() {
+        List<CpRedArmors> armors= cpRedArmorsRepository.findAll();
+        List<CpRedArmorsDTO> armorsDTO = armors.stream().map(armor ->
                 new CpRedArmorsDTO(
                         armor.getType().toString(),
                         armor.getArmorPoints(),
@@ -30,33 +32,35 @@ public class CpRedArmorsService {
                         armor.getPrice(),
                         armor.getAvailability().toString(),
                         armor.getDescription()
-                )
-        ).toList();
-    }
-
-    public CpRedArmorsDTO getArmorById(Long armorId) {
-        CpRedArmors armor = cpRedArmorsRepository.findById(armorId)
-                .orElseThrow(() -> new IllegalStateException("Armor with id " + armorId + " does not exist"));
-        return new CpRedArmorsDTO(
-                armor.getType().toString(),
-                armor.getArmorPoints(),
-                armor.getPenalty(),
-                armor.getPrice(),
-                armor.getAvailability().toString(),
-                armor.getDescription()
-        );
-
-    }
-
-    public List<CpRedArmors> getAllArmorsForAdmin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
+                )).toList();
+        if(armorsDTO.isEmpty()){
+            return CustomReturnables.getOkResponseMap("Brak pancerzy");
         }
-        return cpRedArmorsRepository.findAll();
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano pancerze");
+        response.put("classes", armorsDTO);
+        return response;
+    }
+
+    public Map<String,Object> getArmorById(Long armorId) {
+        CpRedArmorsDTO armor=cpRedArmorsRepository.findById(armorId).
+                map(cpRedArmors -> new CpRedArmorsDTO(
+                        cpRedArmors.getType().toString(),
+                        cpRedArmors.getArmorPoints(),
+                        cpRedArmors.getPenalty(),
+                        cpRedArmors.getPrice(),
+                        cpRedArmors.getAvailability().toString(),
+                        cpRedArmors.getDescription()
+                )).orElseThrow(() -> new ResourceNotFoundException("Pancerz o id " + armorId + " nie został znaleziony"));
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano pancerz");
+        response.put("armor", armor);
+        return response;
+    }
+
+    public Map<String,Object> getAllArmorsForAdmin() {
+        List<CpRedArmors> allArmors = cpRedArmorsRepository.findAll();
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano pancerze");
+        response.put("armors", allArmors);
+        return response;
     }
 
     public Map<String, Object> addArmor(CpRedArmors armor) {

@@ -10,24 +10,23 @@ import java.util.Map;
 @RequestMapping(path = "api/v1/authorized")
 @AllArgsConstructor
 public class CpRedArmorsController {
-    private CpRedArmorsService cpRedArmorsService;
-
+    private final CpRedArmorsService cpRedArmorsService;
 
 //    // Pobierz wszystkie zbroje
     @GetMapping(path = "/rpgSystems/cpRed/armors/all")
-    public List<CpRedArmorsDTO> getAllArmors() {
+    public Map<String, Object> getAllArmors() {
         return cpRedArmorsService.getAllArmors();
     }
 //    // Pobierz zbroję po id
     @GetMapping(path = "/rpgSystems/cpRed/armors/{armorId}")
-    public CpRedArmorsDTO getArmorById(@PathVariable("armorId") Long armorId) {
+    public Map<String,Object> getArmorById(@PathVariable("armorId") Long armorId) {
         return cpRedArmorsService.getArmorById(armorId);
     }
 //
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie zbroje dla admina
     @GetMapping(path = "/admin/rpgSystems/cpRed/armors/all")
-    public List<CpRedArmors> getAllArmorsForAdmin() {
+    public Map<String,Object> getAllArmorsForAdmin() {
         return cpRedArmorsService.getAllArmorsForAdmin();
     }
 //    // Dodać zbroję
