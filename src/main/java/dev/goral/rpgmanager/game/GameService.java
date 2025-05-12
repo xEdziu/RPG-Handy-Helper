@@ -10,14 +10,12 @@ import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,9 +27,9 @@ public class GameService {
     private final RpgSystemsRepository rpgSystemsRepository;
     private final GameRoomManager gameRoomManager;
 
-    public List<GameDTOAdmin> getAllGames() {
+    public Map<String, Object> getAllGames() {
         List<Game> games = gameRepository.findAll();
-        return games.stream()
+        List<GameDTOAdmin> gamesDto = games.stream()
                 .map(game -> new GameDTOAdmin(
                         game.getId(),
                         game.getName(),
@@ -40,11 +38,18 @@ public class GameService {
                         game.getRpgSystem().getId(),
                         game.getStatus().toString()
                 ))
-                .collect(Collectors.toList());
+                .toList();
+
+        if (gamesDto.isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono żadnych gier.");
+        }
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wszystkie gry.");
+        response.put("games", gamesDto);
+        return response;
     }
 
-    public GameDTO getGame(Long gameId) {
-        return gameRepository.findGameById(gameId)
+    public Map<String, Object> getGame(Long gameId) {
+        GameDTO gameResponse = gameRepository.findGameById(gameId)
                 .map(game -> new GameDTO(
                         game.getId(),
                         game.getName(),
@@ -53,21 +58,32 @@ public class GameService {
                         game.getRpgSystem().getId()
                 ))
                 .orElse(null);
+
+        if (gameResponse == null) {
+            throw new ResourceNotFoundException("Gra o podanym ID nie istnieje.");
+        }
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano grę.");
+        response.put("game", gameResponse);
+        return response;
     }
     
-    public List<GameUsersDTO> getGamePlayers(Long gameId) {
+    public Map<String, Object> getGamePlayers(Long gameId) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new ResourceNotFoundException("Gra o podanym ID nie istnieje."));
 
         List<GameUsers> gameUsers = gameUsersRepository.findGameAllUsersByGameId(gameId);
-        return gameUsers.stream()
+        List<GameUsersDTO> gameUsersDTO = gameUsers.stream()
                 .map(gameUser -> new GameUsersDTO(
                         gameUser.getId(),
                         gameUser.getUser().getId(),
                         gameUser.getGame().getId(),
                         gameUser.getRole().toString()
                 ))
-                .collect(Collectors.toList());
+                .toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę użytkowników gry.");
+        response.put("gameUsers", gameUsersDTO);
+        return response;
     }
 
     @Transactional
