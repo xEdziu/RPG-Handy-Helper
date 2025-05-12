@@ -5,6 +5,7 @@ import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
+import dev.goral.rpgmanager.user.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,7 +56,7 @@ public class CpRedClassesService {
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-        if (!currentUser.getRole().equals("ROLE_ADMIN")) {
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
             throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
         }
 
@@ -98,7 +99,7 @@ public class CpRedClassesService {
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-        if (!currentUser.getRole().equals("ROLE_ADMIN")) {
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
             throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
         }
         CpRedClasses existingClass = cpRedClassesRepository.findById(classId)
