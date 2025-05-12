@@ -178,19 +178,29 @@ public class CpRedCharactersService {
 
         Game game = cpRedCharacterToUpdate.getGame();
 
+        // Sprawdzenie, czy użytkownik należy do gry
         GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(game.getId(), currentUser.getId());
 
-        if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())) {
-            if (gameUser == null) {
+        if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER){
+            if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())){
                 throw new IllegalArgumentException("Nie masz uprawnień do modyfikacji tej postaci.");
             }
-        }
-
-        if (cpRedCharacterToUpdate.getUser() == null) {
-            if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            if (cpRedCharacterToUpdate.getUser() == null) {
                 throw new IllegalArgumentException("Tylko GameMaster może modyfikować tę postać.");
             }
+
         }
+//        if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())) {
+//            if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+//                throw new IllegalArgumentException("Nie masz uprawnień do modyfikacji tej postaci.");
+//            }
+//        }
+//
+//        if (cpRedCharacterToUpdate.getUser() == null) {
+//            if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+//                throw new IllegalArgumentException("Tylko GameMaster może modyfikować tę postać.");
+//            }
+//        }
 
         if (character.getUser() != null) {
             boolean userBelongsToGame = gameUsersRepository.existsByUserIdAndGameId(character.getUser().getId(), game.getId());
