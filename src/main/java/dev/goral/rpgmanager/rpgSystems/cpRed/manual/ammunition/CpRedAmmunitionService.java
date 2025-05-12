@@ -21,31 +21,42 @@ public class CpRedAmmunitionService {
     private UserRepository userRepository;
 
     // Pobierz wszystkie amunicje
-    public List<CpRedAmmunitionDTO> getAllAmmunition(){
-        List<CpRedAmmunition> cpRedAmmunitionList = cpRedAmmunitionRepository.findAll();
-        return cpRedAmmunitionList.stream()
+    public Map<String, Object> getAllAmmunition(){
+        List<CpRedAmmunitionDTO> cpRedAmmunitionList = cpRedAmmunitionRepository.findAll().stream()
                 .map(cpRedAmmunition -> new CpRedAmmunitionDTO(
                         cpRedAmmunition.getName(),
                         cpRedAmmunition.getDescription(),
                         cpRedAmmunition.getPricePerBullet(),
                         cpRedAmmunition.getAvailability().toString()
                 )).toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Amunicja została pobrana.");
+        response.put("ammunition", cpRedAmmunitionList);
+        return response;
     }
 
     // Pobierz amunicje po id
-    public CpRedAmmunitionDTO getAmmunitionById(Long ammunitionId){
-        return cpRedAmmunitionRepository.findById(ammunitionId)
+    public Map<String, Object> getAmmunitionById(Long ammunitionId){
+        CpRedAmmunitionDTO ammunition = cpRedAmmunitionRepository.findById(ammunitionId)
                 .map(cpRedAmmunition -> new CpRedAmmunitionDTO(
                         cpRedAmmunition.getName(),
                         cpRedAmmunition.getDescription(),
                         cpRedAmmunition.getPricePerBullet(),
                         cpRedAmmunition.getAvailability().toString()
                 )).orElseThrow(() -> new ResourceNotFoundException("Amunicja o id " + ammunitionId + " nie istnieje"));
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Amunicja została pobrana.");
+        response.put("ammunition", ammunition);
+        return response;
     }
 
     // Pobierz wszystkie amunicje dla admina
-    public List<CpRedAmmunition> getAllAmmunitionForAdmin(){
-        return cpRedAmmunitionRepository.findAll();
+    public Map<String, Object> getAllAmmunitionForAdmin(){
+        List<CpRedAmmunition> allAmmunitionList = cpRedAmmunitionRepository.findAll();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Amunicja została pobrana dla administratora.");
+        response.put("ammunition", allAmmunitionList);
+        return response;
     }
 
     // Dodaj amunicje

@@ -27,9 +27,8 @@ public class CpRedWeaponsService {
     private final CpRedAmmunitionRepository cpRedAmmunitionRepository;
 
     // Pobierz wszystkie bronie
-    public List<CpRedWeaponsDTO> getAllWeapons() {
-        List<CpRedWeapons> cpRedWeaponsList = cpRedWeaponsRepository.findAll();
-        return cpRedWeaponsList.stream()
+    public Map<String, Object> getAllWeapons() {
+        List<CpRedWeaponsDTO> cpRedWeaponsList = cpRedWeaponsRepository.findAll().stream()
                 .map(cpRedWeapons -> new CpRedWeaponsDTO(
                         cpRedWeapons.getRequiredSkillId().getId(),
                         cpRedWeapons.getName(),
@@ -45,11 +44,15 @@ public class CpRedWeaponsService {
                         cpRedWeapons.isModifiable(),
                         cpRedWeapons.getDescription()
                 )).toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Bronie zostały pobrane.");
+        response.put("weapons", cpRedWeaponsList);
+        return response;
     }
 
     // Pobierz broń po id
-    public CpRedWeaponsDTO getWeaponById(Long weaponId) {
-        return cpRedWeaponsRepository.findById(weaponId)
+    public Map<String, Object> getWeaponById(Long weaponId) {
+        CpRedWeaponsDTO weapon = cpRedWeaponsRepository.findById(weaponId)
                 .map(cpRedWeapons -> new CpRedWeaponsDTO(
                         cpRedWeapons.getRequiredSkillId().getId(),
                         cpRedWeapons.getName(),
@@ -65,11 +68,19 @@ public class CpRedWeaponsService {
                         cpRedWeapons.isModifiable(),
                         cpRedWeapons.getDescription()
                 )).orElseThrow(() -> new ResourceNotFoundException("Broń o id " + weaponId + " nie istnieje"));
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Broń została pobrana.");
+        response.put("weapon", weapon);
+        return response;
     }
 
     // Pobierz wszystkie bronie dla admina
-    public List<CpRedWeapons> getAllWeaponsForAdmin() {
-        return cpRedWeaponsRepository.findAll();
+    public Map<String, Object> getAllWeaponsForAdmin() {
+        List<CpRedWeapons> allWeaponsList = cpRedWeaponsRepository.findAll();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Bronie zostały pobrane dla administratora.");
+        response.put("weapons", allWeaponsList);
+        return response;
     }
 
     // Dodać broń

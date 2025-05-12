@@ -15,19 +15,19 @@ public class CpRedWeaponsController {
     // ============ User methods ============
     // Pobierz wszystkie bronie
     @GetMapping(path = "/rpgSystems/cpRed/weapons/all")
-    public List<CpRedWeaponsDTO> getAllWeapons() {
+    public Map<String, Object> getAllWeapons() { // List<CpRedWeaponsDTO>
         return cpRedWeaponsService.getAllWeapons();
     }
     // Pobierz broń po id
     @GetMapping(path = "/rpgSystems/cpRed/weapons/{weaponId}")
-    public CpRedWeaponsDTO getWeaponById(@PathVariable("weaponId") Long weaponId) {
+    public Map<String, Object> getWeaponById(@PathVariable("weaponId") Long weaponId) { // CpRedWeaponsDTO
         return cpRedWeaponsService.getWeaponById(weaponId);
     }
 
     // ============ Admin methods ============
     // Pobierz wszystkie bronie dla admina
     @GetMapping(path = "/admin/rpgSystems/cpRed/weapons/all")
-    public List<CpRedWeapons> getAllWeaponsForAdmin() {
+    public Map<String, Object> getAllWeaponsForAdmin() { // List<CpRedWeapons>
         return cpRedWeaponsService.getAllWeaponsForAdmin();
     }
     // Dodać broń
