@@ -27,32 +27,39 @@ public class CpRedCustomAmmunitionService {
     private final GameUsersRepository gameUsersRepository;
 
     // Pobierz wszystkie amunicje
-    public List<CpRedCustomAmmunitionDTO> getAllCustomAmmunition() {
-        List<CpRedCustomAmmunition> allCustomAmmunitionList = cpRedCustomAmmunitionRepository.findAll();
-        return allCustomAmmunitionList.stream()
-                .map( cpRedCustomAmmunition -> new CpRedCustomAmmunitionDTO(
+    public Map<String, Object> getAllCustomAmmunition() {
+        List<CpRedCustomAmmunitionDTO> allCustomAmmunitionList = cpRedCustomAmmunitionRepository.findAll().stream()
+                .map(cpRedCustomAmmunition -> new CpRedCustomAmmunitionDTO(
                         cpRedCustomAmmunition.getGameId().getId(),
                         cpRedCustomAmmunition.getName(),
                         cpRedCustomAmmunition.getDescription(),
                         cpRedCustomAmmunition.getPricePerBullet(),
                         cpRedCustomAmmunition.getAvailability().toString()
-        )).toList();
+                )).toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowa amunicja została pobrana.");
+        response.put("customAmmunition", allCustomAmmunitionList);
+        return response;
     }
 
     // Pobierz amunicje po id
-    public CpRedCustomAmmunitionDTO getCustomAmmunitionById(Long ammunitionId) {
-        return cpRedCustomAmmunitionRepository.findById(ammunitionId)
-                .map( cpRedCustomAmmunition -> new CpRedCustomAmmunitionDTO(
+    public Map<String, Object> getCustomAmmunitionById(Long ammunitionId) {
+        CpRedCustomAmmunitionDTO ammunition = cpRedCustomAmmunitionRepository.findById(ammunitionId)
+                .map(cpRedCustomAmmunition -> new CpRedCustomAmmunitionDTO(
                         cpRedCustomAmmunition.getGameId().getId(),
                         cpRedCustomAmmunition.getName(),
                         cpRedCustomAmmunition.getDescription(),
                         cpRedCustomAmmunition.getPricePerBullet(),
                         cpRedCustomAmmunition.getAvailability().toString()
-                )).orElseThrow(() -> new ResourceNotFoundException("Customowa amunicja o id " + ammunitionId + " nie istnieje") );
+                )).orElseThrow(() -> new ResourceNotFoundException("Customowa amunicja o id " + ammunitionId + " nie istnieje."));
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowa amunicja została pobrana.");
+        response.put("customAmmunition", ammunition);
+        return response;
     }
 
     // Pobierz amunicje po grze
-    public List<CpRedCustomAmmunitionDTO> getCustomAmmunitionByGameId(Long gameId) {
+    public Map<String, Object> getCustomAmmunitionByGameId(Long gameId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
@@ -65,16 +72,18 @@ public class CpRedCustomAmmunitionService {
         // Sprawdź, czy użytkownik należy do tej gry
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), gameId)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie jesteś graczem wybranej gry."));
-
-        List<CpRedCustomAmmunition> gameCustomAmmunitionList = cpRedCustomAmmunitionRepository.findAllByGameId(game);
-        return gameCustomAmmunitionList.stream()
-                .map( cpRedCustomAmmunition -> new CpRedCustomAmmunitionDTO(
+        List<CpRedCustomAmmunitionDTO> gameCustomAmmunitionList = cpRedCustomAmmunitionRepository.findAllByGameId(game).stream()
+                .map(cpRedCustomAmmunition -> new CpRedCustomAmmunitionDTO(
                         cpRedCustomAmmunition.getGameId().getId(),
                         cpRedCustomAmmunition.getName(),
                         cpRedCustomAmmunition.getDescription(),
                         cpRedCustomAmmunition.getPricePerBullet(),
                         cpRedCustomAmmunition.getAvailability().toString()
                 )).toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowa amunicja dla gry została pobrana.");
+        response.put("customAmmunition", gameCustomAmmunitionList);
+        return response;
     }
 
     // Dodaj amunicje
@@ -232,7 +241,11 @@ public class CpRedCustomAmmunitionService {
     }
 
     // Pobierz wszystkie amunicje dla admina
-    public List<CpRedCustomAmmunition> getAllCustomAmmunitionForAdmin() {
-        return cpRedCustomAmmunitionRepository.findAll();
+    public Map<String, Object> getAllCustomAmmunitionForAdmin() {
+        List<CpRedCustomAmmunition> allCustomAmmunitionList = cpRedCustomAmmunitionRepository.findAll();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowa amunicja została pobrana dla administratora.");
+        response.put("customAmmunition", allCustomAmmunitionList);
+        return response;
     }
 }
