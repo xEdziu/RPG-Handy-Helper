@@ -12,18 +12,18 @@ public class CpRedEquipmentsService {
     private final CpRedEquipmentsRepository cpRedEquipmentsRepository;
 
 //    // Pobierz wszystkie przedmioty
-//    public List<CpRedEquipmentsDTO> getAllEquipments() {
+//    public Map<String, Object> getAllEquipments() {
 //
 //    }
 //
 //    // Pobierz przedmiot po id
-//    public CpRedEquipmentsDTO getEquipmentById(Long equipmentId) {
+//    public Map<String, Object> getEquipmentById(Long equipmentId) {
 //
 //    }
 //
 //    // Pobierz wszystkie przedmioty dla admina
-//    public List<CpRedEquipments> getAllEquipmentsForAdmin() {
-//        return cpRedEquipmentsRepository.findAll();
+//    public Map<String, Object> getAllEquipmentsForAdmin() {
+//
 //    }
 //
 //    // Dodaj przedmiot
