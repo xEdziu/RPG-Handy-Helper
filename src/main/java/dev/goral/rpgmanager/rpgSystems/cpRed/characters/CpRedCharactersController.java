@@ -3,7 +3,6 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.characters;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -14,12 +13,12 @@ public class CpRedCharactersController {
     private final CpRedCharactersService cpRedCharactersService;
 
     @GetMapping(path = "/games/cpRed/characters/all")
-    public List<CpRedCharactersDTO> getAllCharacters() {
+    public Map<String, Object> getAllCharacters() {
         return cpRedCharactersService.getAllCharacters();
     }
 
     @GetMapping(path = "/games/cpRed/characters/{characterId}")
-    public CpRedCharactersDTO getCharacter(@PathVariable("characterId") Long characterId) {
+    public Map<String, Object> getCharacter(@PathVariable("characterId") Long characterId) {
         return cpRedCharactersService.getCharacter(characterId);
     }
 
