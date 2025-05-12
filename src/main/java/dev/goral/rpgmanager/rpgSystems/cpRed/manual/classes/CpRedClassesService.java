@@ -44,7 +44,7 @@ public class CpRedClassesService {
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-        if (!currentUser.getRole().equals("ROLE_ADMIN")) {
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
             throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
         }
         return cpRedClassesRepository.findAll();
