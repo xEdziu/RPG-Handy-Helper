@@ -39,6 +39,7 @@ public class CpRedCustomWeapons {
             nullable = false
     )
     private CpRedSkills requiredSkillId;
+    private String name;
     @Enumerated(EnumType.STRING)
     private CpRedWeaponsType type;//enum from weapons
     private int damage;
