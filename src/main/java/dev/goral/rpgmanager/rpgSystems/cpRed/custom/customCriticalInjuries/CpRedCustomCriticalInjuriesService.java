@@ -12,12 +12,12 @@ public class CpRedCustomCriticalInjuriesService {
     private final CpRedCustomCriticalInjuriesRepository cpRedCustomCriticalInjuriesRepository;
 
 //    // Pobierz wszystkie customowe rany krytyczne
-//    public List<CpRedCustomCriticalInjuriesDTO> getAllCustomCriticalInjuries() {
+//    public Map<String, Object> getAllCustomCriticalInjuries() {
 //
 //    }
 //
 //    // Pobierz customową ranę krytyczną po id
-//    public CpRedCustomCriticalInjuriesDTO getCustomCriticalInjuryById(Long customCriticalInjuryId) {
+//    public Map<String, Object> getCustomCriticalInjuryById(Long customCriticalInjuryId) {
 //
 //    }
 //
@@ -32,8 +32,8 @@ public class CpRedCustomCriticalInjuriesService {
 //    }
 //
 //    // Pobierz wszystkie customowe rany krytyczne dla admina
-//    public List<CpRedCustomCriticalInjuries> getAllCustomCriticalInjuriesForAdmin() {
-//        return cpRedCustomCriticalInjuriesRepository.findAll();
+//    public Map<String, Object> getAllCustomCriticalInjuriesForAdmin() {
+//
 //    }
 
 }
