@@ -15,19 +15,19 @@ public class CpRedCriticalInjuriesController {
 //    // ============ User methods ============
 //    // Pobierz wszystkie obrażenia krytyczne
 //    @GetMapping(path = "/rpgSystems/cpRed/criticalInjuries/all")
-//    public List<CpRedCriticalInjuriesDTO> getAllCriticalInjuries() {
+//    public Map<String, Object> getAllCriticalInjuries() { // List<CpRedCriticalInjuriesDTO>
 //        return cpRedCriticalInjuriesService.getAllCriticalInjuries();
 //    }
 //    // Pobierz obrażenia krytyczne po id
 //    @GetMapping(path = "/rpgSystems/cpRed/criticalInjuries/{injuryId}")
-//    public CpRedCriticalInjuriesDTO getCriticalInjuryById(@PathVariable("injuryId") Long injuryId) {
+//    public Map<String, Object> getCriticalInjuryById(@PathVariable("injuryId") Long injuryId) { // CpRedCriticalInjuriesDTO
 //        return cpRedCriticalInjuriesService.getCriticalInjuryById(injuryId);
 //    }
 //
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie obrażenia krytyczne dla admina
 //    @GetMapping(path = "/admin/rpgSystems/cpRed/criticalInjuries/all")
-//    public List<CpRedCriticalInjuries> getAllCriticalInjuriesForAdmin() {
+//    public Map<String, Object> getAllCriticalInjuriesForAdmin() { // List<CpRedCriticalInjuries>
 //        return cpRedCriticalInjuriesService.getAllCriticalInjuriesForAdmin();
 //    }
 //    // Dodać obrażenia krytyczne

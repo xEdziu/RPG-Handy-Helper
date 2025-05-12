@@ -15,19 +15,19 @@ public class CpRedEquipmentsController {
 //    // ============ User methods ============
 //    // Pobierz wszystkie przedmioty
 //    @GetMapping(path = "/rpgSystems/cpRed/equipments/all")
-//    public List<CpRedEquipmentsDTO> getAllEquipments() {
+//    public Map<String, Object> getAllEquipments() { // List<CpRedEquipmentsDTO>
 //        return cpRedEquipmentsService.getAllEquipments();
 //    }
 //    // Pobierz przedmiot po id
 //    @GetMapping(path = "/rpgSystems/cpRed/equipments/{equipmentId}")
-//    public CpRedEquipmentsDTO getEquipmentById(@PathVariable("equipmentId") Long equipmentId) {
+//    public Map<String, Object> getEquipmentById(@PathVariable("equipmentId") Long equipmentId) { // CpRedEquipmentsDTO
 //        return cpRedEquipmentsService.getEquipmentById(equipmentId);
 //    }
 //
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie przedmioty dla admina
 //    @GetMapping(path = "/admin/rpgSystems/cpRed/equipments/all")
-//    public List<CpRedEquipments> getAllEquipmentsForAdmin() {
+//    public Map<String, Object> getAllEquipmentsForAdmin() { // List<CpRedEquipments>
 //        return cpRedEquipmentsService.getAllEquipmentsForAdmin();
 //    }
 //    // Dodać przedmiot

@@ -12,12 +12,12 @@ public class CpRedCustomWeaponModsService {
     private final CpRedCustomWeaponModsRepository cpRedCustomWeaponModsRepository;
 
 //    // Pobierz wszystkie modyfikacje broni
-//    public List<CpRedCustomWeaponModsDTO> getAllWeaponMods() {
+//    public Map<String, Object> getAllWeaponMods() {
 //
 //    }
 //
 //    // Pobierz modyfikację broni po id
-//    public CpRedCustomWeaponModsDTO getWeaponModById(Long weaponModId) {
+//    public Map<String, Object> getWeaponModById(Long weaponModId) {
 //
 //    }
 //
@@ -32,7 +32,7 @@ public class CpRedCustomWeaponModsService {
 //    }
 //
 //    // Pobierz wszystkie modyfikacje broni dla admina
-//    public List<CpRedCustomWeaponMods> getAllWeaponModsForAdmin() {
-//        return cpRedCustomWeaponModsRepository.findAll();
+//    public Map<String, Object> getAllWeaponModsForAdmin() {
+//
 //    }
 }

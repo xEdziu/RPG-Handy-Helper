@@ -27,10 +27,10 @@ public class CpRedCharactersService {
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
 
-    public List<CpRedCharactersDTO> getAllCharacters() {
+    public Map<String, Object> getAllCharacters() {
         List<CpRedCharacters> characters = cpRedCharactersRepository.findAll();
 
-        return characters.stream().map(character ->
+        List<CpRedCharactersDTO> charactersDTOS = characters.stream().map(character ->
                 new CpRedCharactersDTO(
                         character.getId(),
                         character.getGame().getId(),
@@ -44,13 +44,18 @@ public class CpRedCharactersService {
                         character.isAlive()
                 )
         ).toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę postaci.");
+        response.put("characters", charactersDTOS);
+        return response;
     }
 
-    public CpRedCharactersDTO getCharacter(Long characterId) {
+    public Map<String, Object> getCharacter(Long characterId) {
         Optional<CpRedCharacters> character = cpRedCharactersRepository.findById(characterId);
+        CpRedCharactersDTO charactersDTO;
         if (character.isPresent()) {
             CpRedCharacters cpRedCharacter = character.get();
-            return new CpRedCharactersDTO(
+            charactersDTO = new CpRedCharactersDTO(
                     cpRedCharacter.getId(),
                     cpRedCharacter.getGame().getId(),
                     cpRedCharacter.getUser() != null ? cpRedCharacter.getUser().getId() : null,
@@ -65,6 +70,10 @@ public class CpRedCharactersService {
         } else {
             throw new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje");
         }
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano postać o id " + characterId);
+        response.put("character", charactersDTO);
+        return response;
     }
 
     public Map<String, Object> createCharacter(CpRedCharacters character) {
@@ -170,19 +179,7 @@ public class CpRedCharactersService {
         CpRedCharacters cpRedCharacterToUpdate = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + characterId + " nie istnieje"));
 
-        Game game = cpRedCharacterToUpdate.getGame();
-
-        if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())) {
-            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
-                throw new IllegalArgumentException("Nie masz uprawnień do modyfikacji tej postaci.");
-            }
-        }
-
-        if (cpRedCharacterToUpdate.getUser() == null) {
-            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
-                throw new IllegalArgumentException("Tylko GameMaster może modyfikować tę postać.");
-            }
-        }
+        Game game = getGame(cpRedCharacterToUpdate, currentUser);
 
         if (character.getUser() != null) {
             boolean userBelongsToGame = gameUsersRepository.existsByUserIdAndGameId(character.getUser().getId(), game.getId());
@@ -289,6 +286,23 @@ public class CpRedCharactersService {
         cpRedCharactersRepository.save(cpRedCharacterToUpdate);
 
         return CustomReturnables.getOkResponseMap("Postać " + cpRedCharacterToUpdateName + " została zaktualizowana");
+    }
+
+    private static Game getGame(CpRedCharacters cpRedCharacterToUpdate, User currentUser) {
+        Game game = cpRedCharacterToUpdate.getGame();
+
+        if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())) {
+            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
+                throw new IllegalArgumentException("Nie masz uprawnień do modyfikacji tej postaci.");
+            }
+        }
+
+        if (cpRedCharacterToUpdate.getUser() == null) {
+            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
+                throw new IllegalArgumentException("Tylko GameMaster może modyfikować tę postać.");
+            }
+        }
+        return game;
     }
 
     public Map<String, Object> playerToNpc(Long characterId) {

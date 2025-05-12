@@ -15,12 +15,12 @@ public class CpRedCustomWeaponsController {
 //    // ============ User methods ============
 //    // Pobierz wszystkie customowe bronie
 //    @GetMapping(path = "/rpgSystems/cpRed/customWeapons/all")
-//    public List<CpRedCustomWeaponsDTO> getAllCustomWeapons() {
+//    public Map<String, Object> getAllCustomWeapons() { // List<CpRedCustomWeaponsDTO>
 //        return cpRedCustomWeaponsService.getAllCustomWeapons();
 //    }
 //    // Pobierz customową broń po id
 //    @GetMapping(path = "/rpgSystems/cpRed/customWeapons/{customWeaponId}")
-//    public CpRedCustomWeaponsDTO getCustomWeaponById(@PathVariable("customWeaponId") Long customWeaponId) {
+//    public Map<String, Object> getCustomWeaponById(@PathVariable("customWeaponId") Long customWeaponId) { // CpRedCustomWeaponsDTO
 //        return cpRedCustomWeaponsService.getCustomWeaponById(customWeaponId);
 //    }
 //    // Dodaj customową broń
@@ -38,7 +38,7 @@ public class CpRedCustomWeaponsController {
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie customowe bronie dla admina
 //    @GetMapping(path = "/admin/rpgSystems/cpRed/customWeapons/all")
-//    public List<CpRedCustomWeapons> getAllCustomWeaponsForAdmin() {
+//    public Map<String, Object> getAllCustomWeaponsForAdmin() { // List<CpRedCustomWeapons>
 //        return cpRedCustomWeaponsService.getAllCustomWeaponsForAdmin();
 //    }
 }

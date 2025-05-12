@@ -12,18 +12,18 @@ public class CpRedArmorsService {
     private final CpRedArmorsRepository cpRedArmorsRepository;
 
 //    // Pobierz wszystkie pancerze
-//    public List<CpRedArmorsDTO> getAllArmors() {
+//    public Map<String, Object> getAllArmors() {
 //
 //    }
 //
 //    // Pobierz pancerz po id
-//    public CpRedArmorsDTO getArmorById(Long armorId) {
+//    public Map<String, Object> getArmorById(Long armorId) {
 //
 //    }
 //
 //    // Pobierz wszystkie pancerze dla admina
-//    public List<CpRedArmors> getAllArmorsForAdmin() {
-//        return cpRedArmorsRepository.findAll();
+//    public Map<String, Object> getAllArmorsForAdmin() {
+//
 //    }
 //
 //    // Dodać pancerz

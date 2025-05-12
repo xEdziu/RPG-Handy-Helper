@@ -15,19 +15,19 @@ public class CpRedClassesController {
 //    // ============ User methods ============
 //    // Pobierz wszystkie klasy
 //    @GetMapping(path = "/rpgSystems/cpRed/classes/all")
-//    public List<CpRedClassesDTO> getAllClasses() {
+//    public Map<String, Object> getAllClasses() { // List<CpRedClassesDTO>
 //        return cpRedClassesService.getAllClasses();
 //    }
 //    // Pobierz klasę po id
 //    @GetMapping(path = "/rpgSystems/cpRed/classes/{classId}")
-//    public CpRedClassesDTO getClassById(@PathVariable("classId") Long classId) {
+//    public Map<String, Object> getClassById(@PathVariable("classId") Long classId) { // CpRedClassesDTO
 //        return cpRedClassesService.getClassById(classId);
 //    }
 //
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie klasy dla admina
 //    @GetMapping(path = "/admin/rpgSystems/cpRed/classes/all")
-//    public List<CpRedClasses> getAllClassesForAdmin() {
+//    public Map<String, Object> getAllClassesForAdmin() { // List<CpRedClasses>
 //        return cpRedClassesService.getAllClassesForAdmin();
 //    }
 //    // Dodać klase

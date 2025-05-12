@@ -13,18 +13,18 @@ public class CpRedClassesService {
     private final CpRedClassesRepository cpRedClassesRepository;
 
 //    // Pobierz wszystkie klasy
-//    public List<CpRedClassesDTO> getAllClasses() {
+//    public Map<String, Object> getAllClasses() {
 //
 //    }
 //
 //    // Pobierz klasę po id
-//    public CpRedClassesDTO getClassById(Long classId) {
+//    public Map<String, Object> getClassById(Long classId) {
 //
 //    }
 //
 //    // Pobierz wszystkie klasy dla admina
-//    public List<CpRedClasses> getAllClassesForAdmin() {
-//        return cpRedClassesRepository.findAll();
+//    public Map<String, Object> getAllClassesForAdmin() {
+//
 //    }
 //
 //    // Dodać klase
