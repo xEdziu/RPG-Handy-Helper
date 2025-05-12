@@ -22,32 +22,38 @@ public class CpRedClassesService {
     private final CpRedClassesRepository cpRedClassesRepository;
     private final UserRepository userRepository;
 
-   public List<CpRedClassesDTO> getAllClasses() {
-        return cpRedClassesRepository.findAll()
-                .stream()
+   public Map<String, Object> getAllClasses() {
+       List<CpRedClasses> classes= cpRedClassesRepository.findAll();
+       List<CpRedClassesDTO> classesDTO = classes.stream()
+               .map(cpRedClasses -> new CpRedClassesDTO(
+                       cpRedClasses.getName(),
+                       cpRedClasses.getDescription()
+               )).toList();
+        if(classesDTO.isEmpty()){
+            return CustomReturnables.getOkResponseMap("Brak klas");
+        }
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano klasy");
+        response.put("classes", classesDTO);
+        return response;
+    }
+
+   public Map<String, Object> getClassById(Long classId) {
+        CpRedClassesDTO classes = cpRedClassesRepository.findById(classId)
                 .map(cpRedClasses -> new CpRedClassesDTO(
                         cpRedClasses.getName(),
                         cpRedClasses.getDescription()
-                ))
-                .collect(Collectors.toList());
-    }
-
-   public CpRedClassesDTO getClassById(Long classId) {
-        CpRedClasses classes= cpRedClassesRepository.findById(classId)
-                .orElseThrow(() -> new ResourceNotFoundException("Klasa o id " + classId + " nie istnieje"));
-        return new CpRedClassesDTO(classes.getName(), classes.getDescription());
+                )).orElseThrow(() -> new ResourceNotFoundException("Klasa o id " + classId + " nie istnieje"));
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano klasę");
+        response.put("class", classes);
+        return response;
     }
 
 
-    public List<CpRedClasses> getAllClassesForAdmin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
-        }
-        return cpRedClassesRepository.findAll();
+    public Map<String, Object> getAllClassesForAdmin() {
+       List<CpRedClasses> allClasses = cpRedClassesRepository.findAll();
+       Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano klasy");
+       response.put("classes", allClasses);
+         return response;
    }
 
 

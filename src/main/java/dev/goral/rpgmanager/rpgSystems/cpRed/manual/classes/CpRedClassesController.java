@@ -14,18 +14,18 @@ public class CpRedClassesController {
 
 
     @GetMapping(path = "/rpgSystems/cpRed/classes/all")
-    public List<CpRedClassesDTO> getAllClasses() {
+    public Map<String, Object> getAllClasses() {
         return cpRedClassesService.getAllClasses();
     }
 
    @GetMapping(path = "/rpgSystems/cpRed/classes/{classId}")
-   public CpRedClassesDTO getClassById(@PathVariable("classId") Long classId) {
+   public Map<String, Object> getClassById(@PathVariable("classId") Long classId) {
         return cpRedClassesService.getClassById(classId);
     }
 
 
     @GetMapping(path = "/admin/rpgSystems/cpRed/classes/all")
-    public List<CpRedClasses> getAllClassesForAdmin() {
+    public Map<String, Object> getAllClassesForAdmin() {
         return cpRedClassesService.getAllClassesForAdmin();
     }
 
