@@ -1,15 +1,9 @@
 package dev.goral.rpgmanager.game;
 
 import dev.goral.rpgmanager.game.gameUsers.AddUserToGameRequest;
-import dev.goral.rpgmanager.game.gameUsers.GameUsers;
-import dev.goral.rpgmanager.game.gameUsers.GameUsersDTO;
-import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
-import dev.goral.rpgmanager.security.CustomReturnables;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,12 +16,12 @@ public class GameController {
     // ============ User methods ============
 
     @GetMapping(path = "/game/{gameId}")
-    public GameDTO getGame(@PathVariable("gameId") Long gameId) {
+    public Map<String, Object> getGame(@PathVariable("gameId") Long gameId) {
         return gameService.getGame(gameId);
     }
 
     @GetMapping(path = "/game/allPlayers/{gameId}")
-    public List<GameUsersDTO> getGamePlayers(@PathVariable("gameId") Long gameId) {
+    public Map<String, Object> getGamePlayers(@PathVariable("gameId") Long gameId) {
         return gameService.getGamePlayers(gameId);
     }
 
@@ -59,7 +53,7 @@ public class GameController {
     // ============ Admin methods ============
 
     @GetMapping(path = "/admin/game/all")
-    public List<GameDTOAdmin> getAllGames() {
+    public Map<String, Object> getAllGames() {
         return gameService.getAllGames();
     }
 

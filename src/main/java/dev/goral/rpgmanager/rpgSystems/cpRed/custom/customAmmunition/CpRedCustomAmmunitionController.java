@@ -15,12 +15,12 @@ public class CpRedCustomAmmunitionController {
 //    // ============ User methods ============
 //    // Pobierz wszystkie amunicje
 //    @GetMapping(path = "/rpgSystems/cpRed/customAmmunition/all")
-//    public List<CpRedCustomAmmunitionDTO> getAllCustomAmmunition() {
+//    public Map<String, Object> getAllCustomAmmunition() { // List<CpRedCustomAmmunitionDTO>
 //        return cpRedCustomAmmunitionService.getAllCustomAmmunition();
 //    }
 //    // Pobierz amunicje po id
 //    @GetMapping(path = "/rpgSystems/cpRed/customAmmunition/{ammunitionId}")
-//    public CpRedCustomAmmunitionDTO getCustomAmmunitionById(@PathVariable("ammunitionId") Long ammunitionId) {
+//    public Map<String, Object> getCustomAmmunitionById(@PathVariable("ammunitionId") Long ammunitionId) { // CpRedCustomAmmunitionDTO
 //        return cpRedCustomAmmunitionService.getCustomAmmunitionById(ammunitionId);
 //    }
 //    // Dodaj amunicje
@@ -38,7 +38,7 @@ public class CpRedCustomAmmunitionController {
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie amunicje dla admina
 //    @GetMapping(path = "/admin/rpgSystems/cpRed/customAmmunition/all")
-//    public List<CpRedCustomAmmunition> getAllCustomAmmunitionForAdmin() {
+//    public Map<String, Object> getAllCustomAmmunitionForAdmin() { // List<CpRedCustomAmmunition>
 //        return cpRedCustomAmmunitionService.getAllCustomAmmunitionForAdmin();
 //    }
 }

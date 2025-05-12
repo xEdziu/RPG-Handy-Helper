@@ -12,12 +12,12 @@ public class CpRedCustomWeaponsService {
     private final CpRedCustomWeaponsRepository cpRedCustomWeaponsRepository;
 
 //    // Pobierz wszystkie customowe bronie
-//    public List<CpRedCustomWeaponsDTO> getAllCustomWeapons() {
+//    public Map<String, Object> getAllCustomWeapons() {
 //
 //    }
 //
 //    // Pobierz customową broń po id
-//    public CpRedCustomWeaponsDTO getCustomWeaponById(Long customWeaponId) {
+//    public Map<String, Object> getCustomWeaponById(Long customWeaponId) {
 //
 //    }
 //
@@ -32,7 +32,7 @@ public class CpRedCustomWeaponsService {
 //    }
 //
 //    // Pobierz wszystkie customowe bronie dla admina
-//    public List<CpRedCustomWeapons> getAllCustomWeaponsForAdmin() {
-//        return cpRedCustomWeaponsRepository.findAll();
+//    public Map<String, Object> getAllCustomWeaponsForAdmin() {
+//
 //    }
 }

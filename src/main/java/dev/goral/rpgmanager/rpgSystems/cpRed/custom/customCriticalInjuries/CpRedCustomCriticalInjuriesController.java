@@ -15,13 +15,13 @@ public class CpRedCustomCriticalInjuriesController {
 //    // ============ User methods ============
 //    // Pobierz wszystkie customowe rany krytyczne
 //    @GetMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/all")
-//    public List<CpRedCustomCriticalInjuriesDTO> getAllCustomCriticalInjuries() {
+//    public Map<String, Object> getAllCustomCriticalInjuries() { // List<CpRedCustomCriticalInjuriesDTO>
 //        return cpRedCustomCriticalInjuriesService.getAllCustomCriticalInjuries();
 //    }
 //    // Pobierz customową ranę krytyczną po id
 //    @GetMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/{customCriticalInjuryId}")
-//    public CpRedCustomCriticalInjuriesDTO getCustomCriticalInjuryById(
-//            @PathVariable("customCriticalInjuryId") Long customCriticalInjuryId) {
+//    public Map<String, Object> getCustomCriticalInjuryById(
+//            @PathVariable("customCriticalInjuryId") Long customCriticalInjuryId) { // CpRedCustomCriticalInjuriesDTO
 //        return cpRedCustomCriticalInjuriesService.getCustomCriticalInjuryById(customCriticalInjuryId);
 //    }
 //    // Dodać customową ranę krytyczną
@@ -40,7 +40,7 @@ public class CpRedCustomCriticalInjuriesController {
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie customowe rany krytyczne dla admina
 //    @GetMapping(path = "/admin/rpgSystems/cpRed/customCriticalInjuries/all")
-//    public List<CpRedCustomCriticalInjuries> getAllCustomCriticalInjuriesForAdmin() {
+//    public Map<String, Object> getAllCustomCriticalInjuriesForAdmin() { // List<CpRedCustomCriticalInjuries>
 //        return cpRedCustomCriticalInjuriesService.getAllCustomCriticalInjuriesForAdmin();
 //    }
 }

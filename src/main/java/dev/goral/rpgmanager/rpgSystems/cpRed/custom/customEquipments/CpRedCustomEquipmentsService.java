@@ -12,12 +12,12 @@ public class CpRedCustomEquipmentsService {
     private final CpRedCustomEquipmentsRepository cpRedCustomEquipmentsRepository;
 
 //    // Pobierz wszystkie przedmioty
-//    public List<CpRedCustomEquipmentsDTO> getAllEquipments(){
+//    public Map<String, Object> getAllEquipments(){
 //
 //    }
 //
 //    // Pobierz przedmiot po id
-//    public CpRedCustomEquipmentsDTO getEquipmentById(Long equipmentId){
+//    public Map<String, Object> getEquipmentById(Long equipmentId){
 //
 //    }
 //
@@ -32,7 +32,7 @@ public class CpRedCustomEquipmentsService {
 //    }
 //
 //    // Pobierz wszystkie przedmioty dla admina
-//    public List<CpRedCustomEquipments> getAllEquipmentsForAdmin(){
-//        return cpRedCustomEquipmentsRepository.findAll();
+//    public Map<String, Object> getAllEquipmentsForAdmin(){
+//
 //    }
 }
