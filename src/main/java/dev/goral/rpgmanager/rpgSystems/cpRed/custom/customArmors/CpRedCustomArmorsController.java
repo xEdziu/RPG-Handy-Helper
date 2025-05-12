@@ -15,12 +15,12 @@ public class CpRedCustomArmorsController {
 //    // ============ User methods ============
 //    // Pobierz wszystkie customowe zbroje
 //    @GetMapping(path = "/rpgSystems/cpRed/customArmors/all")
-//    public List<CpRedCustomArmorsDTO> getAllCustomArmors() {
+//    public Map<String, Object> getAllCustomArmors() { // List<CpRedCustomArmorsDTO>
 //        return cpRedCustomArmorsService.getAllCustomArmors();
 //    }
 //    // Pobierz customową zbroję po id
 //    @GetMapping(path = "/rpgSystems/cpRed/customArmors/{armorId}")
-//    public CpRedCustomArmorsDTO getCustomArmorById(@PathVariable("armorId") Long armorId) {
+//    public Map<String, Object> getCustomArmorById(@PathVariable("armorId") Long armorId) { // CpRedCustomArmorsDTO
 //        return cpRedCustomArmorsService.getCustomArmorById(armorId);
 //    }
 //    // Dodaj customową zbroję
@@ -38,7 +38,7 @@ public class CpRedCustomArmorsController {
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie customowe zbroje dla admina
 //    @GetMapping(path = "/admin/rpgSystems/cpRed/customArmors/all")
-//    public List<CpRedCustomArmors> getAllCustomArmorsForAdmin() {
+//    public Map<String, Object> getAllCustomArmorsForAdmin() { // List<CpRedCustomArmors>
 //        return cpRedCustomArmorsService.getAllCustomArmorsForAdmin();
 //    }
 }
