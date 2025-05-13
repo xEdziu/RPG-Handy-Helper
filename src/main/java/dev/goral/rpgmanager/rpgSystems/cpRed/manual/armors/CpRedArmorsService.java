@@ -73,7 +73,6 @@ public class CpRedArmorsService {
         }
         if(armor.getType() == null ||
                 armor.getArmorPoints() == 0 ||
-                armor.getPenalty() == 0 ||
                 armor.getPrice() == 0 ||
                 armor.getAvailability() == null ||
                 armor.getDescription() == null) {
@@ -109,7 +108,6 @@ public class CpRedArmorsService {
         }
         if(armor.getType() == null ||
                 armor.getArmorPoints() == 0 ||
-                armor.getPenalty() == 0 ||
                 armor.getPrice() == 0 ||
                 armor.getAvailability() == null ||
                 armor.getDescription() == null) {
