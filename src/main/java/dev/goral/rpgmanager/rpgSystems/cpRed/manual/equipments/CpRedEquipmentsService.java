@@ -1,7 +1,13 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.manual.equipments;
 
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
+import dev.goral.rpgmanager.user.User;
+import dev.goral.rpgmanager.user.UserRepository;
+import dev.goral.rpgmanager.user.UserRole;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -12,6 +18,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class CpRedEquipmentsService {
     private final CpRedEquipmentsRepository cpRedEquipmentsRepository;
+    private final UserRepository userRepository;
 
     // Pobierz wszystkie przedmioty
     public Map<String, Object>  getAllEquipments() {
@@ -52,11 +59,48 @@ public class CpRedEquipmentsService {
         return response;
 
     }
-//
-//    // Dodaj przedmiot
-//    public Map<String, Object> addEquipment(CpRedEquipments cpRedEquipments) {
-//
-//    }
+
+    // Dodaj przedmiot
+    public Map<String, Object> addEquipment(CpRedEquipments cpRedEquipments) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
+            throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
+        }
+        if (cpRedEquipments.getName() == null ||
+                cpRedEquipments.getAvailability() == null ||
+                cpRedEquipments.getDescription() == null) {
+            throw new IllegalStateException("Nie podano wszystkich parametrów");
+        }
+        if(cpRedEquipments.getPrice() <= 0) {
+            throw new IllegalStateException("Cena nie może być ujemna lub równa zero");
+        }
+        String name = cpRedEquipments.getName().trim();
+        if (name.isEmpty()) {
+            throw new IllegalStateException("Nie podano nazwy przedmiotu");
+        }
+        if (name.length() > 255) {
+            throw new IllegalArgumentException("Nazwa klasy nie może mieć więcej niż 255 znaków.");
+        }
+        String description = cpRedEquipments.getDescription().trim();
+        if (description.isEmpty()) {
+            throw new IllegalArgumentException("Opis klasy jest wymagany.");
+        }
+        if (description.length() > 1000) {
+            throw new IllegalArgumentException("Opis klasy nie może mieć więcej niż 1000 znaków.");
+        }
+        if(cpRedEquipmentsRepository.existsByName(name)) {
+            throw new IllegalStateException("Klasa o nazwie " + name + " już istnieje");
+        }
+        cpRedEquipments.setName(name);
+        cpRedEquipments.setDescription(description);
+        cpRedEquipments.setPrice(cpRedEquipments.getPrice());
+        cpRedEquipments.setAvailability(cpRedEquipments.getAvailability());
+        cpRedEquipmentsRepository.save(cpRedEquipments);
+        return CustomReturnables.getOkResponseMap("Przedmiot " + cpRedEquipments.getName() + " został dodany");
+    }
 //
 //    // Modyfikuj przedmiot
 //    public Map<String, Object> updateEquipment(Long equipmentId, CpRedEquipments cpRedEquipments) {
