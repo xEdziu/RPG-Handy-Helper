@@ -15,19 +15,19 @@ public class CpRedArmorsController {
 //    // ============ User methods ============
 //    // Pobierz wszystkie zbroje
 //    @GetMapping(path = "/rpgSystems/cpRed/armors/all")
-//    public List<CpRedArmorsDTO> getAllArmors() {
+//    public Map<String, Object> getAllArmors() { // List<CpRedArmorsDTO>
 //        return cpRedArmorsService.getAllArmors();
 //    }
 //    // Pobierz zbroję po id
 //    @GetMapping(path = "/rpgSystems/cpRed/armors/{armorId}")
-//    public CpRedArmorsDTO getArmorById(@PathVariable("armorId") Long armorId) {
+//    public Map<String, Object> getArmorById(@PathVariable("armorId") Long armorId) { // CpRedArmorsDTO
 //        return cpRedArmorsService.getArmorById(armorId);
 //    }
 //
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie zbroje dla admina
 //    @GetMapping(path = "/admin/rpgSystems/cpRed/armors/all")
-//    public List<CpRedArmors> getAllArmorsForAdmin() {
+//    public Map<String, Object> getAllArmorsForAdmin() { // List<CpRedArmors>
 //        return cpRedArmorsService.getAllArmorsForAdmin();
 //    }
 //    // Dodać zbroję

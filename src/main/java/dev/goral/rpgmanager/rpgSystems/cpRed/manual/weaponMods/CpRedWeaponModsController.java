@@ -15,19 +15,19 @@ public class CpRedWeaponModsController {
 //    // ============ User methods ============
 //    // Pobierz wszystkie modyfikacje broni
 //    @GetMapping(path = "/rpgSystems/cpRed/weaponMods/all")
-//    public List<CpRedWeaponModsDTO> getAllWeaponMods() {
+//    public Map<String, Object> getAllWeaponMods() { // List<CpRedWeaponModsDTO>
 //        return cpRedWeaponModsService.getAllWeaponMods();
 //    }
 //    // Pobierz modyfikacje broni po id
 //    @GetMapping(path = "/rpgSystems/cpRed/weaponMods/{weaponModId}")
-//    public CpRedWeaponModsDTO getWeaponModById(@PathVariable("weaponModId") Long weaponModId) {
+//    public Map<String, Object> getWeaponModById(@PathVariable("weaponModId") Long weaponModId) { // CpRedWeaponModsDTO
 //        return cpRedWeaponModsService.getWeaponModById(weaponModId);
 //    }
 //
 //    // ============ Admin methods ============
 //    // Pobierz wszystkie modyfikacje broni dla admina
 //    @GetMapping(path = "/admin/rpgSystems/cpRed/weaponMods/all")
-//    public List<CpRedWeaponMods> getAllWeaponModsForAdmin() {
+//    public Map<String, Object> getAllWeaponModsForAdmin() { // List<CpRedWeaponMods>
 //        return cpRedWeaponModsService.getAllWeaponModsForAdmin();
 //    }
 //    // Dodaj modyfikacje broni
