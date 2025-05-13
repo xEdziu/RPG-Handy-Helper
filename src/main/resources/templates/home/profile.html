@@ -101,10 +101,10 @@
         </h1>
     </div>
 
-    <div class="bg-light-surface dark:bg-dark-surface rounded-xl shadow-md p-8 mb-4 max-w-4xl w-full flex flex-col md:grid md:grid-cols-2 gap-10 items-stretch">
+    <div class="bg-light-surface dark:bg-dark-surface rounded-xl shadow-md p-8 mb-6 max-w-4xl w-full flex flex-col md:grid md:grid-cols-2 gap-4 items-stretch">
 
         <div class="flex items-center justify-center">
-            <div class="relative w-[66%] sm:w-full max-w-xs mx-auto rounded-xl object-fill bg-dark-backgroundSecondary h-40 sm:h-52 md:h-[19rem] md:w-[16rem]">
+            <div class="relative w-[66%] sm:w-full max-w-xs mx-auto rounded-xl object-fill bg-dark-backgroundSecondary h-40 sm:h-52 md:h-[15rem] md:w-[15rem]">
                 <img id="profilePhoto" src=""
                      class="absolute inset-0 w-full h-full object-fill z-10 bg-dark-accent" />
                 <img id="photoPreview" src=""
@@ -121,7 +121,7 @@
 
         <form id="updateForm" class="flex flex-col space-y-4 justify-center w-[66%] sm:w-full max-w-xs mx-auto text-sm sm:text-base">
 
-            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-5 sm:px-4 w-full">
+            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full">
                 <label for="username" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
                     <i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:
                 </label>
@@ -130,7 +130,7 @@
                 </button>
             </div>
 
-            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-5 sm:px-4 w-full">
+            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full">
                 <label for="firstName" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
                     <i class="fa-solid fa-user"></i> Imię:
                 </label>
@@ -139,7 +139,7 @@
                 </button>
             </div>
 
-            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-5 sm:px-4 w-full">
+            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full">
                 <label for="surname" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
                     <i class="fa-solid fa-id-badge"></i> Nazwisko:
                 </label>
@@ -148,7 +148,7 @@
                 </button>
             </div>
 
-            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-5 sm:px-4 w-full">
+            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full">
                 <label for="email" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
                     <i class="fa-solid fa-envelope"></i> E-mail:
                 </label>
@@ -158,7 +158,20 @@
             </div>
         </form>
 
-        <p class="mt-6 text-sm w-full text-center text-light-textSecondary dark:text-dark-textSecondary md:col-span-2">
+        <div class="flex items-center justify-center md:col-span-2">
+            <button type="submit" class="px-12 py-3 text-lg font-semibold
+                   dark:text-light-textPrimary text-dark-textPrimary
+                   bg-light-accent dark:bg-dark-accent
+                   border border-light-border dark:border-dark-border
+                   rounded-lg transition-all duration-300
+                   hover:bg-light-accentDark hover:dark:bg-dark-accentDark
+                   focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
+                   active:scale-95 text-font-jetbrains-mono">
+                ZAKTUALIZUJ DANE
+            </button>
+        </div>
+
+        <p class=" text-sm w-full text-center text-light-textSecondary dark:text-dark-textSecondary md:col-span-2">
             Sprawdź też:
             <a href="/my-games" class="text-light-accent dark:text-dark-accent hover:underline visited:text-light-accentDark dark:visited:text-dark-accentDark">Moje gry</a>
             lub wróć na:
