@@ -1,8 +1,10 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.manual.equipments;
 
+import dev.goral.rpgmanager.security.CustomReturnables;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,16 +14,18 @@ public class CpRedEquipmentsService {
     private final CpRedEquipmentsRepository cpRedEquipmentsRepository;
 
     // Pobierz wszystkie przedmioty
-    public List<CpRedEquipmentsDTO> getAllEquipments() {
-        List<CpRedEquipments> cpRedEquipmentsList = cpRedEquipmentsRepository.findAll();
-        return cpRedEquipmentsList.stream().map(
+    public public Map<String, Object>  getAllEquipments() {
+        List<CpRedEquipmentsDTO> cpRedEquipmentsList = cpRedEquipmentsRepository.findAll().stream().
+                map(
                 cpRedEquipments -> new CpRedEquipmentsDTO(
                         cpRedEquipments.getName(),
                         cpRedEquipments.getPrice(),
                         cpRedEquipments.getAvailability().toString(),
                         cpRedEquipments.getDescription()
-                )
-        ).toList();
+                )).toList();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Wyposażenie zostało pobrane.");
+        response.put("equipments", cpRedEquipmentsList);
+        return response;
     }
 //
 //    // Pobierz przedmiot po id
