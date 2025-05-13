@@ -551,7 +551,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  mountPlace: &quot;CYBEROPTIC&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;2 (2K6)&quot;,&#10;  size: 2,&#10;  installationPlace: &quot;CLINIC&quot;,&#10;  price: 1500,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;smart eye with laser, but better&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;CYBEROPTIC&quot;,&#10;  mountPlace: &quot;CYBEROPTIC&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;2 (2K6)&quot;,&#10;  size: 2,&#10;  installationPlace: &quot;CLINIC&quot;,&#10;  price: 1500,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;smart eye with laser, but better&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
