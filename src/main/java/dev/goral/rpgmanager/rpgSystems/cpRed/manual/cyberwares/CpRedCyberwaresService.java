@@ -139,7 +139,7 @@ public class CpRedCyberwaresService {
                 .orElseThrow(() -> new ResourceNotFoundException("Wszczep o id " + cyberwareId + " nie istnieje"));
 
         if (cpRedCyberwares.getName() != null) {
-            if (cpRedCyberwaresRepository.existsByName(cyberwareToUpdate.getName())) {
+            if (cpRedCyberwaresRepository.existsByName(cpRedCyberwares.getName())) {
                 throw new IllegalStateException("Wszczep o tej nazwie już istnieje.");
             }
             if (cpRedCyberwares.getName().isEmpty() || cpRedCyberwares.getName().trim().isEmpty()) {
