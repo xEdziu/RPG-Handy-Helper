@@ -83,13 +83,13 @@ public class CpRedCyberwaresService {
         cpRedCyberwares.getMountPlace().toString()==null ||
                 cpRedCyberwares.getRequirements()==null ||
                 cpRedCyberwares.getHumanityLoss()==null ||
-                cpRedCyberwares.getSize()==-1 ||
                 cpRedCyberwares.getInstallationPlace().toString()==null ||
-                cpRedCyberwares.getPrice()==-1 ||
                 cpRedCyberwares.getAvailability().toString()==null ||
                 cpRedCyberwares.getDescription()==null) {
             throw new IllegalStateException("Nie wszystkie pola zostały wypełnione.");
-
+        }
+        if (cpRedCyberwares.getSize() <= 0) {
+            throw new IllegalStateException("Rozmiar nie może być ujemny lub równy zero.");
         }
         if(cpRedCyberwaresRepository.existsByName(cpRedCyberwares.getName())) {
             throw new IllegalStateException("Wszczep o tej nazwie już istnieje.");
@@ -160,21 +160,19 @@ public class CpRedCyberwaresService {
         if (cpRedCyberwares.getHumanityLoss() != null) {
             cyberwareToUpdate.setHumanityLoss(cpRedCyberwares.getHumanityLoss());
         }
-        if (cpRedCyberwares.getSize() != -1) {
-            if (cpRedCyberwares.getSize() < 0) {
-                throw new IllegalStateException("Rozmiar nie może być ujemny.");
-            }
-            cyberwareToUpdate.setSize(cpRedCyberwares.getSize());
+        if (cpRedCyberwares.getSize() <= 0) {
+            throw new IllegalStateException("Rozmiar nie może być ujemny lub równy zero.");
         }
+        cyberwareToUpdate.setSize(cpRedCyberwares.getSize());
+
         if (cpRedCyberwares.getInstallationPlace() != null) {
             cyberwareToUpdate.setInstallationPlace(cpRedCyberwares.getInstallationPlace());
         }
-        if (cpRedCyberwares.getPrice() != -1) {
-            if (cpRedCyberwares.getPrice() < 0) {
-                throw new IllegalStateException("Cena nie może być ujemna.");
-            }
-            cyberwareToUpdate.setPrice(cpRedCyberwares.getPrice());
+        if (cpRedCyberwares.getPrice() < 0) {
+            throw new IllegalStateException("Cena nie może być ujemna.");
         }
+        cyberwareToUpdate.setPrice(cpRedCyberwares.getPrice());
+
         if (cpRedCyberwares.getAvailability() != null) {
             cyberwareToUpdate.setAvailability(cpRedCyberwares.getAvailability());
         }
