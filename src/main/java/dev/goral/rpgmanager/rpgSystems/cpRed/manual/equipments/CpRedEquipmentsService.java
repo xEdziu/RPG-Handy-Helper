@@ -14,7 +14,7 @@ public class CpRedEquipmentsService {
     private final CpRedEquipmentsRepository cpRedEquipmentsRepository;
 
     // Pobierz wszystkie przedmioty
-    public public Map<String, Object>  getAllEquipments() {
+    public Map<String, Object>  getAllEquipments() {
         List<CpRedEquipmentsDTO> cpRedEquipmentsList = cpRedEquipmentsRepository.findAll().stream().
                 map(
                 cpRedEquipments -> new CpRedEquipmentsDTO(
