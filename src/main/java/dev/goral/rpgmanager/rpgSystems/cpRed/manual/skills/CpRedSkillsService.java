@@ -24,31 +24,42 @@ public class CpRedSkillsService {
     private final CpRedStatsRepository cpRedStatsRepository;
 
     // Pobierz wszystkie umiejętności
-    public List<CpRedSkillsDTO> getAllSkills(){
-        List<CpRedSkills> cpRedSkillsList = cpRedSkillsRepository.findAll();
-        return cpRedSkillsList.stream()
+    public Map<String, Object> getAllSkills(){
+        List<CpRedSkillsDTO> cpRedSkillsList = cpRedSkillsRepository.findAll().stream()
                 .map(cpRedSkills -> new CpRedSkillsDTO(
                         cpRedSkills.getCategory().toString(),
                         cpRedSkills.getName(),
                         cpRedSkills.getConnectedStat().getTag(),
                         cpRedSkills.getDescription()
                 )).toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Umiejętności zostały pobrane.");
+        response.put("skills", cpRedSkillsList);
+        return response;
     }
 
     // Pobierz umiejętność po id
-    public CpRedSkillsDTO getSkillById(Long id) {
-        return cpRedSkillsRepository.findById(id)
+    public Map<String, Object> getSkillById(Long id) {
+        CpRedSkillsDTO skill = cpRedSkillsRepository.findById(id)
                 .map(cpRedSkills -> new CpRedSkillsDTO(
                         cpRedSkills.getCategory().toString(),
                         cpRedSkills.getName(),
                         cpRedSkills.getConnectedStat().getTag(),
                         cpRedSkills.getDescription()
                 )).orElseThrow(() -> new ResourceNotFoundException("Umiejętność o id " + id + " nie istnieje"));
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Umiejętność została pobrana.");
+        response.put("skill", skill);
+        return response;
     }
 
     // Pobierz wszystkie umiejętności dla admina
-    public List<CpRedSkills> getAllSkillsForAdmin() {
-        return cpRedSkillsRepository.findAll();
+    public Map<String, Object> getAllSkillsForAdmin() {
+        List<CpRedSkills> allSkillsList = cpRedSkillsRepository.findAll();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Umiejętności zostały pobrane dla administratora.");
+        response.put("skills", allSkillsList);
+        return response;
     }
 
     // Dodaj umiejętność

@@ -15,19 +15,19 @@ public class CpRedSkillsController {
     // ============ User methods ============
     // Pobierz wszystkie umiejętności
     @GetMapping(path = "/rpgSystems/cpRed/skills/all")
-    public List<CpRedSkillsDTO> getAllSkills() {
+    public Map<String, Object> getAllSkills() { // List<CpRedSkillsDTO>
         return cpRedSkillsService.getAllSkills();
     }
     // Pobierz umiejętność po id
     @GetMapping(path = "/rpgSystems/cpRed/skills/{skillId}")
-    public CpRedSkillsDTO getSkillById(@PathVariable("skillId") Long skillId) {
+    public Map<String, Object> getSkillById(@PathVariable("skillId") Long skillId) { // CpRedSkillsDTO
         return cpRedSkillsService.getSkillById(skillId);
     }
 
     // ============ Admin methods ============
     // Pobierz wszystkie umiejętności dla admina
     @GetMapping(path = "/admin/rpgSystems/cpRed/skills/all")
-    public List<CpRedSkills> getAllSkillsForAdmin() {
+    public Map<String, Object> getAllSkillsForAdmin() { // List<CpRedSkills>
         return cpRedSkillsService.getAllSkillsForAdmin();
     }
     // Dodać umiejętność
