@@ -27,11 +27,22 @@ public class CpRedEquipmentsService {
         response.put("equipments", cpRedEquipmentsList);
         return response;
     }
-//
-//    // Pobierz przedmiot po id
-//    public Map<String, Object> getEquipmentById(Long equipmentId) {
-//
-//    }
+
+    // Pobierz przedmiot po id
+    public Map<String, Object> getEquipmentById(Long equipmentId) {
+        CpRedEquipmentsDTO cpRedEquipments = cpRedEquipmentsRepository.findById(equipmentId)
+                .map(
+                        equipments -> new CpRedEquipmentsDTO(
+                                equipments.getName(),
+                                equipments.getPrice(),
+                                equipments.getAvailability().toString(),
+                                equipments.getDescription()
+                        )).orElseThrow(() -> new RuntimeException("Przedmiot o id " + equipmentId + "nie istnieje"));
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano przedmiot.");
+        response.put("equipment", cpRedEquipments);
+        return response;
+
+    }
 //
 //    // Pobierz wszystkie przedmioty dla admina
 //    public Map<String, Object> getAllEquipmentsForAdmin() {
