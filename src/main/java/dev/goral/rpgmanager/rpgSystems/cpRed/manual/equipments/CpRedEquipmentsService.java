@@ -43,11 +43,15 @@ public class CpRedEquipmentsService {
         return response;
 
     }
-//
-//    // Pobierz wszystkie przedmioty dla admina
-//    public Map<String, Object> getAllEquipmentsForAdmin() {
-//
-//    }
+
+    // Pobierz wszystkie przedmioty dla admina
+    public Map<String, Object> getAllEquipmentsForAdmin() {
+        List<CpRedEquipments> allEquipments = cpRedEquipmentsRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("PWyposażenie zostało pobrane.");
+        response.put("equipments", allEquipments);
+        return response;
+
+    }
 //
 //    // Dodaj przedmiot
 //    public Map<String, Object> addEquipment(CpRedEquipments cpRedEquipments) {
