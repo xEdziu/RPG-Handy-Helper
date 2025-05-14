@@ -30,15 +30,15 @@ public class CpRedEquipmentsController {
     public Map<String, Object> getAllEquipmentsForAdmin() { // List<CpRedEquipments>
         return cpRedEquipmentsService.getAllEquipmentsForAdmin();
     }
-//    // Dodać przedmiot
-//    @PostMapping(path = "/admin/rpgSystems/cpRed/equipments/add")
-//    public Map<String, Object> addEquipment(@RequestBody CpRedEquipments cpRedEquipments) {
-//        return cpRedEquipmentsService.addEquipment(cpRedEquipments);
-//    }
-//    // Modyfikować przedmiot
-//    @PutMapping(path = "/admin/rpgSystems/cpRed/equipments/update/{equipmentId}")
-//    public Map<String, Object> updateEquipment(@PathVariable("equipmentId") Long equipmentId,
-//                                               @RequestBody CpRedEquipments cpRedEquipments) {
-//        return cpRedEquipmentsService.updateEquipment(equipmentId, cpRedEquipments);
-//    }
+    // Dodać przedmiot
+    @PostMapping(path = "/admin/rpgSystems/cpRed/equipments/add")
+    public Map<String, Object> addEquipment(@RequestBody CpRedEquipments cpRedEquipments) {
+        return cpRedEquipmentsService.addEquipment(cpRedEquipments);
+    }
+    // Modyfikować przedmiot
+    @PutMapping(path = "/admin/rpgSystems/cpRed/equipments/update/{equipmentId}")
+    public Map<String, Object> updateEquipment(@PathVariable("equipmentId") Long equipmentId,
+                                               @RequestBody CpRedEquipments cpRedEquipments) {
+        return cpRedEquipmentsService.updateEquipment(equipmentId, cpRedEquipments);
+    }
 }
