@@ -79,7 +79,6 @@
             applyTheme(getSavedTheme());
             getAllGamesForUser();
             loadNotes();
-            loadAllOptionsToFilters();
         });
 
         // ==== Changing the theme ====
@@ -122,6 +121,18 @@
             return localStorage.getItem("theme") ||
                 (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
         }
+        // ==== CRF Token ====
+        function getCsrfToken() {
+            const name = "XSRF-TOKEN=";
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name)) {
+                    return decodeURIComponent(cookie.substring(name.length));
+                }
+            }
+            return null;
+        }
         // ==== Get User Info ====
         function getUserInfo() {
             fetch('/api/v1/authorized/user', {
@@ -138,53 +149,6 @@
                 userInfo = data;
             }).catch(error => {
                 console.error('Error fetching user info:', error);
-            });
-        }
-        // ==== Get All Systems ====
-        function getAllSystems() {
-            fetch('/api/v1/authorized/rpgSystems/all', {
-                method: 'GET',
-                headers: {
-                    'X-XSRF-TOKEN': getCsrfToken()
-                }
-            }).then(
-                response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                }
-            ).then(data => {
-                if (Array.isArray(data) && data.length >= 0) {
-                    RpgSystem = data;
-                }
-            }).catch(error => {
-                console.error('Error fetching user systems:', error);
-            });
-        }
-
-        // ==== CRF Token ====
-        function getCsrfToken() {
-            const name = "XSRF-TOKEN=";
-            const cookies = document.cookie.split(';');
-            for (let cookie of cookies) {
-                cookie = cookie.trim();
-                if (cookie.startsWith(name)) {
-                    return decodeURIComponent(cookie.substring(name.length));
-                }
-            }
-            return null;
-        }
-        // ==== Force Reload ====
-        function forceReload() {
-            location.reload();
-        }
-        // ==== Disable Settings ====
-        function disableControlNoteControls(value = true) {
-            const ids = ['search-input', 'sort-by', 'sort-order', 'game-name-filter', 'campaign-name-filter', 'clear-filters'];
-            ids.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.disabled = value;
-                }
             });
         }
         // ==== Get All Games For User ==== 
@@ -209,6 +173,7 @@
                             'Umiejętność pisania zablokowana!',
                             'Dołącz do gry lub stwórz własną, aby ją odblokować.'
                         );
+                        return;
                     }
                     const existingNames = new Set(gameAccessible.map(g => g.name));
                     data.forEach(game => {
@@ -217,12 +182,49 @@
                             existingNames.add(game);
                         }
                     });
+                    loadAllOptionsToFilters(gameAccessible, 'campaign-name-filter', 'Kampania');
                 }
             }).catch(error => {
                 console.error('Error fetching user games:', error);
                 gameAccessible = [];
                 document.getElementById('add-note').disabled = true;
                 disableControlNoteControls();
+            });
+        }
+        // ==== Get All Systems ====
+        function getAllSystems() {
+            fetch('/api/v1/authorized/rpgSystems/all', {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                if (data.length == 0) {
+                    return;
+                }
+                RpgSystem = data;
+                loadAllOptionsToFilters(data, 'game-name-filter', 'System gry');
+            }).catch(error => {
+                console.error('Error fetching user systems:', error);
+            });
+        }
+        // ==== Force Reload ====
+        function forceReload() {
+            location.reload();
+        }
+        // ==== Disable Settings ====
+        function disableControlNoteControls(value = true) {
+            const ids = ['search-input', 'sort-by', 'sort-order', 'game-name-filter', 'campaign-name-filter', 'clear-filters'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.disabled = value;
+                }
             });
         }
         // ==== Notes Function ====
@@ -268,6 +270,9 @@
                                 resultHtml += generatePieceOfNoteHTML(note);
                             });
                             notesContainer.innerHTML = resultHtml;
+                            getLisinerForFilters('search-input', 'input');
+                            getLisinerForFilters('sort-order');
+                            getLisinerForFilters('sort-by');
                         }
                     })
                 } catch (error) {
@@ -351,7 +356,7 @@
                     return;
                 }
             });
-            if(!gameId || gameId == null || gameId == undefined || gameId == '') {
+            if (!gameId || gameId == null || gameId == undefined || gameId == '') {
                 return;
             }
             const note = {
@@ -386,6 +391,9 @@
                     hideNoteEditor();
                     document.getElementById('search-input').disabled = false;
                     disableControlNoteControls(false);
+                    setTimeout(() => {
+                        forceReload();
+                    }, 1500);
                 }
             }).catch(error => {
                 console.error('Nie udało się zapisać notatki:', error);
@@ -441,7 +449,6 @@
             const noteTitle = document.getElementById('edit-note-title').value.trim(); //
             const newnoteContent = document.getElementById('edit-note-content').value.trim();
             const oldNote = noteContent.find(note => note.id == noteId);
-            console.log(noteContent.find(note => note.id == noteId))
             const note = {
                 gameId: RpgSystem.find(system => system.name === oldNote.rpgSystemName)?.id,
                 userId: userInfo.id,
@@ -505,10 +512,70 @@
             editor.classList.add('scale-95', 'opacity-0');
             editor.classList.remove('scale-100', 'opacity-100');
         }
-        function loadAllOptionsToFilters() {
-            console.log();
-            console.log(gameAccessible);
-            console.log(RpgSystem);
+        function loadAllOptionsToFilters(data, location, dafaultText) {
+            const optionBar = document.getElementById(location);
+            var optionsHTML = `<option value='' disabled selected>${dafaultText}</option>`;
+            data.forEach(item => {
+                optionsHTML += `<option value="${item.name}">${item.name}</option>`;
+            });
+            optionBar.innerHTML = optionsHTML;
+            getLisinerForFilters(location);
+        }
+        function applyFilters() {
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const systemFilter = document.getElementById('game-name-filter').value;
+            const campaignFilter = document.getElementById('campaign-name-filter').value;
+            const sortBy = document.getElementById('sort-by').value;
+            const sortOrder = document.getElementById('sort-order').value;
+            const container = document.getElementById('notes-container');
+            let filteredNotes = [...noteContent];
+            if (systemFilter) {
+                filteredNotes = filteredNotes.filter(note => note.rpgSystemName === systemFilter);
+            }
+            if (campaignFilter) {
+                filteredNotes = filteredNotes.filter(note => note.gameName === campaignFilter);
+            }
+            if (searchQuery) {
+                filteredNotes = filteredNotes.filter(note =>
+                    note.title.toLowerCase().includes(searchQuery) ||
+                    note.content.toLowerCase().includes(searchQuery)
+                );
+            }
+            filteredNotes.sort((a, b) => {
+                let aVal, bVal;
+                if (sortBy === 'data-modify') {
+                    aVal = new Date(a.updatedAt);
+                    bVal = new Date(b.updatedAt);
+                }
+                else if (sortBy === 'data-creation') {
+                    aVal = new Date(a.createdAt);
+                    bVal = new Date(b.createdAt);
+                }
+                else {
+                    aVal = a.title.toLowerCase();
+                    bVal = b.title.toLowerCase();
+                }
+                const result = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+                return sortOrder === 'ASC' ? result : -result;
+            });
+            if (filteredNotes.length === 0) {
+                container.innerHTML = generateInfoHTML("", "Brak notatek spełniających wybrane kryteria.", "");
+                return;
+            }
+            let resultHtml = "";
+            filteredNotes.forEach(note => {
+                resultHtml += generatePieceOfNoteHTML(note);
+            });
+            container.innerHTML = resultHtml;
+        }
+
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('game-name-filter').selectedIndex = 0;
+            document.getElementById('campaign-name-filter').selectedIndex = 0;
+            document.getElementById('sort-by').value = 'data-modify';
+            document.getElementById('sort-order').value = 'DESC';
+            applyFilters();
         }
     </script>
 </head>
@@ -642,133 +709,6 @@
         </a>
     </footer>
 </body>
-<!-- <script>
-    function applyFilters() {
-        const searchQuery = document.getElementById('search-input').value.toLowerCase();
-        const systemFilter = document.getElementById('game-name-filter').value;
-        const campaignFilter = document.getElementById('campaign-name-filter').value;
-        const sortBy = document.getElementById('sort-by').value;
-        const sortOrder = document.getElementById('sort-order').value;
-        const container = document.getElementById('notes-container');
-        container.innerHTML = '';
-        let filteredNotes = [...noteInfo];
-        if (systemFilter) {
-            filteredNotes = filteredNotes.filter(note => note.rpgSystemName === systemFilter);
-        }
-        if (campaignFilter) {
-            filteredNotes = filteredNotes.filter(note => note.gameName === campaignFilter);
-        }
-        if (searchQuery) {
-            filteredNotes = filteredNotes.filter(note =>
-                note.title.toLowerCase().includes(searchQuery) ||
-                note.content.toLowerCase().includes(searchQuery)
-            );
-        }
-        filteredNotes.sort((a, b) => {
-            let aVal, bVal;
-            if (sortBy === 'data-modify') {
-                aVal = new Date(a.updatedAt);
-                bVal = new Date(b.updatedAt);
-            } else if (sortBy === 'data-creation') {
-                aVal = new Date(a.createdAt);
-                bVal = new Date(b.createdAt);
-            } else {
-                aVal = a.title.toLowerCase();
-                bVal = b.title.toLowerCase();
-            }
-
-            const result = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-            return sortOrder === 'ASC' ? result : -result;
-        });
-        if (filteredNotes.length === 0) {
-            const div = document.createElement('div');
-            div.className = 'note-box w-[75vw] max-w-2xl p-4 bg-light-surface dark:bg-dark-surface rounded-lg m-2 text-center text-light-textPrimary dark:text-dark-textPrimary';
-            div.textContent = 'Brak notatek spełniających wybrane kryteria.';
-            container.appendChild(div);
-            return;
-        }
-        filteredNotes.forEach(note => {
-            const div = document.createElement('div');
-            div.className = 'note-box w-[75vw] max-w-2xl p-4 min-h-[8rem] border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary transition duration-300 text-light-textPrimary dark:text-dark-textPrimary break-words whitespace-normal overflow-hidden text-ellipsis';
-            div.addEventListener("click", (e) => {
-                e.stopPropagation();
-                displayNote(note.id);
-            });
-            div.innerHTML = `
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-xl font-semibold mb-1 font-jetbrains-mono">
-                        <span class="text-light-accent dark:text-dark-accent"> ${note.gameName} </span>${note.rpgSystemName} </h3> 
-                    <small>${new Date(note.updatedAt).toLocaleString("pl-PL", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit"
-            })}</small>
-                </div>
-                <h2 class="text-2xl font-semibold mb-2 font-jetbrains-mono">${note.title}</h2>
-                <p class="ml-8">${parseMarkdown(truncateText(note.content))}</p>
-            `;
-            container.appendChild(div);
-        });
-    }
-    function clearFilters() {
-        document.getElementById('search-input').value = '';
-        const sortBy = document.getElementById('sort-by');
-        sortBy.value = 'data-modify';
-        const sortOrder = document.getElementById('sort-order');
-        [...sortOrder.options].forEach(opt => {
-            opt.classList.add('hidden');
-            opt.selected = false;
-        });
-        sortOrder.querySelectorAll('option').forEach(opt => {
-            if (opt.textContent.includes('Najnowszych') || opt.textContent.includes('Najstarszych')) {
-                opt.classList.remove('hidden');
-            }
-        });
-        sortOrder.querySelector('option[value="ASC"]').selected = true;
-        document.getElementById('game-name-filter').selectedIndex = 0;
-        document.getElementById('campaign-name-filter').selectedIndex = 0;
-        applyFilters();
-    }
-    document.getElementById('search-input').addEventListener('input', function () {
-        applyFilters();
-    });
-    document.getElementById('sort-by').addEventListener('change', function () {
-        const sortBy = this.value;
-        const sortOrder = document.getElementById('sort-order');
-        const options = sortOrder.options;
-        for (let option of options) {
-            option.classList.add('hidden');
-            option.selected = false;
-        }
-        if (sortBy === 'title') {
-            for (let option of options) {
-                if (option.textContent.includes('A do Z') || option.textContent.includes('Z do A')) {
-                    option.classList.remove('hidden');
-                }
-            }
-            options[2].selected = true;
-        } else {
-            for (let option of options) {
-                if (option.textContent.includes('Najnowszych') || option.textContent.includes('Najstarszych')) {
-                    option.classList.remove('hidden');
-                }
-            }
-            options[0].selected = true;
-        }
-        applyFilters();
-    });
-    document.getElementById('sort-order').addEventListener('change', function () {
-        applyFilters();
-    });
-    document.getElementById('game-name-filter').addEventListener('change', function () {
-        applyFilters();
-    });
-    document.getElementById('campaign-name-filter').addEventListener('change', function () {
-        applyFilters();
-    });
-</script> -->
 
 </html>
 <script>
@@ -799,6 +739,11 @@
             hideNoteEditor();
         }
     });
+    function getLisinerForFilters(elementID, action = 'change') {
+        document.getElementById(elementID).addEventListener(action, function () {
+            applyFilters();
+        });
+    }
     let _markdownParserListeners = [];
     function getLisinerParesr() {
         const titleInput = document.getElementById('edit-note-title') || document.getElementById('note-title');
@@ -834,8 +779,6 @@
         });
         _markdownParserListeners = [];
     }
-
-
     function getLisinerForNewNote() {
         document.getElementById('game-name').addEventListener('change', function () {
             const selectedGame = this.value;
