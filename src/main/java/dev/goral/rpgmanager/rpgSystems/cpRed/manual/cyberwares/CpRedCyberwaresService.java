@@ -148,7 +148,7 @@ public class CpRedCyberwaresService {
             if (cpRedCyberwares.getName().length() > 255) {
                 throw new IllegalStateException("Nazwa wszczepu nie może być dłuższa niż 255 znaków.");
             }
-            cyberwareToUpdate.setName(cyberwareToUpdate.getName());
+            cyberwareToUpdate.setName(cpRedCyberwares.getName());
         }
 
         if (cpRedCyberwares.getMountPlace() != null) {
