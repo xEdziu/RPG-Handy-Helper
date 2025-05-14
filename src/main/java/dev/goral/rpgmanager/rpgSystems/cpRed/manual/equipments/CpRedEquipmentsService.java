@@ -101,9 +101,52 @@ public class CpRedEquipmentsService {
         cpRedEquipmentsRepository.save(cpRedEquipments);
         return CustomReturnables.getOkResponseMap("Przedmiot " + cpRedEquipments.getName() + " został dodany");
     }
-//
-//    // Modyfikuj przedmiot
-//    public Map<String, Object> updateEquipment(Long equipmentId, CpRedEquipments cpRedEquipments) {
-//
-//    }
+
+    // Modyfikuj przedmiot
+    public Map<String, Object> updateEquipment(Long equipmentId, CpRedEquipments cpRedEquipments) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
+            throw new IllegalStateException("Nie masz uprawnień do dodawania wszczepów.");
+        }
+        CpRedEquipments eqToUpdate = cpRedEquipmentsRepository.findById(equipmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Przedmiot o id " + equipmentId + " nie istnieje"));
+
+        if (cpRedEquipments.getName() != null) {
+            if (cpRedEquipmentsRepository.existsByName(cpRedEquipments.getName())) {
+                throw new IllegalStateException("Przedmiot o tej nazwie już istnieje.");
+            }
+            if (cpRedEquipments.getName().isEmpty() || cpRedEquipments.getName().trim().isEmpty()) {
+                throw new IllegalStateException("Nazwa przedmiot nie może być pusta.");
+            }
+            if (cpRedEquipments.getName().length() > 255) {
+                throw new IllegalStateException("Nazwa przedmiot nie może być dłuższa niż 255 znaków.");
+            }
+            eqToUpdate.setName(cpRedEquipments.getName());
+        }
+
+        if (cpRedEquipments.getPrice() < 0) {
+            throw new IllegalStateException("Cena nie może być ujemna.");
+        }
+        eqToUpdate.setPrice(cpRedEquipments.getPrice());
+
+        if (cpRedEquipments.getAvailability() != null) {
+            eqToUpdate.setAvailability(cpRedEquipments.getAvailability());
+        }
+
+        if (cpRedEquipments.getDescription() != null) {
+            if (cpRedEquipments.getDescription().isEmpty() || cpRedEquipments.getDescription().trim().isEmpty()) {
+                throw new IllegalStateException("Opis przedmiotu nie może być pusty.");
+            }
+            if (cpRedEquipments.getDescription().length() > 500) {
+                throw new IllegalStateException("Opis przedmiotu nie może być dłuższy niż 500 znaków.");
+            }
+            eqToUpdate.setDescription(cpRedEquipments.getDescription());
+        }
+        cpRedEquipmentsRepository.save(eqToUpdate);
+        return CustomReturnables.getOkResponseMap("Przedmiot został zaktualizowany.");
+    }
 }
