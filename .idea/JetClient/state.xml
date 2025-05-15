@@ -701,63 +701,6 @@
                                   </option>
                                   <option name="sortWeight" value="4000000" />
                                 </folderState>
-                                <folderState>
-                                  <option name="id" value="988306f3-77b6-4361-9b94-aa9a0533f527" />
-                                  <option name="name" value="Classes" />
-                                  <option name="requests">
-                                    <list>
-                                      <requestState>
-                                        <option name="body">
-                                          <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Kowal&quot;,&#10;  description: &quot;Kuje przedmioty&quot;&#10;}" />
-                                            <option name="type" value="JSON" />
-                                          </bodyState>
-                                        </option>
-                                        <option name="id" value="2762614a-a8a0-4bf2-a164-acbbfe0fb601" />
-                                        <option name="method" value="POST" />
-                                        <option name="name" value="Stwórz klasę" />
-                                        <option name="sortWeight" value="1000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/add" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="body">
-                                          <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Nowy Kowal&quot;,&#10;  description: &quot;Kuje lepsze przedmioty&quot;&#10;}" />
-                                            <option name="type" value="JSON" />
-                                          </bodyState>
-                                        </option>
-                                        <option name="id" value="e0bc59a4-c4bc-4fd2-bd41-e33146f5cf35" />
-                                        <option name="method" value="PUT" />
-                                        <option name="name" value="Modyfikuj klasę" />
-                                        <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/update/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="id" value="194c44c8-2d7e-4b70-8fa2-bdf5a07e0f10" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Zwróć wszystkie klasy" />
-                                        <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/classes/all" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="id" value="9d04b42c-38a6-4759-b96f-fa79a4684cbe" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Zwróć klasę po id" />
-                                        <option name="sortWeight" value="4000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/classes/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Zwraca obiekty" />
-                                        <option name="id" value="824bb2b1-be60-4d13-aa79-493d2ab904bb" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Zwróć wszystkie klasy dla Admina" />
-                                        <option name="sortWeight" value="5000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/all" />
-                                      </requestState>
-                                    </list>
-                                  </option>
-                                  <option name="sortWeight" value="4000000" />
-                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />
