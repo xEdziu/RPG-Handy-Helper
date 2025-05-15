@@ -391,4 +391,3 @@ public class CpRedCharactersService {
         return CustomReturnables.getOkResponseMap("Zmieniono status postaci " + cpRedCharacter.getName() + " na " + cpRedCharacter.isAlive());
     }
 }
-
