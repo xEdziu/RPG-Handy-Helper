@@ -69,8 +69,8 @@
         var noteEditorMode = 'preview';
         var userInfo = [];
         var RpgSystem = [];
-        var onlyCampanyName = [];
-        var onlyRpgSystemName = [];
+
+
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
             getAllSystems();
@@ -336,14 +336,24 @@
             });
         }
         function saveNote(idNote) {
-            disableLisinerParser();
+            getLisinerParesr();
             const noteTitle = document.getElementById('note-title').value.trim();
-            const noteContent = document.getElementById('note-content').value.trim();
+            const noteText = document.getElementById('note-content').value.trim();
             const gameTite = document.getElementById('game-name').value;
             var gameId = gameAccessible.find(game => game.name === gameTite)?.id
+            noteContent.forEach(note => {
+                if (note.title == noteTitle && note.id != idNote) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Tytuł już istnieje!',
+                        text: `Zmień tytuł notatki, aby zapisać obecną.`,
+                    });
+                    return;
+                }
+            })
             var data = [
                 { objekt: noteTitle, name: 'Brak tytułu!' },
-                { objekt: noteContent, name: 'Brak treści!' },
+                { objekt: noteText, name: 'Brak treści!' },
                 { objekt: gameId, name: 'Brak kampanii!' },
             ]
             data.forEach(element => {
@@ -361,7 +371,7 @@
             }
             const note = {
                 title: noteTitle,
-                content: noteContent,
+                content: noteText,
                 gameId: gameId,
                 userId: userInfo.id
             };
@@ -393,7 +403,7 @@
                     disableControlNoteControls(false);
                     setTimeout(() => {
                         forceReload();
-                    }, 1500);
+                    }, 1000);
                 }
             }).catch(error => {
                 console.error('Nie udało się zapisać notatki:', error);
@@ -409,39 +419,43 @@
         }
         function showPreviewNote(mode = '') {
             getLisinerParesr();
-            const isEdit = mode === 'edit';
-            const titleInput = document.getElementById(isEdit ? 'edit-note-title' : 'note-title');
-            const contentInput = document.getElementById(isEdit ? 'edit-note-content' : 'note-content');
             const preview = document.getElementById('note-preview');
-            const previewButton = document.getElementById('preview-note');
-            if (!titleInput || !contentInput || !preview || !previewButton) {
-                console.warn('Brakuje elementów do podglądu!');
+            const button = document.getElementById('preview-button');
+            let noteTitleBox, noteContentBox, noteConteiner;
+            if (mode === "create") {
+                noteTitleBox = document.getElementById('note-title');
+                noteContentBox = document.getElementById('note-content');
+                noteConteiner = document.getElementById('new-note-content');
+            } else {
+                noteTitleBox = document.getElementById('edit-note-title');
+                noteContentBox = document.getElementById('edit-note-content');
+                noteConteiner = document.getElementById('edit-note-conteiner');
+            }
+            if (!noteTitleBox || !noteContentBox || !preview) {
+                console.warn('Brakuje elementów do dynamicznego podglądu.');
                 return;
             }
-            const title = titleInput.value.trim();
-            const rawMarkdown = contentInput.value.trim();
-            const parsed = parseMarkdown(rawMarkdown || "").replace(/^(\s*\n)+/, "");
+            let title = noteTitleBox.value.trim() || "Notatki bez tytułu?";
+            let content = noteContentBox.value.trim() || "<p><em>*Podgląd pusty...*</em></p>";
             preview.innerHTML = `
-                <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">
-                    ${title || "Notatki bez tytułu?"}
-                </h2>
-                <div class="mt-2 text-sm font-jetbrains-mono text-light-textSecondary dark:text-dark-textSecondary h-[32vh] overflow-auto break-words       whitespace-pre-wrap">
-                    ${parsed.length > 0 ? parsed : "<p><em>*Podgląd pusty...*</em></p>"}
+                <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title}</h2>
+                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                    ${parseMarkdown(content)}
                 </div>
             `;
-            const isHidden = preview.classList.contains('hidden');
-            if (isHidden) {
-                preview.classList.remove('hidden');
-                preview.classList.add('w-1/2');
-                contentInput.classList.remove('w-full');
-                contentInput.classList.add('w-1/2');
-                previewButton.textContent = 'Zamknij podgląd';
+            const show = preview.classList.contains('hidden');
+            if (button) {
+                button.innerText = show ? "Zamknij podgląd" : "Podgląd";
+            }
+            if (_isMobile) {
+                noteTitleBox.classList.toggle('hidden', show);
+                noteContentBox.classList.toggle('hidden', show);
+                preview.classList.toggle('hidden', !show);
             } else {
-                preview.classList.add('hidden');
-                preview.classList.remove('w-1/2');
-                contentInput.classList.add('w-full');
-                contentInput.classList.remove('w-1/2');
-                previewButton.textContent = 'Podgląd';
+                preview.classList.toggle('hidden', !show);
+                preview.classList.toggle('block', show);
+                preview.classList.toggle('w-1/2', show);
+                noteConteiner.classList.toggle('w-1/2', show);
             }
         }
         function saveEditedNote(noteId) {
@@ -505,10 +519,8 @@
         function hideNoteEditor() {
             const backdrop = document.getElementById('note-editor-backdrop');
             const editor = document.getElementById('note-editor');
-
             backdrop.classList.add('opacity-0', 'pointer-events-none');
             backdrop.classList.remove('opacity-100');
-
             editor.classList.add('scale-95', 'opacity-0');
             editor.classList.remove('scale-100', 'opacity-100');
         }
@@ -712,6 +724,24 @@
 
 </html>
 <script>
+    // ==== Listener for Window Size ====
+    var _isMobile = false;
+    window.addEventListener('resize', function () {
+        const windowWidth = window.innerWidth
+        if (windowWidth < 1024) {
+            _isMobile = true;
+        } else {
+            _isMobile = false;
+        }
+    });
+    window.addEventListener('load', function () {
+        const windowWidth = window.innerWidth
+        if (windowWidth < 1024) {
+            _isMobile = true;
+        } else {
+            _isMobile = false;
+        }
+    });
     // ==== Listener for Note ====
     document.addEventListener('click', (e) => {
         const backdrop = document.getElementById('note-editor-backdrop');
@@ -756,7 +786,7 @@
         function updatePreviewLive() {
             const title = titleInput.value.trim();
             const content = contentInput.value.trim();
-            const parsed = parseMarkdown(content || "").replace(/^(\s*\n)+/, "");
+            const parsed = parseMarkdown(content || "");
             preview.innerHTML = `
             <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title || "Notatki bez tytułu?"}</h2>
             <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
@@ -793,7 +823,7 @@
     }
     // ==== Pareser Markdown ====
     function parseMarkdown(markdownText) {
-        return marked.parse(markdownText);
+        return marked.parse(markdownText).trim().replace(/^(\s*\n)+/, "");
     }
     // ==== Truncate Text ====
     function truncateText(text, maxLength = Infinity) {
@@ -864,7 +894,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words mt-[-2em]">
                     ${parseMarkdown(note.content)}
                 </div>
             </div>
@@ -889,7 +919,7 @@
                 </div>
             </div>
             <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
-                <div class="flex flex-col w-full">
+                <div class="flex flex-col w-full" id="edit-note-conteiner">
                     <input id="edit-note-title" type="text" value="${note.title.replace(/"/g, '&quot;')}" placeholder="Tytuł notatki"
                         class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400      dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
                     <textarea id="edit-note-content" rows="10" placeholder="Treść notatki"
@@ -897,12 +927,7 @@
                 </div>
                 <div id="note-preview"
                     class="hidden w-full lg:w-1/2 p-4 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left">
-                        <h1 id="note-preview-title" class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary leading-tight break-words whitespace-normal w-[70%]">
-                            
-                        </h1>
-                        <div id="edit-note-content" class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
-                            
-                        </div>
+
                 </div>
             </div>
         `;
@@ -924,12 +949,12 @@
                     onclick="saveNote()">Zapisz</button>
                 <button id="preview-note"
                     class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
-                    onclick="showPreviewNote('')">Podgląd</button>
+                    onclick="showPreviewNote('create')">Podgląd</button>
             </div>
         </div>
         <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
-            <div class="flex flex-col w-full">
-                <input id="note-title" type="text" placeholder="Tytuł notatki"
+            <div class="flex flex-col w-full" id="new-note-content">
+                <input id="note-title" type="text" placeholder="Tytuł notatki" maxlength="90"
                     class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
                 <textarea id="note-content" rows="10" placeholder="Treść notatki"
                     class="h-[32vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 overflow-auto font-jetbrains-mono"></textarea>
