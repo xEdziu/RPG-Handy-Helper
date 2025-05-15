@@ -531,6 +531,63 @@
                                   <option name="sortWeight" value="3000000" />
                                 </folderState>
                                 <folderState>
+                                  <option name="id" value="61b2614b-e83d-4ef4-b5ed-4739e415a15e" />
+                                  <option name="name" value="Cyberwares" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;smart eye&quot;,&#10;  mountPlace: &quot;CYBEROPTIC&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;3 (2K6)&quot;,&#10;  size: 10,&#10;  installationPlace: &quot;MALL&quot;,&#10;  price: 1000,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;smart eye with laser&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="2812af9e-31bc-4cfd-9c12-60ee1afa31c7" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz wszczep" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/cyberwares/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;CYBEROPTIC&quot;,&#10;  mountPlace: &quot;CYBEROPTIC&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;2 (2K6)&quot;,&#10;  size: 2,&#10;  installationPlace: &quot;CLINIC&quot;,&#10;  price: 1500,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;smart eye with laser, but better&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="61fce29b-e0e3-4d12-b5cb-8ec2eb6432d2" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj wszczep" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/cyberwares/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="31609acf-721e-403b-b0a4-93b19bcc5898" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie wszczepy" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/cyberwares/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="55fbb0d9-7ef7-4f15-b55b-bd2dfb0afe8a" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszczep po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/cyberwares/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="27bcd752-9345-4be4-8f09-a47e0503fd28" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie wszczepy dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/cyberwares/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="4000000" />
+                                </folderState>
+                                <folderState>
                                   <option name="id" value="274c9f59-ca2e-4256-b0b5-7073416b938b" />
                                   <option name="name" value="Armors" />
                                   <option name="requests">
@@ -582,63 +639,6 @@
                                         <option name="name" value="Modyfikuj pancerz" />
                                         <option name="sortWeight" value="5000000" />
                                         <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/update/1" />
-                                      </requestState>
-                                    </list>
-                                  </option>
-                                  <option name="sortWeight" value="4000000" />
-                                </folderState>
-                                <folderState>
-                                  <option name="id" value="988306f3-77b6-4361-9b94-aa9a0533f527" />
-                                  <option name="name" value="Classes" />
-                                  <option name="requests">
-                                    <list>
-                                      <requestState>
-                                        <option name="body">
-                                          <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Kowal&quot;,&#10;  description: &quot;Kuje przedmioty&quot;&#10;}" />
-                                            <option name="type" value="JSON" />
-                                          </bodyState>
-                                        </option>
-                                        <option name="id" value="2762614a-a8a0-4bf2-a164-acbbfe0fb601" />
-                                        <option name="method" value="POST" />
-                                        <option name="name" value="Stwórz klasę" />
-                                        <option name="sortWeight" value="1000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/add" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="body">
-                                          <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Nowy Kowal&quot;,&#10;  description: &quot;Kuje lepsze przedmioty&quot;&#10;}" />
-                                            <option name="type" value="JSON" />
-                                          </bodyState>
-                                        </option>
-                                        <option name="id" value="e0bc59a4-c4bc-4fd2-bd41-e33146f5cf35" />
-                                        <option name="method" value="PUT" />
-                                        <option name="name" value="Modyfikuj klasę" />
-                                        <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/update/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="id" value="194c44c8-2d7e-4b70-8fa2-bdf5a07e0f10" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Zwróć wszystkie klasy" />
-                                        <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/classes/all" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="id" value="9d04b42c-38a6-4759-b96f-fa79a4684cbe" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Zwróć klasę po id" />
-                                        <option name="sortWeight" value="4000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/classes/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Zwraca obiekty" />
-                                        <option name="id" value="824bb2b1-be60-4d13-aa79-493d2ab904bb" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Zwróć wszystkie klasy dla Admina" />
-                                        <option name="sortWeight" value="5000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/all" />
                                       </requestState>
                                     </list>
                                   </option>
