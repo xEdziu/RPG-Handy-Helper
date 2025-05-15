@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 2,&#10;//  &quot;gameId&quot;: 1,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -210,7 +210,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 4&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;owner&quot;: {&#10;    id: 3&#10;  },&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 4&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;gameMaster&quot;: {&#10;    id: 3&#10;  },&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -224,7 +224,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{ &#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{ &#10;  &quot;role&quot;: &quot;SPECTATOR&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -233,7 +233,7 @@
                       <option name="method" value="PUT" />
                       <option name="name" value="Modyfikuj role użytkownika w grze" />
                       <option name="sortWeight" value="5000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/2" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/3" />
                     </requestState>
                     <requestState>
                       <option name="body">
@@ -529,6 +529,63 @@
                                     </list>
                                   </option>
                                   <option name="sortWeight" value="3000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="61b2614b-e83d-4ef4-b5ed-4739e415a15e" />
+                                  <option name="name" value="Cyberwares" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;smart eye&quot;,&#10;  mountPlace: &quot;CYBEROPTIC&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;3 (2K6)&quot;,&#10;  size: 10,&#10;  installationPlace: &quot;MALL&quot;,&#10;  price: 1000,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;smart eye with laser&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="2812af9e-31bc-4cfd-9c12-60ee1afa31c7" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz wszczep" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/cyberwares/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;CYBEROPTIC&quot;,&#10;  mountPlace: &quot;CYBEROPTIC&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;2 (2K6)&quot;,&#10;  size: 2,&#10;  installationPlace: &quot;CLINIC&quot;,&#10;  price: 1500,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;smart eye with laser, but better&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="61fce29b-e0e3-4d12-b5cb-8ec2eb6432d2" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj wszczep" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/cyberwares/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="31609acf-721e-403b-b0a4-93b19bcc5898" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie wszczepy" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/cyberwares/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="55fbb0d9-7ef7-4f15-b55b-bd2dfb0afe8a" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszczep po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/cyberwares/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="27bcd752-9345-4be4-8f09-a47e0503fd28" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie wszczepy dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/cyberwares/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="4000000" />
                                 </folderState>
                                 <folderState>
                                   <option name="id" value="274c9f59-ca2e-4256-b0b5-7073416b938b" />
