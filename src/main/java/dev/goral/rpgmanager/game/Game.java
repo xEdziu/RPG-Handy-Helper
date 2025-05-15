@@ -37,7 +37,7 @@ public class Game {
             referencedColumnName = "id",
             nullable = false
     )
-    private User owner;
+    private User gameMaster;
 
     @ManyToOne
     @JoinColumn(
@@ -52,11 +52,11 @@ public class Game {
 
     public Game(String name,
                 String description,
-                User owner,
+                User gameMaster,
                 RpgSystems rpgSystem) {
         this.name = name;
         this.description = description;
-        this.owner = owner;
+        this.gameMaster = gameMaster;
         this.rpgSystem = rpgSystem;
     }
 }
