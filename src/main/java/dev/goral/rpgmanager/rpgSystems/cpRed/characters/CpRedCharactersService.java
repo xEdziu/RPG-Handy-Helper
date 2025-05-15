@@ -320,23 +320,6 @@ public class CpRedCharactersService {
         return CustomReturnables.getOkResponseMap("Postać " + cpRedCharacterToUpdateName + " została zaktualizowana");
     }
 
-    private static Game getGame(CpRedCharacters cpRedCharacterToUpdate, User currentUser) {
-        Game game = cpRedCharacterToUpdate.getGame();
-
-        if (cpRedCharacterToUpdate.getUser() != null && !cpRedCharacterToUpdate.getUser().getId().equals(currentUser.getId())) {
-            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
-                throw new IllegalArgumentException("Nie masz uprawnień do modyfikacji tej postaci.");
-            }
-        }
-
-        if (cpRedCharacterToUpdate.getUser() == null) {
-            if (!game.getGameMaster().getId().equals(currentUser.getId())) {
-                throw new IllegalArgumentException("Tylko GameMaster może modyfikować tę postać.");
-            }
-        }
-        return game;
-    }
-
     public Map<String, Object> playerToNpc(Long characterId) {
         if (characterId == null) {
             throw new IllegalStateException("Należy podać id postaci");
