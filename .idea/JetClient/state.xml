@@ -531,6 +531,120 @@
                                   <option name="sortWeight" value="3000000" />
                                 </folderState>
                                 <folderState>
+                                  <option name="id" value="274c9f59-ca2e-4256-b0b5-7073416b938b" />
+                                  <option name="name" value="Armors" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="id" value="efe64b72-0780-42e4-b6e3-dc69a07a3778" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie pancerze" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/armors/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="6efdec34-ee05-4fdf-a8d9-065f6b7011d7" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć pancerz po id" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/armors/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="bba76c18-0ed2-4bc4-8dca-b2a37b129a67" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie pancerze dla Admina" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  type: &quot;KEVLAR&quot;,&#10;  armorPoints: 5,&#10;  penalty: 1,&#10;  price: 100,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;A lightweight armor made of Kevlar, providing decent protection against small arms fire.&quot;&#10;}&#10;" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="f77d9752-7a1a-4d68-a4bb-4f6c5d9ddc28" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj pancerz" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  type: &quot;KEVLAR&quot;,&#10;  armorPoints: 6,&#10;  penalty: 1,&#10;  price: 120,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;New armor.&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="9e262ca3-1912-40d2-87ac-95d9cbcd6144" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj pancerz" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/armors/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="4000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="988306f3-77b6-4361-9b94-aa9a0533f527" />
+                                  <option name="name" value="Classes" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Kowal&quot;,&#10;  description: &quot;Kuje przedmioty&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="2762614a-a8a0-4bf2-a164-acbbfe0fb601" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz klasę" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Nowy Kowal&quot;,&#10;  description: &quot;Kuje lepsze przedmioty&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="e0bc59a4-c4bc-4fd2-bd41-e33146f5cf35" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj klasę" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="194c44c8-2d7e-4b70-8fa2-bdf5a07e0f10" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie klasy" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/classes/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="9d04b42c-38a6-4759-b96f-fa79a4684cbe" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć klasę po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/classes/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="824bb2b1-be60-4d13-aa79-493d2ab904bb" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie klasy dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/classes/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="4000000" />
+                                </folderState>
+                                <folderState>
                                   <option name="id" value="988306f3-77b6-4361-9b94-aa9a0533f527" />
                                   <option name="name" value="Classes" />
                                   <option name="requests">
@@ -821,6 +935,194 @@
                   </list>
                 </option>
                 <option name="sortWeight" value="5000000" />
+              </folderState>
+              <folderState>
+                <option name="description" value="Ustalanie harmonogramu" />
+                <option name="folders">
+                  <list>
+                    <folderState>
+                      <option name="id" value="e711e00d-aad8-45f1-a78e-ff42cb669a38" />
+                      <option name="name" value="Player" />
+                      <option name="requests">
+                        <list>
+                          <requestState>
+                            <option name="body">
+                              <bodyState>
+                                <option name="raw" value="{&#10;  &quot;schedulerId&quot;: 1,&#10;  &quot;slots&quot;: [&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2025-12-20T18:00:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2025-12-20T22:00:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;YES&quot;&#10;    },&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2025-12-21T19:00:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2025-12-21T23:00:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;MAYBE&quot;&#10;    },&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2025-12-27T18:00:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2025-12-27T21:00:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;NO&quot;&#10;    },&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2025-12-28T19:30:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2025-12-28T23:30:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;NO&quot;&#10;    }&#10;  ]&#10;}" />
+                                <option name="type" value="JSON" />
+                              </bodyState>
+                            </option>
+                            <option name="description" value="Prześlij swoją dyspozycję" />
+                            <option name="id" value="e420a0d7-e1b8-41bf-819b-dadb45481c8c" />
+                            <option name="method" value="POST" />
+                            <option name="name" value="Submit Availability" />
+                            <option name="sortWeight" value="1000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/submitAvailability" />
+                          </requestState>
+                          <requestState>
+                            <option name="body">
+                              <bodyState>
+                                <option name="raw" value="{&#10;  &quot;schedulerId&quot;: 1,&#10;  &quot;slots&quot;: [&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2025-12-20T18:00:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2025-12-20T22:00:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;YES&quot;&#10;    },&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2025-12-21T19:00:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2025-12-21T23:00:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;MAYBE&quot;&#10;    },&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2025-12-27T18:00:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2025-12-27T21:00:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;NO&quot;&#10;    },&#10;    {&#10;      &quot;startDateTime&quot;: &quot;2025-12-28T19:30:00&quot;,&#10;      &quot;endDateTime&quot;: &quot;2025-12-28T23:30:00&quot;,&#10;      &quot;availabilityType&quot;: &quot;NO&quot;&#10;    }&#10;  ]&#10;}" />
+                                <option name="type" value="JSON" />
+                              </bodyState>
+                            </option>
+                            <option name="description" value="Edytuj dyspozycję" />
+                            <option name="id" value="26a3bdf4-a5a0-4d9a-8ae4-a8e3753d71ca" />
+                            <option name="method" value="PUT" />
+                            <option name="name" value="Edit Availability" />
+                            <option name="sortWeight" value="3000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/editAvailability" />
+                          </requestState>
+                          <requestState>
+                            <option name="description" value="Pobierz dostępność dla schedulera dla konkretnego użytkownika" />
+                            <option name="id" value="a6ae3328-f5d3-496d-914c-a8e026a89f05" />
+                            <option name="method" value="GET" />
+                            <option name="name" value="Get Player Availability" />
+                            <option name="pathVariables">
+                              <list>
+                                <pathVariableState>
+                                  <option name="key" value="schedulerId" />
+                                  <option name="value" value="1" />
+                                </pathVariableState>
+                              </list>
+                            </option>
+                            <option name="sortWeight" value="4000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/availability/{schedulerId}" />
+                          </requestState>
+                          <requestState>
+                            <option name="description" value="Pobierz scheduler po id" />
+                            <option name="id" value="9d7e0c51-6c4a-4f34-9c2f-1999b00c1114" />
+                            <option name="method" value="GET" />
+                            <option name="name" value="Get Scheduler" />
+                            <option name="pathVariables">
+                              <list>
+                                <pathVariableState>
+                                  <option name="key" value="schedulerId" />
+                                </pathVariableState>
+                              </list>
+                            </option>
+                            <option name="sortWeight" value="5000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/{schedulerId}" />
+                          </requestState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="1000000" />
+                    </folderState>
+                  </list>
+                </option>
+                <option name="id" value="7c2346a8-d9e5-4535-84fa-3ae4cbc5edea" />
+                <option name="name" value="Scheduler" />
+                <option name="requests">
+                  <list>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;title&quot;: &quot;Spotkanie RPG: Początek Kampanii&quot;,&#10;  &quot;deadline&quot;: &quot;2026-12-15T23:59:59&quot;,&#10;  &quot;minimumSessionDurationMinutes&quot;: 60,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;creatorId&quot;: 1,&#10;  &quot;dateRanges&quot;: [&#10;    {&#10;      &quot;startDate&quot;: &quot;2025-12-20&quot;,&#10;      &quot;endDate&quot;: &quot;2025-12-22&quot;&#10;    },&#10;    {&#10;      &quot;startDate&quot;: &quot;2025-12-27&quot;,&#10;      &quot;endDate&quot;: &quot;2025-12-28&quot;&#10;    }&#10;  ],&#10;  &quot;timeRanges&quot;: [&#10;    {&#10;      &quot;startTime&quot;: &quot;18:00:00&quot;,&#10;      &quot;endTime&quot;: &quot;22:00:00&quot;&#10;    },&#10;    {&#10;      &quot;startTime&quot;: &quot;19:00:00&quot;,&#10;      &quot;endTime&quot;: &quot;23:30:00&quot;&#10;    }&#10;  ],&#10;  &quot;participantIds&quot;: [1, 2]&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Utwórz przykładowy scheduler" />
+                      <option name="id" value="256737f5-74ba-47ac-abba-47305aaff9f9" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Create Scheduler" />
+                      <option name="sortWeight" value="500000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/create" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Pobierz schedulery dla konkretnej gry" />
+                      <option name="id" value="73d75294-bb3b-42df-990b-cfbbf77782de" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Get Scheduler for Game" />
+                      <option name="sortWeight" value="1500000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/forGame/1" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;schedulerId&quot;: 1,&#10;  &quot;title&quot;: &quot;Zmieniony tytuł sesji RPG&quot;,&#10;  &quot;deadline&quot;: &quot;2025-12-20T20:00:00&quot;,&#10;  &quot;minimumSessionDurationMinutes&quot;: 180,&#10;  &quot;dateRanges&quot;: [&#10;    {&#10;      &quot;startDate&quot;: &quot;2025-12-25&quot;,&#10;      &quot;endDate&quot;: &quot;2025-12-27&quot;&#10;    },&#10;    {&#10;      &quot;startDate&quot;: &quot;2025-12-30&quot;,&#10;      &quot;endDate&quot;: &quot;2025-12-31&quot;&#10;    }&#10;  ],&#10;  &quot;timeRanges&quot;: [&#10;    {&#10;      &quot;startTime&quot;: &quot;18:00:00&quot;,&#10;      &quot;endTime&quot;: &quot;22:00:00&quot;&#10;    },&#10;    {&#10;      &quot;startTime&quot;: &quot;19:00:00&quot;,&#10;      &quot;endTime&quot;: &quot;23:30:00&quot;&#10;    }&#10;  ],&#10;  &quot;participantIds&quot;: [1, 2]&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Zedytuj dany scheduler" />
+                      <option name="id" value="f7ee7d41-9dc5-4a7f-8918-6e4fee10a22f" />
+                      <option name="method" value="PUT" />
+                      <option name="name" value="Edit Scheduler" />
+                      <option name="sortWeight" value="3000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/edit" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Usuń scheduler o podanym id" />
+                      <option name="id" value="b177abc0-4582-47ae-a90f-1f9c16a2a556" />
+                      <option name="method" value="DELETE" />
+                      <option name="name" value="Delete Scheduler" />
+                      <option name="sortWeight" value="4000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/delete/1" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Pobierz sugerowane sloty przez program" />
+                      <option name="id" value="a9f966c8-32e3-4f1e-9dd8-0ae597975522" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Get Suggested Slots" />
+                      <option name="pathVariables">
+                        <list>
+                          <pathVariableState>
+                            <option name="key" value="schedulerId" />
+                            <option name="value" value="1" />
+                          </pathVariableState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="5000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/suggestedSlots/{schedulerId}" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;schedulerId&quot;: 2,&#10;  &quot;start&quot;: &quot;2025-12-20T18:00:00&quot;,&#10;  &quot;end&quot;: &quot;2025-12-20T22:00:00&quot;&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Ustal ostateczną datę spotkania" />
+                      <option name="id" value="ab3e209a-f04a-4fe3-b374-dfb27564e1c0" />
+                      <option name="method" value="PUT" />
+                      <option name="name" value="Set Final Decision" />
+                      <option name="sortWeight" value="6000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/setFinalDecision" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Wyślij maile po zakończeniu ustalniu terminów" />
+                      <option name="id" value="cd078805-8e84-44c8-a6af-1463eb3956dd" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Send Mails" />
+                      <option name="pathVariables">
+                        <list>
+                          <pathVariableState>
+                            <option name="key" value="schedulerId" />
+                            <option name="value" value="2" />
+                          </pathVariableState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="7000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/sendFinalDecisionMails/{schedulerId}" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Pobierz dyspozycję od każdego z użytkowników" />
+                      <option name="id" value="1bec69e7-7bf4-47ff-a426-8ac24829a8e5" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Get All Players Availability" />
+                      <option name="pathVariables">
+                        <list>
+                          <pathVariableState>
+                            <option name="key" value="schedulerId" />
+                            <option name="value" value="1" />
+                          </pathVariableState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="8000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/schedulers/availability/{schedulerId}/all" />
+                    </requestState>
+                  </list>
+                </option>
+                <option name="sortWeight" value="6000000" />
               </folderState>
             </list>
           </option>
