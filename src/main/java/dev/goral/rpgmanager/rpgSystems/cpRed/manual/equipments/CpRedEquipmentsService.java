@@ -44,7 +44,7 @@ public class CpRedEquipmentsService {
                                 equipments.getPrice(),
                                 equipments.getAvailability().toString(),
                                 equipments.getDescription()
-                        )).orElseThrow(() -> new RuntimeException("Przedmiot o id " + equipmentId + "nie istnieje"));
+                        )).orElseThrow(() -> new RuntimeException("Przedmiot o id " + equipmentId + " nie istnieje"));
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano przedmiot.");
         response.put("equipment", cpRedEquipments);
         return response;
@@ -54,7 +54,7 @@ public class CpRedEquipmentsService {
     // Pobierz wszystkie przedmioty dla admina
     public Map<String, Object> getAllEquipmentsForAdmin() {
         List<CpRedEquipments> allEquipments = cpRedEquipmentsRepository.findAll();
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("PWyposażenie zostało pobrane.");
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Wyposażenie zostało pobrane.");
         response.put("equipments", allEquipments);
         return response;
 
@@ -82,17 +82,17 @@ public class CpRedEquipmentsService {
             throw new IllegalStateException("Nie podano nazwy przedmiotu");
         }
         if (name.length() > 255) {
-            throw new IllegalArgumentException("Nazwa klasy nie może mieć więcej niż 255 znaków.");
+            throw new IllegalArgumentException("Nazwa przedmiotu nie może mieć więcej niż 255 znaków.");
         }
         String description = cpRedEquipments.getDescription().trim();
         if (description.isEmpty()) {
-            throw new IllegalArgumentException("Opis klasy jest wymagany.");
+            throw new IllegalArgumentException("Opis przedmiotu jest wymagany.");
         }
         if (description.length() > 1000) {
-            throw new IllegalArgumentException("Opis klasy nie może mieć więcej niż 1000 znaków.");
+            throw new IllegalArgumentException("Opis przedmiotu nie może mieć więcej niż 1000 znaków.");
         }
         if(cpRedEquipmentsRepository.existsByName(name)) {
-            throw new IllegalStateException("Klasa o nazwie " + name + " już istnieje");
+            throw new IllegalStateException("Przedmiot o nazwie " + name + " już istnieje");
         }
         cpRedEquipments.setName(name);
         cpRedEquipments.setDescription(description);
