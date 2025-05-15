@@ -70,7 +70,6 @@
         var userInfo = [];
         var RpgSystem = [];
 
-
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
             getAllSystems();
@@ -823,7 +822,7 @@
     }
     // ==== Pareser Markdown ====
     function parseMarkdown(markdownText) {
-        return marked.parse(markdownText).trim().replace(/^(\s*\n)+/, "");
+        return marked.parse(markdownText).replace(/^(\\s*\\n)+/,"");
     }
     // ==== Truncate Text ====
     function truncateText(text, maxLength = Infinity) {
