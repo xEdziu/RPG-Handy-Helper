@@ -49,4 +49,5 @@ public class CpRedCustomAmmunitionController {
     public Map<String, Object> getAllCustomAmmunitionForAdmin() {
         return cpRedCustomAmmunitionService.getAllCustomAmmunitionForAdmin();
     }
+
 }

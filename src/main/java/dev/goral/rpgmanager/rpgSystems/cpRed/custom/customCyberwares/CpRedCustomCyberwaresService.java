@@ -12,12 +12,12 @@ public class CpRedCustomCyberwaresService {
     private final CpRedCustomCyberwaresRepository cpRedCustomCyberwaresRepository;
 
 //    // Pobierz wszystkie cyberware
-//    public List<CpRedCustomCyberwaresDTO> getAllCyberware() {
+//    public Map<String, Object> getAllCyberware() {
 //
 //    }
 //
 //    // Pobierz cyberware po id
-//    public CpRedCustomCyberwaresDTO getCyberwareById(Long cyberwareId) {
+//    public Map<String, Object> getCyberwareById(Long cyberwareId) {
 //
 //    }
 //
@@ -32,7 +32,7 @@ public class CpRedCustomCyberwaresService {
 //    }
 //
 //    // Pobierz wszystkie cyberware dla admina
-//    public List<CpRedCustomCyberwares> getAllCyberwareForAdmin() {
-//        return cpRedCustomCyberwaresRepository.findAll();
+//    public Map<String, Object> getAllCyberwareForAdmin() {
+//
 //    }
 }

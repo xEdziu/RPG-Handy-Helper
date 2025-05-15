@@ -21,29 +21,40 @@ public class CpRedStatsService {
     private final UserRepository userRepository;
 
     // Pobierz wszystkie statystyki
-    public List<CpRedStatsDTO> getAllStats() {
-        List<CpRedStats> cpRedStatsList = cpRedStatsRepository.findAll();
-        return cpRedStatsList.stream()
+    public Map<String, Object> getAllStats() {
+        List<CpRedStatsDTO> cpRedStatsList = cpRedStatsRepository.findAll().stream()
                 .map(cpRedStats -> new CpRedStatsDTO(
                         cpRedStats.getName(),
                         cpRedStats.getTag(),
                         cpRedStats.getDescription()
-                )).collect(Collectors.toList());
+                )).toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Statystyki zostały pobrane.");
+        response.put("stats", cpRedStatsList);
+        return response;
     }
 
     // Pobierz statystyke po id
-    public CpRedStatsDTO getStatById(Long id) {
-        return cpRedStatsRepository.findById(id)
+    public Map<String, Object> getStatById(Long id) {
+        CpRedStatsDTO stat = cpRedStatsRepository.findById(id)
                 .map(cpRedStats -> new CpRedStatsDTO(
                         cpRedStats.getName(),
                         cpRedStats.getTag(),
                         cpRedStats.getDescription()
                 )).orElseThrow(() -> new ResourceNotFoundException("Statystyka o id " + id + " nie istnieje"));
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Statystyka została pobrana.");
+        response.put("stat", stat);
+        return response;
     }
 
     // Pobierz wszystkie statystyki dla admina
-    public List<CpRedStats> getAllStatsForAdmin() {
-        return cpRedStatsRepository.findAll();
+    public Map<String, Object> getAllStatsForAdmin() {
+        List<CpRedStats> allStatsList = cpRedStatsRepository.findAll();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Statystyki zostały pobrane dla administratora.");
+        response.put("stats", allStatsList);
+        return response;
     }
 
     // Dodać statystyke

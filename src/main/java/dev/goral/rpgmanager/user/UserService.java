@@ -111,8 +111,11 @@ public class UserService implements UserDetailsService {
         return CustomReturnables.getOkResponseMap("Zdjęcie profilowe zostało ustawione.");
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Map<String, Object> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę użytkowników.");
+        response.put("users", users);
+        return response;
     }
 
     public Map<String, Object> createUserAdmin(User user) {

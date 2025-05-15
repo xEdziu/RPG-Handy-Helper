@@ -12,18 +12,18 @@ public class CpRedCriticalInjuriesService {
     private final CpRedCriticalInjuriesRepository cpRedCriticalInjuriesRepository;
 
 //    // Pobierz wszystkie obrażenia krytyczne
-//    public List<CpRedCriticalInjuriesDTO> getAllCriticalInjuries() {
+//    public Map<String, Object> getAllCriticalInjuries() {
 //
 //    }
 //
 //    // Pobierz obrażenia krytyczne po id
-//    public CpRedCriticalInjuriesDTO getCriticalInjuryById(Long criticalInjuryId) {
+//    public Map<String, Object> getCriticalInjuryById(Long criticalInjuryId) {
 //
 //    }
 //
 //    // Pobierz wszystkie obrażenia krytyczne dla admina
-//    public List<CpRedCriticalInjuries> getAllCriticalInjuriesForAdmin() {
-//        return cpRedCriticalInjuriesRepository.findAll();
+//    public Map<String, Object> getAllCriticalInjuriesForAdmin() {
+//
 //    }
 //
 //    // Dodaj obrażenia krytyczne

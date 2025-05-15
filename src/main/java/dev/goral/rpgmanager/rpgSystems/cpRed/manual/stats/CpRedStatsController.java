@@ -15,12 +15,12 @@ public class CpRedStatsController {
     // ============ User methods ============
     // Pobierz wszystkie statystyki
     @GetMapping(path = "/rpgSystems/cpRed/stats/all")
-    public List<CpRedStatsDTO> getAllStats() {
+    public Map<String, Object> getAllStats() { // List<CpRedStatsDTO>
         return cpRedStatsService.getAllStats();
     }
     // Pobierz statystykę po id
     @GetMapping(path = "/rpgSystems/cpRed/stats/{statId}")
-    public CpRedStatsDTO getStatById(@PathVariable("statId") Long statId) {
+    public Map<String, Object> getStatById(@PathVariable("statId") Long statId) { // CpRedStatsDTO
         return cpRedStatsService.getStatById(statId);
     }
 
@@ -28,7 +28,7 @@ public class CpRedStatsController {
     // ============ Admin methods ============
     // Pobierz wszystkie statystyki dla admina
     @GetMapping(path = "/admin/rpgSystems/cpRed/stats/all")
-    public List<CpRedStats> getAllStatsForAdmin() {
+    public Map<String, Object> getAllStatsForAdmin() { // List<CpRedStats>
         return cpRedStatsService.getAllStatsForAdmin();
     }
     // Dodać statystykę
