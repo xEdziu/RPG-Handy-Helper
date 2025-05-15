@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
+                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 2,&#10;//  &quot;gameId&quot;: 1,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -210,7 +210,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 4&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;gameMaster&quot;: {&#10;    id: 3&#10;  },&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 4&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;owner&quot;: {&#10;    id: 3&#10;  },&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -224,7 +224,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{ &#10;  &quot;role&quot;: &quot;SPECTATOR&quot;&#10;}" />
+                          <option name="raw" value="{ &#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -233,7 +233,7 @@
                       <option name="method" value="PUT" />
                       <option name="name" value="Modyfikuj role użytkownika w grze" />
                       <option name="sortWeight" value="5000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/3" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/2" />
                     </requestState>
                     <requestState>
                       <option name="body">
@@ -707,6 +707,84 @@
                             <option name="name" value="Manual" />
                             <option name="sortWeight" value="1000000" />
                           </folderState>
+                          <folderState>
+                            <option name="folders">
+                              <list>
+                                <folderState>
+                                  <option name="id" value="b4f98777-e074-4c3a-9862-ae19a790f330" />
+                                  <option name="name" value="CustomAmmunition" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Amunicja EMP 2&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 20,&#10;  availability: &quot;SUPER_LUXURY&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje customową amunicje" />
+                                        <option name="id" value="dfe379ad-f4b7-49c1-8803-3dbebcec661f" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj customową amunicję" />
+                                        <option name="sortWeight" value="750000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customAmmunition/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;Amunicja EMP zmodyfikowany 3&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 2000,&#10;  availability: &quot;COSTLY&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje podane paramtery customowej broni" />
+                                        <option name="id" value="bb5b8140-83a8-4931-9e9a-1acebee99066" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj customową broń" />
+                                        <option name="sortWeight" value="1500000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customAmmunition/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera listę wszysktich customowych amunicji" />
+                                        <option name="id" value="c4964bf6-1c5f-451b-9d5e-8cf10ada9663" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie customowe amunicje" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customAmmunition/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera konkretną customową amunicje o podanym id " />
+                                        <option name="id" value="e3181fd1-217e-4fee-8a76-f96b0744e098" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz customową amunicje po id" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customAmmunition/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich customowych amunicji dla admina" />
+                                        <option name="id" value="7cc170b3-d487-44ee-a117-fdc80ce1a65e" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie customowe amunicje dla admina" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customAmmunition/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera liste amunicji dla podanego id gry" />
+                                        <option name="id" value="0d41bfdc-f568-49df-9d75-d11e0accf09a" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz amunicje dla danej gry" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customAmmunition/game/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="1000000" />
+                                </folderState>
+                              </list>
+                            </option>
+                            <option name="id" value="be478e01-3cd6-4b0a-bd25-b519ab021bde" />
+                            <option name="name" value="Custom" />
+                            <option name="sortWeight" value="2000000" />
+                          </folderState>
                         </list>
                       </option>
                       <option name="id" value="be9e305b-7eae-442e-9183-34c14c9991a5" />
@@ -730,7 +808,7 @@
                           <requestState>
                             <option name="body">
                               <bodyState>
-                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
+                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher 3&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
                                 <option name="type" value="JSON" />
                               </bodyState>
                             </option>
@@ -752,7 +830,7 @@
                           <requestState>
                             <option name="body">
                               <bodyState>
-                                <option name="raw" value="{&#10;  &quot;user&quot;: {&#10;    &quot;id&quot;: 3&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
+                                <option name="raw" value="{&#10;//  &quot;user&quot;: {&#10;//    &quot;id&quot;: 3&#10;//  },&#10;  &quot;name&quot;: &quot;Adam Smasher2&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
                                 <option name="type" value="JSON" />
                               </bodyState>
                             </option>
@@ -761,7 +839,7 @@
                             <option name="method" value="PUT" />
                             <option name="name" value="Modyfikuj postać" />
                             <option name="sortWeight" value="4000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/1" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/3" />
                           </requestState>
                           <requestState>
                             <option name="body">
@@ -775,7 +853,15 @@
                             <option name="method" value="PUT" />
                             <option name="name" value="Zrób z postaci NPC" />
                             <option name="sortWeight" value="5000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/1" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/3" />
+                          </requestState>
+                          <requestState>
+                            <option name="description" value="Zmienia parametr alive " />
+                            <option name="id" value="1287af64-6ca1-4311-b691-ef8e41f5198a" />
+                            <option name="method" value="PUT" />
+                            <option name="name" value="Zmień czy postać żyje" />
+                            <option name="sortWeight" value="6000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/changeAlive/3" />
                           </requestState>
                         </list>
                       </option>
