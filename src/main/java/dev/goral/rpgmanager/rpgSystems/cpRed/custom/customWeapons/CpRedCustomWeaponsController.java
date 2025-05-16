@@ -18,21 +18,37 @@ public class CpRedCustomWeaponsController {
     public Map<String, Object> getAllCustomWeapons() { // List<CpRedCustomWeaponsDTO>
         return cpRedCustomWeaponsService.getAllCustomWeapons();
     }
+
     // Pobierz customową broń po id
     @GetMapping(path = "/rpgSystems/cpRed/customWeapons/{customWeaponId}")
     public Map<String, Object> getCustomWeaponById(@PathVariable("customWeaponId") Long customWeaponId) { // CpRedCustomWeaponsDTO
         return cpRedCustomWeaponsService.getCustomWeaponById(customWeaponId);
     }
+
+    //TODO: Pobieranie wszystkich broni danej gry
+
     // Dodaj customową broń
     @PostMapping(path = "/rpgSystems/cpRed/customWeapons/add")
-    public Map<String, Object> addCustomWeapon(@RequestBody CpRedCustomWeapons cpRedCustomWeapons) {
+    public Map<String, Object> addCustomWeapon(@RequestBody AddCustomWeaponRequest cpRedCustomWeapons) {
         return cpRedCustomWeaponsService.addCustomWeapon(cpRedCustomWeapons);
     }
     // Modyfikuj customową broń
     @PutMapping(path = "/rpgSystems/cpRed/customWeapons/update/{customWeaponId}")
     public Map<String, Object> updateCustomWeapon(@PathVariable("customWeaponId") Long customWeaponId,
-                                                  @RequestBody CpRedCustomWeapons cpRedCustomWeapons) {
+                                                  @RequestBody AddCustomWeaponRequest cpRedCustomWeapons) {
         return cpRedCustomWeaponsService.updateCustomWeapon(customWeaponId, cpRedCustomWeapons);
+    }
+
+    // Modyfikuj ukrywalność broni
+    @PutMapping(path = "/rpgSystems/cpRed/customWeapons/changeHide/{customWeaponId}")
+    public Map<String, Object> changeHide(@PathVariable("customWeaponId") Long customWeaponId) {
+        return cpRedCustomWeaponsService.changeHide(customWeaponId);
+    }
+
+    // Modyfikuj modyfikowalność broni
+    @PutMapping(path = "/rpgSystems/cpRed/customWeapons/changeModifiable/{customWeaponId}")
+    public Map<String, Object> changeModifiable(@PathVariable("customWeaponId") Long customWeaponId) {
+        return cpRedCustomWeaponsService.changeModifiable(customWeaponId);
     }
 
     // ============ Admin methods ============
