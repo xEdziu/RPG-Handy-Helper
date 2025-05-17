@@ -2,8 +2,10 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors;
 
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.game.GameRepository;
+import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
@@ -89,18 +91,88 @@ public class CpRedCustomArmorsService {
     }
 
 
-    // Dodaj customową zbroję
-//    public Map<String, Object> addCustomArmor(CpRedCustomArmorsRequest cpRedCustomArmors) {
-//
-//
-//    }
-//
+    public Map<String, Object> addCustomArmor(CpRedCustomArmorsRequest cpRedCustomArmors) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        if (cpRedCustomArmors.getGameId() == null ||
+                cpRedCustomArmors.getName() == null ||
+                cpRedCustomArmors.getType() == null ||
+                cpRedCustomArmors.getArmorPoints() < 0 ||
+                cpRedCustomArmors.getPenalty() < 0 ||
+                cpRedCustomArmors.getPrice() < 0 ||
+                cpRedCustomArmors.getAvailability() == null||
+                cpRedCustomArmors.getDescription() == null ) {
+            throw new IllegalStateException("Wszystkie pola muszą być wypełnione.");
+        }
+
+        Game game = gameRepository.findById(cpRedCustomArmors.getGameId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + cpRedCustomArmors.getGameId() + " nie istnieje."));
+
+
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra o id " + cpRedCustomArmors.getGameId() + " nie jest aktywna.");
+        }
+
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), cpRedCustomArmors.getGameId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
+
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalStateException("Tylko GM może dodać pancerz do gry.");
+        }
+
+        if (cpRedCustomArmorsRepository.existsByNameAndGameId(cpRedCustomArmors.getName(), game)) {
+            throw new IllegalStateException("Customowy pancerz o tej nazwie już istnieje w tej grze.");
+        }
+        if (cpRedCustomArmors.getName().isEmpty() ||
+                cpRedCustomArmors.getName().trim().isEmpty()) {
+            throw new IllegalStateException("Nazwa pancerza nie może być pusta.");
+        }
+        if (cpRedCustomArmors.getName().length() > 255) {
+            throw new IllegalStateException("Nazwa pancerza nie może być dłuższa niż 255 znaków.");
+        }
+        if (cpRedCustomArmors.getArmorPoints() < 0) {
+            throw new IllegalStateException("Punkty pancerza nie może być mniejsza od 0.");
+        }
+        if (cpRedCustomArmors.getPenalty() < 0) {
+            throw new IllegalStateException("Kara pancerza nie może być mniejsza od 0.");
+        }
+        if (cpRedCustomArmors.getPrice() < 0) {
+            throw new IllegalStateException("Cena pancerza nie może być mniejsza lub równa 0.");
+        }
+        if (cpRedCustomArmors.getDescription().isEmpty() ||
+                cpRedCustomArmors.getDescription().trim().isEmpty()) {
+            throw new IllegalStateException("Opis pancerza nie może być pusty.");
+        }
+        if (cpRedCustomArmors.getDescription().length() > 500) {
+            throw new IllegalStateException("Opis pancerza nie może być dłuższy niż 500 znaków.");
+        }
+
+        CpRedCustomArmors newCustomArmor = new CpRedCustomArmors(
+                0,
+                game,
+                cpRedCustomArmors.getName(),
+                cpRedCustomArmors.getType(),
+                cpRedCustomArmors.getArmorPoints(),
+                cpRedCustomArmors.getPenalty(),
+                cpRedCustomArmors.getPrice(),
+                cpRedCustomArmors.getAvailability(),
+                cpRedCustomArmors.getDescription()
+        );
+
+        cpRedCustomArmorsRepository.save(newCustomArmor);
+        return CustomReturnables.getOkResponseMap("Customowy pancerz został dodany.");
+
+
+    }
+
 //    // Modyfikuj customową zbroję
 //    public Map<String, Object> updateCustomArmor(Long armorId, CpRedCustomArmors cpRedCustomArmors) {
 //
 //    }
-//
-    // Pobierz wszystkie customowe zbroje dla admina
+
     public Map<String, Object> getAllCustomArmorsForAdmin() {
         List<CpRedCustomArmors> allCustomArmorsList = cpRedCustomArmorsRepository.findAll();
 

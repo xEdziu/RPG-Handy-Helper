@@ -25,7 +25,7 @@ public class CpRedCustomArmors {
             strategy = GenerationType.SEQUENCE,
             generator = "cpRedCustomArmors_sequence"
     )
-    private Long id;
+    private long id;
     @ManyToOne
     @JoinColumn(
             name = "game_id",
