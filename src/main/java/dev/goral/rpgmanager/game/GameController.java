@@ -5,8 +5,10 @@ import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersDTO;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +31,11 @@ public class GameController {
     @GetMapping(path = "/game/allPlayers/{gameId}")
     public List<GameUsersDTO> getGamePlayers(@PathVariable("gameId") Long gameId) {
         return gameService.getGamePlayers(gameId);
+    }
+
+    @GetMapping(path = "/game/userGames")
+    public List<UserGamesDTO> getUserGames(@AuthenticationPrincipal User currentUser) {
+        return gameService.getUserGames(currentUser);
     }
 
     @PostMapping(path = "/game/create")

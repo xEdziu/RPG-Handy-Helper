@@ -70,6 +70,18 @@ public class GameService {
                 .collect(Collectors.toList());
     }
 
+    public List<UserGamesDTO> getUserGames(User currentUser) {
+        List<GameUsers> gameUsers = gameUsersRepository.findAllByUserId(currentUser.getId());
+        return gameUsers.stream()
+                .filter(gameUser -> gameUser.getGame().getStatus() == GameStatus.ACTIVE)
+                .map(gameUser -> new UserGamesDTO(
+                        gameUser.getGame().getId(),
+                        gameUser.getGame().getName(),
+                        gameUser.getGame().getDescription()
+                ))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public Map<String, Object> createGame(Game game) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
