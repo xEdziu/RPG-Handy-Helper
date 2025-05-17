@@ -30,10 +30,22 @@ public class CpRedCustomArmorsService {
         return response;
     }
 //
-//    // Pobierz customową zbroję po id
-//    public Map<String, Object> getCustomArmorById(Long armorId) {
-//
-//    }
+    // Pobierz customową zbroję po id
+    public Map<String, Object> getCustomArmorById(Long armorId) {
+        CpRedCustomArmorsDTO customArmor = cpRedCustomArmorsRepository.findById(armorId)
+                .map(CpRedCustomArmors-> new CpRedCustomArmorsDTO(
+                        CpRedCustomArmors.getGameId().getId(),
+                        CpRedCustomArmors.getType().toString(),
+                        CpRedCustomArmors.getArmorPoints(),
+                        CpRedCustomArmors.getPenalty(),
+                        CpRedCustomArmors.getPrice(),
+                        CpRedCustomArmors.getAvailability().toString(),
+                        CpRedCustomArmors.getDescription()
+                )).orElse(null);
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Customowa zbroja została pobrana.");
+        response.put("customArmor", customArmor);
+        return response;
+    }
 //
 //    // Dodaj customową zbroję
 //    public Map<String, Object> addCustomArmor(CpRedCustomArmors cpRedCustomArmors) {
