@@ -25,7 +25,11 @@ public class CpRedCustomWeaponsController {
         return cpRedCustomWeaponsService.getCustomWeaponById(customWeaponId);
     }
 
-    //TODO: Pobieranie wszystkich broni danej gry
+    // Pobierz wszystkie customowe bronie danej gry
+    @GetMapping(path = "/rpgSystems/cpRed/customWeapons/game/{gameId}")
+    public Map<String, Object> getAllCustomWeaponsByGameId(@PathVariable("gameId") Long gameId) { // List<CpRedCustomWeaponsDTO>
+        return cpRedCustomWeaponsService.getAllCustomWeaponsByGameId(gameId);
+    }
 
     // Dodaj customową broń
     @PostMapping(path = "/rpgSystems/cpRed/customWeapons/add")

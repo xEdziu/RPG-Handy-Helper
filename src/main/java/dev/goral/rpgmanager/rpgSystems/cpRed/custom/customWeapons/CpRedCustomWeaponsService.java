@@ -84,6 +84,32 @@ public class CpRedCustomWeaponsService {
         return response;
     }
 
+    // Pobierz wszystkie customowe bronie danej gry
+    public Map<String, Object> getAllCustomWeaponsByGameId(Long gameId) {
+        List<CpRedCustomWeaponsDTO> allCustomWeapons = cpRedCustomWeaponsRepository.findAllByGameId_Id(gameId).stream()
+                .map(cpRedCustomWeapons -> new CpRedCustomWeaponsDTO(
+                        cpRedCustomWeapons.getId(),
+                        cpRedCustomWeapons.getGameId().getId(),
+                        cpRedCustomWeapons.getName(),
+                        cpRedCustomWeapons.getRequiredSkillId().getId(),
+                        cpRedCustomWeapons.getType().name(),
+                        cpRedCustomWeapons.getDamage(),
+                        cpRedCustomWeapons.getMagazineCapacity(),
+                        cpRedCustomWeapons.getNumberOfAttacks(),
+                        cpRedCustomWeapons.getHandType(),
+                        cpRedCustomWeapons.isHidden(),
+                        cpRedCustomWeapons.getQuality().name(),
+                        cpRedCustomWeapons.getPrice(),
+                        cpRedCustomWeapons.getAvailability().name(),
+                        cpRedCustomWeapons.isModifiable(),
+                        cpRedCustomWeapons.getDescription()
+                )).toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowe bronie pobrane pomyślnie");
+        response.put("customWeapons", allCustomWeapons);
+        return response;
+    }
+
     // Dodaj customową broń
     public Map<String, Object> addCustomWeapon(AddCustomWeaponRequest addCustomWeaponRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

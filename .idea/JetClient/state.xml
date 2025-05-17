@@ -400,7 +400,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Broń długa&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 2,&#10;  category: &quot;FIGHTING&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 1,&#10;  category: &quot;FIGHTING&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -787,7 +787,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  requiredSkillId: 1,&#10;  name: &quot;test weapon&quot;,&#10;  type: &quot;SNIPER_RIFLE&quot;,&#10;  damage: 2,&#10;  magazineCapacity: 10,&#10;  numberOfAttacks: 2,&#10;  handType: 2,&#10;  isHidden: true,&#10;  quality: &quot;STANDARD&quot;,&#10;  price: 1000,&#10;  availability: &quot;VERY_EXPENSIVE&quot;,&#10;  isModifiable: true,&#10;  description: &quot;Jakiś piękny opis&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  requiredSkillId: 1,&#10;  name: &quot;test weapon&quot;,&#10;  type: &quot;SNIPER_RIFLE&quot;,&#10;  damage: 2,&#10;  magazineCapacity: 10,&#10;  numberOfAttacks: 2,&#10;  handType: 2,&#10;  hidden: true,&#10;  quality: &quot;STANDARD&quot;,&#10;  price: 1000,&#10;  availability: &quot;VERY_EXPENSIVE&quot;,&#10;  modifiable: true,&#10;  description: &quot;Jakiś piękny opis&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -810,7 +810,7 @@
                                         <option name="method" value="PUT" />
                                         <option name="name" value="Modyfikuj customową broń" />
                                         <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/update/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/update/2" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Zmienia na zasadzie switch parametr ukrywalności" />
@@ -818,7 +818,7 @@
                                         <option name="method" value="PUT" />
                                         <option name="name" value="Zmień ukrywalność" />
                                         <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/changeHide/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/changeHide/2" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Zmienia na zasadzie switch parametr modyfikowalności" />
@@ -848,9 +848,17 @@
                                         <option name="description" value="Pobiera listę wszystkich customowych broni dla admina" />
                                         <option name="id" value="a83ec26d-adff-4bfa-9603-761de013e046" />
                                         <option name="method" value="GET" />
-                                        <option name="name" value="Pobierz wszystkie vustomowe bronie dla admina" />
+                                        <option name="name" value="Pobierz wszystkie customowe bronie dla admina" />
                                         <option name="sortWeight" value="7000000" />
                                         <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customWeapons/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera listę broni powiązanych z grą o podanym id" />
+                                        <option name="id" value="be368748-8b26-4398-a22b-591aef41a3f6" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie bronie danej gry" />
+                                        <option name="sortWeight" value="8000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/game/2" />
                                       </requestState>
                                     </list>
                                   </option>
