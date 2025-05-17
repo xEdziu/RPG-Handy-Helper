@@ -13,6 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CpRedCustomArmorsRequest {
     private Long gameId;
+    private String name;
     private CpRedArmorsType type;
     private int armorPoints=-1;
     private int penalty=-1;

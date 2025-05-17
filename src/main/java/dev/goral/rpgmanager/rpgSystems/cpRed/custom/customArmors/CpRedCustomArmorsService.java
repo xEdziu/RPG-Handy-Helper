@@ -29,6 +29,7 @@ public class CpRedCustomArmorsService {
         List<CpRedCustomArmorsDTO> allCustomArmorsList = cpRedCustomArmorsRepository.findAll().stream()
                 .map(CpRedCustomArmors-> new CpRedCustomArmorsDTO(
                         CpRedCustomArmors.getGameId().getId(),
+                        CpRedCustomArmors.getName(),
                         CpRedCustomArmors.getType().toString(),
                         CpRedCustomArmors.getArmorPoints(),
                         CpRedCustomArmors.getPenalty(),
@@ -47,6 +48,7 @@ public class CpRedCustomArmorsService {
         CpRedCustomArmorsDTO customArmor = cpRedCustomArmorsRepository.findById(armorId)
                 .map(CpRedCustomArmors-> new CpRedCustomArmorsDTO(
                         CpRedCustomArmors.getGameId().getId(),
+                        CpRedCustomArmors.getName(),
                         CpRedCustomArmors.getType().toString(),
                         CpRedCustomArmors.getArmorPoints(),
                         CpRedCustomArmors.getPenalty(),
@@ -72,6 +74,7 @@ public class CpRedCustomArmorsService {
         List<CpRedCustomArmorsDTO> gameCustomArmorsList = cpRedCustomArmorsRepository.findAllByGameId(gameId).stream()
                 .map(CpRedCustomArmors-> new CpRedCustomArmorsDTO(
                         CpRedCustomArmors.getGameId().getId(),
+                        CpRedCustomArmors.getName(),
                         CpRedCustomArmors.getType().toString(),
                         CpRedCustomArmors.getArmorPoints(),
                         CpRedCustomArmors.getPenalty(),
