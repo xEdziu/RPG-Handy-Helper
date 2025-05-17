@@ -101,18 +101,19 @@
         </h1>
     </div>
 
-    <div class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg p-8 mb-6 max-w-4xl w-full flex flex-col md:grid md:grid-cols-2 gap-4 items-stretch">
+    <div class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg p-8 mb-6 max-w-4xl w-full flex flex-col md:grid md:grid-cols-2 gap-2 items-stretch">
 
         <div class="flex items-center justify-center md:mr-20">
-            <div class="relative w-[66%] sm:w-full max-w-xs mx-auto rounded-xl object-fill bg-dark-backgroundSecondary h-40 sm:h-52 md:h-[15rem] md:w-[15rem]">
+            <div class="relative w-[66%] sm:w-full max-w-xs mx-auto rounded-xl object-fill bg-dark-backgroundSecondary h-40 sm:h-52 md:h-[18rem] md:w-[16rem]">
                 <img id="profilePhoto" src=""
                      class="absolute inset-0 w-full h-full object-fill z-10 bg-dark-accent" />
                 <img id="photoPreview" src=""
                      class="absolute inset-0 w-full h-full object-fill z-20" />
                 <label for="photoInput"
-                       class="absolute top-2 right-2 z-30 bg-light-accent dark:bg-dark-accent p-2 rounded-full text-white shadow-lg cursor-pointer">
-                    <i class="fa-solid fa-pen"></i>
+                       class="absolute top-1 right-1 z-30 bg-light-accent dark:bg-dark-accent w-10 h-10 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer">
+                    <i class="fa-solid fa-pen text-sm"></i>
                 </label>
+
                 <form id="photoForm" enctype="multipart/form-data">
                     <input type="file" id="photoInput" name="file" accept="image/png, image/jpeg" class="hidden" />
                 </form>
@@ -120,10 +121,15 @@
         </div>
 
         <form id="updateForm" class="flex flex-col space-y-4 justify-center w-[66%] sm:w-full max-w-xs mx-auto text-sm sm:text-base md:ml-6">
-
+            <div class="relative w-full">
+                <label for="username"
+                       class="absolute top-1.5 left-1 px-2 text-sm z-10 flex items-center gap-1 text-light-textPrimary dark:text-dark-textPrimary rounded">
+                    <i class="fa-solid fa-user-ninja text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    Nazwa użytkownika:
+                </label>
+                </div>
             <div class="field-container flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border">
                 <div class ="flex items-center gap-3 w-full">
-                    <i class="fa-solid fa-user-ninja text-light-textSecondary dark:text-dark-textSecondary"></i>
                     <label id="label-username" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2 ">
                          <span id="username-label-text">Nazwa użytkownika</span>
                     </label>
@@ -137,11 +143,15 @@
                     <i class="fa-solid fa-pen"></i>
                 </button>
             </div>
-
-
+            <div class="relative w-full">
+                <label for="firstName"
+                       class="absolute top-1.5 left-1 px-2 text-sm z-10 flex items-center gap-1 text-light-textPrimary dark:text-dark-textPrimary rounded">
+                    <i class="fa-solid fa-user text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    Imię:
+                </label>
+            </div>
             <div class="field-container flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border">
                 <div class ="flex items-center gap-3 w-full">
-                    <i class="fa-solid fa-user text-light-textSecondary dark:text-dark-textSecondary"></i>
                     <label id="label-firstName" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
                         <span id="firstName-label-text">Imię</span>
                     </label>
@@ -155,10 +165,15 @@
                     <i class="fa-solid fa-pen"></i>
                 </button>
             </div>
-
+            <div class="relative w-full">
+                <label for="surname"
+                       class="absolute top-1.5 left-1 px-2 text-sm z-10 flex items-center gap-1 text-light-textPrimary dark:text-dark-textPrimary rounded">
+                    <i class="fa-solid fa-id-badge text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    Nazwisko:
+                </label>
+            </div>
             <div class="field-container flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border ">
                 <div class ="flex items-center gap-3 w-full ">
-                    <i class="fa-solid fa-id-badge text-light-textSecondary dark:text-dark-textSecondary"></i>
                     <label for="surname" id="label-surname" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2 ">
                         <span id="surname-label-text">Nazwisko</span>
                     </label>
@@ -173,10 +188,15 @@
                 </button>
             </div>
 
-
+            <div class="relative w-full">
+                <label for="email"
+                       class="absolute top-1.5 left-1 px-2 text-sm z-10 flex items-center gap-1 text-light-textPrimary dark:text-dark-textPrimary rounded">
+                    <i class="fa-solid fa-envelope text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    Email:
+                </label>
+            </div>
             <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border">
                 <div class ="flex items-center gap-3 w-full">
-                    <i class="fa-solid fa-envelope text-light-textSecondary dark:text-dark-textSecondary"></i>
                     <label id="label-email" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
                         <span id="email-label-text">E-mail</span>
                     </label>
@@ -466,7 +486,8 @@
             const input = document.getElementById(target);
             const label = document.getElementById(`label-${target}`);
             const labelTextSpan = document.getElementById(`${target}-label-text`);
-
+            const floatingLabel = document.querySelector(`label[for="${target}"]`);
+            const icon = floatingLabel?.querySelector('i'); // 👈 złapanie ikonki
             const container = btn.closest('.field-container');
 
             if (input && label) {
@@ -481,6 +502,16 @@
                     container.classList.remove('border-light-border', 'dark:border-dark-border');
                 }
 
+                if (floatingLabel) {
+                    floatingLabel.classList.add('text-light-accent', 'dark:text-dark-accent');
+                    floatingLabel.classList.remove('text-light-textPrimary', 'dark:text-dark-textPrimary');
+                }
+
+                if (icon) {
+                    icon.classList.add('text-light-accent', 'dark:text-dark-accent');
+                    icon.classList.remove('text-light-textSecondary', 'dark:text-dark-textSecondary');
+                }
+
                 input.addEventListener('blur', () => {
                     labelTextSpan.textContent = input.value;
                     input.classList.add('hidden');
@@ -490,10 +521,23 @@
                         container.classList.remove('border-light-accent', 'dark:border-dark-accent');
                         container.classList.add('border-light-border', 'dark:border-dark-border');
                     }
+
+                    if (floatingLabel) {
+                        floatingLabel.classList.remove('text-light-accent', 'dark:text-dark-accent');
+                        floatingLabel.classList.add('text-light-textPrimary', 'dark:text-dark-textPrimary');
+                    }
+
+                    if (icon) {
+                        icon.classList.remove('text-light-accent', 'dark:text-dark-accent');
+                        icon.classList.add('text-light-textSecondary', 'dark:text-dark-textSecondary');
+                    }
                 }, { once: true });
             }
         });
     });
+
+
+
 
 
 </script>
