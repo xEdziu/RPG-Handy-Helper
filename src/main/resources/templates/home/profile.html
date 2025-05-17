@@ -64,7 +64,7 @@
 <body class="font-league-spartan justify-between min-h-screen flex flex-col">
 
 <nav class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
-    <a href="/"> <!-- Przekierowanie do strony głównej -->
+    <a href="/">
         <div class="flex items-center">
             <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
             <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
@@ -101,7 +101,7 @@
         </h1>
     </div>
 
-    <div class="bg-light-surface dark:bg-dark-surface rounded-xl shadow-md p-8 mb-6 max-w-4xl w-full flex flex-col md:grid md:grid-cols-2 gap-4 items-stretch">
+    <div class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg p-8 mb-6 max-w-4xl w-full flex flex-col md:grid md:grid-cols-2 gap-4 items-stretch">
 
         <div class="flex items-center justify-center">
             <div class="relative w-[66%] sm:w-full max-w-xs mx-auto rounded-xl object-fill bg-dark-backgroundSecondary h-40 sm:h-52 md:h-[15rem] md:w-[15rem]">
@@ -121,45 +121,79 @@
 
         <form id="updateForm" class="flex flex-col space-y-4 justify-center w-[66%] sm:w-full max-w-xs mx-auto text-sm sm:text-base">
 
-            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full">
-                <label for="username" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:
-                </label>
-                <button type="button" class="text-light-accent dark:text-dark-accent">
+            <div class="field-container flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border">
+                <div class ="flex items-center gap-3 w-full">
+                    <i class="fa-solid fa-user-ninja text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    <label id="label-username" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2 ">
+                         <span id="username-label-text">Nazwa użytkownika</span>
+                    </label>
+                    <input type="text" id="username" name="username" maxlength="30" class="hidden block rounded-t-lg
+                           text-light-textPrimary dark:text-dark-textPrimary
+                           bg-light-background dark:bg-dark-surface
+                           focus:outline-none focus:ring-0
+                           placeholder-light-textSecondary dark:placeholder-dark-textSecondary" />
+                </div>
+                <button type="button" class="edit-btn text-light-accent dark:text-dark-accent" data-target="username">
                     <i class="fa-solid fa-pen"></i>
                 </button>
             </div>
 
-            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full">
-                <label for="firstName" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-user"></i> Imię:
-                </label>
-                <button type="button" class="text-light-accent dark:text-dark-accent">
+
+            <div class="field-container flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border">
+                <div class ="flex items-center gap-3 w-full">
+                    <i class="fa-solid fa-user text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    <label id="label-firstName" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
+                        <span id="firstName-label-text">Imię</span>
+                    </label>
+                    <input type="text" id="firstName" name="firstName" maxlength="30" class="hidden block rounded-t-lg
+                           text-light-textPrimary dark:text-dark-textPrimary
+                           bg-light-background dark:bg-dark-surface
+                           focus:outline-none focus:ring-0
+                           placeholder-light-textSecondary dark:placeholder-dark-textSecondary" />
+                </div>
+                <button type="button" class="edit-btn text-light-accent dark:text-dark-accent" data-target="firstName">
                     <i class="fa-solid fa-pen"></i>
                 </button>
             </div>
 
-            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full">
-                <label for="surname" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-id-badge"></i> Nazwisko:
-                </label>
-                <button type="button" class="text-light-accent dark:text-dark-accent">
+            <div class="field-container flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border ">
+                <div class ="flex items-center gap-3 w-full ">
+                    <i class="fa-solid fa-id-badge text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    <label for="surname" id="label-surname" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2 ">
+                        <span id="surname-label-text">Nazwisko</span>
+                    </label>
+                    <input type="text" id="surname" name="surname" maxlength="30" class="hidden block rounded-t-lg
+                           text-light-textPrimary dark:text-dark-textPrimary
+                           bg-light-background dark:bg-dark-surface
+                           focus:outline-none focus:ring-0
+                           placeholder-light-textSecondary dark:placeholder-dark-textSecondary" />
+                </div>
+                <button type="button" class="edit-btn text-light-accent dark:text-dark-accent" data-target="surname">
                     <i class="fa-solid fa-pen"></i>
                 </button>
             </div>
 
-            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full">
-                <label for="email" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-envelope"></i> E-mail:
-                </label>
-                <button type="button" class="text-light-accent dark:text-dark-accent">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
+
+            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border">
+                <div class ="flex items-center gap-3 w-full">
+                    <i class="fa-solid fa-envelope text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    <label id="label-email" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
+                        <span id="email-label-text">E-mail</span>
+                    </label>
+                </div>
+                <input type="text" id="email" name="email" class="hidden block rounded-t-lg
+                           text-light-textPrimary dark:text-dark-textPrimary
+                           bg-light-background dark:bg-dark-surface
+                           border-0 border-b-2 border-light-border dark:border-dark-border
+                           focus:outline-none focus:ring-0
+                           focus:border-light-accent peer dark:focus:border-dark-accent
+                           placeholder-light-textSecondary dark:placeholder-dark-textSecondary"/>
             </div>
+
         </form>
 
         <div class="flex items-center justify-center md:col-span-2">
-            <button type="submit" class="px-12 py-3 text-lg font-semibold
+            <button type="submit" form="updateForm" class="px-12 py-3 text-lg font-semibold
                    dark:text-light-textPrimary text-dark-textPrimary
                    bg-light-accent dark:bg-dark-accent
                    border border-light-border dark:border-dark-border
@@ -253,10 +287,15 @@
             const data = await response.json();
             Swal.close();
 
-            document.getElementById("viewEmail").textContent = data.email;
             document.getElementById("username").value = data.username;
             document.getElementById("firstName").value = data.firstName;
             document.getElementById("surname").value = data.surname;
+            document.getElementById("email").value = data.email;
+
+            document.getElementById("username-label-text").textContent = data.username;
+            document.getElementById("firstName-label-text").textContent = data.firstName;
+            document.getElementById("surname-label-text").textContent = data.surname;
+            document.getElementById("email-label-text").textContent = data.email;
 
             const filename = data.userPhotoPath?.split("/").pop();
             currentPhotoFilename = filename;
@@ -266,6 +305,7 @@
             Swal.fire({ icon: 'error', text: 'Nie udało się załadować danych użytkownika.' });
         }
     }
+
 
     function updateProfilePhoto(filename) {
         if (!filename) return;
@@ -277,6 +317,41 @@
 
     document.getElementById("updateForm").addEventListener("submit", async function (e) {
         e.preventDefault();
+
+        const fileInput = document.getElementById("photoInput");
+        const file = fileInput.files[0];
+        let photoUpdated = false;
+        let uploadedPhotoFilename = "";
+
+        if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const photoResponse = await fetch("/api/v1/authorized/user/photo", {
+                    method: "POST",
+                    headers: {
+                        'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
+                    },
+                    body: formData
+                });
+
+                const result = await photoResponse.json();
+
+                if (!photoResponse.ok) {
+                    Swal.fire({ icon: 'error', text: result.message || "Błąd przesyłania zdjęcia." });
+                    return;
+                }
+
+                photoUpdated = true;
+                uploadedPhotoFilename = result.userPhotoPath?.split("/").pop();
+
+            } catch (photoError) {
+                Swal.fire({ icon: 'error', text: "Błąd połączenia przy przesyłaniu zdjęcia." });
+                return;
+            }
+        }
+
         Swal.fire({
             title: 'Zapisywanie...',
             allowOutsideClick: false,
@@ -294,7 +369,7 @@
                     username: document.getElementById("username").value,
                     firstName: document.getElementById("firstName").value,
                     surname: document.getElementById("surname").value,
-                    email: document.getElementById("viewEmail").textContent
+                    email: document.getElementById("email").value
                 })
             });
 
@@ -303,7 +378,13 @@
 
             if (response.ok) {
                 Swal.fire({ icon: 'success', text: result.message || "Profil zaktualizowany" });
+
+                if (photoUpdated && uploadedPhotoFilename) {
+                    updateProfilePhoto(uploadedPhotoFilename);
+                }
+
                 await loadProfile();
+                document.getElementById("photoInput").value = "";
             } else {
                 Swal.fire({ icon: 'error', text: result.message || "Błąd aktualizacji profilu" });
             }
@@ -312,6 +393,7 @@
             Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
         }
     });
+
 
     document.getElementById("photoInput").addEventListener("change", function(e) {
         const file = e.target.files[0];
@@ -376,6 +458,44 @@
             Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
         }
     });
+
+
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-target');
+            const input = document.getElementById(target);
+            const label = document.getElementById(`label-${target}`);
+            const labelTextSpan = document.getElementById(`${target}-label-text`);
+
+            const container = btn.closest('.field-container');
+
+            if (input && label) {
+                input.classList.remove('hidden');
+                label.classList.add('hidden');
+
+                input.value = labelTextSpan.textContent;
+                input.focus();
+
+                if (container) {
+                    container.classList.add('border-light-accent', 'dark:border-dark-accent');
+                    container.classList.remove('border-light-border', 'dark:border-dark-border');
+                }
+
+                input.addEventListener('blur', () => {
+                    labelTextSpan.textContent = input.value;
+                    input.classList.add('hidden');
+                    label.classList.remove('hidden');
+
+                    if (container) {
+                        container.classList.remove('border-light-accent', 'dark:border-dark-accent');
+                        container.classList.add('border-light-border', 'dark:border-dark-border');
+                    }
+                }, { once: true });
+            }
+        });
+    });
+
+
 </script>
 </body>
 
