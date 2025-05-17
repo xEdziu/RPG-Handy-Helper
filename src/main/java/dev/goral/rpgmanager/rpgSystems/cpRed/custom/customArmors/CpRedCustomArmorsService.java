@@ -151,7 +151,7 @@ public class CpRedCustomArmorsService {
         }
 
         CpRedCustomArmors newCustomArmor = new CpRedCustomArmors(
-                0,
+                null,
                 game,
                 cpRedCustomArmors.getName(),
                 cpRedCustomArmors.getType(),
