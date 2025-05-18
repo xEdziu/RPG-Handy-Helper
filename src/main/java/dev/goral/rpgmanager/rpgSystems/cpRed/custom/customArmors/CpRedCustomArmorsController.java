@@ -23,17 +23,17 @@ public class CpRedCustomArmorsController {
         return cpRedCustomArmorsService.getCustomArmorById(armorId);
     }
 
-    @GetMapping(path = "/rpgSystems/cpRed/customArmors//game/{gameId}")
+    @GetMapping(path = "/rpgSystems/cpRed/customArmors/game/{gameId}")
     public Map<String, Object> getCustomArmorByGame(@PathVariable("gameId") Long gameId) {
         return cpRedCustomArmorsService.getCustomArmorByGame(gameId);
     }
 
-    @GetMapping(path = "/rpgSystems/cpRed/customArmors/add")
-    public Map<String, Object> addCustomArmor(CpRedCustomArmorsRequest cpRedCustomArmors) {
+    @PostMapping(path = "/rpgSystems/cpRed/customArmors/add")
+    public Map<String, Object> addCustomArmor(@RequestBody CpRedCustomArmorsRequest cpRedCustomArmors) {
         return cpRedCustomArmorsService.addCustomArmor(cpRedCustomArmors);
     }
 
-    @GetMapping(path = "/rpgSystems/cpRed/customArmors/update/{armorId}")
+    @PutMapping(path = "/rpgSystems/cpRed/customArmors/update/{armorId}")
     public Map<String, Object> updateCustomArmor(@PathVariable("armorId") Long armorId,
                                                  @RequestBody CpRedCustomArmorsRequest cpRedCustomArmors) {
         return cpRedCustomArmorsService.updateCustomArmor(armorId, cpRedCustomArmors);

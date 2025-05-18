@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CpRedCustomArmorsRepository extends JpaRepository<CpRedCustomArmors, Long> {
-    List<CpRedCustomArmors> findAllByGameId(Long gameId);
+    List<CpRedCustomArmors> findAllByGameId(Game game);
     Boolean existsByNameAndGameId(String name, Game game);
 
 }

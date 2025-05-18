@@ -73,7 +73,7 @@ public class CpRedCustomArmorsService {
 
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), gameId)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie jesteś graczem wybranej gry."));
-        List<CpRedCustomArmorsDTO> gameCustomArmorsList = cpRedCustomArmorsRepository.findAllByGameId(gameId).stream()
+        List<CpRedCustomArmorsDTO> gameCustomArmorsList = cpRedCustomArmorsRepository.findAllByGameId(game).stream()
                 .map(CpRedCustomArmors-> new CpRedCustomArmorsDTO(
                         CpRedCustomArmors.getGameId().getId(),
                         CpRedCustomArmors.getName(),
