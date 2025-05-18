@@ -69,6 +69,8 @@
         var noteEditorMode = 'preview';
         var userInfo = [];
         var RpgSystem = [];
+        var toFilerRPGSystyem= [];
+        var toFilerGame = [];
 
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
@@ -181,7 +183,6 @@
                             existingNames.add(game);
                         }
                     });
-                    loadAllOptionsToFilters(gameAccessible, 'campaign-name-filter', 'Kampania');
                 }
             }).catch(error => {
                 console.error('Error fetching user games:', error);
@@ -207,7 +208,6 @@
                     return;
                 }
                 RpgSystem = data;
-                loadAllOptionsToFilters(data, 'game-name-filter', 'System gry');
             }).catch(error => {
                 console.error('Error fetching user systems:', error);
             });
@@ -267,8 +267,16 @@
                             var resultHtml = ""
                             noteContent.forEach(note => {
                                 resultHtml += generatePieceOfNoteHTML(note);
+                                if(toFilerRPGSystyem.indexOf(note.rpgSystemName) == -1){
+                                    toFilerRPGSystyem.push(note.rpgSystemName);
+                                }
+                                if(toFilerGame.indexOf(note.gameName) == -1){
+                                    toFilerGame.push(note.gameName);
+                                }
                             });
                             notesContainer.innerHTML = resultHtml;
+                            loadAllOptionsToFilters(toFilerGame, 'campaign-name-filter', 'Kampania');
+                            loadAllOptionsToFilters(toFilerRPGSystyem, 'game-name-filter', 'System gry');
                             getLisinerForFilters('search-input', 'input');
                             getLisinerForFilters('sort-order');
                             getLisinerForFilters('sort-by');
@@ -523,11 +531,11 @@
             editor.classList.add('scale-95', 'opacity-0');
             editor.classList.remove('scale-100', 'opacity-100');
         }
-        function loadAllOptionsToFilters(data, location, dafaultText) {
+        function loadAllOptionsToFilters(data, location, dafaultText) {;
             const optionBar = document.getElementById(location);
             var optionsHTML = `<option value='' disabled selected>${dafaultText}</option>`;
             data.forEach(item => {
-                optionsHTML += `<option value="${item.name}">${item.name}</option>`;
+                optionsHTML += `<option value="${item}">${item}</option>`;
             });
             optionBar.innerHTML = optionsHTML;
             getLisinerForFilters(location);
