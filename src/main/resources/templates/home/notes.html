@@ -429,16 +429,17 @@
         function showPreviewNote(mode = '') {
             getLisinerParesr();
             const preview = document.getElementById('note-preview');
-            const button = document.getElementById('preview-button');
-            let noteTitleBox, noteContentBox, noteConteiner;
+            let noteTitleBox, noteContentBox, noteConteiner, button;
             if (mode === "create") {
                 noteTitleBox = document.getElementById('note-title');
                 noteContentBox = document.getElementById('note-content');
                 noteConteiner = document.getElementById('new-note-content');
+                button = document.getElementById('create-preview-note');
             } else {
                 noteTitleBox = document.getElementById('edit-note-title');
                 noteContentBox = document.getElementById('edit-note-content');
                 noteConteiner = document.getElementById('edit-note-conteiner');
+                button = document.getElementById('edit-preview-note');
             }
             if (!noteTitleBox || !noteContentBox || !preview) {
                 console.warn('Brakuje elementów do dynamicznego podglądu.');
@@ -453,8 +454,13 @@
                 </div>
             `;
             const show = preview.classList.contains('hidden');
+            console.log(button);
             if (button) {
-                button.innerText = show ? "Zamknij podgląd" : "Podgląd";
+                if (show) {
+                    button.innerText = "Zamknij podgląd";
+                } else {
+                    button.innerText = "Podgląd";
+                }
             }
             if (_isMobile) {
                 noteTitleBox.classList.toggle('hidden', show);
@@ -472,7 +478,7 @@
             const noteTitle = document.getElementById('edit-note-title').value.trim();
             const newnoteContent = document.getElementById('edit-note-content').value.trim();
             const oldNote = noteContent.find(note => note.id == noteId);
-            if(noteTitle === '' || newnoteContent === '') {
+            if (noteTitle === '' || newnoteContent === '') {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Nie można zapisać notatki!',
@@ -510,7 +516,12 @@
                     });
                     noteContent = noteContent.map(note => {
                         if (note.id == noteId) {
-                            return { ...note, title: noteTitle, content: newnoteContent };
+                            return {
+                                ...note,
+                                title: noteTitle,
+                                content: newnoteContent,
+                                updatedAt: new Date().toISOString()
+                            };
                         }
                         return note;
                     });
@@ -961,7 +972,7 @@
                     <p id="game-description" class="text-xs text-light-textSecondary dark:text-dark-textSecondary mb-1"></p>
                 </div>
                 <div class="flex flex-row gap-2 items-center">
-                    <button id="preview-note"
+                    <button id="edit-preview-note"
                         class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap"
                         onclick="showPreviewNote('edit')">Podgląd</button>
                     <button id="save-note"
@@ -998,7 +1009,7 @@
                 <button id="save-note"
                     class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
                     onclick="saveNote()">Zapisz</button>
-                <button id="preview-note"
+                <button id="create-preview-note"
                     class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
                     onclick="showPreviewNote('create')">Podgląd</button>
             </div>
