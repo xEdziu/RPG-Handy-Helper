@@ -836,15 +836,6 @@
                                   </option>
                                   <option name="sortWeight" value="1000000" />
                                 </folderState>
-                              </list>
-                            </option>
-                            <option name="id" value="be478e01-3cd6-4b0a-bd25-b519ab021bde" />
-                            <option name="name" value="Custom" />
-                            <option name="sortWeight" value="2000000" />
-                          </folderState>
-                          <folderState>
-                            <option name="folders">
-                              <list>
                                 <folderState>
                                   <option name="id" value="9e7c289a-1412-4fb6-9be1-a2ce69827063" />
                                   <option name="name" value="CustomArmors" />
@@ -912,11 +903,11 @@
                                       </requestState>
                                     </list>
                                   </option>
-                                  <option name="sortWeight" value="1000000" />
+                                  <option name="sortWeight" value="2000000" />
                                 </folderState>
                               </list>
                             </option>
-                            <option name="id" value="158059c8-439b-485b-a2f0-3be48cd3b0b7" />
+                            <option name="id" value="be478e01-3cd6-4b0a-bd25-b519ab021bde" />
                             <option name="name" value="Custom" />
                             <option name="sortWeight" value="2000000" />
                           </folderState>
