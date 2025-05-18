@@ -448,9 +448,9 @@
             let title = noteTitleBox.value.trim() || "Notatki bez tytułu?";
             let content = noteContentBox.value.trim() || "<p><em>*Podgląd pusty...*</em></p>";
             preview.innerHTML = `
-                <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title}</h2>
+                <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left py-1 pb-[1.3em]">${title}</h2>
                 <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
-                    ${parseMarkdown(content)}
+                    ${parseMarkdown(content, true)}
                 </div>
             `;
             const show = preview.classList.contains('hidden');
@@ -848,9 +848,9 @@
         function updatePreviewLive() {
             const title = titleInput.value.trim();
             const content = contentInput.value.trim();
-            const parsed = parseMarkdown(content || "");
+            const parsed = parseMarkdown(content || "", true);
             preview.innerHTML = `
-            <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left">${title || "Notatki bez tytułu?"}</h2>
+            <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left py-1 pb-[1.3em]">${title || "Notatki bez tytułu?"}</h2>
             <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
                 ${parsed.length > 0 ? parsed : "<p><em>*Podgląd pusty...*</em></p>"}
             </div>
@@ -884,8 +884,12 @@
         });
     }
     // ==== Pareser Markdown ====
-    function parseMarkdown(markdownText) {
-        return marked.parse(markdownText).replace(/^(\\s*\\n)+/, "");
+    function parseMarkdown(markdownText, ifAllNote = false) {
+        var parsedParagraph = marked.parse(markdownText);
+        if(ifAllNote) {
+            parsedParagraph = parsedParagraph.replace(/<p>/g, '<p class="mt-[-3em]">');
+        }
+        return parsedParagraph;
     }
     // ==== Truncate Text ====
     function truncateText(text, maxLength = Infinity) {
@@ -956,8 +960,8 @@
                     </button>
                   </div>
                 </div>
-                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words mt-[-2em]">
-                    ${parseMarkdown(note.content)}
+                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                    ${parseMarkdown(note.content, true)}
                 </div>
             </div>
         </div>
@@ -988,7 +992,7 @@
                         class="h-[32vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none         focus:ring-0 overflow-auto font-jetbrains-mono">${note.content}</textarea>
                 </div>
                 <div id="note-preview"
-                    class="hidden w-full lg:w-1/2 p-4 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left">
+                    class="w-full lg:w-1/2 px-2 p-2 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left hidden">
 
                 </div>
             </div>
@@ -999,7 +1003,7 @@
         <div class="flex justify-between items-center mb-4">
             <div class="flex flex-col items-start w-1/2">
                 <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1"></p>
-                <select id="game-name" class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-light-accent       dark:text-dark-accent bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
+                <select id="game-name" class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-light-accent dark:text-dark-accent bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
                     <option value="" disabled selected>Kampania</option>
                         ${gameAccessible.map(game => `<option value="${game.name}">${game.name}</option>`).join('')}
                 </select>
@@ -1022,7 +1026,7 @@
                     class="h-[32vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 overflow-auto font-jetbrains-mono"></textarea>
             </div>
             <div id="note-preview"
-                class="hidden w-full lg:w-1/2 p-4 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left">
+                class="w-full lg:w-1/2 px-2 p-2 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left hidden">
 
             </div>
         </div>
