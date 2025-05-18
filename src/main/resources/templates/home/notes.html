@@ -741,6 +741,22 @@
             _isMobile = false;
         }
     });
+    document.getElementById('sort-by').addEventListener('change', function () {
+        const selectedValue = this.value;
+        const sortOrder = document.getElementById('sort-order');
+        sortOrder.innerHTML = '';
+        if(selectedValue === 'data-modify') {
+            sortOrder.innerHTML = `
+                <option value="DESC" class="block" selected>Od Najnowszych</option>
+                <option value="ASC" class="block">Od Najstarszych</option>
+            `;
+        } else{
+            sortOrder.innerHTML = `
+                <option value="ASC" class="hidden">Sortuj od A do Z</option>
+                <option value="DESC" class="hidden">Sortuj od Z do A</option>
+            `;
+        }
+    });
     // ==== Listener for Note ====
     document.addEventListener('click', (e) => {
         const backdrop = document.getElementById('note-editor-backdrop');
