@@ -69,8 +69,9 @@
         var noteEditorMode = 'preview';
         var userInfo = [];
         var RpgSystem = [];
-        var toFilerRPGSystyem= [];
+        var toFilerRPGSystyem = [];
         var toFilerGame = [];
+        var actualNote = null;
 
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
@@ -267,10 +268,10 @@
                             var resultHtml = ""
                             noteContent.forEach(note => {
                                 resultHtml += generatePieceOfNoteHTML(note);
-                                if(toFilerRPGSystyem.indexOf(note.rpgSystemName) == -1){
+                                if (toFilerRPGSystyem.indexOf(note.rpgSystemName) == -1) {
                                     toFilerRPGSystyem.push(note.rpgSystemName);
                                 }
-                                if(toFilerGame.indexOf(note.gameName) == -1){
+                                if (toFilerGame.indexOf(note.gameName) == -1) {
                                     toFilerGame.push(note.gameName);
                                 }
                             });
@@ -293,6 +294,7 @@
             const noteEditor = document.getElementById('note-editor');
             noteEditor.innerHTML = '';
             noteEditor.innerHTML = generateNoteHTML(note);
+            actualNote = note;
             showNoteEditor();
         }
         function createNote() {
@@ -467,9 +469,17 @@
         }
         function saveEditedNote(noteId) {
             disableLisinerParser();
-            const noteTitle = document.getElementById('edit-note-title').value.trim(); //
+            const noteTitle = document.getElementById('edit-note-title').value.trim();
             const newnoteContent = document.getElementById('edit-note-content').value.trim();
             const oldNote = noteContent.find(note => note.id == noteId);
+            if(noteTitle === '' || newnoteContent === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Nie można zapisać notatki!',
+                    text: 'Tytuł i treść notatki nie mogą być puste. Uzupełnij brakujące pola przed zapisaniem.',
+                });
+                return;
+            }
             const note = {
                 gameId: RpgSystem.find(system => system.name === oldNote.rpgSystemName)?.id,
                 userId: userInfo.id,
@@ -531,7 +541,7 @@
             editor.classList.add('scale-95', 'opacity-0');
             editor.classList.remove('scale-100', 'opacity-100');
         }
-        function loadAllOptionsToFilters(data, location, dafaultText) {;
+        function loadAllOptionsToFilters(data, location, dafaultText) {
             const optionBar = document.getElementById(location);
             var optionsHTML = `<option value='' disabled selected>${dafaultText}</option>`;
             data.forEach(item => {
@@ -753,12 +763,12 @@
         const selectedValue = this.value;
         const sortOrder = document.getElementById('sort-order');
         sortOrder.innerHTML = '';
-        if(selectedValue === 'data-modify') {
+        if (selectedValue === 'data-modify') {
             sortOrder.innerHTML = `
                 <option value="DESC" class="block" selected>Od Najnowszych</option>
                 <option value="ASC" class="block">Od Najstarszych</option>
             `;
-        } else{
+        } else {
             sortOrder.innerHTML = `
                 <option value="ASC" class="hidden">Sortuj od A do Z</option>
                 <option value="DESC" class="hidden">Sortuj od Z do A</option>
@@ -773,6 +783,24 @@
         const isEditorVisible = !backdrop.classList.contains('pointer-events-none');
         const clickedBackdrop = isEditorVisible && e.target === backdrop;
         if (!clickedBackdrop) return;
+        if (noteEditorMode === 'create') {
+            const noteTitle = document.getElementById('note-title').value.trim();
+            const noteText = document.getElementById('note-content').value.trim();
+            if (noteTitle === '' && noteText === '') {
+                noteEditorMode = 'preview';
+                hideNoteEditor();
+                return;
+            }
+        }
+        if (noteEditorMode === 'edit') {
+            const noteTitle = document.getElementById('edit-note-title').value.trim();
+            const noteText = document.getElementById('edit-note-content').value.trim();
+            if (noteTitle === actualNote.title && noteText === actualNote.content) {
+                noteEditorMode = 'preview';
+                hideNoteEditor();
+                return;
+            }
+        }
         if (noteEditorMode === 'edit' || noteEditorMode === 'create') {
             Swal.fire({
                 title: 'Czy na pewno chcesz wyjść?',
@@ -846,7 +874,7 @@
     }
     // ==== Pareser Markdown ====
     function parseMarkdown(markdownText) {
-        return marked.parse(markdownText).replace(/^(\\s*\\n)+/,"");
+        return marked.parse(markdownText).replace(/^(\\s*\\n)+/, "");
     }
     // ==== Truncate Text ====
     function truncateText(text, maxLength = Infinity) {
