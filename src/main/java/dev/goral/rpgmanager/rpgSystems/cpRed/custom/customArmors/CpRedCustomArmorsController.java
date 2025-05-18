@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors;
 
+import dev.goral.rpgmanager.game.Game;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,33 +13,34 @@ import java.util.Map;
 public class CpRedCustomArmorsController {
     private final CpRedCustomArmorsService cpRedCustomArmorsService;
 
-//    // ============ User methods ============
-//    // Pobierz wszystkie customowe zbroje
-//    @GetMapping(path = "/rpgSystems/cpRed/customArmors/all")
-//    public Map<String, Object> getAllCustomArmors() { // List<CpRedCustomArmorsDTO>
-//        return cpRedCustomArmorsService.getAllCustomArmors();
-//    }
-//    // Pobierz customową zbroję po id
-//    @GetMapping(path = "/rpgSystems/cpRed/customArmors/{armorId}")
-//    public Map<String, Object> getCustomArmorById(@PathVariable("armorId") Long armorId) { // CpRedCustomArmorsDTO
-//        return cpRedCustomArmorsService.getCustomArmorById(armorId);
-//    }
-//    // Dodaj customową zbroję
-//    @GetMapping(path = "/rpgSystems/cpRed/customArmors/add")
-//    public Map<String, Object> addCustomArmor(CpRedCustomArmors cpRedCustomArmors) {
-//        return cpRedCustomArmorsService.addCustomArmor(cpRedCustomArmors);
-//    }
-//    // Modyfikuj customową zbroję
-//    @GetMapping(path = "/rpgSystems/cpRed/customArmors/update/{armorId}")
-//    public Map<String, Object> updateCustomArmor(@PathVariable("armorId") Long armorId,
-//                                                 @RequestBody CpRedCustomArmors cpRedCustomArmors) {
-//        return cpRedCustomArmorsService.updateCustomArmor(armorId, cpRedCustomArmors);
-//    }
-//
-//    // ============ Admin methods ============
-//    // Pobierz wszystkie customowe zbroje dla admina
-//    @GetMapping(path = "/admin/rpgSystems/cpRed/customArmors/all")
-//    public Map<String, Object> getAllCustomArmorsForAdmin() { // List<CpRedCustomArmors>
-//        return cpRedCustomArmorsService.getAllCustomArmorsForAdmin();
-//    }
+    @GetMapping(path = "/rpgSystems/cpRed/customArmors/all")
+    public Map<String, Object> getAllCustomArmors() {
+        return cpRedCustomArmorsService.getAllCustomArmors();
+    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customArmors/{armorId}")
+    public Map<String, Object> getCustomArmorById(@PathVariable("armorId") Long armorId) {
+        return cpRedCustomArmorsService.getCustomArmorById(armorId);
+    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customArmors//game/{gameId}")
+    public Map<String, Object> getCustomArmorByGame(@PathVariable("gameId") Long gameId) {
+        return cpRedCustomArmorsService.getCustomArmorByGame(gameId);
+    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customArmors/add")
+    public Map<String, Object> addCustomArmor(CpRedCustomArmorsRequest cpRedCustomArmors) {
+        return cpRedCustomArmorsService.addCustomArmor(cpRedCustomArmors);
+    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customArmors/update/{armorId}")
+    public Map<String, Object> updateCustomArmor(@PathVariable("armorId") Long armorId,
+                                                 @RequestBody CpRedCustomArmorsRequest cpRedCustomArmors) {
+        return cpRedCustomArmorsService.updateCustomArmor(armorId, cpRedCustomArmors);
+    }
+
+    @GetMapping(path = "/admin/rpgSystems/cpRed/customArmors/all")
+    public Map<String, Object> getAllCustomArmorsForAdmin() {
+        return cpRedCustomArmorsService.getAllCustomArmorsForAdmin();
+    }
 }
