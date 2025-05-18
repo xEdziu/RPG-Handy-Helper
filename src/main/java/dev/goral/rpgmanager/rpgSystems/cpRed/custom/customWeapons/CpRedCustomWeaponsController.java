@@ -36,6 +36,7 @@ public class CpRedCustomWeaponsController {
     public Map<String, Object> addCustomWeapon(@RequestBody AddCustomWeaponRequest cpRedCustomWeapons) {
         return cpRedCustomWeaponsService.addCustomWeapon(cpRedCustomWeapons);
     }
+
     // Modyfikuj customową broń
     @PutMapping(path = "/rpgSystems/cpRed/customWeapons/update/{customWeaponId}")
     public Map<String, Object> updateCustomWeapon(@PathVariable("customWeaponId") Long customWeaponId,

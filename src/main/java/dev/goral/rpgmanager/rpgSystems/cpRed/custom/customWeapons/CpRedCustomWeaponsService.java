@@ -60,6 +60,23 @@ public class CpRedCustomWeaponsService {
 
     // Pobierz customową broń po id
     public Map<String, Object> getCustomWeaponById(Long customWeaponId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        // Sprawdź, czy customowa broń o podanym id istnieje
+        CpRedCustomWeapons weaponToGet = cpRedCustomWeaponsRepository.findById(customWeaponId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customowa broń o id " + customWeaponId + " nie istnieje"));
+
+        // Sprawdź, czy gra istnieje
+        Game game = gameRepository.findById(weaponToGet.getGameId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + weaponToGet.getGameId().getId() + " nie istnieje."));
+
+        // Sprawdź, czy użytkownik należy do tej gry
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie jesteś graczem wybranej gry."));
+
         CpRedCustomWeaponsDTO weaponsDTO = cpRedCustomWeaponsRepository.findById(customWeaponId)
                 .map(cpRedCustomWeapons -> new CpRedCustomWeaponsDTO(
                         cpRedCustomWeapons.getId(),
@@ -86,6 +103,20 @@ public class CpRedCustomWeaponsService {
 
     // Pobierz wszystkie customowe bronie danej gry
     public Map<String, Object> getAllCustomWeaponsByGameId(Long gameId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        // Sprawdź, czy gra istnieje
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + gameId + " nie istnieje."));
+
+        // Sprawdź, czy użytkownik należy do tej gry
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie jesteś graczem wybranej gry."));
+
+
         List<CpRedCustomWeaponsDTO> allCustomWeapons = cpRedCustomWeaponsRepository.findAllByGameId_Id(gameId).stream()
                 .map(cpRedCustomWeapons -> new CpRedCustomWeaponsDTO(
                         cpRedCustomWeapons.getId(),
