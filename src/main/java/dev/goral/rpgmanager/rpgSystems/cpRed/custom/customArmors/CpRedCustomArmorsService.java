@@ -168,10 +168,93 @@ public class CpRedCustomArmorsService {
 
     }
 
-//    // Modyfikuj customową zbroję
-//    public Map<String, Object> updateCustomArmor(Long armorId, CpRedCustomArmors cpRedCustomArmors) {
-//
-//    }
+    // Modyfikuj customową zbroję
+    public Map<String, Object> updateCustomArmor(Long armorId, CpRedCustomArmorsRequest cpRedCustomArmors) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        CpRedCustomArmors armorToUpdate = cpRedCustomArmorsRepository.findById(armorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customowy pancerz o id " + armorId + " nie istnieje"));
+
+        Game game = gameRepository.findById(armorToUpdate.getGameId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + armorToUpdate.getGameId().getId() + " nie istnieje."));
+
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra o id " + armorToUpdate.getGameId().getId() + " nie jest aktywna.");
+        }
+
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), armorToUpdate.getGameId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
+
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalStateException("Tylko GM może modyfikować pancerz.");
+        }
+
+        if(cpRedCustomArmors.getName() != null) {
+            if (cpRedCustomArmorsRepository.existsByNameAndGameId(cpRedCustomArmors.getName(), armorToUpdate.getGameId())) {
+                throw new IllegalStateException("Customowy pancerz o tej nazwie już istnieje.");
+            }
+            if (cpRedCustomArmors.getName().isEmpty() || cpRedCustomArmors.getName().trim().isEmpty()) {
+                throw new IllegalStateException("Nazwa pancerza nie może być pusta.");
+            }
+            if (cpRedCustomArmors.getName().length() > 255) {
+                throw new IllegalStateException("Nazwa pancerza jest za długa. Maksymalna długość to 255 znaków.");
+            }
+            armorToUpdate.setName(cpRedCustomArmors.getName());
+        }
+
+        if (cpRedCustomArmors.getType() != null) {
+            armorToUpdate.setType(cpRedCustomArmors.getType());
+        }
+
+        if (cpRedCustomArmors.getArmorPoints() != armorToUpdate.getArmorPoints()) {
+            if (cpRedCustomArmors.getArmorPoints() != -1){
+                if (cpRedCustomArmors.getArmorPoints() < 0) {
+                    throw new IllegalStateException("Punkty pancerza muszą być większe lub równe 0.");
+                }
+                armorToUpdate.setArmorPoints(cpRedCustomArmors.getArmorPoints());
+            }
+        }
+
+        if (cpRedCustomArmors.getPenalty() != armorToUpdate.getPenalty()) {
+            if (cpRedCustomArmors.getPenalty() != -1){
+                if (cpRedCustomArmors.getPenalty() < 0) {
+                    throw new IllegalStateException("Kara pancerza musi być większa lub równa 0.");
+                }
+                armorToUpdate.setPenalty(cpRedCustomArmors.getPenalty());
+            }
+        }
+
+        if (cpRedCustomArmors.getPrice() != armorToUpdate.getPrice()) {
+            if (cpRedCustomArmors.getPrice() != -1){
+                if (cpRedCustomArmors.getPrice() <= 0) {
+                    throw new IllegalStateException("Cena pancerza musi być większa od 0.");
+                }
+                armorToUpdate.setPrice(cpRedCustomArmors.getPrice());
+            }
+        }
+
+        if (cpRedCustomArmors.getAvailability() != null) {
+            armorToUpdate.setAvailability(cpRedCustomArmors.getAvailability());
+        }
+
+        if (cpRedCustomArmors.getDescription() != null) {
+            if (cpRedCustomArmors.getDescription().length() > 500) {
+                throw new IllegalStateException("Opis pancerza jest za długi. Maksymalna długość to 500 znaków.");
+            }
+            if (cpRedCustomArmors.getDescription().isEmpty() || cpRedCustomArmors.getDescription().trim().isEmpty()) {
+                throw new IllegalStateException("Opis pancerza nie może być pusty.");
+            }
+            armorToUpdate.setDescription(cpRedCustomArmors.getDescription());
+        }
+
+
+        cpRedCustomArmorsRepository.save(armorToUpdate);
+
+        return CustomReturnables.getOkResponseMap("Customowy pancerz został zmodyfikowany.");
+    }
 
     public Map<String, Object> getAllCustomArmorsForAdmin() {
         List<CpRedCustomArmors> allCustomArmorsList = cpRedCustomArmorsRepository.findAll();
