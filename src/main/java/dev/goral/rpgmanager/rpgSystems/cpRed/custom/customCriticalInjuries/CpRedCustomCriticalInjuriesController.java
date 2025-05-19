@@ -29,23 +29,20 @@ public class CpRedCustomCriticalInjuriesController {
         return cpRedCustomCriticalInjuriesService.getCustomCriticalInjuryByGame(gameId);
     }
 
-//    // Dodać customową ranę krytyczną
-//    @PostMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/add")
-//    public Map<String, Object> addCustomCriticalInjury(
-//            @RequestBody CpRedCustomCriticalInjuries cpRedCustomCriticalInjuries) {
-//        return cpRedCustomCriticalInjuriesService.addCustomCriticalInjury(cpRedCustomCriticalInjuries);
-//    }
+    // Dodać customową ranę krytyczną
+    @PostMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/add")
+    public Map<String, Object> addCustomCriticalInjury(
+            @RequestBody CpRedCustomCriticalInjuriesRequest @RequestBody cpRedCustomCriticalInjuries) {
+        return cpRedCustomCriticalInjuriesService.addCustomCriticalInjury(cpRedCustomCriticalInjuries);
+    }
 //    // Modyfikować customową ranę krytyczną
 //    @PutMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/update/{customCriticalInjuryId}")
 //    public Map<String, Object> updateCustomCriticalInjury(@PathVariable("customCriticalInjuryId") Long customCriticalInjuryId,
 //                                                           @RequestBody CpRedCustomCriticalInjuries cpRedCustomCriticalInjuries) {
 //        return cpRedCustomCriticalInjuriesService.updateCustomCriticalInjury(customCriticalInjuryId, cpRedCustomCriticalInjuries);
 //    }
-//
-//    // ============ Admin methods ============
-//    // Pobierz wszystkie customowe rany krytyczne dla admina
-//    @GetMapping(path = "/admin/rpgSystems/cpRed/customCriticalInjuries/all")
-//    public Map<String, Object> getAllCustomCriticalInjuriesForAdmin() { // List<CpRedCustomCriticalInjuries>
-//        return cpRedCustomCriticalInjuriesService.getAllCustomCriticalInjuriesForAdmin();
-//    }
+    @GetMapping(path = "/admin/rpgSystems/cpRed/customCriticalInjuries/all")
+    public Map<String, Object> getAllCustomCriticalInjuriesForAdmin() { // List<CpRedCustomCriticalInjuries>
+        return cpRedCustomCriticalInjuriesService.getAllCustomCriticalInjuriesForAdmin();
+    }
 }

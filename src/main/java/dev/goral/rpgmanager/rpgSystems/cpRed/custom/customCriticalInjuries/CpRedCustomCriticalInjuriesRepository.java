@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CpRedCustomCriticalInjuriesRepository extends JpaRepository<CpRedCustomCriticalInjuries, Long> {
     List<CpRedCustomCriticalInjuries> findAllByGameId(Game game);
+    Boolean existsByNameAndGameId(String name, Game game);
 }
