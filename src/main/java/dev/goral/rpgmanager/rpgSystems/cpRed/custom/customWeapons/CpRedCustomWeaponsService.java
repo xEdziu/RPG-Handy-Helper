@@ -179,7 +179,7 @@ public class CpRedCustomWeaponsService {
 
         // Sprawdź, czy użytkownik jest GM
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może dodać amunicję do gry.");
+            throw new IllegalStateException("Tylko GM może dodać broń do gry.");
         }
 
         // Sprawdź, czy umiejętność o podanym id istnieje
@@ -285,11 +285,11 @@ public class CpRedCustomWeaponsService {
 
         // Sprawdź, czy użytkownik jest GM
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może modyfikować amunicję.");
+            throw new IllegalStateException("Tylko GM może modyfikować customową broń.");
         }
 
         // Sprawdź przypisaną statystykę
-        if (cpRedCustomWeapon.getRequiredSkillId() != null) {
+        if (cpRedCustomWeapon.getRequiredSkillId() != -1) {
             CpRedSkills requiredSkill = cpRedSkillsRepository.findById(cpRedCustomWeapon.getRequiredSkillId())
                     .orElseThrow(() -> new ResourceNotFoundException("Umiejętność o id " + cpRedCustomWeapon.getRequiredSkillId() + " nie istnieje"));
             weaponToUpdate.setRequiredSkillId(requiredSkill);
@@ -420,7 +420,7 @@ public class CpRedCustomWeaponsService {
 
         // Sprawdź, czy użytkownik jest GM
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może modyfikować amunicję.");
+            throw new IllegalStateException("Tylko GM może modyfikować customową broń.");
         }
 
         weaponToUpdate.setHidden(!weaponToUpdate.isHidden());
@@ -454,7 +454,7 @@ public class CpRedCustomWeaponsService {
 
         // Sprawdź, czy użytkownik jest GM
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może modyfikować amunicję.");
+            throw new IllegalStateException("Tylko GM może modyfikować customową broń.");
         }
 
         weaponToUpdate.setModifiable(!weaponToUpdate.isModifiable());
