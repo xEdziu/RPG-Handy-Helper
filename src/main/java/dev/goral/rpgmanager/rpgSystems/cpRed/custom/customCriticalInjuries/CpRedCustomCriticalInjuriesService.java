@@ -6,6 +6,7 @@ import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
+import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmors;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmorsDTO;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
@@ -91,12 +92,12 @@ public class CpRedCustomCriticalInjuriesService {
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-        if(cpRedCustomCriticalInjuries.getGameId() == null||
-            cpRedCustomCriticalInjuries.getInjuryPlace()==null||
-            cpRedCustomCriticalInjuries.getName()==null||
-            cpRedCustomCriticalInjuries.getEffects()==null||
-            cpRedCustomCriticalInjuries.getPatching()==null||
-            cpRedCustomCriticalInjuries.getTreating()==null) {
+        if (cpRedCustomCriticalInjuries.getGameId() == null ||
+                cpRedCustomCriticalInjuries.getInjuryPlace() == null ||
+                cpRedCustomCriticalInjuries.getName() == null ||
+                cpRedCustomCriticalInjuries.getEffects() == null ||
+                cpRedCustomCriticalInjuries.getPatching() == null ||
+                cpRedCustomCriticalInjuries.getTreating() == null) {
             throw new IllegalStateException("Wszystkie pola muszą być wypełnione.");
         }
         Game game = gameRepository.findById(cpRedCustomCriticalInjuries.getGameId())
@@ -152,18 +153,88 @@ public class CpRedCustomCriticalInjuriesService {
         cpRedCustomCriticalInjuriesRepository.save(newCustomCriticalInjuries);
         return CustomReturnables.getOkResponseMap("Customowe rany krytyczne zostały dodane.");
     }
-//
-//    // Modyfikować customową ranę krytyczną
-//    public Map<String, Object> updateCustomCriticalInjury(Long customCriticalInjuryId, CpRedCustomCriticalInjuries cpRedCustomCriticalInjuries) {
-//
-//    }
-//
-    public Map<String, Object> getAllCustomCriticalInjuriesForAdmin() {
-    List<CpRedCustomCriticalInjuries> allCustomCriticalInjuries = cpRedCustomCriticalInjuriesRepository.findAll();
 
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowe rany krytyczne zostały pobrane dla administratora");
-        response.put("customCriticalInjuries", allCustomCriticalInjuries);
-        return response;
-    }
+
+    public Map<String, Object> updateCustomCriticalInjury(Long customCriticalInjuryId, CpRedCustomCriticalInjuriesRequest cpRedCustomCriticalInjuries) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        CpRedCustomCriticalInjuries injuryToUpdate = cpRedCustomCriticalInjuriesRepository.findById(customCriticalInjuryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customowe rany krytyczne o id " + customCriticalInjuryId + " nie istnieją"));
+
+        Game game = gameRepository.findById(injuryToUpdate.getGameId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + injuryToUpdate.getGameId().getId() + " nie istnieje."));
+
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra o id " + injuryToUpdate.getGameId().getId() + " nie jest aktywna.");
+        }
+
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), injuryToUpdate.getGameId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
+
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalStateException("Tylko GM może modyfikować pancerz.");
+        }
+
+        if (cpRedCustomCriticalInjuries.getInjuryPlace() != null) {
+            injuryToUpdate.setInjuryPlace(cpRedCustomCriticalInjuries.getInjuryPlace());
+        }
+
+        if (cpRedCustomCriticalInjuries.getName() != null) {
+            if (cpRedCustomCriticalInjuriesRepository.existsByNameAndGameId(cpRedCustomCriticalInjuries.getName(), injuryToUpdate.getGameId())) {
+                throw new IllegalStateException("Customowe rany krytyczne o tej nazwie już istnieją.");
+            }
+            if (cpRedCustomCriticalInjuries.getName().isEmpty() || cpRedCustomCriticalInjuries.getName().trim().isEmpty()) {
+                throw new IllegalStateException("Nazwa ran krytycznych nie może być pusta.");
+            }
+            if (cpRedCustomCriticalInjuries.getName().length() > 255) {
+                throw new IllegalStateException("Nazwa ran krytycznych jest za długa. Maksymalna długość to 255 znaków.");
+            }
+            injuryToUpdate.setName(cpRedCustomCriticalInjuries.getName());
+        }
+
+            if (cpRedCustomCriticalInjuries.getEffects() != null) {
+                if (cpRedCustomCriticalInjuries.getEffects().length() > 500) {
+                    throw new IllegalStateException("Efekty ran krytycznych są za długie. Maksymalna długość to 500 znaków.");
+                }
+                if (cpRedCustomCriticalInjuries.getEffects().isEmpty() || cpRedCustomCriticalInjuries.getEffects().trim().isEmpty()) {
+                    throw new IllegalStateException("Efekty ran krytycznych nie mogą być puste.");
+                }
+                injuryToUpdate.setEffects(cpRedCustomCriticalInjuries.getEffects());
+            }
+
+            if (cpRedCustomCriticalInjuries.getPatching() != null) {
+                if (cpRedCustomCriticalInjuries.getPatching().length() > 255) {
+                    throw new IllegalStateException("Łatanie ran krytycznych jest za długie. Maksymalna długość to 255 znaków.");
+                }
+                if (cpRedCustomCriticalInjuries.getPatching().isEmpty() || cpRedCustomCriticalInjuries.getPatching().trim().isEmpty()) {
+                    throw new IllegalStateException("Łatanie ran krytycznych nie może być puste.");
+                }
+                injuryToUpdate.setPatching(cpRedCustomCriticalInjuries.getPatching());
+            }
+
+            if (cpRedCustomCriticalInjuries.getTreating() != null) {
+                if (cpRedCustomCriticalInjuries.getTreating().length() > 255) {
+                    throw new IllegalStateException("Leczenie ran krytycznych jest za długie. Maksymalna długość to 255 znaków.");
+                }
+                if (cpRedCustomCriticalInjuries.getTreating().isEmpty() || cpRedCustomCriticalInjuries.getTreating().trim().isEmpty()) {
+                    throw new IllegalStateException("Leczenie ran krytycznych nie może być puste.");
+                }
+                injuryToUpdate.setTreating(cpRedCustomCriticalInjuries.getTreating());
+            }
+
+            cpRedCustomCriticalInjuriesRepository.save(injuryToUpdate);
+            return CustomReturnables.getOkResponseMap("Customowe rany krytyczne zostały zmodyfikowane.");
+        }
+
+        public Map<String, Object> getAllCustomCriticalInjuriesForAdmin() {
+            List<CpRedCustomCriticalInjuries> allCustomCriticalInjuries = cpRedCustomCriticalInjuriesRepository.findAll();
+
+            Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowe rany krytyczne zostały pobrane dla administratora");
+            response.put("customCriticalInjuries", allCustomCriticalInjuries);
+            return response;
+        }
 
 }

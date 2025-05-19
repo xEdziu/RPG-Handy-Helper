@@ -29,18 +29,17 @@ public class CpRedCustomCriticalInjuriesController {
         return cpRedCustomCriticalInjuriesService.getCustomCriticalInjuryByGame(gameId);
     }
 
-    // Dodać customową ranę krytyczną
     @PostMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/add")
     public Map<String, Object> addCustomCriticalInjury(
-            @RequestBody CpRedCustomCriticalInjuriesRequest @RequestBody cpRedCustomCriticalInjuries) {
+            @RequestBody CpRedCustomCriticalInjuriesRequest cpRedCustomCriticalInjuries) {
         return cpRedCustomCriticalInjuriesService.addCustomCriticalInjury(cpRedCustomCriticalInjuries);
     }
-//    // Modyfikować customową ranę krytyczną
-//    @PutMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/update/{customCriticalInjuryId}")
-//    public Map<String, Object> updateCustomCriticalInjury(@PathVariable("customCriticalInjuryId") Long customCriticalInjuryId,
-//                                                           @RequestBody CpRedCustomCriticalInjuries cpRedCustomCriticalInjuries) {
-//        return cpRedCustomCriticalInjuriesService.updateCustomCriticalInjury(customCriticalInjuryId, cpRedCustomCriticalInjuries);
-//    }
+
+    @PutMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/update/{customCriticalInjuryId}")
+    public Map<String, Object> updateCustomCriticalInjury(@PathVariable("customCriticalInjuryId") Long customCriticalInjuryId,
+                                                           @RequestBody CpRedCustomCriticalInjuriesRequest cpRedCustomCriticalInjuries) {
+        return cpRedCustomCriticalInjuriesService.updateCustomCriticalInjury(customCriticalInjuryId, cpRedCustomCriticalInjuries);
+    }
     @GetMapping(path = "/admin/rpgSystems/cpRed/customCriticalInjuries/all")
     public Map<String, Object> getAllCustomCriticalInjuriesForAdmin() { // List<CpRedCustomCriticalInjuries>
         return cpRedCustomCriticalInjuriesService.getAllCustomCriticalInjuriesForAdmin();
