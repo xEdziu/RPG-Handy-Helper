@@ -780,6 +780,11 @@
                                   <option name="sortWeight" value="1000000" />
                                 </folderState>
                                 <folderState>
+                                  <option name="id" value="c4e06bff-5d6f-4297-a10c-fa287c81c9d0" />
+                                  <option name="name" value="CustomArmors" />
+                                  <option name="sortWeight" value="1500000" />
+                                </folderState>
+                                <folderState>
                                   <option name="id" value="036f9f33-53ab-4d5c-9763-3a78709c4163" />
                                   <option name="name" value="CustomWeapon" />
                                   <option name="requests">
@@ -863,11 +868,6 @@
                                     </list>
                                   </option>
                                   <option name="sortWeight" value="2000000" />
-                                </folderState>
-                                <folderState>
-                                  <option name="id" value="c4e06bff-5d6f-4297-a10c-fa287c81c9d0" />
-                                  <option name="name" value="CustomArmors" />
-                                  <option name="sortWeight" value="3000000" />
                                 </folderState>
                               </list>
                             </option>
