@@ -1,6 +1,7 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.custom.customCriticalInjuries;
 
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +29,22 @@ public class CpRedCustomCriticalInjuriesService {
         return response;
 
     }
-//
-//    // Pobierz customową ranę krytyczną po id
-//    public Map<String, Object> getCustomCriticalInjuryById(Long customCriticalInjuryId) {
-//
-//    }
+
+    // Pobierz customową ranę krytyczną po id
+    public Map<String, Object> getCustomCriticalInjuryById(Long customCriticalInjuryId) {
+        CpRedCustomCriticalInjuriesDTO customCriticalInjuries = cpRedCustomCriticalInjuriesRepository.findById(customCriticalInjuryId)
+                .map(CpRedCustomCriticalInjuries -> new CpRedCustomCriticalInjuriesDTO(
+                        CpRedCustomCriticalInjuries.getGameId().getId(),
+                        CpRedCustomCriticalInjuries.getInjuryPlace().toString(),
+                        CpRedCustomCriticalInjuries.getName(),
+                        CpRedCustomCriticalInjuries.getEffects(),
+                        CpRedCustomCriticalInjuries.getPatching(),
+                        CpRedCustomCriticalInjuries.getTreating()
+                )).orElseThrow(() -> new ResourceNotFoundException("Customowe rany krytyczne o id " + customCriticalInjuryId + " nie istnieją."));
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowa rana krytyczna została pobrana");
+        response.put("customCriticalInjuries", customCriticalInjuries);
+        return response;
+    }
 //
 //    // Dodać customową ranę krytyczną
 //    public Map<String, Object> addCustomCriticalInjury(CpRedCustomCriticalInjuries cpRedCustomCriticalInjuries) {
