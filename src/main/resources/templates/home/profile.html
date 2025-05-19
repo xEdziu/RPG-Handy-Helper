@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mój Profil</title>
     <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
+    <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -107,10 +109,10 @@
             <div class="relative w-[66%] sm:w-full max-w-xs mx-auto rounded-xl bg-dark-backgroundSecondary aspect-square md:aspect-auto md:h-[18rem] md:w-[18rem]">
 
                 <img id="profilePhoto" src=""
-                     class="absolute inset-0 w-full h-full object-fill z-10 bg-dark-accent" />
+                     class="absolute inset-0 w-full h-full object-cover z-10 bg-dark-accent" />
 
                 <img id="photoPreview" src=""
-                     class="absolute inset-0 w-full h-full object-fill z-20" />
+                     class="absolute inset-0 w-full h-full object-cover z-20" />
 
                 <label for="photoInput"
                        class="absolute top-1 right-1 z-30 bg-light-accent dark:bg-dark-accent w-10 h-10 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer">
@@ -246,6 +248,34 @@
     <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
        class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
 </footer>
+
+
+<div id="cropModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div class="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow-lg max-w-xl w-full">
+        <h2 class="text-xl font-semibold mb-4 text-center text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+            Przytnij zdjęcie
+        </h2>
+        <div class="w-full aspect-square relative overflow-hidden border border-light-border dark:border-dark-border rounded-md">
+            <img id="cropImage" class="max-h-[60vh] mx-auto" />
+        </div>
+        <div class="flex justify-center gap-4 mt-6">
+            <button id="cancelCrop"
+                    class="px-4 py-2 rounded-lg font-medium text-light-textPrimary dark:text-dark-textPrimary
+                           bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border
+                           hover:bg-light-border hover:dark:bg-dark-border transition">
+                Anuluj
+            </button>
+            <button id="confirmCrop"
+                    class="px-4 py-2 rounded-lg font-medium dark:text-light-textPrimary text-dark-textPrimary
+                   bg-light-accent dark:bg-dark-accent border border-light-border dark:border-dark-border
+                           hover:bg-light-accentDark hover:dark:bg-dark-accentDark transition">
+                Zapisz
+            </button>
+        </div>
+    </div>
+</div>
+
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -419,24 +449,35 @@
     });
 
 
-    document.getElementById("photoInput").addEventListener("change", function(e) {
+    let cropper;
+    const cropModal = document.getElementById('cropModal');
+    const cropImage = document.getElementById('cropImage');
+
+    document.getElementById("photoInput").addEventListener("change", function (e) {
         const file = e.target.files[0];
-        if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                Swal.fire({ icon: 'warning', text: 'Plik jest za duży. Maksymalny rozmiar to 5 MB.' });
-                e.target.value = "";
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById("photoPreview");
-                preview.src = e.target.result;
-                preview.style.display = "block";
-                preview.classList.remove("hidden");
-            }
-            reader.readAsDataURL(file);
+        if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) {
+            Swal.fire({ icon: 'warning', text: 'Plik jest za duży. Maksymalny rozmiar to 5 MB.' });
+            e.target.value = "";
+            return;
         }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            cropImage.src = e.target.result;
+            cropModal.classList.remove("hidden");
+
+            if (cropper) cropper.destroy();
+
+            cropper = new Cropper(cropImage, {
+                aspectRatio: 1,
+                viewMode: 1
+            });
+        };
+        reader.readAsDataURL(file);
     });
+
 
     document.getElementById("photoForm").addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -539,11 +580,32 @@
             }
         });
     });
+    document.getElementById("cancelCrop").addEventListener("click", () => {
+        cropper.destroy();
+        cropModal.classList.add("hidden");
+        document.getElementById("photoInput").value = "";
+    });
 
+    document.getElementById("confirmCrop").addEventListener("click", () => {
+        cropper.getCroppedCanvas({
+            width: 400,
+            height: 400
+        }).toBlob((blob) => {
+            const newFile = new File([blob], "cropped-profile.jpg", { type: "image/jpeg" });
 
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(newFile);
+            document.getElementById("photoInput").files = dataTransfer.files;
 
+            const preview = document.getElementById("photoPreview");
+            preview.src = URL.createObjectURL(blob);
+            preview.style.display = "block";
+            preview.classList.remove("hidden");
 
-
+            cropper.destroy();
+            cropModal.classList.add("hidden");
+        }, "image/jpeg");
+    });
 </script>
 </body>
 
