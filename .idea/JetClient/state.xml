@@ -758,6 +758,64 @@
                                   </option>
                                   <option name="sortWeight" value="5000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="0cc78d9c-5f51-4b86-a99b-1a3d87fe7066" />
+                                  <option name="name" value="CriticalInjuries" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  rollValue: 3,&#10;  injuryPlace: &quot;HEAD&quot;,&#10;  name: &quot;Critical Hit&quot;,&#10;  effects: &quot;Critical damage&quot;,&#10;  patching: &quot;None&quot;,&#10;  treating: &quot;None&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="c9a64323-3a0d-4999-be22-c6caadd84df7" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj obrażenia krytyczne" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/criticalInjuries/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  rollValue: 2,&#10;  injuryPlace: &quot;HEAD&quot;,&#10;  name: &quot;Critical Hit 2.0&quot;,&#10;  effects: &quot;Critical damage&quot;,&#10;  patching: &quot;yes&quot;,&#10;  treating: &quot;None&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="53375029-61a3-4885-bca7-3aacb4f0cf4e" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj obrażenia krytyczne" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/criticalInjuries/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich obrażeń krytycznych" />
+                                        <option name="id" value="ffdb58df-53c8-4f63-af80-82b905ebc645" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie obrażenia krytyczne" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/criticalInjuries/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="4dc22482-4b8a-459b-9afc-4ca3779ea531" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz konkretne obrażenia krytyczne po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/criticalInjuries/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę obiektów" />
+                                        <option name="id" value="825da758-04bb-47fe-91e9-6455b070d9af" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie obrażenia krytyczne dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/criticalInjuries/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="6000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />
