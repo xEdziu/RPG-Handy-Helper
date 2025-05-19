@@ -66,7 +66,7 @@ public class GameService {
         response.put("game", gameResponse);
         return response;
     }
-    
+
     public Map<String, Object> getGamePlayers(Long gameId) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new ResourceNotFoundException("Gra o podanym ID nie istnieje."));
@@ -213,7 +213,7 @@ public class GameService {
                 gameToUpdate.setName(game.getName());
             }
         }
-        
+
         if (game.getOwner() != null ) {
 
             if(gameToUpdate.getOwner().getId() == null) {

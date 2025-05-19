@@ -33,6 +33,7 @@ public class CpRedCustomArmors {
             nullable = false
     )
     private Game gameId;
+    private String name;
     @Enumerated(EnumType.STRING)
     private CpRedArmorsType type;
     private int armorPoints;
