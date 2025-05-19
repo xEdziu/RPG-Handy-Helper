@@ -1,5 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.manual.criticalInjuries;
 
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.cyberwares.CpRedCyberwares;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
@@ -119,8 +120,70 @@ public class CpRedCriticalInjuriesService {
         return CustomReturnables.getOkResponseMap("Obrażenia krytyczne zostały dodane.");
     }
 
-//    public Map<String, Object> updateCriticalInjury(Long criticalInjuryId, CpRedCriticalInjuries cpRedCriticalInjuries) {
-//
-//    }
+    public Map<String, Object> updateCriticalInjury(Long criticalInjuryId, CpRedCriticalInjuries cpRedCriticalInjuries) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
+            throw new IllegalStateException("Nie masz uprawnień do dodawania obrażeń krytycznych.");
+        }
+        CpRedCriticalInjuries injuriesToUpdate = cpRedCriticalInjuriesRepository.findById(criticalInjuryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Obrażenia krytyczne o id " + criticalInjuryId + " nie istnieją"));
+
+        if(cpRedCriticalInjuries.getRollValue() <= 0) {
+            throw new IllegalStateException("Rzut nie może być ujemny lub równy zero.");
+        }
+        injuriesToUpdate.setRollValue(cpRedCriticalInjuries.getRollValue());
+
+        if(cpRedCriticalInjuries.getInjuryPlace() != null) {
+            injuriesToUpdate.setInjuryPlace(cpRedCriticalInjuries.getInjuryPlace());
+        }
+
+        if (cpRedCriticalInjuries.getName() != null) {
+            if (cpRedCriticalInjuriesRepository.existsByName(cpRedCriticalInjuries.getName())) {
+                throw new IllegalStateException("Obrażenia krytyczne o tej nazwie już istnieją.");
+            }
+            if (cpRedCriticalInjuries.getName().isEmpty() || cpRedCriticalInjuries.getName().trim().isEmpty()) {
+                throw new IllegalStateException("Nazwa obrażeń krytycznych nie może być pusta.");
+            }
+            if (cpRedCriticalInjuries.getName().length() > 255) {
+                throw new IllegalStateException("Nazwa obrażeń krytycznych nie może być dłuższa niż 255 znaków.");
+            }
+            injuriesToUpdate.setName(cpRedCriticalInjuries.getName());
+        }
+
+        if (cpRedCriticalInjuries.getEffects() != null) {
+            if (cpRedCriticalInjuries.getEffects().isEmpty() || cpRedCriticalInjuries.getEffects().trim().isEmpty()) {
+                throw new IllegalStateException("Efekty obrażeń krytycznych nie mogą być puste.");
+            }
+            if (cpRedCriticalInjuries.getEffects().length() > 500) {
+                throw new IllegalStateException("Efekty obrażeń krytycznych nie mogą być dłuższe niż 500 znaków.");
+            }
+            injuriesToUpdate.setEffects(cpRedCriticalInjuries.getEffects());
+        }
+
+        if (cpRedCriticalInjuries.getPatching() != null) {
+            if (cpRedCriticalInjuries.getPatching().isEmpty() || cpRedCriticalInjuries.getPatching().trim().isEmpty()) {
+                throw new IllegalStateException("Łatanie obrażeń krytycznych nie moźe być puste.");
+            }
+            if (cpRedCriticalInjuries.getPatching().length() > 255) {
+                throw new IllegalStateException("Łatanie obrażeń krytycznych nie może być dłuższe niż 255 znaków.");
+            }
+            injuriesToUpdate.setPatching(cpRedCriticalInjuries.getPatching());
+        }
+
+        if (cpRedCriticalInjuries.getTreating() != null) {
+            if (cpRedCriticalInjuries.getTreating().isEmpty() || cpRedCriticalInjuries.getTreating().trim().isEmpty()) {
+                throw new IllegalStateException("Leczenie obrażeń krytycznych nie moźe być puste.");
+            }
+            if (cpRedCriticalInjuries.getTreating().length() > 255) {
+                throw new IllegalStateException("Leczenie obrażeń krytycznych nie może być dłuższe niż 255 znaków.");
+            }
+            injuriesToUpdate.setTreating(cpRedCriticalInjuries.getTreating());
+        }
+        cpRedCriticalInjuriesRepository.save(injuriesToUpdate);
+        return CustomReturnables.getOkResponseMap("Obrażenia krytyczne zostały zaktualizowane.");
+    }
 }
