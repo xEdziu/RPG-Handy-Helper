@@ -94,9 +94,12 @@ public class CpRedCustomCriticalInjuriesService {
 //
 //    }
 //
-//    // Pobierz wszystkie customowe rany krytyczne dla admina
-//    public Map<String, Object> getAllCustomCriticalInjuriesForAdmin() {
-//
-//    }
+    public Map<String, Object> getAllCustomCriticalInjuriesForAdmin() {
+    List<CpRedCustomCriticalInjuries> allCustomCriticalInjuries = cpRedCustomCriticalInjuriesRepository.findAll();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowe rany krytyczne zostały pobrane dla administratora");
+        response.put("customCriticalInjuries", allCustomCriticalInjuries);
+        return response;
+    }
 
 }
