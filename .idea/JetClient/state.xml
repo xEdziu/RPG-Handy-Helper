@@ -836,6 +836,75 @@
                                   </option>
                                   <option name="sortWeight" value="1000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="9e7c289a-1412-4fb6-9be1-a2ce69827063" />
+                                  <option name="name" value="CustomArmors" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Pancerz własny&quot;,&#10;  type: &quot;LEATHER&quot;,&#10;  armorPoints: 2,&#10;  penalty: 0,&#10;  price: 100,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;Pancerz skórzany&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje customowy pancerz" />
+                                        <option name="id" value="5c2a99bc-6d54-462d-af79-eed6efe76ed5" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj pancerz" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customArmors/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Pancerz własny 2.0&quot;,&#10;  type: &quot;LEATHER&quot;,&#10;  armorPoints: 3,&#10;  penalty: 1,&#10;  price: 150,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;Lepszy pancerz skórzany&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Pozwala zmienić dane w customowym pancerzu" />
+                                        <option name="id" value="4a4278f5-9cd6-4147-9588-5a362ae63865" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj pancerz" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customArmors/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera wszystkie customowe pancerze" />
+                                        <option name="id" value="547ba57a-ba85-4198-90eb-f008e472fc4e" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie pancerze" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customArmors/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customowy pancerz po id" />
+                                        <option name="id" value="ae3b078f-27e6-4c89-9baa-25f2e0355d32" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz pancerz po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customArmors/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customowe pancerze z konkretnej gry" />
+                                        <option name="id" value="e1fafb99-dd8d-4c13-b391-34f6cc4578d3" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie pancerze po gameId" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customArmors/game/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera wszystkie customowe pancerze w formie obiektów" />
+                                        <option name="id" value="8d4348ad-8dc4-44d8-9741-b4fe82774719" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie pancerze dla admina" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customArmors/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="2000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="be478e01-3cd6-4b0a-bd25-b519ab021bde" />
