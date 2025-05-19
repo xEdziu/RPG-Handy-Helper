@@ -12,18 +12,23 @@ import java.util.Map;
 public class CpRedCustomCriticalInjuriesController {
     private final CpRedCustomCriticalInjuriesService cpRedCustomCriticalInjuriesService;
 
-//    // ============ User methods ============
-//    // Pobierz wszystkie customowe rany krytyczne
-//    @GetMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/all")
-//    public Map<String, Object> getAllCustomCriticalInjuries() { // List<CpRedCustomCriticalInjuriesDTO>
-//        return cpRedCustomCriticalInjuriesService.getAllCustomCriticalInjuries();
-//    }
-//    // Pobierz customową ranę krytyczną po id
-//    @GetMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/{customCriticalInjuryId}")
-//    public Map<String, Object> getCustomCriticalInjuryById(
-//            @PathVariable("customCriticalInjuryId") Long customCriticalInjuryId) { // CpRedCustomCriticalInjuriesDTO
-//        return cpRedCustomCriticalInjuriesService.getCustomCriticalInjuryById(customCriticalInjuryId);
-//    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/all")
+    public Map<String, Object> getAllCustomCriticalInjuries() { // List<CpRedCustomCriticalInjuriesDTO>
+        return cpRedCustomCriticalInjuriesService.getAllCustomCriticalInjuries();
+    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/{customCriticalInjuryId}")
+    public Map<String, Object> getCustomCriticalInjuryById(
+            @PathVariable("customCriticalInjuryId") Long customCriticalInjuryId) { // CpRedCustomCriticalInjuriesDTO
+        return cpRedCustomCriticalInjuriesService.getCustomCriticalInjuryById(customCriticalInjuryId);
+    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/game/{gameId}")
+    public Map<String, Object> getCustomCriticalInjuryByGame(@PathVariable("gameId") Long gameId) {
+        return cpRedCustomCriticalInjuriesService.getCustomCriticalInjuryByGame(gameId);
+    }
+
 //    // Dodać customową ranę krytyczną
 //    @PostMapping(path = "/rpgSystems/cpRed/customCriticalInjuries/add")
 //    public Map<String, Object> addCustomCriticalInjury(
