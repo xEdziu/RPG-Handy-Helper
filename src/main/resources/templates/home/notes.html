@@ -773,7 +773,7 @@
         const selectedValue = this.value;
         const sortOrder = document.getElementById('sort-order');
         sortOrder.innerHTML = '';
-        if (selectedValue === 'data-modify') {
+        if (selectedValue === 'data-modify' || selectedValue === 'data-creation') {
             sortOrder.innerHTML = `
                 <option value="DESC" class="block" selected>Od Najnowszych</option>
                 <option value="ASC" class="block">Od Najstarszych</option>
