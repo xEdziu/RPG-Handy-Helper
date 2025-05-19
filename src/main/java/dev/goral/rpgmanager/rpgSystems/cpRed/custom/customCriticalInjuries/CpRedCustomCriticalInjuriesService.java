@@ -1,8 +1,10 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.custom.customCriticalInjuries;
 
+import dev.goral.rpgmanager.security.CustomReturnables;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +13,21 @@ import java.util.Map;
 public class CpRedCustomCriticalInjuriesService {
     private final CpRedCustomCriticalInjuriesRepository cpRedCustomCriticalInjuriesRepository;
 
-//    // Pobierz wszystkie customowe rany krytyczne
-//    public Map<String, Object> getAllCustomCriticalInjuries() {
-//
-//    }
+    public Map<String, Object> getAllCustomCriticalInjuries() {
+        List<CpRedCustomCriticalInjuriesDTO> allCustomCriticalInjuries = cpRedCustomCriticalInjuriesRepository.findAll().stream()
+                .map(CpRedCustomCriticalInjuries -> new CpRedCustomCriticalInjuriesDTO(
+                        CpRedCustomCriticalInjuries.getGameId().getId(),
+                        CpRedCustomCriticalInjuries.getInjuryPlace().toString(),
+                        CpRedCustomCriticalInjuries.getName(),
+                        CpRedCustomCriticalInjuries.getEffects(),
+                        CpRedCustomCriticalInjuries.getPatching(),
+                        CpRedCustomCriticalInjuries.getTreating()
+                )).toList();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowe rany krytyczne zostały pobrane");
+        response.put("customCriticalInjuries", allCustomCriticalInjuries);
+        return response;
+
+    }
 //
 //    // Pobierz customową ranę krytyczną po id
 //    public Map<String, Object> getCustomCriticalInjuryById(Long customCriticalInjuryId) {
