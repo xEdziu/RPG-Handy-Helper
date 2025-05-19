@@ -905,6 +905,75 @@
                                   </option>
                                   <option name="sortWeight" value="2000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="69a6df04-5032-441b-bc50-19f7772d812c" />
+                                  <option name="name" value="CustomCriticalInjuries" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  injuryPlace: &quot;HEAD&quot;,&#10;  name: &quot;rany&quot;,&#10;  effects: &quot;nie zabija&quot;,&#10;  patching: &quot;none&quot;,&#10;  treating: &quot;yes&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje customowy rany krytyczne" />
+                                        <option name="id" value="d98f6feb-9920-4dc2-a304-8acbb1622183" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj rany krytyczne" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customCriticalInjuries/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  injuryPlace: &quot;HEAD&quot;,&#10;  name: &quot;nowe rany&quot;,&#10;  effects: &quot;zabija&quot;,&#10;  patching: &quot;none&quot;,&#10;  treating: &quot;none&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Pozwala zmienić dane w customowych ranach krytycznych" />
+                                        <option name="id" value="835fb46f-5306-4ffa-b79b-34033117d58a" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj rany krytyczne" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customCriticalInjuries/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera wszystkie customowe rany krytyczne" />
+                                        <option name="id" value="bbe49238-be29-4553-8962-98b61f224300" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie rany krytyczne" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customCriticalInjuries/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customowe rany krytyczne po id" />
+                                        <option name="id" value="d7806575-02e5-441c-9f7b-5c5f7473fd02" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz rany krytyczne po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customCriticalInjuries/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customowe rany krytyczne z konkretnej gry" />
+                                        <option name="id" value="af68e475-0770-4e63-8253-c02033feadf7" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie rany krytyczne po gameId" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customCriticalInjuries/game/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera wszystkie customowe rany krytyczne w formie obiektów" />
+                                        <option name="id" value="27b5b316-3a90-4f4d-ad5e-cb82c09eb348" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie rany krytyczne dla admina" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customCriticalInjuries/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="3000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="be478e01-3cd6-4b0a-bd25-b519ab021bde" />
