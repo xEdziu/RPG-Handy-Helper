@@ -95,7 +95,7 @@ public class CpRedCyberwaresService {
             throw new IllegalStateException("Wszczep o tej nazwie już istnieje.");
         }
         if (cpRedCyberwares.getName().isEmpty() || cpRedCyberwares.getName().trim().isEmpty()) {
-            throw new IllegalStateException("Nazwa broni nie może być pusta.");
+            throw new IllegalStateException("Nazwa wszczepu nie może być pusta.");
         }
         if (cpRedCyberwares.getName().length() > 255) {
             throw new IllegalStateException("Nazwa wszczepu nie może być dłuższa niż 255 znaków.");
