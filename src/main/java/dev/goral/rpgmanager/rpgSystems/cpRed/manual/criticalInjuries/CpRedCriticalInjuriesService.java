@@ -1,6 +1,4 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.manual.criticalInjuries;
-
-import dev.goral.rpgmanager.rpgSystems.cpRed.manual.cyberwares.CpRedCyberwares;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
@@ -69,7 +67,7 @@ public class CpRedCriticalInjuriesService {
         if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
             throw new IllegalStateException("Nie masz uprawnień do dodawania obrażeń krytycznych.");
         }
-        if(cpRedCriticalInjuries.getInjuryPlace().toString()==null ||
+        if(cpRedCriticalInjuries.getInjuryPlace()==null ||
                 cpRedCriticalInjuries.getName()==null ||
                 cpRedCriticalInjuries.getEffects()==null ||
                 cpRedCriticalInjuries.getPatching()==null ||
@@ -96,13 +94,13 @@ public class CpRedCriticalInjuriesService {
         }
 
         if (cpRedCriticalInjuries.getPatching().isEmpty() || cpRedCriticalInjuries.getPatching().trim().isEmpty()) {
-            throw new IllegalStateException("Łatanie obrażeń krytycznych nie moźe być puste.");
+            throw new IllegalStateException("Łatanie obrażeń krytycznych nie może być puste.");
         }
         if (cpRedCriticalInjuries.getPatching().length() > 255) {
             throw new IllegalStateException("Łatanie obrażeń krytycznych nie może być dłuższe niż 255 znaków.");
         }
         if (cpRedCriticalInjuries.getTreating().isEmpty() || cpRedCriticalInjuries.getTreating().trim().isEmpty()) {
-            throw new IllegalStateException("Leczenie obrażeń krytycznych nie moźe być puste.");
+            throw new IllegalStateException("Leczenie obrażeń krytycznych nie może być puste.");
         }
         if (cpRedCriticalInjuries.getTreating().length() > 255) {
             throw new IllegalStateException("Leczenie obrażeń krytycznych nie może być dłuższe niż 255 znaków.");
