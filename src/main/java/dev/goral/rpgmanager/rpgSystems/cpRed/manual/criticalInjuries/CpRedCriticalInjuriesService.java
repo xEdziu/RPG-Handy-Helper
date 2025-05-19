@@ -29,11 +29,23 @@ public class CpRedCriticalInjuriesService {
 
     }
 //
-//    // Pobierz obrażenia krytyczne po id
-//    public Map<String, Object> getCriticalInjuryById(Long criticalInjuryId) {
-//
-//    }
-//
+    // Pobierz obrażenia krytyczne po id
+    public Map<String, Object> getCriticalInjuryById(Long criticalInjuryId) {
+        CpRedCriticalInjuriesDTO criticalInjury = cpRedCriticalInjuriesRepository.findById(criticalInjuryId).map(
+                cpRedCriticalInjuries -> new CpRedCriticalInjuriesDTO(
+                        cpRedCriticalInjuries.getRollValue(),
+                        cpRedCriticalInjuries.getInjuryPlace().toString(),
+                        cpRedCriticalInjuries.getName(),
+                        cpRedCriticalInjuries.getEffects(),
+                        cpRedCriticalInjuries.getPatching(),
+                        cpRedCriticalInjuries.getTreating()
+                )).orElseThrow(() -> new RuntimeException("Obrażenia krytyczne o id " + criticalInjuryId + " nie istnieją"));
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano obrażenia krytyczne o id " + criticalInjuryId);
+        response.put("criticalInjury", criticalInjury);
+        return response;
+
+    }
+
 //    // Pobierz wszystkie obrażenia krytyczne dla admina
 //    public Map<String, Object> getAllCriticalInjuriesForAdmin() {
 //
