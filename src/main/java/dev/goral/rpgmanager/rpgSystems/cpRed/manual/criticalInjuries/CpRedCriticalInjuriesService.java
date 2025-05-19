@@ -46,10 +46,14 @@ public class CpRedCriticalInjuriesService {
 
     }
 
-//    // Pobierz wszystkie obrażenia krytyczne dla admina
-//    public Map<String, Object> getAllCriticalInjuriesForAdmin() {
-//
-//    }
+    // Pobierz wszystkie obrażenia krytyczne dla admina
+    public Map<String, Object> getAllCriticalInjuriesForAdmin() {
+        List<CpRedCriticalInjuries> allCriticalInjuries = cpRedCriticalInjuriesRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wszystkie obrażenia krytyczne.");
+        response.put("criticalInjuries", allCriticalInjuries);
+        return response;
+
+    }
 //
 //    // Dodaj obrażenia krytyczne
 //    public Map<String, Object> addCriticalInjury(CpRedCriticalInjuries cpRedCriticalInjuries) {
