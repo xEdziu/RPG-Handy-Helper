@@ -4,6 +4,7 @@ import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmors;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmorsService;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customCriticalInjuries.CpRedCustomCriticalInjuries;
@@ -96,11 +97,84 @@ public class CpRedCustomCyberwaresService {
         return response;
     }
 
-//
-//    // Doadaj cyberware
-//    public Map<String, Object> addCyberware(CpRedCustomCyberwares cpRedCustomCyberwares) {
-//
-//    }
+    public Map<String, Object> addCyberware(CpRedCustomCyberwaresRequest cpRedCustomCyberwares) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+        if (cpRedCustomCyberwares.getGameId()==null||
+                cpRedCustomCyberwares.getName()==null||
+                cpRedCustomCyberwares.getMountPlace()==null||
+                cpRedCustomCyberwares.getRequirements()==null||
+                cpRedCustomCyberwares.getHumanityLoss()==null||
+                cpRedCustomCyberwares.getSize()<0||
+                cpRedCustomCyberwares.getInstallationPlace()==null||
+                cpRedCustomCyberwares.getPrice()<0||
+                cpRedCustomCyberwares.getAvailability()==null||
+                cpRedCustomCyberwares.getDescription()==null) {
+            throw new IllegalStateException("Wszystkie pola muszą być wypełnione.");
+        }
+        Game game = gameRepository.findById(cpRedCustomCyberwares.getGameId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + cpRedCustomCyberwares.getGameId() + " nie istnieje."));
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), cpRedCustomCyberwares.getGameId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
+
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalStateException("Tylko GM może dodać pancerz do gry.");
+        }
+        if (cpRedCustomCyberwaresRepository.existsByNameAndGameId(cpRedCustomCyberwares.getName(), game)) {
+            throw new IllegalStateException("Customowy szczep o tej nazwie już istnieje w tej grze.");
+        }
+        if (cpRedCustomCyberwares.getName().isEmpty() ||
+                cpRedCustomCyberwares.getName().trim().isEmpty()) {
+            throw new IllegalStateException("Nazwa wszczepu nie może być pusta.");
+        }
+        if (cpRedCustomCyberwares.getName().length() > 255) {
+            throw new IllegalStateException("Nazwa wszczepu nie może być dłuższa niż 255 znaków.");
+        }
+        if (cpRedCustomCyberwares.getRequirements().isEmpty() ||
+                cpRedCustomCyberwares.getRequirements().trim().isEmpty()) {
+            throw new IllegalStateException("Wymagania wszczepu nie mogą być puste.");
+        }
+        if (cpRedCustomCyberwares.getRequirements().length() > 500) {
+            throw new IllegalStateException("Wymagania wszczepu nie mogą być dłuższe niż 500 znaków.");
+        }
+        if (cpRedCustomCyberwares.getHumanityLoss().isEmpty() ||
+                cpRedCustomCyberwares.getHumanityLoss().trim().isEmpty()) {
+            throw new IllegalStateException("Utrata ludzkosci wszczepu nie może być pusta.");
+        }
+        if (cpRedCustomCyberwares.getHumanityLoss().length() > 255) {
+            throw new IllegalStateException("Utrata ludzkosci wszczepu nie może być dłuższa niż 255 znaków.");
+        }
+        if (cpRedCustomCyberwares.getDescription().isEmpty() ||
+                cpRedCustomCyberwares.getDescription().trim().isEmpty()) {
+            throw new IllegalStateException("Opis wszczepu nie może być pusty.");
+        }
+        if (cpRedCustomCyberwares.getDescription().length() > 500) {
+            throw new IllegalStateException("Opis wszczepu nie może być dłuższy niż 500 znaków.");
+        }
+        if (cpRedCustomCyberwares.getSize() < 0) {
+            throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy lub równy 0.");
+        }
+        if (cpRedCustomCyberwares.getPrice() < 0) {
+            throw new IllegalStateException("Cena wszczepu nie może być mniejsza lub równa 0.");
+        }
+        CpRedCustomCyberwares newCpRedCustomCyberwares = new CpRedCustomCyberwares(
+                null,
+                game,
+                cpRedCustomCyberwares.getName(),
+                cpRedCustomCyberwares.getMountPlace(),
+                cpRedCustomCyberwares.getRequirements(),
+                cpRedCustomCyberwares.getHumanityLoss(),
+                cpRedCustomCyberwares.getSize(),
+                cpRedCustomCyberwares.getInstallationPlace(),
+                cpRedCustomCyberwares.getPrice(),
+                cpRedCustomCyberwares.getAvailability(),
+                cpRedCustomCyberwares.getDescription()
+        );
+        cpRedCustomCyberwaresRepository.save(newCpRedCustomCyberwares);
+        return CustomReturnables.getOkResponseMap("Customowy wszczep został dodany.");
+    }
 //
 //    // Modyfikować cyberware
 //    public Map<String, Object> updateCyberware(Long cyberwareId, CpRedCustomCyberwares cpRedCustomCyberwares) {
