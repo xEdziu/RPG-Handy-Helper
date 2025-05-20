@@ -6,6 +6,7 @@ import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmo
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmorsService;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customCriticalInjuries.CpRedCustomCriticalInjuries;
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,11 +41,27 @@ public class CpRedCustomCyberwaresService {
         response.put("customCyberwares",allCustomCyberwares);
         return response;
     }
-//
-//    // Pobierz cyberware po id
-//    public Map<String, Object> getCyberwareById(Long cyberwareId) {
-//
-//    }
+
+
+    public Map<String, Object> getCyberwareById(Long cyberwareId) {
+        CpRedCustomCyberwaresDTO customCyberware = cpRedCustomCyberwaresRepository.findById(cyberwareId)
+                .map(CpRedCustomCyberwares -> new CpRedCustomCyberwaresDTO(
+                        CpRedCustomCyberwares.getGameId().getId(),
+                        CpRedCustomCyberwares.getName(),
+                        CpRedCustomCyberwares.getMountPlace().toString(),
+                        CpRedCustomCyberwares.getRequirements(),
+                        CpRedCustomCyberwares.getHumanityLoss(),
+                        CpRedCustomCyberwares.getSize(),
+                        CpRedCustomCyberwares.getInstallationPlace().toString(),
+                        CpRedCustomCyberwares.getPrice(),
+                        CpRedCustomCyberwares.getAvailability().toString(),
+                        CpRedCustomCyberwares.getDescription()
+                )).orElseThrow(()-> new ResourceNotFoundException("Customowy wszczep o id " + cyberwareId + " nie istnieje."));
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Customowy wszczep został pobran.");
+        response.put("customCyberware", customCyberware);
+        return response;
+
+    }
 //
 //    // Doadaj cyberware
 //    public Map<String, Object> addCyberware(CpRedCustomCyberwares cpRedCustomCyberwares) {
