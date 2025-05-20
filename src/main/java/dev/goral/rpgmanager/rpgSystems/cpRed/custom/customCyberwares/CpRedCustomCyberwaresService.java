@@ -2,6 +2,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.custom.customCyberwares;
 
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.game.GameRepository;
+import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
@@ -123,7 +124,7 @@ public class CpRedCustomCyberwaresService {
             throw new IllegalStateException("Tylko GM może dodać pancerz do gry.");
         }
         if (cpRedCustomCyberwaresRepository.existsByNameAndGameId(cpRedCustomCyberwares.getName(), game)) {
-            throw new IllegalStateException("Customowy szczep o tej nazwie już istnieje w tej grze.");
+            throw new IllegalStateException("Customowy wszczep o tej nazwie już istnieje.");
         }
         if (cpRedCustomCyberwares.getName().isEmpty() ||
                 cpRedCustomCyberwares.getName().trim().isEmpty()) {
@@ -175,13 +176,97 @@ public class CpRedCustomCyberwaresService {
         cpRedCustomCyberwaresRepository.save(newCpRedCustomCyberwares);
         return CustomReturnables.getOkResponseMap("Customowy wszczep został dodany.");
     }
-//
-//    // Modyfikować cyberware
-//    public Map<String, Object> updateCyberware(Long cyberwareId, CpRedCustomCyberwares cpRedCustomCyberwares) {
-//
-//    }
-//
-    // Pobierz wszystkie cyberware dla admina
+
+    public Map<String, Object> updateCyberware(Long cyberwareId, CpRedCustomCyberwaresRequest cpRedCustomCyberwares) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+        CpRedCustomCyberwares cyberwareToUpdate = cpRedCustomCyberwaresRepository.findById(cyberwareId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customowy wszczep o id " + cyberwareId + " nie istnieje."));
+
+        Game game = gameRepository.findById(cyberwareToUpdate.getGameId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id "+cyberwareToUpdate.getGameId().getId()+" nie istnieje."));
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra o id " + cyberwareToUpdate.getGameId().getId() + " nie jest aktywna.");
+        }
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), cyberwareToUpdate.getGameId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalStateException("Tylko GM może edytować wszczep w grze.");
+        }
+        if(cpRedCustomCyberwares.getName()!=null){
+            if (cpRedCustomCyberwaresRepository.existsByNameAndGameId(cpRedCustomCyberwares.getName(), game)) {
+                throw new IllegalStateException("Customowy wszczep o tej nazwie już istnieje.");
+            }
+            if (cpRedCustomCyberwares.getName().isEmpty() ||
+                    cpRedCustomCyberwares.getName().trim().isEmpty()) {
+                throw new IllegalStateException("Nazwa wszczepu nie może być pusta.");
+            }
+            if (cpRedCustomCyberwares.getName().length() > 255) {
+                throw new IllegalStateException("Nazwa wszczepu nie może być dłuższa niż 255 znaków.");
+            }
+            cyberwareToUpdate.setName(cpRedCustomCyberwares.getName());
+        }
+        if(cpRedCustomCyberwares.getMountPlace()!=null){
+            cyberwareToUpdate.setMountPlace(cpRedCustomCyberwares.getMountPlace());
+        }
+        if(cpRedCustomCyberwares.getRequirements()!=null){
+            if (cpRedCustomCyberwares.getRequirements().isEmpty() ||
+                    cpRedCustomCyberwares.getRequirements().trim().isEmpty()) {
+                throw new IllegalStateException("Wymagania wszczepu nie mogą być puste.");
+            }
+            if (cpRedCustomCyberwares.getRequirements().length() > 500) {
+                throw new IllegalStateException("Wymagania wszczepu nie mogą być dłuższe niż 500 znaków.");
+            }
+            cyberwareToUpdate.setRequirements(cpRedCustomCyberwares.getRequirements());
+        }
+        if(cpRedCustomCyberwares.getHumanityLoss()!=null){
+            if (cpRedCustomCyberwares.getHumanityLoss().isEmpty() ||
+                    cpRedCustomCyberwares.getHumanityLoss().trim().isEmpty()) {
+                throw new IllegalStateException("Utrata ludzkosci wszczepu nie może być pusta.");
+            }
+            if (cpRedCustomCyberwares.getHumanityLoss().length() > 255) {
+                throw new IllegalStateException("Utrata ludzkosci wszczepu nie może być dłuższa niż 255 znaków.");
+            }
+            cyberwareToUpdate.setHumanityLoss(cpRedCustomCyberwares.getHumanityLoss());
+        }
+        if(cpRedCustomCyberwares.getSize()!=cyberwareToUpdate.getSize()){
+            if(cpRedCustomCyberwares.getSize()!=-1) {
+                if (cpRedCustomCyberwares.getSize() <= 0) {
+                    throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy lub równy 0.");
+                }
+                cyberwareToUpdate.setSize(cpRedCustomCyberwares.getSize());
+            }
+        }
+        if(cpRedCustomCyberwares.getInstallationPlace()!=null){
+            cyberwareToUpdate.setInstallationPlace(cpRedCustomCyberwares.getInstallationPlace());
+        }
+        if(cpRedCustomCyberwares.getPrice()!=cyberwareToUpdate.getPrice()){
+            if(cpRedCustomCyberwares.getPrice()!=-1) {
+                if (cpRedCustomCyberwares.getPrice() <= 0) {
+                    throw new IllegalStateException("Cena wszczepu nie może być mniejsza lub równa 0.");
+                }
+                cyberwareToUpdate.setPrice(cpRedCustomCyberwares.getPrice());
+            }
+        }
+        if(cpRedCustomCyberwares.getAvailability()!=null){
+            cyberwareToUpdate.setAvailability(cpRedCustomCyberwares.getAvailability());
+        }
+        if(cpRedCustomCyberwares.getDescription()!=null){
+            if (cpRedCustomCyberwares.getDescription().isEmpty() ||
+                    cpRedCustomCyberwares.getDescription().trim().isEmpty()) {
+                throw new IllegalStateException("Opis wszczepu nie może być pusty.");
+            }
+            if (cpRedCustomCyberwares.getDescription().length() > 500) {
+                throw new IllegalStateException("Opis wszczepu nie może być dłuższy niż 500 znaków.");
+            }
+            cyberwareToUpdate.setDescription(cpRedCustomCyberwares.getDescription());
+        }
+        cpRedCustomCyberwaresRepository.save(cyberwareToUpdate);
+        return CustomReturnables.getOkResponseMap("Customowy wszczep został zmodyfikowany.");
+    }
+
     public Map<String, Object> getAllCyberwareForAdmin() {
         List<CpRedCustomCyberwares> allCustomCyberwaresList = cpRedCustomCyberwaresRepository.findAll();
         Map<String,Object> response= CustomReturnables.getOkResponseMap("Customowe wszczepy zostały pobrane dla administratora.");
