@@ -10,6 +10,7 @@ import lombok.ToString;
 public class CpRedCustomWeaponsDTO {
     private Long id;
     private Long gameId;
+    private String name;
     private Long requiredSkillId;
     private String type;
     private int damage;
