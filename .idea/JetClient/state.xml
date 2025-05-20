@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 2,&#10;//  &quot;gameId&quot;: 1,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 2,&#10;//  &quot;gameId&quot;: 1,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 2,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -394,13 +394,13 @@
                                 </folderState>
                                 <folderState>
                                   <option name="id" value="0525a4d1-4dcf-40a9-8155-50d3a3a94397" />
-                                  <option name="name" value="Skils" />
+                                  <option name="name" value="Skills" />
                                   <option name="requests">
                                     <list>
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Broń długa&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 2,&#10;  category: &quot;FIGHTING&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 1,&#10;  category: &quot;FIGHTING&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -758,6 +758,64 @@
                                   </option>
                                   <option name="sortWeight" value="5000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="0cc78d9c-5f51-4b86-a99b-1a3d87fe7066" />
+                                  <option name="name" value="CriticalInjuries" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  rollValue: 3,&#10;  injuryPlace: &quot;HEAD&quot;,&#10;  name: &quot;Critical Hit&quot;,&#10;  effects: &quot;Critical damage&quot;,&#10;  patching: &quot;None&quot;,&#10;  treating: &quot;None&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="c9a64323-3a0d-4999-be22-c6caadd84df7" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj obrażenia krytyczne" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/criticalInjuries/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  rollValue: 2,&#10;  injuryPlace: &quot;HEAD&quot;,&#10;  name: &quot;Critical Hit 2.0&quot;,&#10;  effects: &quot;Critical damage&quot;,&#10;  patching: &quot;yes&quot;,&#10;  treating: &quot;None&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="id" value="53375029-61a3-4885-bca7-3aacb4f0cf4e" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj obrażenia krytyczne" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/criticalInjuries/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich obrażeń krytycznych" />
+                                        <option name="id" value="ffdb58df-53c8-4f63-af80-82b905ebc645" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie obrażenia krytyczne" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/criticalInjuries/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="4dc22482-4b8a-459b-9afc-4ca3779ea531" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz konkretne obrażenia krytyczne po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/criticalInjuries/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę obiektów" />
+                                        <option name="id" value="825da758-04bb-47fe-91e9-6455b070d9af" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie obrażenia krytyczne dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/criticalInjuries/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="6000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />
@@ -900,6 +958,91 @@
                                         <option name="name" value="Pobierz wszystkie pancerze dla admina" />
                                         <option name="sortWeight" value="6000000" />
                                         <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customArmors/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="2000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="036f9f33-53ab-4d5c-9763-3a78709c4163" />
+                                  <option name="name" value="CustomWeapon" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  requiredSkillId: 1,&#10;  name: &quot;test weapon&quot;,&#10;  type: &quot;SNIPER_RIFLE&quot;,&#10;  damage: 2,&#10;  magazineCapacity: 10,&#10;  numberOfAttacks: 2,&#10;  handType: 2,&#10;  hidden: true,&#10;  quality: &quot;STANDARD&quot;,&#10;  price: 1000,&#10;  availability: &quot;VERY_EXPENSIVE&quot;,&#10;  modifiable: true,&#10;  description: &quot;Jakiś piękny opis&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje customową broń" />
+                                        <option name="id" value="7d78735c-4cb0-4ad1-b94e-0b9572b2b859" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj customową broń" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  requiredSkillId: 2,&#10;  name: &quot;zmodyfikoany test weapon&quot;,&#10;  type: &quot;ROCKET_LAUNCHER&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 3,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 20000,&#10;  availability: &quot;SUPER_LUXURY&quot;,&#10;  description: &quot;Jakiś jeszcze piękniejszy opis&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje podane paramtery customowej broni o podanym id" />
+                                        <option name="id" value="8d3aceb7-e7a7-4087-a720-58b86126cde7" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj customową broń" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zmienia na zasadzie switch parametr ukrywalności" />
+                                        <option name="id" value="184e04d2-6c90-49e3-81f9-e2dc4d3dfe75" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Zmień ukrywalność" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/changeHide/2" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zmienia na zasadzie switch parametr modyfikowalności" />
+                                        <option name="id" value="3ed436c4-8dbd-4c25-bb06-ba623bbdcbc8" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Zmień modyfikowalność" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/changeModifiable/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszystkich customowych broni" />
+                                        <option name="id" value="370e6ff4-3f32-4ecc-8265-40076fb81446" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie customowe bronie" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Poniera customową broń o podanym id" />
+                                        <option name="id" value="76f12d54-0a47-4935-985d-bc79d25f95e2" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz customową broń po id" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/2" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera listę wszystkich customowych broni dla admina" />
+                                        <option name="id" value="a83ec26d-adff-4bfa-9603-761de013e046" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie customowe bronie dla admina" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customWeapons/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera listę broni powiązanych z grą o podanym id" />
+                                        <option name="id" value="be368748-8b26-4398-a22b-591aef41a3f6" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie bronie danej gry" />
+                                        <option name="sortWeight" value="8000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/game/1" />
                                       </requestState>
                                     </list>
                                   </option>

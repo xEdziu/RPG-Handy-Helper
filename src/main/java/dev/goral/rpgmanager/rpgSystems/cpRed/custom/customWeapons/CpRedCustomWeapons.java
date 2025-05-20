@@ -39,18 +39,20 @@ public class CpRedCustomWeapons {
             nullable = false
     )
     private CpRedSkills requiredSkillId;
+    private String name;
     @Enumerated(EnumType.STRING)
     private CpRedWeaponsType type;//enum from weapons
-    private int damage;
-    private int magazineCapacity;
-    private short numberOfAttacks;
-    private short handType;
+    private int damage = -1;
+    private int magazineCapacity = -1;
+    private short numberOfAttacks = -1;
+    private short handType = -1;
     private boolean isHidden;
     @Enumerated(EnumType.STRING)
     private CpRedItemsQuality quality;
-    private int price;
+    private int price = -1;
     @Enumerated(EnumType.STRING)
     private CpRedItemsAvailability availability;
     private boolean isModifiable;
+    @Column(length = 500)
     private String description;
 }
