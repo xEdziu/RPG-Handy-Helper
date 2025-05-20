@@ -13,33 +13,34 @@ import java.util.Map;
 public class CpRedCustomCyberwaresController {
     private CpRedCustomCyberwaresService cpRedCustomCyberwaresService;
 
-//    // ============ User methods ============
-//    // Pobierz wszystkie cyberware
-//    @GetMapping(path = "/rpgSystems/cpRed/customCyberware/all")
-//    public Map<String, Object> getAllCyberware() { // List<CpRedCustomCyberwaresDTO>
-//        return cpRedCustomCyberwaresService.getAllCyberware();
-//    }
-//    // Pobierz cyberware po id
-//    @GetMapping(path = "/rpgSystems/cpRed/customCyberware/{cyberwareId}")
-//    public Map<String, Object> getCyberwareById(@PathVariable("cyberwareId") Long cyberwareId) { // CpRedCustomCyberwaresDTO
-//        return cpRedCustomCyberwaresService.getCyberwareById(cyberwareId);
-//    }
-//    // Doadaj cyberware
-//    @PostMapping(path = "/rpgSystems/cpRed/customCyberware/add")
-//    public Map<String, Object> addCyberware(@RequestBody CpRedCustomCyberwares cpRedCustomCyberwares) {
-//        return cpRedCustomCyberwaresService.addCyberware(cpRedCustomCyberwares);
-//    }
-//    // Modyfikować cyberware
-//    @PutMapping(path = "/rpgSystems/cpRed/customCyberware/update/{cyberwareId}")
-//    public Map<String, Object> updateCyberware(@PathVariable("cyberwareId") Long cyberwareId,
-//                                               @RequestBody CpRedCustomCyberwares cpRedCustomCyberwares) {
-//        return cpRedCustomCyberwaresService.updateCyberware(cyberwareId, cpRedCustomCyberwares);
-//    }
-//
-//    // ============ Admin methods ============
-//    // Pobierz wszystkie cyberware dla admina
-//    @GetMapping(path = "/admin/rpgSystems/cpRed/customCyberware/all")
-//    public Map<String, Object> getAllCyberwareForAdmin() { // List<CpRedCustomCyberwares>
-//        return cpRedCustomCyberwaresService.getAllCyberwareForAdmin();
-//    }
+    @GetMapping(path = "/rpgSystems/cpRed/customCyberware/all")
+    public Map<String, Object> getAllCyberware() {
+        return cpRedCustomCyberwaresService.getAllCyberware();
+    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customCyberware/{cyberwareId}")
+    public Map<String, Object> getCyberwareById(@PathVariable("cyberwareId") Long cyberwareId) {
+        return cpRedCustomCyberwaresService.getCyberwareById(cyberwareId);
+    }
+    @GetMapping(path = "/rpgSystems/cpRed/customCyberware/game/{gameId}")
+    public Map<String, Object> getCyberwareByGame(@PathVariable("gameId") Long gameId) {
+        return cpRedCustomCyberwaresService.getCyberwareByGame(gameId);
+    }
+
+
+    @PostMapping(path = "/rpgSystems/cpRed/customCyberware/add")
+    public Map<String, Object> addCyberware(@RequestBody CpRedCustomCyberwaresRequest cpRedCustomCyberwares) {
+        return cpRedCustomCyberwaresService.addCyberware(cpRedCustomCyberwares);
+    }
+
+    @PutMapping(path = "/rpgSystems/cpRed/customCyberware/update/{cyberwareId}")
+    public Map<String, Object> updateCyberware(@PathVariable("cyberwareId") Long cyberwareId,
+                                               @RequestBody CpRedCustomCyberwaresRequest cpRedCustomCyberwares) {
+        return cpRedCustomCyberwaresService.updateCyberware(cyberwareId, cpRedCustomCyberwares);
+    }
+
+    @GetMapping(path = "/admin/rpgSystems/cpRed/customCyberware/all")
+    public Map<String, Object> getAllCyberwareForAdmin() {
+        return cpRedCustomCyberwaresService.getAllCyberwareForAdmin();
+    }
 }
