@@ -4,6 +4,7 @@ import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmors;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmorsService;
+import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customCriticalInjuries.CpRedCustomCriticalInjuries;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 @Service
 @AllArgsConstructor
@@ -54,8 +56,11 @@ public class CpRedCustomCyberwaresService {
 //
 //    }
 //
-//    // Pobierz wszystkie cyberware dla admina
-//    public Map<String, Object> getAllCyberwareForAdmin() {
-//
-//    }
+    // Pobierz wszystkie cyberware dla admina
+    public Map<String, Object> getAllCyberwareForAdmin() {
+        List<CpRedCustomCyberwares> allCustomCyberwaresList = cpRedCustomCyberwaresRepository.findAll();
+        Map<String,Object> response= CustomReturnables.getOkResponseMap("Customowe wszczepy zostały pobrane dla administratora.");
+        response.put("customCyberwares",allCustomCyberwaresList);
+        return response;
+    }
 }
