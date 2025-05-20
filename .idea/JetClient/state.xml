@@ -998,7 +998,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Wszczep własny 1.0&quot;,&#10;  mountPlace: &quot;EYE&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;2 (2K6)&quot;,&#10;  size: 5,&#10;  installationPlace: &quot;CLINIC&quot;,&#10;  price: 100,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;słaby wszczep&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Wszczep własny 1.0&quot;,&#10;  mountPlace: &quot;NEURALWARE&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;2 (2K6)&quot;,&#10;  size: 5,&#10;  installationPlace: &quot;CLINIC&quot;,&#10;  price: 100,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;słaby wszczep&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -1012,7 +1012,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Wszczep własny 2.0&quot;,&#10;  mountPlace: &quot;EYE&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;2 (2K6)&quot;,&#10;  size: 1,&#10;  installationPlace: &quot;CLINIC&quot;,&#10;  price: 150,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;inny wszczep&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Wszczep własny 2.0&quot;,&#10;  mountPlace: &quot;NEURALWARE&quot;,&#10;  requirements: &quot;none&quot;,&#10;  humanityLoss: &quot;2 (2K6)&quot;,&#10;  size: 1,&#10;  installationPlace: &quot;CLINIC&quot;,&#10;  price: 150,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;inny wszczep&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
