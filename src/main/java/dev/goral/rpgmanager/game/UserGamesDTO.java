@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 public class UserGamesDTO {
     private Long id;
+    private Long rpgSystemId;
     private String name;
     private String description;
 }

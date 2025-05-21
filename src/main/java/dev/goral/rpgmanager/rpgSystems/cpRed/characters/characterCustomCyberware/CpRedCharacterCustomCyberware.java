@@ -2,7 +2,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCustomCyberwar
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.customCyberwares.CpRedCustomCyberwares;
+import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customCyberwares.CpRedCustomCyberwares;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
