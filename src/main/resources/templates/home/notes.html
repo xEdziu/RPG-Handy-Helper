@@ -932,7 +932,7 @@
     }
     function generateNoteHTML(note) {
         return `
-        <div class="flex flex-row justify-end lg:flex-row gap-4">
+        <div class="flex flex-col sm:flex-row justify-end lg:flex-row gap-2 sm:gap-4 mb-4 sm:mb-0">
             <div class="flex flex-col w-full">
                 <p class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${note.rpgSystemName}</p>
                 <p class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
@@ -948,7 +948,7 @@
                   <h1 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary leading-tight break-words whitespace-normal w-[70%]">
                     ${note.title}
                   </h1>
-                  <div class="flex-shrink-0 flex gap-2 xl:flex-row flex-col align-end">
+                  <div class="flex-shrink-0 flex gap-2 xl:flex-row align-end flex-col md:flex-row">
                     <button onclick="editNote(${note.id})"
                       class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap">
                       Edytuj
@@ -974,7 +974,7 @@
                     <p id="game-name" class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
                     <p id="game-description" class="text-xs text-light-textSecondary dark:text-dark-textSecondary mb-1"></p>
                 </div>
-                <div class="flex flex-row gap-2 items-center">
+                <div class="flex gap-2 items-centerv flex-col md:flex-ro">
                     <button id="edit-preview-note"
                         class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap"
                         onclick="showPreviewNote('edit')">Podgląd</button>
