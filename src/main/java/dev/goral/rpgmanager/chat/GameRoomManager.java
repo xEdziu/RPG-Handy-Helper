@@ -4,7 +4,6 @@ import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -26,7 +25,6 @@ public class GameRoomManager {
     private final GameRoomHistoryRepository historyRepository;
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
-    private final SimpMessagingTemplate messagingTemplate;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public GameRoom createRoom(Long gameId, Long creatorId) {
@@ -114,6 +112,10 @@ public class GameRoomManager {
     }
 
     public GameRoom getRoom(String roomId) {
+        return activeRooms.get(roomId);
+    }
+
+    public GameRoom getRoomById(String roomId) {
         return activeRooms.get(roomId);
     }
 }

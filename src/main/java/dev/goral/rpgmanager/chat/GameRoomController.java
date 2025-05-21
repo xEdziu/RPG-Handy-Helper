@@ -53,6 +53,19 @@ public class GameRoomController {
         return  response;
     }
 
+    @GetMapping("/gameIdForRoomId")
+    public Map<String, Object> getGameIdForRoomId(@RequestParam String roomId) {
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Znaleziono ID gry dla podanego pokoju.");
+
+        GameRoom room = gameRoomManager.getRoomById(roomId);
+        if (room == null) {
+            throw new ResourceNotFoundException("Nie znaleziono pokoju o podanym ID.");
+        }
+
+        response.put("gameId", room.getGameId());
+        return response;
+    }
+
     @GetMapping("/history")
     public Map<String, Object> getUserGameRoomHistory(@AuthenticationPrincipal User currentUser) {
         List<GameRoomHistory> userHistory = historyRepository.findByParticipantsContaining(currentUser);
