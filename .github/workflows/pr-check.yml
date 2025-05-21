@@ -84,7 +84,15 @@ jobs:
       run: mvn spring-boot:run &
 
     - name: Wait for application to start completely
-      run: sleep 60
+      run: |
+        for i in {1..5}; do
+          if curl -s http://localhost:8080/actuator/health | grep -q '"status":"UP"'; then
+            echo "Application is up!"
+            break
+          fi
+          echo "Waiting for application to start..."
+          sleep 30
+        done
 
     - name: Send test request
       run: curl http://localhost:8080/actuator/health
