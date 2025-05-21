@@ -7,9 +7,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class CpRedAmmunitionCompatibilityRequestDTO {
-    private Long weaponId;
-    private Long ammoId;
-    private boolean isWeaponCustom;
-    private boolean isAmmoCustom;
+public class CpRedAmmunitionCompatibilityDTO {
+    private Long ammunitionId;
+    private Long customAmmunitionId;
+    private boolean isCustomWeapon;
+    private boolean isCustomAmmunition;
 }

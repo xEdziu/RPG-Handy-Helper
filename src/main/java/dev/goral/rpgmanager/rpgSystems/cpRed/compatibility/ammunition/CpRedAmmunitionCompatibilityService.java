@@ -27,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -43,60 +44,11 @@ public class CpRedAmmunitionCompatibilityService {
     private final CpRedWeaponsRepository weaponRepo;
 
 
-//    @Transactional
-//    public Map<String, Object> addCompatibility( Long weaponId,
-//                                                 Long ammunitionId,
-//                                                 boolean isCustomWeapon,
-//                                                 boolean isCustomAmmo) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String currentUsername = authentication.getName();
-//        User currentUser = userRepository.findByUsername(currentUsername)
-//                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-//
-//        //TODO:
-//        // Sprawdzenie czy odpowiedni użytkownik chce dokonać zmian
-//        // Sprawdzenie czy broń istnieje
-//        // Sprawdzenie czy amunicja istnieje
-//
-//        if (!isCustomWeapon && !isCustomAmmo) {
-//            CpRedWeapons weapon = weaponRepo.findById(weaponId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Broń o podanym id nie została znaleziona."));
-//            CpRedAmmunition ammo = ammoRepo.findById(ammunitionId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Amunicja o podanym id nie została znaleziona."));
-//
-//            CpRedWeaponAmmunitionCompatibility entity = new CpRedWeaponAmmunitionCompatibility(weapon, ammo);
-//            weaponAmmoRepo.save(entity);
-//            return CustomReturnables.getOkResponseMap("Dodano kompatybilność Weapon - Ammo.");
-//
-//        } else if (!isCustomWeapon && isCustomAmmo) {
-//            CpRedWeapons weapon = weaponRepo.findById(weaponId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Broń o podanym id nie została znaleziona."));
-//            CpRedCustomAmmunition ammo = customAmmoRepo.findById(ammunitionId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Amunicja o podanym id nie została znaleziona."));
-//
-//            CpRedWeaponCustomAmmunitionCompatibility entity = new CpRedWeaponCustomAmmunitionCompatibility(weapon, ammo);
-//            weaponCustomAmmoRepo.save(entity);
-//            return CustomReturnables.getOkResponseMap("Dodano kompatybilność Weapon - CustomAmmo.");
-//
-//        } else if (isCustomWeapon && !isCustomAmmo) {
-//            CpRedCustomWeapons weapon = customWeaponRepo.findById(weaponId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Broń o podanym id nie została znaleziona."));
-//            CpRedAmmunition ammo = ammoRepo.findById(ammunitionId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Amunicja o podanym id nie została znaleziona."));
-//
-//            CpRedCustomWeaponAmmunitionCompatibility entity = new CpRedCustomWeaponAmmunitionCompatibility(weapon, ammo);
-//            customWeaponAmmoRepo.save(entity);
-//            return CustomReturnables.getOkResponseMap("Dodano kompatybilność CustomWeapon - Ammo.");
-//
-//        } else {
-//            CpRedCustomWeapons weapon = customWeaponRepo.findById(weaponId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Broń o podanym id nie została znaleziona."));
-//            CpRedCustomAmmunition ammo = customAmmoRepo.findById(ammunitionId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Amunicja o podanym id nie została znaleziona."));
-//
-//            CpRedCustomWeaponCustomAmmunitionCompatibility entity = new CpRedCustomWeaponCustomAmmunitionCompatibility(weapon, ammo);
-//            customWeaponCustomAmmoRepo.save(entity);
-//            return CustomReturnables.getOkResponseMap("Dodano kompatybilność CustomWeapon - CustomAmmo.");
-//        }
-//    }
+    public Map<String, Object> allCompatibility() {
+        List<CpRedAmmunitionCompatibilityDTO>
+    }
+
+    public Map<String, Object> addCompatibility() {
+
+    }
 }

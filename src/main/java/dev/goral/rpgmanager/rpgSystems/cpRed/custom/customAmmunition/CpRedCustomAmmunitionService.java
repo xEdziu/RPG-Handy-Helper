@@ -147,7 +147,7 @@ public class CpRedCustomAmmunitionService {
 
         // Zapisanie amunicji do bazy danych
         CpRedCustomAmmunition newCustomAmmunition = new CpRedCustomAmmunition(
-                0,
+                null,
                 game,
                 cpRedCustomAmmunition.getName(),
                 cpRedCustomAmmunition.getDescription(),
