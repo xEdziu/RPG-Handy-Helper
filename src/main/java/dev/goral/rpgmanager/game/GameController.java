@@ -1,9 +1,12 @@
 package dev.goral.rpgmanager.game;
 
 import dev.goral.rpgmanager.game.gameUsers.AddUserToGameRequest;
+import dev.goral.rpgmanager.user.User;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,6 +26,11 @@ public class GameController {
     @GetMapping(path = "/game/allPlayers/{gameId}")
     public Map<String, Object> getGamePlayers(@PathVariable("gameId") Long gameId) {
         return gameService.getGamePlayers(gameId);
+    }
+
+    @GetMapping(path = "/game/userGames")
+    public Map<String, Object> getUserGames(@AuthenticationPrincipal User currentUser) { // List<UserGamesDTO>
+        return gameService.getUserGames(currentUser);
     }
 
     @PostMapping(path = "/game/create")

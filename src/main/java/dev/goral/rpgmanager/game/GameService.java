@@ -86,6 +86,21 @@ public class GameService {
         return response;
     }
 
+    public Map<String, Object> getUserGames(User currentUser) {
+        List<GameUsers> gameUsers = gameUsersRepository.findAllByUserId(currentUser.getId());
+        List<UserGamesDTO> userGamesDTO = gameUsers.stream()
+                .filter(gameUser -> gameUser.getGame().getStatus() == GameStatus.ACTIVE)
+                .map(gameUser -> new UserGamesDTO(
+                        gameUser.getGame().getId(),
+                        gameUser.getGame().getRpgSystem().getId(),
+                        gameUser.getGame().getName(),
+                        gameUser.getGame().getDescription()
+                )).toList();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę gier użytkownika.");
+        response.put("userGames", userGamesDTO);
+        return response;
+    }
+
     @Transactional
     public Map<String, Object> createGame(Game game) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
