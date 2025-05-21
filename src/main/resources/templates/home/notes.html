@@ -624,7 +624,7 @@
                 .filter(note => !selectedSystem || note.rpgSystemName === selectedSystem)
                 .map(note => note.gameName);
             const uniqueCampaigns = [...new Set(campaigns)];
-            campaignFilter.innerHTML = '<option value="">Wszystkie kampanie</option>';
+            campaignFilter.innerHTML = '<option value="">Kampania</option>';
             uniqueCampaigns.forEach(campaign => {
                 const option = document.createElement('option');
                 option.value = campaign;
