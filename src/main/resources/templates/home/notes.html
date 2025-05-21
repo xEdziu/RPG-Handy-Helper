@@ -255,15 +255,10 @@
                         if (data.error != "200") {
                             console.error('API Error:', data.error);
                         }
-                        if (noteContent.length == 0 && gameAccessible.length != 0) {
-                            notesContainer.innerHTML = '';
-                            disableControlNoteControls();
-                            notesContainer.innerHTML = generateInfoHTML(
-                                `Nie masz jeszcze żadnych notatek!`,
-                                `Na szczęśnie masz już odblokowaną umiejętność pisania`,
-                                `Utwórz swoją pierwszą notatkę już teraz.`
-                            );
-                        } else {
+                        console.log(gameAccessible);
+                        console.log(gameAccessible.length);
+                        console.log(gameAccessible.length != 0);
+                        if(noteContent.length != 0 && gameAccessible.length != 0){
                             notesContainer.innerHTML = '';
                             noteContent.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
                             var resultHtml = ""
@@ -282,6 +277,14 @@
                             getLisinerForFilters('search-input', 'input');
                             getLisinerForFilters('sort-order');
                             getLisinerForFilters('sort-by');
+                        } else{
+                            notesContainer.innerHTML = '';
+                            disableControlNoteControls();
+                            notesContainer.innerHTML = generateInfoHTML(
+                                `Nie masz jeszcze żadnych notatek!`,
+                                `Na szczęśnie masz już odblokowaną umiejętność pisania`,
+                                `Utwórz swoją pierwszą notatkę już teraz.`
+                            );
                         }
                     })
                 } catch (error) {
