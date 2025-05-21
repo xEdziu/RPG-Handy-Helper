@@ -348,8 +348,7 @@
             getLisinerParesr();
             const noteTitle = document.getElementById('note-title').value.trim();
             const noteText = document.getElementById('note-content').value.trim();
-            const gameTite = document.getElementById('game-name').value;
-            var gameId = gameAccessible.find(game => game.name === gameTite)?.id
+            const gameId= document.getElementById('game-name').value;
             noteContent.forEach(note => {
                 if (note.title == noteTitle && note.id != idNote) {
                     Swal.fire({
@@ -876,7 +875,7 @@
             const systemSelect = document.getElementById('game-system');
             systemSelect.selectedIndex = 0;
             if (selectedGame) {
-                const systems = gameAccessible.find(game => game.name === selectedGame);
+                const systems = gameAccessible.find(game => game.id == selectedGame);
                 document.getElementById('game-system').textContent = RpgSystem.find(system => system.id === systems.id).name;
                 document.getElementById('game-description-new-note').innerText = systems.description;
             }
@@ -1004,7 +1003,7 @@
                 <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1"></p>
                 <select id="game-name" class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-light-accent dark:text-dark-accent bg-white dark:bg-dark-surface focus:outline-none focus:ring-0">
                     <option value="" disabled selected>Kampania</option>
-                        ${gameAccessible.map(game => `<option value="${game.name}">${game.name}</option>`).join('')}
+                        ${gameAccessible.map(game => `<option value="${game.id}">${game.name}</option>`).join('')}
                 </select>
                 <p id="game-description-new-note" class="text-xs font-bold text-light-textPrimary dark:text-dark-textPrimary"></p>
             </div>
