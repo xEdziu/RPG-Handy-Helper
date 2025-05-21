@@ -258,7 +258,7 @@
                         console.log(gameAccessible);
                         console.log(gameAccessible.length);
                         console.log(gameAccessible.length != 0);
-                        if(noteContent.length != 0 && gameAccessible.length != 0){
+                        if (noteContent.length != 0 && gameAccessible.length != 0) {
                             notesContainer.innerHTML = '';
                             noteContent.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
                             var resultHtml = ""
@@ -277,7 +277,7 @@
                             getLisinerForFilters('search-input', 'input');
                             getLisinerForFilters('sort-order');
                             getLisinerForFilters('sort-by');
-                        } else{
+                        } else {
                             notesContainer.innerHTML = '';
                             disableControlNoteControls();
                             notesContainer.innerHTML = generateInfoHTML(
@@ -352,7 +352,7 @@
             getLisinerParesr();
             const noteTitle = document.getElementById('note-title').value.trim();
             const noteText = document.getElementById('note-content').value.trim();
-            const gameId= document.getElementById('game-name').value;
+            const gameId = document.getElementById('game-name').value;
             noteContent.forEach(note => {
                 if (note.title == noteTitle && note.id != idNote) {
                     Swal.fire({
@@ -583,6 +583,7 @@
             if (systemFilter) {
                 filteredNotes = filteredNotes.filter(note => note.rpgSystemName === systemFilter);
             }
+            updateCampaignFilterOptions(systemFilter);
             if (campaignFilter) {
                 filteredNotes = filteredNotes.filter(note => note.gameName === campaignFilter);
             }
@@ -597,12 +598,10 @@
                 if (sortBy === 'data-modify') {
                     aVal = new Date(a.updatedAt);
                     bVal = new Date(b.updatedAt);
-                }
-                else if (sortBy === 'data-creation') {
+                } else if (sortBy === 'data-creation') {
                     aVal = new Date(a.createdAt);
                     bVal = new Date(b.createdAt);
-                }
-                else {
+                } else {
                     aVal = a.title.toLowerCase();
                     bVal = b.title.toLowerCase();
                 }
@@ -618,6 +617,20 @@
                 resultHtml += generatePieceOfNoteHTML(note);
             });
             container.innerHTML = resultHtml;
+        }
+        function updateCampaignFilterOptions(selectedSystem) {
+            const campaignFilter = document.getElementById('campaign-name-filter');
+            const campaigns = noteContent
+                .filter(note => !selectedSystem || note.rpgSystemName === selectedSystem)
+                .map(note => note.gameName);
+            const uniqueCampaigns = [...new Set(campaigns)];
+            campaignFilter.innerHTML = '<option value="">Wszystkie kampanie</option>';
+            uniqueCampaigns.forEach(campaign => {
+                const option = document.createElement('option');
+                option.value = campaign;
+                option.textContent = campaign;
+                campaignFilter.appendChild(option);
+            });
         }
 
         function clearFilters() {
@@ -896,7 +909,7 @@
     // ==== Pareser Markdown ====
     function parseMarkdown(markdownText, ifAllNote = false) {
         var parsedParagraph = marked.parse(markdownText);
-        if(ifAllNote) {
+        if (ifAllNote) {
             parsedParagraph = parsedParagraph.replace(/<p>/g, '<p class="mt-[-3em]">');
         }
         return parsedParagraph;
