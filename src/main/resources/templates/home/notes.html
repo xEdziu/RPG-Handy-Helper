@@ -486,6 +486,14 @@
                 });
                 return;
             }
+            if (noteContent.some(note => note.title === noteTitle && note.id !== noteId)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Tytuł już istnieje!',
+                    text: `Zmień tytuł notatki, aby zapisać obecną.`,
+                });
+                return;
+            }
             const note = {
                 gameId: RpgSystem.find(system => system.name === oldNote.rpgSystemName)?.id,
                 userId: userInfo.id,
