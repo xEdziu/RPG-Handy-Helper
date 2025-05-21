@@ -57,10 +57,10 @@ jobs:
         echo "spring.datasource.username=testuser" >> src/main/resources/application.properties
         echo "spring.datasource.password=testpassword" >> src/main/resources/application.properties
         echo "spring.datasource.driver-class-name=org.mariadb.jdbc.Driver" >> src/main/resources/application.properties
-        echo "spring.jpa.show-sql=true" >> src/main/resources/application.properties
+        echo "spring.jpa.show-sql=false" >> src/main/resources/application.properties
         echo "spring.jpa.hibernate.ddl-auto=create-drop" >> src/main/resources/application.properties
         echo "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDBDialect" >> src/main/resources/application.properties
-        echo "spring.jpa.properties.hibernate.format_sql=true" >> src/main/resources/application.properties
+        echo "spring.jpa.properties.hibernate.format_sql=false" >> src/main/resources/application.properties
         echo "spring.mail.host= ${{ secrets.MAIL_HOST }}" >> src/main/resources/application.properties
         echo "spring.mail.port= ${{ secrets.MAIL_PORT }}" >> src/main/resources/application.properties
         echo "spring.mail.username= ${{ secrets.MAIL_USERNAME }}" >> src/main/resources/application.properties
