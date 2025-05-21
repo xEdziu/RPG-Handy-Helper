@@ -121,7 +121,10 @@ public class CpRedCustomCyberwaresService {
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
 
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może dodać pancerz do gry.");
+            throw new IllegalStateException("Tylko GM może dodać wszczep do gry.");
+        }
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra o id " + cpRedCustomCyberwares.getGameId() + " nie jest aktywna.");
         }
         if (cpRedCustomCyberwaresRepository.existsByNameAndGameId(cpRedCustomCyberwares.getName(), game)) {
             throw new IllegalStateException("Customowy wszczep o tej nazwie już istnieje.");
