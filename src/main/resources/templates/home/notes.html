@@ -166,6 +166,7 @@
                     return response.json();
                 }
             ).then(data => {
+                data = data.userGames;
                 if (Array.isArray(data) && data.length >= 0) {
                     if (data.length == 0) {
                         document.getElementById('add-note').disabled = true;
@@ -205,6 +206,7 @@
                     return response.json();
                 }
             ).then(data => {
+                data = data.rpgSystems;
                 if (data.length == 0) {
                     return;
                 }
@@ -255,9 +257,6 @@
                         if (data.error != "200") {
                             console.error('API Error:', data.error);
                         }
-                        console.log(gameAccessible);
-                        console.log(gameAccessible.length);
-                        console.log(gameAccessible.length != 0);
                         if (noteContent.length != 0 && gameAccessible.length != 0) {
                             notesContainer.innerHTML = '';
                             noteContent.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -457,7 +456,6 @@
                 </div>
             `;
             const show = preview.classList.contains('hidden');
-            console.log(button);
             if (button) {
                 if (show) {
                     button.innerText = "Zamknij podgląd";
@@ -900,9 +898,10 @@
             const systemSelect = document.getElementById('game-system');
             systemSelect.selectedIndex = 0;
             if (selectedGame) {
+                console.log(selectedGame);
                 const systems = gameAccessible.find(game => game.id == selectedGame);
-                document.getElementById('game-system').textContent = RpgSystem.find(system => system.id === systems.id).name;
                 document.getElementById('game-description-new-note').innerText = systems.description;
+                document.getElementById('game-system').textContent = RpgSystem.find(system => system.id === systems.id).name;
             }
         });
     }
@@ -1022,6 +1021,8 @@
         `;
     }
     function generateNewNoteHTML() {
+        console.log(gameAccessible);
+        console.log(RpgSystem);
         return `
         <div class="flex justify-between items-center mb-4">
             <div class="flex flex-col items-start w-1/2">
