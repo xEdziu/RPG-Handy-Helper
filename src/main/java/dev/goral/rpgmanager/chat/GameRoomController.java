@@ -53,8 +53,8 @@ public class GameRoomController {
         return  response;
     }
 
-    @GetMapping("/gameIdForRoomId")
-    public Map<String, Object> getGameIdForRoomId(@RequestParam String roomId) {
+    @GetMapping("/gameIdForRoomId/{roomId}")
+    public Map<String, Object> getGameIdForRoomId(@PathVariable String roomId) {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Znaleziono ID gry dla podanego pokoju.");
 
         GameRoom room = gameRoomManager.getRoomById(roomId);
