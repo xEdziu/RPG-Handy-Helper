@@ -64,7 +64,7 @@ public class CpRedCustomCyberwaresService {
                         CpRedCustomCyberwares.getAvailability().toString(),
                         CpRedCustomCyberwares.getDescription()
                 )).orElseThrow(()-> new ResourceNotFoundException("Customowy wszczep o id " + cyberwareId + " nie istnieje."));
-        Map<String,Object> response = CustomReturnables.getOkResponseMap("Customowy wszczep został pobran.");
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Customowy wszczep został pobrany.");
         response.put("customCyberware", customCyberware);
         return response;
 

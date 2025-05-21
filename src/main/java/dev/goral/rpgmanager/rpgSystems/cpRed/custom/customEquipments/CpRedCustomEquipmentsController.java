@@ -12,33 +12,34 @@ import java.util.Map;
 public class CpRedCustomEquipmentsController {
     private final CpRedCustomEquipmentsService cpRedCustomEquipmentsService;
 
-//    // ============ User methods ============
-//    // Pobierz wszystkie przedmioty
-//    @GetMapping(path = "/rpgSystems/cpRed/customEquipments/all")
-//    public Map<String, Object> getAllEquipments() { // List<CpRedCustomEquipmentsDTO>
-//        return cpRedCustomEquipmentsService.getAllEquipments();
-//    }
-//    // Pobierz przedmiot po id
-//    @GetMapping(path = "/rpgSystems/cpRed/customEquipments/{equipmentId}")
-//    public Map<String, Object> getEquipmentById(@PathVariable("equipmentId") Long equipmentId) { // CpRedCustomEquipmentsDTO
-//        return cpRedCustomEquipmentsService.getEquipmentById(equipmentId);
-//    }
-//    // Dodaj przedmiot
-//    @PostMapping(path = "/rpgSystems/cpRed/customEquipments/add")
-//    public Map<String, Object> addEquipment(@RequestBody CpRedCustomEquipments cpRedCustomEquipments) {
-//        return cpRedCustomEquipmentsService.addEquipment(cpRedCustomEquipments);
-//    }
-//    // Modyfikować przedmiot
-//    @PutMapping(path = "/rpgSystems/cpRed/customEquipments/update/{equipmentId}")
-//    public Map<String, Object> updateEquipment(@PathVariable("equipmentId") Long equipmentId,
-//                                                @RequestBody CpRedCustomEquipments cpRedCustomEquipments) {
-//        return cpRedCustomEquipmentsService.updateEquipment(equipmentId, cpRedCustomEquipments);
-//    }
-//
-//    // ============ Admin methods ============
-//    // Pobierz wszystkie przedmioty dla admina
-//    @GetMapping(path = "/admin/rpgSystems/cpRed/customEquipments/all")
-//    public Map<String, Object> getAllEquipmentsForAdmin() { // List<CpRedCustomEquipments>
-//        return cpRedCustomEquipmentsService.getAllEquipmentsForAdmin();
-//    }
+    @GetMapping(path = "/rpgSystems/cpRed/customEquipments/all")
+    public Map<String, Object> getAllEquipments() { // List<CpRedCustomEquipmentsDTO>
+        return cpRedCustomEquipmentsService.getAllEquipments();
+    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customEquipments/{equipmentId}")
+    public Map<String, Object> getEquipmentById(@PathVariable("equipmentId") Long equipmentId) { // CpRedCustomEquipmentsDTO
+        return cpRedCustomEquipmentsService.getEquipmentById(equipmentId);
+    }
+
+    @GetMapping(path = "/rpgSystems/cpRed/customEquipments/game/{gameId}")
+    public Map<String, Object> getEquipmentsByGame(@PathVariable("gameId") Long gameId) {
+        return cpRedCustomEquipmentsService.getEquipmentsByGame(gameId);
+    }
+
+    @PostMapping(path = "/rpgSystems/cpRed/customEquipments/add")
+    public Map<String, Object> addEquipment(@RequestBody CpRedCustomEquipmentsRequest cpRedCustomEquipments) {
+        return cpRedCustomEquipmentsService.addEquipment(cpRedCustomEquipments);
+    }
+
+    @PutMapping(path = "/rpgSystems/cpRed/customEquipments/update/{equipmentId}")
+    public Map<String, Object> updateEquipment(@PathVariable("equipmentId") Long equipmentId,
+                                                @RequestBody CpRedCustomEquipmentsRequest cpRedCustomEquipments) {
+        return cpRedCustomEquipmentsService.updateEquipment(equipmentId, cpRedCustomEquipments);
+    }
+
+    @GetMapping(path = "/admin/rpgSystems/cpRed/customEquipments/all")
+    public Map<String, Object> getAllEquipmentsForAdmin() { // List<CpRedCustomEquipments>
+        return cpRedCustomEquipmentsService.getAllEquipmentsForAdmin();
+    }
 }

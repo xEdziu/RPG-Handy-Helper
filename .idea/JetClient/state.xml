@@ -1194,6 +1194,75 @@
                                   </option>
                                   <option name="sortWeight" value="3000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="d5428425-cf36-4eb0-b0d6-dd033f1e338c" />
+                                  <option name="name" value="CustomEquipments" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;mały sprzęt&quot;,&#10;  price: 100,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;sprzęt&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje customowe wyposażenie" />
+                                        <option name="id" value="2e3fc435-96b5-4aa6-80b5-350deb0c13b7" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj wyposażenie" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customEquipments/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;duży sprzęt&quot;,&#10;  price: 150,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;większy&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Pozwala zmienić dane w customowym wyposażeniu" />
+                                        <option name="id" value="0f08573f-24a4-4897-9dbb-5bf7edf1b14a" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj wyposażenie" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customEquipments/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera wszystkie customowe wyposażenie" />
+                                        <option name="id" value="f5f24c98-6858-4cc7-b51d-0d8eef38a2aa" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie wyposażenie" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customEquipments/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customowe wyposażenie po id" />
+                                        <option name="id" value="279b28dc-f97b-442e-aa18-d73d1394e5c4" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wyposażenie po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customEquipments/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customowe wyposażenie z konkretnej gry" />
+                                        <option name="id" value="a7f80c98-6a6d-4661-8398-5e39226a052b" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie wyposażenie po gameId" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customEquipments/game/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera wszystkie customowe wyposażenie w formie obiektów" />
+                                        <option name="id" value="7db29e19-c173-4edd-890c-6735ca1be583" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie wyposażenie dla admina" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customEquipments/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="4000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="be478e01-3cd6-4b0a-bd25-b519ab021bde" />
