@@ -252,11 +252,11 @@
                         }
                     ).then(data => {
                         noteContent = data.gameNotes;
-                        notesContainer.innerHTML = '';
                         if (data.error != "200") {
                             console.error('API Error:', data.error);
                         }
-                        if (noteContent.length == 0) {
+                        if (noteContent.length == 0 && gameAccessible.length != 0) {
+                            notesContainer.innerHTML = '';
                             disableControlNoteControls();
                             notesContainer.innerHTML = generateInfoHTML(
                                 `Nie masz jeszcze żadnych notatek!`,
@@ -264,6 +264,7 @@
                                 `Utwórz swoją pierwszą notatkę już teraz.`
                             );
                         } else {
+                            notesContainer.innerHTML = '';
                             noteContent.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
                             var resultHtml = ""
                             noteContent.forEach(note => {
