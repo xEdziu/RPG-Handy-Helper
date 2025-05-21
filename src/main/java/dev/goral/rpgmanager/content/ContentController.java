@@ -70,4 +70,10 @@ public class ContentController {
         System.out.println("ContentController: getProfile()");
         return "home/profile";
     }
+
+    @GetMapping("/home/notes")
+    public String getNotes() {
+        System.out.println("ContentController: getNotes()");
+        return "home/notes";
+    }
 }

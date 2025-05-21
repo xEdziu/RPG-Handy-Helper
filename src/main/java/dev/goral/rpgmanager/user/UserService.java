@@ -57,14 +57,14 @@ public class UserService implements UserDetailsService {
         Object principal = getAuthentication().getPrincipal();
 
         if (principal instanceof User foundUser) {
-            return new UserDTO(foundUser.getUsername(), foundUser.getFirstName(), foundUser.getSurname(), foundUser.getEmail(), foundUser.getUserPhotoPath());
+            return new UserDTO(foundUser.getId(), foundUser.getUsername(), foundUser.getFirstName(), foundUser.getSurname(), foundUser.getEmail(), foundUser.getUserPhotoPath());
         } else if (principal instanceof DefaultOAuth2User oauthUser) {
             String email = oauthUser.getAttribute("email");
             Optional<User> userOptional = userRepository.findByEmail(email);
 
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
-                return new UserDTO(user.getUsername(), user.getFirstName(), user.getSurname(), user.getEmail(), user.getUserPhotoPath());
+                return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getSurname(), user.getEmail(), user.getUserPhotoPath());
             } else {
                 throw new IllegalStateException("Nie udało się znaleźć użytkownika w bazie danych.");
             }
