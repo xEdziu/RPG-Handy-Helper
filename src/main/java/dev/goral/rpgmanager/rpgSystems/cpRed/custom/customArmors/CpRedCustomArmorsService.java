@@ -258,7 +258,6 @@ public class CpRedCustomArmorsService {
 
     public Map<String, Object> getAllCustomArmorsForAdmin() {
         List<CpRedCustomArmors> allCustomArmorsList = cpRedCustomArmorsRepository.findAll();
-
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowe pancerze zostały pobrane dla administratora.");
         response.put("customArmors", allCustomArmorsList);
         return response;
