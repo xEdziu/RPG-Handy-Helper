@@ -1,116 +1,612 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rejestracja</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .grecaptcha-badge {
+            /* Stylizacja reCAPTCHA */
+            position: fixed !important;
+            bottom: 10px;
+            right: 10px;
+            z-index: 9999;
+        }
+
+        ::-ms-reveal {
+            display: none;
+        }
+
+        input[data-autocompleted] {
+            background-color: transparent !important;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0px 1000px var(--input-bg-light) inset !important;
+            -webkit-text-fill-color: var(--input-text-light) !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .dark input:-webkit-autofill,
+        .dark input:-webkit-autofill:hover,
+        .dark input:-webkit-autofill:focus,
+        .dark input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0px 1000px var(--input-bg-dark) inset !important;
+            -webkit-text-fill-color: var(--input-text-dark) !important;
+        }
+
+        :root {
+            --input-bg-light: #E1E1E1;
+            --input-text-light: #252525;
+        }
+
+        .dark {
+            --input-bg-dark: #1E1E1E;
+            --input-text-dark: #E1E1E1;
+        }
+
+        .peer-placeholder-shown:scale-100.peer-placeholder-shown:translate-y-0,
+        input.not-empty~label {
+            transform: translateY(-1rem) scale(0.9);
+            color: var(--your-accent-color);
+        }
+    </style>
 </head>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.google.com/recaptcha/api.js?render=6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM"></script>
-<body>
-<h1>Rejestracja</h1>
+<!-- Dodanie reCAPTCHA v3 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+<script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script> <!-- Dodanie Font Awesome -->
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>// Ustawienia Tailwind CSS
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    dark: {
+                        background: "#1E1E1E",
+                        backgroundSecondary: "#181818",
+                        backgroundTertiary: "#101010",
+                        textPrimary: "#E1E1E1",
+                        textSecondary: "#AFAFAF",
+                        accent: "#12e1b9",
+                        border: "#333333",
+                        surface: "#1E1E1E",
+                        accentDark: "#00B189",
+                        success: "#00EE00",
+                        error: "#D00000",
+                        warning: "#FF9831",
+                    },
+                    light: {
+                        background: "#E1E1E1",
+                        backgroundSecondary: "#C1C1C1",
+                        backgroundTertiary: "#818181",
+                        textPrimary: "#252525",
+                        surface: "#F5F5F5",
+                        border: "#CCCCCC",
+                        textSecondary: "#505050",
+                        accent: "#ED1E46",
+                        accentDark: "#BD0016",
+                        success: "#009688",
+                        error: "#b388FF",
+                        warning: "#FF6F00",
+                    },
+                },
+            },
+        },
+    };
+    function fixLabelsForAutofill() {
+        document.querySelectorAll('input').forEach(input => {
+            if (input.value.trim() !== '') {
+                input.classList.add('filled');
+            }
+            input.addEventListener('input', () => {
+                if (input.value.trim() !== '') {
+                    input.classList.add('filled');
+                } else {
+                    input.classList.remove('filled');
+                }
+            });
+        });
+    }
+    // Skrypt do przełączania motywu jasnego/ciemnego
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleSwitch = document.getElementById("switch-component");
+        const body = document.body;
+        const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+        const favicon = document.getElementById("favicon");
+        function updateFavicon(theme) {
+            if (favicon) {
+                favicon.href = theme === "dark"
+                    ? "/img/logo/logo-dark.svg"
+                    : "/img/logo/logo-light.svg";
+            }
+        }
+        function applyTheme(theme) {
+            body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+            if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+        }
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        applyTheme(savedTheme);
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener("change", function () {
+                const newTheme = toggleSwitch.checked ? "dark" : "light";
+                applyTheme(newTheme);
+            });
+        }
+        if (themeToggleDiv) {
+            themeToggleDiv.addEventListener("click", function (e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                const newTheme = body.classList.contains("dark") ? "light" : "dark";
+                applyTheme(newTheme);
+            });
+        }
+        fixLabelsForAutofill();
+    });
+</script>
 
-<form method="post">
-    <label for="username">Nazwa użytkownika:</label>
-    <input type="text" id="username" name="username" required><br>
+<body class="m-0 h-screen w-screen flex flex-col justify-between font-league-spartan">
+    <nav
+        class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+        <a href="/"> <!-- Przekierowanie do strony głównej -->
+            <div class="flex items-center">
+                <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+                <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+                <h1
+                    class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    RPG Handy Helper
+                </h1>
+            </div>
+        </a>
+        <div class="flex items-center justify-center">
+            <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+            <div class="relative inline-block w-12 h-6">
+                <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full 
+                           bg-light-accent dark:bg-dark-accent
+                           shadow-md transition-all duration-300 
+                           peer-checked:translate-x-[0.75rem] 
+                           peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                           cursor-pointer hover:shadow-lg">
+                </label>
+                <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                            bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary
+                            border border-light-accent dark:border-dark-accent">
+                </div>
+            </div>
+            <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+        </div>
+    </nav>
+    <main
+        class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
+        <div
+            class="p-4 m-3 flex items-center justify-center text-3xl border-b-4 border-light-accentDark dark:border-dark-accentDark">
+            <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                REJESTRACJA
+            </h1>
+        </div>
+        <div class="p-9 m-1 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg xl:w-[40%]">
+            <form method="post" autocomplete="off">
+                <input type="text" name="hidden" autocomplete="false" style="display:none;">
+                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" class="hiddenS" />
+                <div class="relative m-5">
+                    <input autocomplete="off" type="text" id="username" aria-describedby="username" name="username"
+                        required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-background
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base"
+                        placeholder=" " />
+                    <label for="username" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-user-ninja"></i> Nazwa użytkownika:
+                    </label>
+                    <p id="error-username" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="usernameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="usernameErrorTooltip"></span>
+                    </p>
+                </div>
+                <div class="relative m-5">
+                    <input autocomplete="off" type="text" id="firstName" aria-describedby="firstName" name="firstName"
+                        required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    text-light-textPrimary dark:text-dark-textPrimary 
+                    bg-light-background dark:bg-dark-surface
+                    border-0 border-b-2 border-light-border dark:border-dark-border
+                    focus:outline-none focus:ring-0
+                    focus:border-light-accent peer dark:focus:border-dark-accent 
+                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="firstName" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-user"></i> Imię:
+                    </label>
 
-    <label for="firstName">Imię:</label>
-    <input type="text" id="firstName" name="firstName" required><br>
+                    <p id="error-firstName" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="firstNameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="firstNameErrorTooltip"></span>
+                    </p>
+                </div>
+                <div class="relative m-5">
+                    <input autocomplete="off" type="text" id="surname" aria-describedby="surname" name="surname"
+                        required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                        text-light-textPrimary dark:text-dark-textPrimary 
+                        bg-light-background dark:bg-dark-surface
+                        border-0 border-b-2 border-light-border dark:border-dark-border
+                        focus:outline-none focus:ring-0
+                        focus:border-light-accent peer dark:focus:border-dark-accent 
+                        placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="surname" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-id-badge"></i> Nazwisko:
+                    </label>
+                    <p id="error-surname" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="surnameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="surnameErrorTooltip"></span>
+                    </p>
+                </div>
+                <div class="relative m-5">
+                    <input autocomplete="off" type="email" id="email" aria-describedby="email" name="email" required
+                        class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                    text-light-textPrimary dark:text-dark-textPrimary 
+                    bg-light-background dark:bg-dark-surface
+                    border-0 border-b-2 border-light-border dark:border-dark-border
+                    focus:outline-none focus:ring-0
+                    focus:border-light-accent peer dark:focus:border-dark-accent 
+                    placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="email" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-envelope"></i> E-mail:
+                    </label>
 
-    <label for="surname">Nazwisko:</label>
-    <input type="text" id="surname" name="surname" required><br>
+                    <p id="error-email" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="emailErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="emailErrorTooltip"></span>
+                    </p>
+                </div>
+                <div class="relative m-5">
+                    <input autocomplete="off" type="password" id="password" aria-describedby="password" name="password"
+                        required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                               text-light-textPrimary dark:text-dark-textPrimary 
+                               bg-light-background dark:bg-dark-surface
+                               border-0 border-b-2 border-light-border dark:border-dark-border
+                               focus:outline-none focus:ring-0
+                               focus:border-light-accent peer dark:focus:border-dark-accent 
+                               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="password" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                           duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                           peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                           peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                           peer-focus:scale-90 peer-focus:-translate-y-4 
+                           rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-user-lock"></i> Hasło:
+                    </label>
+                    <i id="togglePasswordIcon1" onclick="togglePassword('password', 'togglePasswordIcon1')" class="fa-solid fa-eye absolute right-4 top-4.5
+                               text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
+                    </i>
 
-    <label for="email">E-mail:</label>
-    <input type="email" id="email" name="email" required><br>
+                    <p id="error-password" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="passwordErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="passwordErrorTooltip"></span>
+                    </p>
+                </div>
+                <div class="relative m-5">
+                    <input autocomplete="off" type="password" id="passwordConfirm" aria-describedby="passwordConfirm"
+                        name="passwordConfirm" required class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm
+                        text-light-textPrimary dark:text-dark-textPrimary 
+                        bg-light-background dark:bg-dark-surface
+                        border-0 border-b-2 border-light-border dark:border-dark-border
+                        focus:outline-none focus:ring-0
+                        focus:border-light-accent peer dark:focus:border-dark-accent 
+                        placeholder-light-textSecondary dark:placeholder-dark-textSecondary" placeholder=" " />
+                    <label for="passwordConfirm" class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary 
+                               duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 
+                               peer-focus:text-light-accent peer-focus:dark:text-dark-accent
+                               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                               peer-focus:scale-90 peer-focus:-translate-y-4 
+                               rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                        <i class="fa-solid fa-lock"></i> Potwierdź hasło:
+                    </label>
+                    <i id="togglePasswordIcon2" onclick="togglePassword('passwordConfirm', 'togglePasswordIcon2')"
+                        class="fa-solid fa-eye absolute right-4 top-4.5
+                               text-light-textSecondary dark:text-dark-textSecondary cursor-pointer">
+                    </i>
 
-    <label for="password">Hasło:</label>
-    <input type="password" id="password" name="password" required><br>
+                    <p id="error-passwordConfirm"
+                        class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                        <i id="passwordConfirmErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                        <span id="passwordConfirmErrorTooltip"></span>
+                    </p>
 
-    <label for="passwordConfirm">Potwierdź hasło:</label>
-    <input type="password" id="passwordConfirm" name="passwordConfirm" required><br>
-
-    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
-
-    <button type="submit">Zarejestruj się</button><br>
-</form>
-
-<p>Masz już konto? <a href="/login">Zaloguj się</a></p>
+                </div>
+                <br>
+                <div class="flex flex-col items-center justify-center">
+                    <p class="-mt-6 mb-10 text-light-textSecondary dark:text-dark-textSecondary">
+                        Rejestrując się, zgadzasz się na nasze
+                        <a href="#" class="text-light-accent dark:text-dark-accent hover:underline
+                        visited:text-light-accentDark dark:visited:text-dark-accent">Warunki użytkowania</a> i
+                        <a href="#" class="text-light-accent dark:text-dark-accent hover:underline
+                        visited:text-light-accentDark dark:visited:text-dark-accent">Politykę prywatności</a>.
+                    </p>
+                    <button type="submit" class="px-6 py-3 text-lg font-semibold 
+                   dark:text-light-textPrimary text-dark-textPrimary
+                   bg-light-accent dark:bg-dark-accent 
+                   border border-light-border dark:border-dark-border
+                   rounded-lg transition-all duration-300 
+                   hover:bg-light-accentDark hover:dark:bg-dark-accentDark 
+                   focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
+                   active:scale-95 text-font-jetbrains-mono">
+                        ZAREJESTRUJ SIĘ
+                    </button>
+                    <p class="m-4 text-center text-light-textSecondary dark:text-dark-textSecondary">
+                        Masz już konto? <a href="/login" class="text-light-accent dark:text-dark-accent hover:underline
+                                                visited:text-light-accentDark dark:visited:text-dark-accent">
+                            Zaloguj się
+                        </a>
+                    </p>
+                    <a href="/oauth2/authorization/discord">
+                        <div
+                            class="flex items-center justify-center bg-[#4654c0] p-2 text-dark-textPrimary rounded-lg hover:bg-[#3b47a5] cursor-pointer transition duration-300 mx-auto">
+                            <i class="fa-brands fa-discord text-xl mr-2"></i>
+                            <h1 class="text-dark-textPrimary font-semibold text-base text-center mt-[4px]">ZAREJESTRUJ
+                                ZA POMOCĄ DISCORD</h1>
+                        </div>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+        <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
+    </footer>
 </body>
 <script>
     const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
-    let form = document.querySelector('form');
-    form.addEventListener('submit', function (event) {
-        event.preventDefault(); // Zatrzymanie domyślnego wysyłania formularza
-        let formData = new FormData(form);
-        let data = Object.fromEntries(formData);
-
-        // Walidacja: sprawdzenie, czy hasła są identyczne
-        if (data.password !== data.passwordConfirm) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Błąd',
-                text: 'Hasła nie są takie same',
+    function togglePassword(inputId, iconId) {
+        const inputField = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        const isPassword = inputField.type === "password";
+        inputField.type = isPassword ? "text" : "password";
+        icon.classList.replace(isPassword ? "fa-eye" : "fa-eye-slash", isPassword ? "fa-eye-slash" : "fa-eye");
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('email').focus();
+        document.getElementById('password').focus();
+        document.getElementById('passwordConfirm').focus();
+        document.getElementById('username').focus();
+        document.activeElement.blur();
+        const form = document.querySelector('form');
+        const fields = [
+            {
+                id: 'username',
+                validate: validateUsername,
+                errorElement: document.getElementById('error-username')
+            },
+            {
+                id: 'firstName',
+                validate: validateName,
+                errorElement: document.getElementById('error-firstName')
+            },
+            {
+                id: 'surname',
+                validate: validateName,
+                errorElement: document.getElementById('error-surname')
+            },
+            {
+                id: 'email',
+                validate: validateEmail,
+                errorElement: document.getElementById('error-email')
+            },
+            {
+                id: 'password',
+                validate: validatePassword,
+                errorElement: document.getElementById('error-password')
+            },
+            {
+                id: 'passwordConfirm',
+                validate: validatePasswordConfirm,
+                errorElement: document.getElementById('error-passwordConfirm')
+            }
+        ];
+        fields.forEach(field => {
+            const input = document.getElementById(field.id);
+            input.addEventListener('blur', async () => {
+                currentFieldId = field.id;
+                const isValid = await field.validate(input.value);
+                toggleError(field.errorElement, isValid, input);
             });
-            return;
-        }
-
-        // **Dodanie reCAPTCHA v3 - Pobranie tokena przed wysłaniem**
-        grecaptcha.ready(function() {
-            grecaptcha.execute('6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM', { action: 'signup' }).then(function(token) {
-                // Dodanie tokena reCAPTCHA do danych formularza
-                data["captcha"] = token;
-                data["_csrf"] = csrfToken;
-                if (!token) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Błąd',
-                        text: 'Nie udało się uzyskać tokena reCAPTCHA. Spróbuj ponownie!',
-                    });
-                    return;
-                }
-
-                // Wysyłanie formularza do backendu
-                fetch('/api/v1/register/signup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-XSRF-TOKEN': csrfToken,
-                    },
-                    body: JSON.stringify(data),
-                })
-                    .then(
+        });
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            let isFormValid = true;
+            for (const field of fields) {
+                const input = document.getElementById(field.id);
+                const isValid = await field.validate(input.value);
+                toggleError(field.errorElement, isValid, input);
+                if (!isValid) isFormValid = false;
+            }
+            if (!isFormValid) return;
+            let formData = new FormData(form);
+            let data = Object.fromEntries(formData);
+            // Sprawdzenie haseł jeszcze raz
+            if (data.password !== data.passwordConfirm) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd',
+                    text: 'Hasła nie są takie same',
+                });
+                return;
+            }
+            grecaptcha.ready(function () {
+                grecaptcha.execute('6Lfz_BsqAAAAAPepoWRQn1x7rQAxALA-wyfsjrzM', { action: 'signup' }).then(function (token) {
+                    if (!token) {
                         Swal.fire({
-                            title: 'Proszę czekać...',
-                            didOpen: () => {
-                                Swal.showLoading()
+                            icon: 'error',
+                            title: 'Błąd',
+                            text: 'Nie udało się uzyskać tokena reCAPTCHA. Spróbuj ponownie!',
+                        });
+                        return;
+                    }
+                    data["captcha"] = token;
+                    data["_csrf"] = csrfToken;
+                    Swal.fire({
+                        title: 'Proszę czekać...',
+                        didOpen: () => Swal.showLoading()
+                    });
+                    fetch('/api/v1/register/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-XSRF-TOKEN': csrfToken,
+                        },
+                        body: JSON.stringify(data),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error !== 200) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Błąd',
+                                    text: data.message,
+                                    confirmButtonText: 'Spróbuj ponownie',
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sukces',
+                                    text: data.message,
+                                    confirmButtonText: 'Zaloguj się',
+                                }).then(() => {
+                                    window.location.href = '/login';
+                                });
                             }
                         })
-                    )
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error !== 200) {
+                        .catch((error) => {
+                            console.error('Error:', error);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Błąd',
-                                text: data.message,
-                                confirmButtonText: 'Spróbuj ponownie',
+                                text: 'Coś poszło nie tak podczas rejestracji.',
                             });
-                        } else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Sukces',
-                                text: data.message,
-                                confirmButtonText: 'Zaloguj się',
-                            }).then(() => {
-                                window.location.href = '/login';
-                            });
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
+                        });
+                });
             });
         });
+        // ==== WALIDATORY ====
+        async function validateUsername(username) {
+            if (username.trim() === '') return true;
+            const regex = /^[a-zA-Z0-9_][\w\-\*\!\?]{2,}$/;
+            if (!regex.test(username)) {
+                document.getElementById('usernameErrorTooltip').textContent = 'Nazwa użytkownika musi mieć co najmniej 3 znaki i nie może zaczynać się od znaku specjalnego.';
+                return false;
+            }
+            try {
+                const response = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(username)}`);
+                const data = await response.json();
+                if (data.error !== 200) {
+                    document.getElementById('usernameErrorTooltip').textContent = 'Podana nazwa użytkownika jest już zajęta.';
+                    return false;
+                }
+                return true;
+            } catch {
+                document.getElementById('usernameErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
+                return false;
+            }
+        }
+        function validateName(name) {
+            if (name.trim() === '') return true;
+            const regex = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]+$/;
+            const tooltip = document.getElementById(`${currentFieldId}ErrorTooltip`);
+            if (!regex.test(name)) {
+                if (tooltip) tooltip.textContent = 'Pole nie może zawierać cyfr ani znaków specjalnych.';
+                return false;
+            }
+            return true;
+        }
+        async function validateEmail(email) {
+            if (email.trim() === '') return true;
+            const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!regex.test(email)) {
+                document.getElementById('emailErrorTooltip').textContent = 'Proszę podać prawidłowy adres e-mail.';
+                return false;
+            }
+            try {
+                const response = await fetch(`/api/v1/register/checkEmail?email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+                if (data.error !== 200) {
+                    document.getElementById('emailErrorTooltip').textContent = 'Adres e-mail jest już zajęty.';
+                    return false;
+                }
+                return true;
+            } catch {
+                document.getElementById('emailErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
+                return false;
+            }
+        }
+        function validatePassword(password) {
+            if (password.trim() === '') return true;
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            if (!regex.test(password)) {
+                document.getElementById('passwordErrorTooltip').textContent = 'Hasło musi mieć co najmniej 8 znaków, zawierać małą i dużą literę, cyfrę oraz znak specjalny.';
+                return false;
+            }
+            return true;
+        }
+        function validatePasswordConfirm(passwordConfirm) {
+            if (passwordConfirm.trim() === '') return true;
+            const password = document.getElementById('password').value;
+            if (passwordConfirm !== password) {
+                document.getElementById('passwordConfirmErrorTooltip').textContent = 'Hasła nie są identyczne.';
+                return false;
+            }
+            return true;
+        }
+        function toggleError(errorElement, isValid, input) {
+            if (isValid || input.value.trim() === '') {
+                errorElement.classList.add('hidden');
+                input.classList.remove('border-error');
+            } else {
+                errorElement.classList.remove('hidden');
+                input.classList.add('border-error');
+            }
+        }
     });
 </script>
 

@@ -166,7 +166,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description.&quot;,&#10;  &quot;rpgSystem&quot;: {&#10;    &quot;id&quot;: 1&#10;  }&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 2&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description. 2&quot;,&#10;  &quot;rpgSystem&quot;: {&#10;    &quot;id&quot;: 1&#10;  }&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -1331,7 +1331,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;gameId&quot;: 1,&#10;  &quot;userId&quot;: 3,&#10;  &quot;title&quot;: &quot;Test 3&quot;,&#10;  &quot;content&quot;: &quot;# **Test**&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;gameId&quot;: 1,&#10;  &quot;userId&quot;: 1,&#10;  &quot;title&quot;: &quot;Test 3&quot;,&#10;  &quot;content&quot;: &quot;# **Test**&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -1358,7 +1358,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;gameId&quot;: 1,&#10;  &quot;userId&quot;: 1,&#10;  &quot;title&quot;: &quot;Pierwsza notatka - edytowana&quot;,&#10;  &quot;content&quot;: &quot;Zmieniona treść notatki *markdown* po edycji.&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;gameId&quot;: 2,&#10;  &quot;userId&quot;: 1,&#10;  &quot;title&quot;: &quot;Pierwsza notatka - edytowana&quot;,&#10;  &quot;content&quot;: &quot;Zmieniona treść notatki *markdown* po edycji.&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>

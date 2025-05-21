@@ -238,7 +238,12 @@
             Swal.close();
 
             if (response.ok) {
-                Swal.fire({ icon: 'success', text: result.message || "Zdjęcie zaktualizowane!" });
+                Swal.fire({ icon: 'success', text: result.message || "Zdjęcie zaktualizowane!" })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
                 updateProfilePhoto(currentPhotoFilename);
             } else {
                 Swal.fire({ icon: 'error', text: result.message || "Błąd podczas przesyłania zdjęcia." });

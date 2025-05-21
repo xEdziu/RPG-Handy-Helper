@@ -61,39 +61,39 @@
             },
         };
         document.addEventListener("DOMContentLoaded", function () {
-        const toggleSwitch = document.getElementById("switch-component");
-        const body = document.body;
-        const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
-        const favicon = document.getElementById("favicon");
-        function updateFavicon(theme) {
-            if (favicon) {
-                favicon.href = theme === "dark"
-                    ? "/img/logo/logo-dark.svg"
-                    : "/img/logo/logo-light.svg";
+            const toggleSwitch = document.getElementById("switch-component");
+            const body = document.body;
+            const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+            const favicon = document.getElementById("favicon");
+            function updateFavicon(theme) {
+                if (favicon) {
+                    favicon.href = theme === "dark"
+                        ? "/img/logo/logo-dark.svg"
+                        : "/img/logo/logo-light.svg";
+                }
             }
-        }
-        function applyTheme(theme) {
-            body.classList.toggle("dark", theme === "dark");
-            localStorage.setItem("theme", theme);
-            updateFavicon(theme);
-            if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
-        }
-        const savedTheme = localStorage.getItem("theme") || "dark";
-        applyTheme(savedTheme);
-        if (toggleSwitch) {
-            toggleSwitch.addEventListener("change", function () {
-                const newTheme = toggleSwitch.checked ? "dark" : "light";
-                applyTheme(newTheme);
-            });
-        }
-        if (themeToggleDiv) {
-            themeToggleDiv.addEventListener("click", function (e) {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
-                const savedTheme = localStorage.getItem("theme") || "dark";
-                applyTheme(savedTheme);
-            });
-        }
-    });
+            function applyTheme(theme) {
+                body.classList.toggle("dark", theme === "dark");
+                localStorage.setItem("theme", theme);
+                updateFavicon(theme);
+                if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+            }
+            const savedTheme = localStorage.getItem("theme") || "dark";
+            applyTheme(savedTheme);
+            if (toggleSwitch) {
+                toggleSwitch.addEventListener("change", function () {
+                    const newTheme = toggleSwitch.checked ? "dark" : "light";
+                    applyTheme(newTheme);
+                });
+            }
+            if (themeToggleDiv) {
+                themeToggleDiv.addEventListener("click", function (e) {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                    const savedTheme = localStorage.getItem("theme") || "dark";
+                    applyTheme(savedTheme);
+                });
+            }
+        });
     </script>
 </head>
 
@@ -103,7 +103,9 @@
             <i class="fa-solid fa-sun text-light-accent dark:text-dark-accent"></i>
             <label for="switch-component" class="relative inline-block w-12 h-6 cursor-pointer">
                 <input id="switch-component" type="checkbox" class="peer hidden" checked />
-                <div class="w-12 h-6 rounded-full transition-all duration-300 bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary"></div>
+                <div
+                    class="w-12 h-6 rounded-full transition-all duration-300 bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary">
+                </div>
                 <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-light-accent dark:bg-dark-accent
                     shadow-md transition-all duration-300 peer-checked:translate-x-[0.75rem] pointer-events-none">
                 </div>
@@ -114,29 +116,26 @@
     <div class="fixed top-0 left-0 p-5 z-50">
         <a href="/">
             <div>
-                <img src="/img/logo/logo-light.svg" alt="Logo Light" class="block dark:hidden w-16 h-auto mx-auto lg:hidden lg:dark:hidden" />
-                <img src="/img/logo/logo-dark.svg" alt="Logo Dark" class="hidden dark:block w-16 h-auto mx-auto lg:hidden lg:dark:hidden" />
-                <img src="/img/logo/logo_with_text_light_version.svg" alt="Logo Light" class="hidden lg:hidden lg:dark:block w-64 h-auto"/>
-                <img src="/img/logo/logo_with_text_dark_version.svg" alt="Logo Dark" class="hidden lg:block lg:dark:hidden w-64 h-auto"/>
+                <img src="/img/logo/logo-light.svg" alt="Logo Light"
+                    class="block dark:hidden w-16 h-auto mx-auto md:hidden md:dark:hidden" />
+                <img src="/img/logo/logo-dark.svg" alt="Logo Dark"
+                    class="hidden dark:block w-16 h-auto mx-auto md:hidden md:dark:hidden" />
+                <img src="/img/logo/logo_with_text_light_version.svg" alt="Logo Light"
+                    class="hidden md:hidden md:dark:block w-64 h-auto" />
+                <img src="/img/logo/logo_with_text_dark_version.svg" alt="Logo Dark"
+                    class="hidden md:block md:dark:hidden w-64 h-auto" />
             </div>
         </a>
     </div>
     <main
-        class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen p-5">
-        <h1 class="text-center text-5xl md:text-7xl font-bold text-light-accent dark:text-dark-accent">
-            Pokój nie został
-        </h1>
-        <h1 class="text-center text-5xl md:text-7xl font-bold text-light-accent dark:text-dark-accent mb-8">
-            znaleziony
-        </h1>
-
+        class="flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-screen">
+        <h1 class="text-center text-9xl font-bold text-light-accent dark:text-dark-accent mb-8">403</h1>
         <h2 class="text-center text-2xl md:text-4xl font-semibold text-light-textSecondary dark:text-dark-textSecondary mb-8">
-            Dany pokój nie istnieje lub został zamknięty.
+            Nie masz uprawnień,<br> aby wejść na te stronę.
         </h2>
         <h2 class="text-center text-2xl md:text-4xl font-semibold text-light-textSecondary dark:text-dark-textSecondary">
-            Poproś Twojego Mistrza Gry, aby utworzył nowy!
+             Straż Cię zauważyła jak <br>próbowałeś się przekraść...
         </h2>
-
         <a href="/">
             <img src="/img/assets/home_button_light_version.svg" alt="Home Light"
                 class="block dark:hidden w-12 md:w-16 h-auto mx-auto mt-8" />

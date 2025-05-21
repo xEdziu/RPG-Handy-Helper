@@ -41,6 +41,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/login", "/api/v1/**", "/register", "/activate").permitAll()
                                 .requestMatchers("/forgotPassword", "/resetPassword").permitAll()
                                 .requestMatchers("/", "/index.html", "/static/**", "/resources/**").permitAll() // Allow access to static resources
+                                .requestMatchers("/styles/**", "/scripts/**", "/img/**", "/fonts/**").permitAll() // Allow access to static resources
                                 .requestMatchers("/actuator/health").permitAll() // Allow access to health check
                                 .requestMatchers("/styles/**", "/scripts/**", "/img/**", "/fonts/**").permitAll() // Allow access to static resources
                                 .anyRequest()
