@@ -4,6 +4,7 @@ import dev.goral.rpgmanager.email.EmailService;
 import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import dev.goral.rpgmanager.scheduler.dto.common.TimeRangeDto;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.EditSchedulerRequest;
@@ -72,10 +73,9 @@ public class SchedulerService {
             throw new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId());
         }
 
-        // Sprawdź, czy twórca harmonogramu to GameMaster
-        if (!gameRepository.findById(request.getGameId())
-                .orElseThrow(() -> new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId()))
-                .getGameMaster().getId().equals(creator.getId())) {
+        if (!gameUsersRepository.findUserInGame(request.getGameId(), creator.getId())
+                .map(gameUsers -> gameUsers.getRole() == GameUsersRole.GAMEMASTER)
+                .orElse(false)) {
             throw new IllegalStateException("Tylko GameMaster może stworzyć harmonogram");
         }
 
