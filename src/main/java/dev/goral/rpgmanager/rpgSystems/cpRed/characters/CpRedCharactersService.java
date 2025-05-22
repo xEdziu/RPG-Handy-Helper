@@ -150,7 +150,7 @@ public class CpRedCharactersService {
         cpRedCharacter.setExpAvailable(character.getExpAvailable());
         cpRedCharacter.setCash(character.getCash());
         if(character.getCharacterPhotoPath() == null) {
-            character.setCharacterPhotoPath("static/img/profilePics/cyberpunkDefaultProfilePic.png");
+            character.setCharacterPhotoPath("static/img/profilePics/defaultProfilePic-cyberpunk.png");
         } else {
             character.setCharacterPhotoPath(character.getCharacterPhotoPath());
         }

@@ -220,9 +220,7 @@ public class UserService implements UserDetailsService {
 
             // Usuń poprzednie zdjęcie, jeśli nie jest domyślne
             String oldPath = user.getUserPhotoPath();
-            if (oldPath != null &&
-                    !oldPath.equals("/img/profilePics/defaultProfilePic.png") &&
-                    !oldPath.equals("/img/profilePics/cyberpunkDefaultProfilePic.png")) {
+            if (oldPath != null && !oldPath.startsWith("defaultProfilePic")) {
 
                 Path baseDir = Paths.get("src/main/resources/static/img/profilePics").normalize().toAbsolutePath();
                 String oldFilename = Paths.get(oldPath).getFileName().toString();
