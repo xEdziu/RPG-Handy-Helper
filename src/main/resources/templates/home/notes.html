@@ -618,19 +618,24 @@
         }
         function updateCampaignFilterOptions(selectedSystem) {
             const campaignFilter = document.getElementById('campaign-name-filter');
+            const previousValue = campaignFilter.value;
             const campaigns = noteContent
                 .filter(note => !selectedSystem || note.rpgSystemName === selectedSystem)
                 .map(note => note.gameName);
             const uniqueCampaigns = [...new Set(campaigns)];
-            campaignFilter.innerHTML = '<option value="">Kampania</option>';
+            campaignFilter.innerHTML = '<option value="" disabled>Kampania</option>';
             uniqueCampaigns.forEach(campaign => {
                 const option = document.createElement('option');
                 option.value = campaign;
                 option.textContent = campaign;
                 campaignFilter.appendChild(option);
             });
+            if (previousValue && uniqueCampaigns.includes(previousValue)) {
+                campaignFilter.value = previousValue;
+            } else {
+                campaignFilter.value = "";
+            }
         }
-
         function clearFilters() {
             document.getElementById('search-input').value = '';
             document.getElementById('game-name-filter').selectedIndex = 0;
