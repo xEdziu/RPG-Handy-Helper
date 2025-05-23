@@ -75,11 +75,11 @@
 
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
+            getAllGamesForUser();
             getAllSystems();
             getUserInfo();
             initThemeToggle();
             applyTheme(getSavedTheme());
-            getAllGamesForUser();
             loadNotes();
         });
 
@@ -581,7 +581,6 @@
             if (systemFilter) {
                 filteredNotes = filteredNotes.filter(note => note.rpgSystemName === systemFilter);
             }
-            updateCampaignFilterOptions(systemFilter);
             if (campaignFilter) {
                 filteredNotes = filteredNotes.filter(note => note.gameName === campaignFilter);
             }
@@ -618,27 +617,21 @@
         }
         function updateCampaignFilterOptions(selectedSystem) {
             const campaignFilter = document.getElementById('campaign-name-filter');
-            const previousValue = campaignFilter.value;
             const campaigns = noteContent
                 .filter(note => !selectedSystem || note.rpgSystemName === selectedSystem)
                 .map(note => note.gameName);
             const uniqueCampaigns = [...new Set(campaigns)];
-            campaignFilter.innerHTML = '<option value="" disabled>Kampania</option>';
+            campaignFilter.innerHTML = '<option value="">Kampania</option>'; // domyślna opcja
             uniqueCampaigns.forEach(campaign => {
                 const option = document.createElement('option');
                 option.value = campaign;
                 option.textContent = campaign;
                 campaignFilter.appendChild(option);
             });
-            if (previousValue && uniqueCampaigns.includes(previousValue)) {
-                campaignFilter.value = previousValue;
-            } else {
-                campaignFilter.value = "";
-            }
         }
         function clearFilters() {
             document.getElementById('search-input').value = '';
-            document.getElementById('game-name-filter').selectedIndex = 0;
+            document.getElementById('game-name-filter').selectedIndex = '';
             document.getElementById('campaign-name-filter').selectedIndex = 0;
             document.getElementById('sort-by').value = 'data-modify';
             document.getElementById('sort-order').value = 'DESC';
@@ -811,6 +804,12 @@
                 <option value="DESC" class="block">Sortuj od Z do A</option>
             `;
         }
+    });
+    document.getElementById('game-name-filter').addEventListener('change', function () {
+        const selectedSystem = this.value;
+        updateCampaignFilterOptions(selectedSystem);
+        document.getElementById('campaign-name-filter').selectedIndex = 0;
+        applyFilters();
     });
     // ==== Listener for Note ====
     document.addEventListener('click', (e) => {
