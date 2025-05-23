@@ -4,7 +4,6 @@ import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -12,17 +11,21 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @AllArgsConstructor
 public class GameRoomManager {
+
 
     private final Map<String, GameRoom> activeRooms = new ConcurrentHashMap<>();
 
     private final GameRoomHistoryRepository historyRepository;
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public GameRoom createRoom(Long gameId, Long creatorId) {
         String roomId = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
@@ -42,27 +45,29 @@ public class GameRoomManager {
         }
     }
 
-    public void removeUserBySession(String sessionId) {
-        List<String> emptyRooms = new ArrayList<>();
+    public synchronized void removeUserBySession(String sessionId) {
+        GameRoom room = activeRooms.values().stream()
+                .filter(r -> r.getUserSessions().containsValue(sessionId))
+                .findFirst()
+                .orElse(null);
 
-        for (GameRoom room : activeRooms.values()) {
-            boolean hadSession = room.getConnectedUsersOrdered().stream()
-                    .anyMatch(username -> sessionId.equals(room.getConnectedSessionId(username)));
-
+        if (room != null) {
             room.removeUserBySession(sessionId);
 
-            if (hadSession) {
-                List<String> updatedUsers = room.getConnectedUsersOrdered();
-                messagingTemplate.convertAndSend("/topic/chat/" + room.getRoomId() + "/users", updatedUsers);
-            }
-
             if (room.isEmpty()) {
-                saveRoomHistory(room);
-                emptyRooms.add(room.getRoomId());
+                String roomId = room.getRoomId();
+
+                // Opóźnione usunięcie pokoju po 60 sekundach
+                scheduler.schedule(() -> {
+                    GameRoom stillEmpty = activeRooms.get(roomId);
+                    if (stillEmpty != null && stillEmpty.isEmpty()) {
+                        saveRoomHistory(stillEmpty);
+                        activeRooms.remove(roomId);
+                        System.out.println("Pokój " + roomId + " został usunięty po 30 sekundach bez użytkowników.");
+                    }
+                }, 30, TimeUnit.SECONDS);
             }
         }
-
-        emptyRooms.forEach(activeRooms::remove);
     }
 
     public List<String> getConnectedUsers(String roomId) {
@@ -107,6 +112,10 @@ public class GameRoomManager {
     }
 
     public GameRoom getRoom(String roomId) {
+        return activeRooms.get(roomId);
+    }
+
+    public GameRoom getRoomById(String roomId) {
         return activeRooms.get(roomId);
     }
 }
