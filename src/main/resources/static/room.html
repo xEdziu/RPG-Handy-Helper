@@ -64,10 +64,20 @@
                 },
             },
         };
+        // ==== Zmienne globalne ====
+        var userInfo = null;
+        var gameId = null;
+        var allNotesForGame = null;
+        var noteEditorMode = 'preview';
         // ===== DOMContentLoaded =====
         document.addEventListener("DOMContentLoaded", () => {
+            getUserInfo();
             initThemeToggle();
             applyTheme(getSavedTheme());
+            getGameIdFromUrl();
+            setTimeout(() => {
+                loadNotes();
+            }, 100);
         });
         // ==== Changing the theme ====
         function initThemeToggle() {
@@ -86,7 +96,6 @@
                 updateTheme();
             });
         }
-
         function applyTheme(theme) {
             document.body.classList.toggle("dark", theme === "dark");
             localStorage.setItem("theme", theme);
@@ -97,17 +106,363 @@
                 toggle.checked = (theme === "dark");
             }
         }
-
         function updateFavicon(theme) {
             const favicon = document.getElementById("favicon");
             if (favicon) {
                 favicon.href = `/img/logo/logo-${theme}.svg`;
             }
         }
-
         function getSavedTheme() {
             return localStorage.getItem("theme") ||
                 (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        }
+        // ==== CRF Token ====
+        function getCsrfToken() {
+            const name = "XSRF-TOKEN=";
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name)) {
+                    return decodeURIComponent(cookie.substring(name.length));
+                }
+            }
+            return null;
+        }
+        // ==== Get User Info ====
+        function getUserInfo() {
+            fetch('/api/v1/authorized/user', {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                userInfo = data;
+            }).catch(error => {
+                console.error('Error fetching user info:', error);
+            });
+        }
+        // ==== Get Game ID from URL ====
+        function getGameIdFromUrl() {
+            var roomId = window.location.pathname.split("/").pop()
+            fetch(`/api/v1/authorized/gameRoom/gameIdForRoomId/${roomId}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                gameId = data.gameId;
+            }).catch(error => {
+                console.error('Error fetching user info:', error);
+            });
+        }
+        // ==== Note Functions ====
+        function loadNotes() {
+            fetch(`/api/v1/authorized/gameNotes/game/${gameId}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                allNotesForGame = data.gameNotes;
+                console.log(allNotesForGame);
+                const notesContent = document.getElementById("notes-content");
+                notesContent.innerHTML = "";
+                if (allNotesForGame.length == 0) {
+                    notesContent.innerHTML = generateInfoHTML(
+                        `Nie masz jeszcze żadnych notatek!`,
+                        `Na szczęśnie masz już odblokowaną umiejętność pisania`,
+                        `Utwórz swoją pierwszą notatkę już teraz.`
+                    );
+                } else {
+                    allNotesForGame.forEach(note => {
+                        notesContent.innerHTML += generatePieceOfNoteHTML(note);
+                    });
+                }
+            }).catch(error => {
+                console.error('Error fetching notes:', error);
+            });
+        }
+        function displayNote(idNote) {
+            noteEditorMode = 'preview';
+            const note = noteContent.find(note => note.id == idNote);
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.innerHTML = '';
+            noteEditor.innerHTML = generateNoteHTML(note);
+            actualNote = note;
+            showNoteEditor();
+        }
+        function createNote() {
+            noteEditorMode = 'create';
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.innerHTML = '';
+            noteEditor.innerHTML = generateNewNoteHTML();
+            showNoteEditor();
+        }
+        function deleteNote(idNote) {
+            Swal.fire({
+                title: 'Czy na pewno chcesz usunąć tę notatkę?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Tak, usuń!',
+                cancelButtonText: 'Anuluj'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/api/v1/authorized/gameNotes/delete/${idNote}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-XSRF-TOKEN': getCsrfToken()
+                        }
+                    }).then(
+                        response => {
+                            if (!response.ok) throw new Error('Network response was not ok');
+                            return response.json();
+                        }
+                    ).then(data => {
+                        if (data.error != "200") {
+                            console.error('API Error:', data.error);
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Notatka została usunięta!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            noteContent = noteContent.filter(note => note.id !== idNote);
+                            loadNotes();
+                            hideNoteEditor();
+                        }
+                    }).catch(error => {
+                        console.error('Nie udało się usunąć notatki:', error);
+                    });
+                }
+            });
+        }
+        function saveNote(idNote) {
+            getLisinerParesr();
+            const noteTitle = document.getElementById('note-title').value.trim();
+            const noteText = document.getElementById('note-content').value.trim();
+            const gameId = document.getElementById('game-name').value;
+            noteContent.forEach(note => {
+                if (note.title == noteTitle && note.id != idNote) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Tytuł już istnieje!',
+                        text: `Zmień tytuł notatki, aby zapisać obecną.`,
+                    });
+                    return;
+                }
+            })
+            var data = [
+                { objekt: noteTitle, name: 'Brak tytułu!' },
+                { objekt: noteText, name: 'Brak treści!' },
+                { objekt: gameId, name: 'Brak kampanii!' },
+            ]
+            data.forEach(element => {
+                if (element.objekt == null || element.objekt == undefined || element.objekt == '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: `${element.name}`,
+                        text: `Uzupełnij wszystkie pola. `,
+                    });
+                    return;
+                }
+            });
+            if (!gameId || gameId == null || gameId == undefined || gameId == '') {
+                return;
+            }
+            const note = {
+                title: noteTitle,
+                content: noteText,
+                gameId: gameId,
+                userId: userInfo.id
+            };
+            fetch('/api/v1/authorized/gameNotes/add', {
+                method: 'POST',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(note)
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                if (data.error != "200") {
+                    console.error('API Error:', data.error);
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notatka została zapisana!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    loadNotes();
+                    hideNoteEditor();
+                    document.getElementById('search-input').disabled = false;
+                    disableControlNoteControls(false);
+                    setTimeout(() => {
+                        forceReload();
+                    }, 1000);
+                }
+            }).catch(error => {
+                console.error('Nie udało się zapisać notatki:', error);
+            });
+        }
+        function editNote(idNote) {
+            noteEditorMode = 'edit';
+            const note = noteContent.find(note => note.id == idNote);
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.innerHTML = '';
+            noteEditor.innerHTML = generateEditNoteHTML(note);
+            showNoteEditor();
+        }
+        function showPreviewNote(mode = '') {
+            getLisinerParesr();
+            const preview = document.getElementById('note-preview');
+            let noteTitleBox, noteContentBox, noteConteiner, button;
+            if (mode === "create") {
+                noteTitleBox = document.getElementById('note-title');
+                noteContentBox = document.getElementById('note-content');
+                noteConteiner = document.getElementById('new-note-content');
+                button = document.getElementById('create-preview-note');
+            } else {
+                noteTitleBox = document.getElementById('edit-note-title');
+                noteContentBox = document.getElementById('edit-note-content');
+                noteConteiner = document.getElementById('edit-note-conteiner');
+                button = document.getElementById('edit-preview-note');
+            }
+            if (!noteTitleBox || !noteContentBox || !preview) {
+                console.warn('Brakuje elementów do dynamicznego podglądu.');
+                return;
+            }
+            let title = noteTitleBox.value.trim() || "Notatki bez tytułu?";
+            let content = noteContentBox.value.trim() || "<p><em>*Podgląd pusty...*</em></p>";
+            preview.innerHTML = `
+                <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left py-1 pb-[1.3em]">${title}</h2>
+                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                    ${parseMarkdown(content, true)}
+                </div>
+            `;
+            const show = preview.classList.contains('hidden');
+            if (button) {
+                if (show) {
+                    button.innerText = "Zamknij podgląd";
+                } else {
+                    button.innerText = "Podgląd";
+                }
+            }
+            if (_isMobile) {
+                noteTitleBox.classList.toggle('hidden', show);
+                noteContentBox.classList.toggle('hidden', show);
+                preview.classList.toggle('hidden', !show);
+            } else {
+                preview.classList.toggle('hidden', !show);
+                preview.classList.toggle('block', show);
+                preview.classList.toggle('w-1/2', show);
+                noteConteiner.classList.toggle('w-1/2', show);
+            }
+        }
+        function saveEditedNote(noteId) {
+            disableLisinerParser();
+            const noteTitle = document.getElementById('edit-note-title').value.trim();
+            const newnoteContent = document.getElementById('edit-note-content').value.trim();
+            const oldNote = noteContent.find(note => note.id == noteId);
+            if (noteTitle === '' || newnoteContent === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Nie można zapisać notatki!',
+                    text: 'Tytuł i treść notatki nie mogą być puste. Uzupełnij brakujące pola przed zapisaniem.',
+                });
+                return;
+            }
+            if (noteContent.some(note => note.title === noteTitle && note.id !== noteId)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Tytuł już istnieje!',
+                    text: `Zmień tytuł notatki, aby zapisać obecną.`,
+                });
+                return;
+            }
+            const note = {
+                gameId: RpgSystem.find(system => system.name === oldNote.rpgSystemName)?.id,
+                userId: userInfo.id,
+                title: noteTitle,
+                content: newnoteContent,
+            };
+            fetch(`/api/v1/authorized/gameNotes/update/${noteId}`, {
+                method: 'PUT',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(note)
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                if (data.error != "200") {
+                    console.error('API Error:', data.error);
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notatka została zaktualizowana!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    noteContent = noteContent.map(note => {
+                        if (note.id == noteId) {
+                            return {
+                                ...note,
+                                title: noteTitle,
+                                content: newnoteContent,
+                                updatedAt: new Date().toISOString()
+                            };
+                        }
+                        return note;
+                    });
+                    loadNotes();
+                    hideNoteEditor();
+                    document.getElementById('search-input').disabled = false;
+                }
+            }).catch(error => {
+                console.error('Nie udało się zaktualizować notatki:', error);
+            });
+        }
+        // ==== Funtion Editor Display ====
+        function showNoteEditor() {
+            const backdrop = document.getElementById('note-editor-backdrop');
+            const editor = document.getElementById('note-editor');
+            backdrop.classList.remove('pointer-events-none', 'opacity-0');
+            backdrop.classList.add('opacity-100');
+            editor.classList.remove('scale-95', 'opacity-0');
+            editor.classList.add('scale-100', 'opacity-100');
+        }
+        function hideNoteEditor() {
+            const backdrop = document.getElementById('note-editor-backdrop');
+            const editor = document.getElementById('note-editor');
+            backdrop.classList.add('opacity-0', 'pointer-events-none');
+            backdrop.classList.remove('opacity-100');
+            editor.classList.add('scale-95', 'opacity-0');
+            editor.classList.remove('scale-100', 'opacity-100');
         }
     </script>
 </head>
@@ -163,7 +518,6 @@
             <div id="chat-container"
                 class="flex flex-col grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4">
                 <div class="max-w-3xl mx-auto p-4">
-
 
                     <h2 class="text-2xl font-bold mb-2">Pokój czatowy: <span id="room-id" class="font-mono"></span></h2>
 
@@ -239,7 +593,13 @@
                 </div>
             </div>
         </div>
-
+        <!-- Edytor notatki -->
+        <div id="note-editor-backdrop"
+            class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none bg-black/30 dark:bg-black/50 transition-opacity duration-300">
+            <div id="note-editor"
+                class="w-[90vw] sm:w-[95vw] md:w-[70vw] lg:w-[50vw] bg-white dark:bg-dark-surface text-black dark:text-white p-6 px-10 rounded-lg shadow-xl overflow-auto flex-col justify-between transition-all duration-300 ease-in-out scale-95 opacity-0">
+            </div>
+        </div>
     </main>
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
@@ -416,5 +776,196 @@
             rollPool.push(`${qty}d${sides}`);
         }
         document.getElementById("dice-input").value = rollPool.join("+");
+    }
+</script>
+<script>
+    // ==== Listener for Window Size ====
+    var _isMobile = false;
+    window.addEventListener('resize', function () {
+        const windowWidth = window.innerWidth
+        if (windowWidth < 1024) {
+            _isMobile = true;
+        } else {
+            _isMobile = false;
+        }
+    });
+    window.addEventListener('load', function () {
+        const windowWidth = window.innerWidth
+        if (windowWidth < 1024) {
+            _isMobile = true;
+        } else {
+            _isMobile = false;
+        }
+    });
+    // ==== Listener for Note ====
+    document.addEventListener('click', (e) => {
+        const backdrop = document.getElementById('note-editor-backdrop');
+        const editor = document.getElementById('note-editor');
+        if (!editor || !backdrop) return;
+        const isEditorVisible = !backdrop.classList.contains('pointer-events-none');
+        const clickedBackdrop = isEditorVisible && e.target === backdrop;
+        if (!clickedBackdrop) return;
+        if (noteEditorMode === 'create') {
+            const noteTitle = document.getElementById('note-title').value.trim();
+            const noteText = document.getElementById('note-content').value.trim();
+            if (noteTitle === '' && noteText === '') {
+                noteEditorMode = 'preview';
+                hideNoteEditor();
+                return;
+            }
+        }
+        if (noteEditorMode === 'edit') {
+            const noteTitle = document.getElementById('edit-note-title').value.trim();
+            const noteText = document.getElementById('edit-note-content').value.trim();
+            if (noteTitle === actualNote.title && noteText === actualNote.content) {
+                noteEditorMode = 'preview';
+                hideNoteEditor();
+                return;
+            }
+        }
+        if (noteEditorMode === 'edit' || noteEditorMode === 'create') {
+            Swal.fire({
+                title: 'Czy na pewno chcesz wyjść?',
+                text: 'Niezapisane zmiany zostaną utracone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Tak, wyjdź',
+                cancelButtonText: 'Nie, wróć'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    noteEditorMode = 'preview';
+                    hideNoteEditor();
+                }
+            });
+        } else {
+            noteEditorMode = 'preview';
+            hideNoteEditor();
+        }
+    });
+    // ==== Variable for Styling ====
+    var noteStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary break-words whitespace-normal overflow-hidden text-ellipsis";
+    var infoStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono";
+    // ==== Function to generate html ====
+    function generateInfoHTML(info1, info2, info3) {
+        return `
+            <div class="${infoStyle}">
+                ${info1 ? `<p class="text-light-textPrimary dark:text-dark-textPrimary m-2">${info1}</p>` : ''}
+                ${info2 ? `<p class="text-light-textPrimary dark:text-dark-textPrimary m-2">${info2}</p>` : ''}
+                ${info3 ? `<p class="text-light-textPrimary dark:text-dark-textPrimary m-2">${info3}</p>` : ''}
+            </div>
+        `;
+    }
+    function generatePieceOfNoteHTML(note) {
+        return `
+        <div class="${noteStyle}" onclick="displayNote(${note.id})">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex flex-col sm:flex-row text-xl font-semibold mb-1 font-jetbrains-mono gap-x-4">
+                    <span class="text-light-accent dark:text-dark-accent"> ${note.gameName}</span>
+                    ${note.rpgSystemName}
+                </div>
+                <small class="hidden sm:block">${formatDate(note.updatedAt)}</small>
+            </div>
+            <h2 class= "text-2xl font-semibold mb-2 font-jetbrains-mono">${note.title}</h2>
+            <p class="ml-8 break-words whitespace-normal overflow-hidden text-ellipsis">${parseMarkdown(truncateText(note.content, 80))}</p>
+        </div>
+        `;
+    }
+    function generateNewNoteHTML() {
+        return `
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex flex-col items-start w-1/2">
+                <!-- 
+                    @TODO: DODAĆ OPIS GRY JAK BĘDZIE NAPRAWA API    
+                -->
+            </div>
+            <div class="flex flex-col lg:flex-row gap-2 items-right">
+                <button id="save-note"
+                    class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                    onclick="saveNote()">Zapisz</button>
+                <button id="create-preview-note"
+                    class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                    onclick="showPreviewNote('create')">Podgląd</button>
+            </div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
+            <div class="flex flex-col w-full" id="new-note-content">
+                <input id="note-title" type="text" placeholder="Tytuł notatki" maxlength="90"
+                    class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
+                <textarea id="note-content" rows="10" placeholder="Treść notatki"
+                    class="h-[32vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 overflow-auto font-jetbrains-mono"></textarea>
+            </div>
+            <div id="note-preview"
+                class="w-full lg:w-1/2 px-2 p-2 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left hidden">
+
+            </div>
+        </div>
+        `;
+    }
+    function generateNoteHTML(note) {
+        return `
+        <div class="flex flex-col sm:flex-row justify-end lg:flex-row gap-2 sm:gap-4 mb-4 sm:mb-0">
+            <div class="flex flex-col w-full">
+                <p class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${note.rpgSystemName}</p>
+                <p class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
+            </div>
+            <div class="flex flex-col items-start justify-start text-xs text-light-textSecondary dark:text-dark-textSecondary whitespace-nowrap">
+                <p>Ostatnia modyfikacja: ${formatDate(note.updatedAt)}</p>
+                <p>Utworzono: ${formatDate(note.createdAt)}</p>
+            </div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
+            <div class="flex flex-col w-full">
+                <div class="w-full mb-4 flex justify-between items-start gap-4">
+                  <h1 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary leading-tight break-words whitespace-normal w-[70%]">
+                    ${note.title}
+                  </h1>
+                  <div class="flex-shrink-0 flex gap-2 xl:flex-row align-end flex-col md:flex-row">
+                    <button onclick="editNote(${note.id})"
+                      class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap">
+                      Edytuj
+                    </button>
+                    <button onclick="deleteNote(${note.id})"
+                      class="w-[80px] text-base font-bold bg-light-error dark:bg-dark-error text-white px-4 py-2 rounded hover:bg-red-600 whitespace-nowrap">
+                      Usuń
+                    </button>
+                  </div>
+                </div>
+                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                    ${parseMarkdown(note.content, true)}
+                </div>
+            </div>
+        </div>
+        `;
+    }
+    function generateEditNoteHTML(note) {
+        return `
+        <div class="flex flex-row justify-end lg:flex-row gap-4">
+            <div class="flex flex-col w-full">
+                <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${note.rpgSystemName}</p>
+                <p id="game-name" class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
+                <p id="game-description" class="text-xs text-light-textSecondary dark:text-dark-textSecondary mb-1"></p>
+            </div>
+            <div class="flex gap-2 items-centerv flex-col md:flex-ro">
+                <button id="edit-preview-note"
+                    class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap"
+                    onclick="showPreviewNote('edit')">Podgląd</button>
+                <button id="save-note"
+                    class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap"
+                    onclick="saveEditedNote(${note.id})">Zapisz</button>
+            </div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
+            <div class="flex flex-col w-full" id="edit-note-conteiner">
+                <input id="edit-note-title" type="text" value="${note.title.replace(/"/g, '&quot;')}" placeholder="Tytuł notatki"
+                    class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400      dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
+                <textarea id="edit-note-content" rows="10" placeholder="Treść notatki"
+                    class="h-[33.5vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none         focus:ring-0 overflow-auto font-jetbrains-mono">${note.content}</textarea>
+            </div>
+            <div id="note-preview"
+                class="w-full lg:w-1/2 px-2 p-2 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left hidden">
+
+            </div>
+        </div>
+        `;
     }
 </script>
