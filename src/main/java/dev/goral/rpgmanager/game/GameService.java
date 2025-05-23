@@ -150,6 +150,43 @@ public class GameService {
         return CustomReturnables.getOkResponseMap("Użytkownik został dodany do gry.");
     }
 
+    public Map<String, Object> deleteUserFromGame(DeleteUserFromGameRequest request) {
+
+        if ( request.getGameId() == null || request.getUserId() == null) {
+            throw new IllegalArgumentException("Nie podano wszystkich danych.");
+        }
+
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o podanym ID nie istnieje."));
+        Game game = gameRepository.findById(request.getGameId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o podanym ID nie istnieje."));
+
+        if(!gameUsersRepository.existsByUserIdAndGameId(user.getId(), game.getId())) {
+            throw new IllegalArgumentException("Nie ma użytkownika w grze.");
+        }
+
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalArgumentException("Nie można usunąć użytkownika z nieaktywnej gry.");
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(request.getGameId(), currentUser.getId());
+        if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalArgumentException("Nie możesz usunąć użytkownika z gry, gdy nie jesteś jej GameMasterem.");
+        }
+
+        GameUsers delUser = gameUsersRepository.findByGameIdAndUserId(request.getGameId(), request.getUserId());
+        if(delUser == null||delUser.getRole()==GameUsersRole.GAMEMASTER) {
+            throw new IllegalArgumentException("Nie można usunąć GameMastera z gry.");
+        }
+        gameUsersRepository.delete(delUser);
+        return CustomReturnables.getOkResponseMap("Użytkownik został usunięty z gry.");
+    }
+
     @Transactional
     public Map<String, Object> updateGame(Long gameId, Game game) {
         Game gameToUpdate = gameRepository.findGameById(gameId).orElse(null);
