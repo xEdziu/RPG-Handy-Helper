@@ -1,6 +1,6 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCustomWeaponAmmunition;
 
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.ammunition.CpRedAmmunition;
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.ammunition.CpRedAmmunition;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCustomWeapon.CpRedCharacterCustomWeapon;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

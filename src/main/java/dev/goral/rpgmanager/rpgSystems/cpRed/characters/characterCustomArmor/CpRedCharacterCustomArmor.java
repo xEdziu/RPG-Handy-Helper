@@ -2,7 +2,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCustomArmor;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.customArmors.CpRedCustomArmors;
+import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmors;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

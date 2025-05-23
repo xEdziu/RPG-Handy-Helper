@@ -16,21 +16,32 @@ public class RpgSystemsService {
 
     private final RpgSystemsRepository rpgSystemsRepository;
 
-    public RpgSystemsDTO getRpgSystemsById(Long rpgSystemsId) {
+    public Map<String, Object> getRpgSystemsById(Long rpgSystemsId) {
         RpgSystems rpgSystems = rpgSystemsRepository.findById(rpgSystemsId)
                 .orElseThrow(() -> new ResourceNotFoundException("System o id " + rpgSystemsId + " nie istnieje"));
-        return new RpgSystemsDTO(rpgSystems.getId(), rpgSystems.getName(), rpgSystems.getDescription());
+
+        RpgSystemsDTO rpgSystemsDTO = new RpgSystemsDTO(
+                rpgSystems.getId(),
+                rpgSystems.getName(),
+                rpgSystems.getDescription()
+        );
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("System został pobrany.");
+        response.put("rpgSystem", rpgSystemsDTO);
+        return response;
     }
 
-    public List<RpgSystemsDTO> getAllRpgSystems() {
-        return rpgSystemsRepository.findAll()
-                .stream()
+    public Map<String, Object> getAllRpgSystems() {
+        List<RpgSystemsDTO> rpgSystemsList = rpgSystemsRepository.findAll().stream()
                 .map(rpgSystems -> new RpgSystemsDTO(
                         rpgSystems.getId(),
                         rpgSystems.getName(),
                         rpgSystems.getDescription()
-                ))
-                .collect(Collectors.toList());
+                )).toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Systemy zostały pobrane.");
+        response.put("rpgSystems", rpgSystemsList);
+        return response;
     }
 
     public Map<String, Object> createRpgSystems(RpgSystems rpgSystems) {

@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService {
         Object principal = getAuthentication().getPrincipal();
 
         if (principal instanceof User foundUser) {
-            return new UserDTO(foundUser.getId(),foundUser.getUsername(), foundUser.getFirstName(), foundUser.getSurname(), foundUser.getEmail(), foundUser.getUserPhotoPath());
+            return new UserDTO(foundUser.getId(), foundUser.getUsername(), foundUser.getFirstName(), foundUser.getSurname(), foundUser.getEmail(), foundUser.getUserPhotoPath());
         } else if (principal instanceof DefaultOAuth2User oauthUser) {
             String email = oauthUser.getAttribute("email");
             Optional<User> userOptional = userRepository.findByEmail(email);
@@ -107,8 +107,11 @@ public class UserService implements UserDetailsService {
         return CustomReturnables.getOkResponseMap("Zdjęcie profilowe zostało ustawione.");
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Map<String, Object> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę użytkowników.");
+        response.put("users", users);
+        return response;
     }
 
     public Map<String, Object> createUserAdmin(User user) {
