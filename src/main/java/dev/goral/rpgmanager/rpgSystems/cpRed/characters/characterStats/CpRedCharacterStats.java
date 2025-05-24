@@ -1,7 +1,7 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterStats;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.stats.CpRedStats;
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.stats.CpRedStats;
 import jakarta.persistence.*;
 import lombok.*;
 

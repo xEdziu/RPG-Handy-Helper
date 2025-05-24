@@ -17,12 +17,12 @@ public class RpgSystemsController {
     // ============ User methods ============
 
     @GetMapping(path = "/rpgSystems/{rpgSystemsId}")
-    public RpgSystemsDTO getRpgSystemsById(@PathVariable("rpgSystemsId") Long rpgSystemsId) {
+    public Map<String, Object> getRpgSystemsById(@PathVariable("rpgSystemsId") Long rpgSystemsId) { // RpgSystemsDTO
         return rpgSystemsService.getRpgSystemsById(rpgSystemsId);
     }
 
     @GetMapping(path = "/rpgSystems/all")
-    public List<RpgSystemsDTO> getAllRpgSystems() {
+    public Map<String, Object> getAllRpgSystems() { // List<RpgSystemsDTO>
         return rpgSystemsService.getAllRpgSystems();
     }
 
