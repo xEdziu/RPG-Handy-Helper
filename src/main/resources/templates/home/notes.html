@@ -80,7 +80,9 @@
             getUserInfo();
             initThemeToggle();
             applyTheme(getSavedTheme());
-            loadNotes();
+            setTimeout(() => {
+                loadNotes();
+            }, 100);
         });
 
         // ==== Changing the theme ====
