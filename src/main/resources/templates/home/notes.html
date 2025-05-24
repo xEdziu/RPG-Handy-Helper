@@ -902,10 +902,9 @@
             const systemSelect = document.getElementById('game-system');
             systemSelect.selectedIndex = 0;
             if (selectedGame) {
-                console.log(selectedGame);
-                const systems = gameAccessible.find(game => game.id == selectedGame);
-                document.getElementById('game-description-new-note').innerText = systems.description;
-                document.getElementById('game-system').textContent = RpgSystem.find(system => system.id === systems.id).name;
+                const selected = gameAccessible.find(game => game.id == selectedGame);
+                document.getElementById('game-description-new-note').innerText = selected.description;
+                document.getElementById('game-system').textContent = RpgSystem.find(system => system.id == selected.rpgSystemId).name;
             }
         });
     }
@@ -1025,8 +1024,6 @@
         `;
     }
     function generateNewNoteHTML() {
-        console.log(gameAccessible);
-        console.log(RpgSystem);
         return `
         <div class="flex justify-between items-center mb-4">
             <div class="flex flex-col items-start w-1/2">
