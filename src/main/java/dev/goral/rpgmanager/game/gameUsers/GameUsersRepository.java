@@ -34,6 +34,4 @@ public interface GameUsersRepository extends JpaRepository<GameUsers, Long> {
     boolean existsByGameIdAndUserId(Long gameId, Long id);
   
     GameUsers findByGameIdAndUserId(Long gameId, Long id);
-
-    List<GameUsers> findAllByUserId(Long id);
 }

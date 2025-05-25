@@ -37,7 +37,7 @@ public class CpRedArmorsService {
             return CustomReturnables.getOkResponseMap("Brak pancerzy");
         }
         Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano pancerze");
-        response.put("classes", armorsDTO);
+        response.put("armors", armorsDTO);
         return response;
     }
 
