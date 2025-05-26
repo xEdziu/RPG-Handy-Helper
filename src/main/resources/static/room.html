@@ -235,7 +235,7 @@
                 }
             ).then(data => {
                 allNotesForGame = data.gameNotes;
-                console.log(allNotesForGame);
+                noteContent = [...allNotesForGame];
                 const notesContent = document.getElementById("notes-content");
                 notesContent.innerHTML = "";
                 if (allNotesForGame.length == 0) {
@@ -457,7 +457,7 @@
                 return;
             }
             const note = {
-                gameId: RpgSystem.find(system => system.name === oldNote.rpgSystemName)?.id,
+                gameId: gameInfo.id,
                 userId: userInfo.id,
                 title: noteTitle,
                 content: newnoteContent,
@@ -1021,6 +1021,7 @@
             <div class="flex flex-col w-full">
                 <p class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${note.rpgSystemName}</p>
                 <p class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
+                <p id="game-description-new-note" class="text-xs font-bold text-light-textPrimary dark:text-dark-textPrimary">${gameInfo.description}</p>
             </div>
             <div class="flex flex-col items-start justify-start text-xs text-light-textSecondary dark:text-dark-textSecondary whitespace-nowrap">
                 <p>Ostatnia modyfikacja: ${formatDate(note.updatedAt)}</p>
@@ -1029,8 +1030,8 @@
         </div>
         <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
             <div class="flex flex-col w-full">
-                <div class="w-full mb-4 flex justify-between items-start gap-4">
-                  <h1 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary leading-tight break-words whitespace-normal w-[70%]">
+                <div class="w-full mb-4 flex justify-between items-start gap-2">
+                  <h1 class="mt-2 text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary leading-tight break-words whitespace-normal w-[70%]">
                     ${note.title}
                   </h1>
                   <div class="flex-shrink-0 flex gap-2 xl:flex-row align-end flex-col md:flex-row">
@@ -1057,7 +1058,7 @@
             <div class="flex flex-col w-full">
                 <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${note.rpgSystemName}</p>
                 <p id="game-name" class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
-                <p id="game-description" class="text-xs text-light-textSecondary dark:text-dark-textSecondary mb-1"></p>
+                <p id="game-description-new-note" class="text-xs font-bold text-light-textPrimary dark:text-dark-textPrimary">${gameInfo.description}</p>
             </div>
             <div class="flex gap-2 items-centerv flex-col md:flex-ro">
                 <button id="edit-preview-note"
