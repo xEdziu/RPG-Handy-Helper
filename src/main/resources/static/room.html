@@ -885,7 +885,11 @@
         stompClient.connect({}, () => {
             stompClient.subscribe(`/topic/chat/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
-                appendMessage(from, content);
+                appendMessage(from, content, false);
+            });
+            stompClient.subscribe(`/user/topic/chat/${roomId}`, msg => {
+                const { from, content } = JSON.parse(msg.body);
+                appendMessage(from, content, true);  // trzeci parametr = prywatna
             });
             stompClient.subscribe(`/topic/dice/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
@@ -903,13 +907,15 @@
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
     }
-    function appendMessage(from, content) {
+
+    function appendMessage(from, content, pv = false) {
         const chat = document.getElementById("chat");
         const wrapper = document.createElement("div");
         wrapper.innerHTML = messageHTML(from, content);
         chat.appendChild(wrapper);
         chat.scrollTop = chat.scrollHeight;
     }
+
 
     document.getElementById("message-form").addEventListener("submit", e => {
         e.preventDefault();
@@ -992,7 +998,7 @@
 
         document.getElementById("dice-result").textContent = `Łączny wynik: ${total}`;
         stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({
-            from: "🧊 System",
+            from: "System",
             content: `${username} wylosował ${total} (${nat.join(", ")})`
         }));
 

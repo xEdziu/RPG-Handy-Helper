@@ -1,6 +1,7 @@
 package dev.goral.rpgmanager.user;
 
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -295,5 +296,22 @@ public class UserService implements UserDetailsService {
                 .contentType(mediaType)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
                 .body(image);
+    }
+
+    public ResponseEntity<byte[]> getUserPhotoByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o nicku: " + username));
+
+        String userPhotoPath = user.getUserPhotoPath();
+        if (userPhotoPath == null || userPhotoPath.isEmpty()) {
+            throw new ResourceNotFoundException("Użytkownik nie ma ustawionego zdjęcia profilowego.");
+        }
+
+        String filename = Paths.get(userPhotoPath).getFileName().toString();
+        try {
+            return getUserPhoto(filename);
+        } catch (IOException e) {
+            throw new IllegalStateException("Błąd przy pobieraniu zdjęcia profilowego użytkownika: " + username, e);
+        }
     }
 }
