@@ -2,6 +2,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.manual.weaponMods;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.manual.armors.CpRedArmors;
 import dev.goral.rpgmanager.rpgSystems.cpRed.manual.armors.CpRedArmorsDTO;
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.cyberwares.CpRedCyberwares;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpgmanager.user.User;
@@ -23,7 +24,6 @@ public class CpRedWeaponModsService {
     private final CpRedWeaponModsRepository cpRedWeaponModsRepository;
     private final UserRepository userRepository;
 
-    // Pobierz wszystkie modyfikacje broni
     public Map<String, Object> getAllWeaponMods() {
         List<CpRedWeaponMods> mods= cpRedWeaponModsRepository.findAll();
         List<CpRedWeaponModsDTO> modsDTO = mods.stream().map( mod->
@@ -43,7 +43,6 @@ public class CpRedWeaponModsService {
         return response;
     }
 
-    // Pobierz modyfikacje broni po id
     public Map<String, Object> getWeaponModById(Long weaponModId) {
         CpRedWeaponModsDTO weaponMod = cpRedWeaponModsRepository.findById(weaponModId)
                 .map(cpRedWeaponMods -> new CpRedWeaponModsDTO(
@@ -58,7 +57,6 @@ public class CpRedWeaponModsService {
         return response;
     }
 
-    // Pobierz wszystkie modyfikacje broni dla admina
     public Map<String, Object> getAllWeaponModsForAdmin() {
         List<CpRedWeaponMods> allWeaponMods = cpRedWeaponModsRepository.findAll();
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano modyfikacje broni");
@@ -66,7 +64,6 @@ public class CpRedWeaponModsService {
         return response;
     }
 
-    // Dodaj modyfikacje broni
     public Map<String, Object> addWeaponMod(CpRedWeaponMods cpRedWeaponMods) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -114,9 +111,52 @@ public class CpRedWeaponModsService {
         cpRedWeaponModsRepository.save(newWeaponMod);
         return CustomReturnables.getOkResponseMap("Dodano modyfikację broni");
     }
-//
-//    // Modyfikuj modyfikacje broni
-//    public Map<String, Object> updateWeaponMod(Long weaponModId, CpRedWeaponMods cpRedWeaponMods) {
-//
-//    }
+
+    public Map<String, Object> updateWeaponMod(Long weaponModId, CpRedWeaponMods cpRedWeaponMods) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
+            throw new IllegalStateException("Nie masz uprawnień do dodawania wszczepów.");
+        }
+        CpRedWeaponMods modToUpdate = cpRedWeaponModsRepository.findById(weaponModId)
+                .orElseThrow(() -> new ResourceNotFoundException("Modyfikacja o id " + weaponModId + " nie istnieje"));
+        if (cpRedWeaponMods.getName() != null) {
+            if (cpRedWeaponModsRepository.existsByName(cpRedWeaponMods.getName())) {
+                throw new IllegalStateException("Modyfikacja o tej nazwie już istnieje.");
+            }
+            if (cpRedWeaponMods.getName().isEmpty() || cpRedWeaponMods.getName().trim().isEmpty()) {
+                throw new IllegalStateException("Nazwa modyfikacji nie może być pusta.");
+            }
+            if (cpRedWeaponMods.getName().length() > 255) {
+                throw new IllegalStateException("Nazwa modyfikacji nie może być dłuższa niż 255 znaków.");
+            }
+            modToUpdate.setName(cpRedWeaponMods.getName());
+        }
+        if (cpRedWeaponMods.getSize() <= 0) {
+            throw new IllegalStateException("Rozmiar nie może być ujemny lub równy zero.");
+        }
+        modToUpdate.setSize(cpRedWeaponMods.getSize());
+
+        if (cpRedWeaponMods.getPrice() < 0) {
+            throw new IllegalStateException("Cena nie może być ujemna.");
+        }
+        modToUpdate.setPrice(cpRedWeaponMods.getPrice());
+        if (cpRedWeaponMods.getAvailability() != null) {
+            modToUpdate.setAvailability(cpRedWeaponMods.getAvailability());
+        }
+        if (cpRedWeaponMods.getDescription() != null) {
+            if (cpRedWeaponMods.getDescription().isEmpty() || cpRedWeaponMods.getDescription().trim().isEmpty()) {
+                throw new IllegalStateException("Opis modyfikacji nie może być pusty.");
+            }
+            if (cpRedWeaponMods.getDescription().length() > 500) {
+                throw new IllegalStateException("Opis modyfikacji nie może być dłuższy niż 500 znaków.");
+            }
+            modToUpdate.setDescription(cpRedWeaponMods.getDescription());
+        }
+        cpRedWeaponModsRepository.save(modToUpdate);
+        return CustomReturnables.getOkResponseMap("Zaktualizowano modyfikację broni");
+    }
 }
