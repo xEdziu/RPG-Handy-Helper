@@ -2,14 +2,14 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.ammunition;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
-@ToString
-public class CpRedAmmunitionCompatibilityDTO {
-    private Long weaponId;
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class GetCompatibilityByAmmunitionRequest {
     private Long ammunitionId;
-    private boolean isWeaponCustom;
     private boolean isAmmunitionCustom;
 }

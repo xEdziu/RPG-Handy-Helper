@@ -25,7 +25,7 @@ public class CpRedAmmunitionCompatibility {
     private Long id;
 
     private Long weaponId;
-    private Long customAmmunitionId;
+    private Long ammunitionId;
 
     private boolean isWeaponCustom;
     private boolean isAmmunitionCustom;
