@@ -632,11 +632,35 @@
             });
         }
         function clearFilters() {
-            document.getElementById('search-input').value = '';
-            document.getElementById('game-name-filter').selectedIndex = '';
-            document.getElementById('campaign-name-filter').selectedIndex = 0;
-            document.getElementById('sort-by').value = 'data-modify';
-            document.getElementById('sort-order').value = 'DESC';
+            document.getElementById('search-input').value = ''; // game-name-filter
+            const campaignFilter = document.getElementById('campaign-name-filter');
+            const gameFilter = document.getElementById('game-name-filter');
+            const sortBy = document.getElementById('sort-by');
+            const sortOrder = document.getElementById('sort-order');
+            campaignFilter.innerHTML = ""
+            gameFilter.innerHTML = "";
+            var campaing = `<option value="" disabled selected>System gry</option>`;
+            var gameHTML = `<option value="" disabled selected>Kampania</option>`;
+            toFilerGame = [];
+            gameAccessible.forEach(game => {
+                if (toFilerGame.indexOf(game.name) == -1) {
+                    toFilerGame.push(game.name);
+                }
+            });
+            toFilerGame.forEach(game => {
+                gameHTML += `<option value="${game.name}">${game.name}</option>`;
+            });
+            RpgSystem.forEach(system => {
+                campaing += `<option value="${system.name}">${system.name}</option>`;
+            });
+            campaignFilter.innerHTML = gameHTML;
+            gameFilter.innerHTML = campaing;
+            sortBy.value = 'data-modify';
+            sortOrder.innerHTML = `
+                <option value="DESC" class="block" selected>Od Najnowszych</option>
+                <option value="ASC" class="block">Od Najstarszych</option>
+            `;
+            sortOrder.value = 'DESC';
             applyFilters();
         }
     </script>
