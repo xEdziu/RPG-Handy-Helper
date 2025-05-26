@@ -408,85 +408,130 @@
     }
 
     loadProfile();
+    document.addEventListener("DOMContentLoaded", () => {
+        const usernameInput = document.getElementById("username");
+        const firstNameInput = document.getElementById("firstName");
+        const surnameInput = document.getElementById("surname");
 
-    document.getElementById("updateForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        const fileInput = document.getElementById("photoInput");
-        const file = fileInput.files[0];
-        let photoUpdated = false;
-        let uploadedPhotoFilename = "";
-
-        if (file) {
-            const formData = new FormData();
-            formData.append("file", file);
-
-            try {
-                const photoResponse = await fetch("/api/v1/authorized/user/photo", {
-                    method: "POST",
-                    headers: {
-                        'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
-                    },
-                    body: formData
-                });
-
-                const result = await photoResponse.json();
-
-                if (!photoResponse.ok) {
-                    Swal.fire({ icon: 'error', text: result.message || "Błąd przesyłania zdjęcia." });
-                    return;
-                }
-
-                photoUpdated = true;
-                uploadedPhotoFilename = result.userPhotoPath?.split("/").pop();
-
-            } catch (photoError) {
-                Swal.fire({ icon: 'error', text: "Błąd połączenia przy przesyłaniu zdjęcia." });
-                return;
-            }
-        }
-
-        Swal.fire({
-            title: 'Zapisywanie...',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading()
+        usernameInput.addEventListener("blur", async () => {
+            const isValid = await validateUsername(usernameInput.value);
+            toggleError("usernameErrorTooltip", isValid, usernameInput);
         });
 
-        try {
-            const response = await fetch("/api/v1/authorized/user/update", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
-                },
-                body: JSON.stringify({
-                    username: document.getElementById("username").value,
-                    firstName: document.getElementById("firstName").value,
-                    surname: document.getElementById("surname").value,
-                    email: document.getElementById("email").value
-                })
+        firstNameInput.addEventListener("blur", () => {
+            const isValid = validateName(firstNameInput.value, "firstName");
+            toggleError("firstNameErrorTooltip", isValid, firstNameInput);
+        });
+
+        surnameInput.addEventListener("blur", () => {
+            const isValid = validateName(surnameInput.value, "surname");
+            toggleError("surnameErrorTooltip", isValid, surnameInput);
+        });
+
+        document.getElementById("updateForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            let valid = true;
+
+            const isUsernameValid = await validateUsername(usernameInput.value);
+            toggleError("usernameErrorTooltip", isUsernameValid, usernameInput);
+            valid = valid && isUsernameValid;
+
+            const isFirstNameValid = validateName(firstNameInput.value, "firstName");
+            toggleError("firstNameErrorTooltip", isFirstNameValid, firstNameInput);
+            valid = valid && isFirstNameValid;
+
+            const isSurnameValid = validateName(surnameInput.value, "surname");
+            toggleError("surnameErrorTooltip", isSurnameValid, surnameInput);
+            valid = valid && isSurnameValid;
+
+            if (!valid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd walidacji',
+                    text: 'Popraw błędy w formularzu przed zapisem.'
+                });
+                return;
+            }
+
+            const fileInput = document.getElementById("photoInput");
+            const file = fileInput.files[0];
+            let photoUpdated = false;
+            let uploadedPhotoFilename = "";
+
+            if (file) {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                try {
+                    const photoResponse = await fetch("/api/v1/authorized/user/photo", {
+                        method: "POST",
+                        headers: {
+                            'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
+                        },
+                        body: formData
+                    });
+
+                    const result = await photoResponse.json();
+
+                    if (!photoResponse.ok) {
+                        Swal.fire({ icon: 'error', text: result.message || "Błąd przesyłania zdjęcia." });
+                        return;
+                    }
+
+                    photoUpdated = true;
+                    uploadedPhotoFilename = result.userPhotoPath?.split("/").pop();
+
+                } catch (photoError) {
+                    Swal.fire({ icon: 'error', text: "Błąd połączenia przy przesyłaniu zdjęcia." });
+                    return;
+                }
+            }
+
+            Swal.fire({
+                title: 'Zapisywanie...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
             });
 
-            const result = await response.json();
-            Swal.close();
+            try {
+                const response = await fetch("/api/v1/authorized/user/update", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
+                    },
+                    body: JSON.stringify({
+                        username: usernameInput.value,
+                        firstName: firstNameInput.value,
+                        surname: surnameInput.value,
+                        email: document.getElementById("email").value
+                    })
+                });
 
-            if (response.ok) {
-                Swal.fire({ icon: 'success', text: result.message || "Profil zaktualizowany" });
+                const result = await response.json();
+                Swal.close();
 
-                if (photoUpdated && uploadedPhotoFilename) {
-                    updateProfilePhoto(uploadedPhotoFilename);
+                if (response.ok) {
+                    Swal.fire({ icon: 'success', text: result.message || "Profil zaktualizowany" });
+
+                    if (photoUpdated && uploadedPhotoFilename) {
+                        updateProfilePhoto(uploadedPhotoFilename);
+                    }
+
+                    await loadProfile();
+                    fileInput.value = "";
+                } else {
+                    Swal.fire({ icon: 'error', text: result.message || "Błąd aktualizacji profilu" });
                 }
-
-                await loadProfile();
-                document.getElementById("photoInput").value = "";
-            } else {
-                Swal.fire({ icon: 'error', text: result.message || "Błąd aktualizacji profilu" });
+            } catch (error) {
+                Swal.close();
+                Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
             }
-        } catch (error) {
-            Swal.close();
-            Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
-        }
+        });
+
     });
+
 
 
     let cropper;
@@ -699,7 +744,7 @@
         if (trimmed === originalUsername) return true;
 
         try {
-            const response = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(username)}`);
+            const response = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(trimmed)}`);
             const data = await response.json();
             if (data.error !== 200) {
                 document.getElementById('usernameErrorTooltip').textContent = 'Podana nazwa użytkownika jest już zajęta.';
@@ -713,63 +758,27 @@
     }
 
     function validateName(name, fieldId) {
-        if (name.trim() === '') return true;
+        let trimmed = name.trim();
+        if (trimmed === '') return true;
 
         const regex = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]+$/;
-        if (!regex.test(name)) {
+        if (!regex.test(trimmed)) {
             document.getElementById(`${fieldId}ErrorTooltip`).textContent =
                 'Pole nie może zawierać cyfr ani znaków specjalnych.';
             return false;
         }
+        if (trimmed.length <= 3){
+            document.getElementById(`${fieldId}ErrorTooltip`).textContent =
+                'Pole musi zawierać minimum 3 znaki.';
+            return false;
+        }
+        if (trimmed === ''){
+            document.getElementById(`${fieldId}ErrorTooltip`).textContent =
+                'Pole nie może być puste';
+            return false;
+        }
         return true;
     }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const usernameInput = document.getElementById("username");
-        const firstNameInput = document.getElementById("firstName");
-        const surnameInput = document.getElementById("surname");
-
-        usernameInput.addEventListener("blur", async () => {
-            const isValid = await validateUsername(usernameInput.value);
-            toggleError("usernameErrorTooltip", isValid, usernameInput);
-        });
-
-        firstNameInput.addEventListener("blur", () => {
-            const isValid = validateName(firstNameInput.value, "firstName");
-            toggleError("firstNameErrorTooltip", isValid, firstNameInput);
-        });
-
-        surnameInput.addEventListener("blur", () => {
-            const isValid = validateName(surnameInput.value, "surname");
-            toggleError("surnameErrorTooltip", isValid, surnameInput);
-        });
-
-
-    document.getElementById("updateForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-        let valid = true;
-
-        const isUsernameValid = await validateUsername(usernameInput.value);
-        toggleError("usernameErrorTooltip", isUsernameValid, usernameInput);
-        valid = valid && isUsernameValid;
-
-        const isFirstNameValid = validateName(firstNameInput.value, "firstName");
-        toggleError("firstNameErrorTooltip", isFirstNameValid, firstNameInput);
-        valid = valid && isFirstNameValid;
-
-        const isSurnameValid = validateName(surnameInput.value, "surname");
-        toggleError("surnameErrorTooltip", isSurnameValid, surnameInput);
-        valid = valid && isSurnameValid;
-
-        if (!valid) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Błąd walidacji',
-                text: 'Popraw błędy w formularzu przed zapisem.'
-            });
-        }
-    });
-    });
 
 
 </script>
