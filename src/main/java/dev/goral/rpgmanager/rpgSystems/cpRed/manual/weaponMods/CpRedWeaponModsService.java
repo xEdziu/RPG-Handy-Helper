@@ -51,11 +51,14 @@ public class CpRedWeaponModsService {
         response.put("weaponMod", weaponMod);
         return response;
     }
-//
-//    // Pobierz wszystkie modyfikacje broni dla admina
-//    public Map<String, Object> getAllWeaponModsForAdmin() {
-//        return cpRedWeaponModsRepository.findAll();
-//    }
+
+    // Pobierz wszystkie modyfikacje broni dla admina
+    public Map<String, Object> getAllWeaponModsForAdmin() {
+        List<CpRedWeaponMods> allWeaponMods = cpRedWeaponModsRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano modyfikacje broni");
+        response.put("weaponMods", allWeaponMods);
+        return response;
+    }
 //
 //    // Dodaj modyfikacje broni
 //    public Map<String, Object> addWeaponMod(CpRedWeaponMods cpRedWeaponMods) {
