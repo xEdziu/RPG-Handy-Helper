@@ -47,8 +47,8 @@ public class UserController {
         return userService.getUserPhoto(filename);
     }
 
-    @GetMapping("/user/photo/{username}")
-    public ResponseEntity<byte[]> getUserPhotoByUsername(@PathVariable String username) throws IOException {
+    @GetMapping("/user/photo/username/{username}")
+    public Map<String, Object> getUserPhotoByUsername(@PathVariable String username) throws IOException {
         return userService.getUserPhotoByUsername(username);
     }
 
