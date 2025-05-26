@@ -296,4 +296,24 @@ public class UserService implements UserDetailsService {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
                 .body(image);
     }
+
+    public ResponseEntity<byte[]> getUserPhotoByUsername(String filename, String username) {
+        if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
+            throw new IllegalStateException("Invalid filename");
+        }
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika o nicku: " + username));
+
+        String userPhotoPath = user.getUserPhotoPath();
+        if (userPhotoPath == null || !userPhotoPath.endsWith(filename)) {
+            throw new IllegalStateException("Użytkownik nie ma ustawionego zdjęcia profilowego.");
+        }
+
+        try {
+            return getUserPhoto(filename);
+        } catch (IOException e) {
+            throw new IllegalStateException("Błąd przy pobieraniu zdjęcia profilowego użytkownika: " + username, e);
+        }
+    }
 }
