@@ -257,6 +257,20 @@
                       <option name="sortWeight" value="6000000" />
                       <option name="url" value="http://localhost:8888/api/v1/authorized/game/changeStatus/1" />
                     </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Usuwa połączenie między użytkownikiem a grą" />
+                      <option name="id" value="241bcf32-28ff-4503-9c28-b92f2a8b8204" />
+                      <option name="method" value="DELETE" />
+                      <option name="name" value="Usuń użytkownika z gry" />
+                      <option name="sortWeight" value="7000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/deleteUserFromGame" />
+                    </requestState>
                   </list>
                 </option>
                 <option name="sortWeight" value="2000000" />
