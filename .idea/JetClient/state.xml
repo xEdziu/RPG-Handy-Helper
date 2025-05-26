@@ -1263,6 +1263,75 @@
                                   </option>
                                   <option name="sortWeight" value="4000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="31f97970-3b01-42f2-b390-b54711135d75" />
+                                  <option name="name" value="CustomWeaponMods" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;my mod&quot;,&#10;  price: 100,&#10;  size: 10,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;good custom mod&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje customową modyfikację broni" />
+                                        <option name="id" value="637385e7-0163-41c4-92d8-d88ad39904be" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj modyfikację" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;my new mod&quot;,&#10;  price: 150,&#10;  size: 5,&#10;  availability: &quot;LUXURY&quot;,&#10;  description: &quot;better custom mod&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Pozwala zmienić dane w customowej modyfikacji broni" />
+                                        <option name="id" value="b5599b21-2175-45fb-8da5-6ff20a732682" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj modyfikację" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera wszystkie customowe modyfikacje broni" />
+                                        <option name="id" value="89c18f56-e4de-4e1f-bc78-dde7dc9112e7" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie modyfikacje" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customową modyfikację broni po id" />
+                                        <option name="id" value="63723131-05cd-4f8f-8b2b-c47eacd8fd9f" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz modyfikację po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customowe modyfikacje broni z konkretnej gry" />
+                                        <option name="id" value="321ec261-e0c1-4a8d-8a7c-0570c6e7f9d7" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie modyfikację po gameId" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/game/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera wszystkie customowe modyfikacje broni w formie obiektów" />
+                                        <option name="id" value="ab1e75b1-c7d6-4955-80f3-37ab7c377d3c" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie modyfikacje dla admina" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customWeaponMods/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="5000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="be478e01-3cd6-4b0a-bd25-b519ab021bde" />
