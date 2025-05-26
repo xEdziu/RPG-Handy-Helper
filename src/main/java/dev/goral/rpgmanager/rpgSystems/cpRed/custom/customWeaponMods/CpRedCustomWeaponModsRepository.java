@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CpRedCustomWeaponModsRepository extends JpaRepository<CpRedCustomWeaponMods,Long> {
     List<CpRedCustomWeaponMods> findAllByGameId(Game game);
+    boolean existsByNameAndGameId(String name, Game game);
 }
