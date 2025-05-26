@@ -315,7 +315,6 @@
 </div>
 
 
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const toggleSwitch = document.getElementById("switch-component");
@@ -350,7 +349,6 @@
                 applyTheme(newTheme);
             });
         }
-        fixLabelsForAutofill();
     });
 </script>
 
@@ -391,7 +389,7 @@
             document.getElementById("surname-label-text").textContent = data.surname;
             document.getElementById("email-label-text").textContent = data.email;
 
-            let originalUsername = data.username;
+            originalUsername = data.username;
 
             const filename = data.userPhotoPath?.split("/").pop();
             currentPhotoFilename = filename;
