@@ -151,7 +151,7 @@ public class CpRedCustomWeaponModsService {
         return CustomReturnables.getOkResponseMap("Customowa modyfikacja broni została dodana.");
     }
 
-    public Map<String, Object> updateWeaponMod(Long weaponModId, CpRedCustomWeaponMods cpRedCustomWeaponMods) {
+    public Map<String, Object> updateWeaponMod(Long weaponModId, CpRedCustomWeaponModsRequest cpRedCustomWeaponMods) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
@@ -214,9 +214,11 @@ public class CpRedCustomWeaponModsService {
         CpRedCustomWeaponMods updatedWeaponMod = cpRedCustomWeaponModsRepository.save(modToUpdate);
         return CustomReturnables.getOkResponseMap("Customowa modyfikacja broni została zaktualizowana.");
     }
-//
-//    // Pobierz wszystkie modyfikacje broni dla admina
-//    public Map<String, Object> getAllWeaponModsForAdmin() {
-//
-//    }
+
+    public Map<String, Object> getAllWeaponModsForAdmin() {
+        List<CpRedCustomWeaponMods> allCustomWeaponModsList = cpRedCustomWeaponModsRepository.findAll();
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Customowe modyfikacje broni zostały pobrane dla administratora.");
+        response.put("customWeaponMods", allCustomWeaponModsList);
+        return response;
+    }
 }
