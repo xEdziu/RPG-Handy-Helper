@@ -588,7 +588,7 @@
                     </form>
                 </div>
             </section>
-            <section id="notes-container" class="flex flex-col gap-[2%] grow w-[32vw] w-full max-w-xl">
+            <section id="personal-info" class="flex flex-col gap-[2%] grow w-[32vw] w-full max-w-xl">
                 <div id="notes-container"
                     class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-[79%]">
                     <a href="#"
@@ -860,7 +860,17 @@
     import DiceBox from "https://cdn.jsdelivr.net/npm/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
     let username = null;
     let stompClient = null;
-
+    const userColorMap = {};
+    const userColors = [
+        "text-red-500",
+        "text-blue-500",
+        "text-green-500",
+        "text-yellow-500",
+        "text-purple-500",
+        "text-pink-500",
+        "text-indigo-500",
+        "text-emerald-500",
+    ];
     fetch("/api/v1/authorized/user")
         .then(res => res.json())
         .then(data => {
@@ -895,26 +905,9 @@
     }
     function appendMessage(from, content) {
         const chat = document.getElementById("chat");
-        const msgWrapper = document.createElement("div");
-        const isSystem = from.includes("System") || from === "🧊 System";
-        msgWrapper.className = isSystem
-            ? "bg-white text-gray-600 italic text-center text-sm px-3 py-2 rounded-md shadow-sm font-jetbrains-mono"
-            : "bg-[#f5f6f8] px-4 py-2 rounded-lg shadow-sm font-jetbrains-mono text-sm";
-        if (isSystem) {
-            msgWrapper.textContent = content;
-        } else {
-            const usernameDiv = document.createElement("div");
-            usernameDiv.className = "text-red-600 font-bold mb-1";
-            usernameDiv.textContent = escapeHtml(from);
-
-            const contentDiv = document.createElement("div");
-            contentDiv.className = "text-black";
-            contentDiv.textContent = escapeHtml(content);
-
-            msgWrapper.appendChild(usernameDiv);
-            msgWrapper.appendChild(contentDiv);
-        }
-        chat.appendChild(msgWrapper);
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = messageHTML(from, content);
+        chat.appendChild(wrapper);
         chat.scrollTop = chat.scrollHeight;
     }
 
@@ -1025,6 +1018,29 @@
             rollPool.push(`${qty}d${sides}`);
         }
         document.getElementById("dice-input").value = rollPool.join("+");
+    }
+    function getUserColor(username) {
+        if (!userColorMap[username]) {
+            const index = Object.keys(userColorMap).length % userColors.length;
+            userColorMap[username] = userColors[index];
+        }
+        return userColorMap[username];
+    }
+    function messageHTML(form, content) {
+        const userColor = getUserColor(form);
+        return `
+            <div class="flex items-start justify-start bg-light-background dark:bg-dark-background p-3 rounded-lg">
+                <div id="user-photo" class="flex item-center justify-center">
+                    IMG
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-light-textPrimary dark:text-dark-textPrimary font-bold ${userColor}">${escapeHtml(form)}</span>
+                    <p class="text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                        ${(content)}
+                    </p>
+                </div>
+            </div>
+        `;
     }
 </script>
 <script>
