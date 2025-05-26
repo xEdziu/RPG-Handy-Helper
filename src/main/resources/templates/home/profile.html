@@ -242,7 +242,7 @@
             </div>
             <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border">
                 <div class ="flex items-center gap-3 w-full">
-                    <label id="label-email" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2">
+                    <label id="label-email" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none">
                         <span id="email-label-text">E-mail</span>
                     </label>
                 </div>
@@ -342,8 +342,76 @@
 
 
 <script>
-    document.getElementById("changePhotoBtn").addEventListener("click", () => {
+    document.getElementById("changePhotoBtn").addEventListener("click", async () => {
         document.getElementById("photoChoiceModal").classList.remove("hidden");
+
+        const container = document.getElementById("photoTileContainer");
+
+        while (container.children.length > 1) {
+            container.removeChild(container.lastChild);
+        }
+
+        try {
+            const response = await fetch("/api/v1/authorized/user/photo/defaults");
+            const data = await response.json();
+
+            if (data.error !== 200 || !Array.isArray(data.defaultProfilePics)) {
+                throw new Error("Nie udało się pobrać domyślnych zdjęć.");
+            }
+
+            data.defaultProfilePics.forEach(path => {
+                const img = document.createElement("img");
+                img.src = path;
+                img.alt = "Zdjęcie profilowe";
+                img.className = "w-24 h-24 rounded-md object-cover cursor-pointer hover:scale-105 transition";
+
+                img.addEventListener("click", async () => {
+                    try {
+                        Swal.fire({
+                            title: "Wysyłanie...",
+                            text: "Trwa przesyłanie zdjęcia.",
+                            allowOutsideClick: false,
+                            didOpen: () => Swal.showLoading()
+                        });
+
+                        const imageBlob = await fetch(path).then(res => res.blob());
+                        const fileName = path.split('/').pop();
+                        const file = new File([imageBlob], fileName, { type: imageBlob.type });
+
+                        const formData = new FormData();
+                        formData.append("file", file);
+
+                        const uploadResponse = await fetch("/api/v1/authorized/user/photo", {
+                            method: "POST",
+                            headers: {
+                                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN")
+                            },
+                            body: formData
+                        });
+
+                        const result = await uploadResponse.json();
+                        Swal.close();
+
+                        if (uploadResponse.ok) {
+                            updateProfilePhoto(fileName);
+                            closePhotoChoiceModal();
+                            Swal.fire({ icon: 'success', text: result.message || "Zdjęcie zostało ustawione!" });
+                        } else {
+                            Swal.fire({ icon: 'error', text: result.message || "Błąd podczas ustawiania zdjęcia." });
+                        }
+                    } catch (err) {
+                        Swal.close();
+                        Swal.fire({ icon: 'error', text: "Nie udało się połączyć z serwerem." });
+                    }
+                });
+
+
+                container.appendChild(img);
+            });
+        } catch (error) {
+            console.error(error);
+            Swal.fire({ icon: 'error', text: "Wystąpił problem z załadowaniem zdjęć." });
+        }
     });
 
     function closePhotoChoiceModal() {
@@ -574,6 +642,7 @@
     const cropImage = document.getElementById('cropImage');
 
     document.getElementById("photoInput").addEventListener("change", function (e) {
+        document.getElementById("photoChoiceModal").classList.add("hidden");
         const file = e.target.files[0];
         if (!file) return;
 
@@ -772,7 +841,7 @@
         const regex = /^[a-zA-Z0-9_][\w\-*!?]{2,}$/;
         if (!regex.test(trimmed)) {
             document.getElementById('usernameErrorTooltip').textContent =
-                'Nazwa użytkownika musi mieć co najmniej 3 znaki i nie może zawierać znaku specjalnego.';
+                'Nazwa użytkownika musi mieć co najmniej 3 znaki, nie może zaczynać się od znaku specjalnego, ani zawierać spacji';
             return false;
         }
 
@@ -802,7 +871,7 @@
                 'Pole nie może zawierać cyfr ani znaków specjalnych.';
             return false;
         }
-        if (trimmed.length <= 3){
+        if (trimmed.length < 3){
             document.getElementById(`${fieldId}ErrorTooltip`).textContent =
                 'Pole musi zawierać minimum 3 znaki.';
             return false;
