@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Pokój czatu</title>
-
     <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
@@ -69,15 +68,23 @@
         var gameId = null;
         var allNotesForGame = null;
         var noteEditorMode = 'preview';
+        var gameInfo = {
+            id: null,
+            name: null,
+            system: null,
+            description: null,
+        }
+        const roomId = window.location.pathname.split("/").pop()
         // ===== DOMContentLoaded =====
         document.addEventListener("DOMContentLoaded", () => {
             getUserInfo();
             initThemeToggle();
             applyTheme(getSavedTheme());
-            getGameIdFromUrl();
+            getGameInfo();
+            loadAllNotes();
             setTimeout(() => {
                 loadNotes();
-            }, 100);
+            }, 1000);
         });
         // ==== Changing the theme ====
         function initThemeToggle() {
@@ -147,27 +154,76 @@
             });
         }
         // ==== Get Game ID from URL ====
-        function getGameIdFromUrl() {
-            var roomId = window.location.pathname.split("/").pop()
+        function getGameInfo() {
+            var roomId = window.location.pathname.split("/").pop();
             fetch(`/api/v1/authorized/gameRoom/gameIdForRoomId/${roomId}`, {
                 method: 'GET',
                 headers: {
                     'X-XSRF-TOKEN': getCsrfToken()
                 }
-            }).then(
-                response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
+            }).then(response => {
+                if (!response.ok) throw new Error('Failed to fetch gameId');
+                return response.json();
+            }).then(data1 => {
+                gameInfo.id = data1.gameId;
+
+                return fetch(`/api/v1/authorized/game/userGames`, {
+                    method: 'GET',
+                    headers: {
+                        'X-XSRF-TOKEN': getCsrfToken()
+                    }
+                });
+            }).then(response => {
+                if (!response.ok) throw new Error('Failed to fetch userGames');
+                return response.json();
+            }).then(data2 => {
+                var game = data2.userGames.find(game => game.id == gameInfo.id);
+                if (game) {
+                    gameInfo.name = game.name;
+                    gameInfo.description = game.description;
+                    gameInfo.system = game.rpgSystemId;
                 }
-            ).then(data => {
-                gameId = data.gameId;
+
+                return fetch(`/api/v1/authorized/rpgSystems/${gameInfo.system}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-XSRF-TOKEN': getCsrfToken()
+                    }
+                });
+            }).then(response => {
+                if (!response.ok) throw new Error('Failed to fetch rpgSystem');
+                return response.json();
+            }).then(data3 => {
+                gameInfo.system = data3.rpgSystem.name;
+
+                console.log("Final gameInfo:", gameInfo);
             }).catch(error => {
-                console.error('Error fetching user info:', error);
+                console.error('Error fetching game info:', error);
             });
         }
         // ==== Note Functions ====
+        function loadAllNotes() {
+            fetch('/api/v1/authorized/gameNotes', {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(data => {
+                if (data.error !== "200") {
+                    console.error('API Error:', data.error);
+                }
+                noteContent = data.gameNotes;
+            }).catch(error => {
+                console.error('Nie udało się załadować notatek:', error);
+            });
+        }
         function loadNotes() {
-            fetch(`/api/v1/authorized/gameNotes/game/${gameId}`, {
+            fetch(`/api/v1/authorized/gameNotes/game/${gameInfo.id}`, {
                 method: 'GET',
                 headers: {
                     'X-XSRF-TOKEN': getCsrfToken()
@@ -200,6 +256,7 @@
         function displayNote(idNote) {
             noteEditorMode = 'preview';
             const note = noteContent.find(note => note.id == idNote);
+            console.log(note);
             const noteEditor = document.getElementById('note-editor');
             noteEditor.innerHTML = '';
             noteEditor.innerHTML = generateNoteHTML(note);
@@ -256,7 +313,7 @@
             getLisinerParesr();
             const noteTitle = document.getElementById('note-title').value.trim();
             const noteText = document.getElementById('note-content').value.trim();
-            const gameId = document.getElementById('game-name').value;
+            const gameId = gameInfo.id;
             noteContent.forEach(note => {
                 if (note.title == noteTitle && note.id != idNote) {
                     Swal.fire({
@@ -269,8 +326,7 @@
             })
             var data = [
                 { objekt: noteTitle, name: 'Brak tytułu!' },
-                { objekt: noteText, name: 'Brak treści!' },
-                { objekt: gameId, name: 'Brak kampanii!' },
+                { objekt: noteText, name: 'Brak treści!' }
             ]
             data.forEach(element => {
                 if (element.objekt == null || element.objekt == undefined || element.objekt == '') {
@@ -501,7 +557,7 @@
     <main
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
         <div class="flex gap-[2%] flex-row flex-nowrap justify-center items-stretch w-[100vw] min-h-[80vh] p-4">
-            <div id="character-card"
+            <section id="character-card"
                 class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8">
                 <a href="#"
                     class="p-4 relative self-end -top-2 -right-6 text-light-textPrimary dark:text-dark-textPrimary z-10">
@@ -513,29 +569,26 @@
                 <div id="character-card-info">
                     <h1 class="font-jetbrains-mono text-3xl">#Będzie</h1>
                 </div>
-            </div>
-
-            <div id="chat-container"
-                class="flex flex-col grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4">
-                <div class="max-w-3xl mx-auto p-4">
-
-                    <h2 class="text-2xl font-bold mb-2">Pokój czatowy: <span id="room-id" class="font-mono"></span></h2>
-
-                    <div id="chat" class="bg-white border border-gray-300 rounded-md p-4 h-72 overflow-y-auto mb-4">
+            </section>
+            <section id="chat-container"
+                class="flex flex-col grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg w-full max-w-xl p-4">
+                <div class="flex flex-col gap-2">
+                    <div id="chat"
+                        class="flex flex-col gap-2 bg-white dark:bg-dark-background border border-gray-300 dark:border-dark-border rounded-lg p-4 h-[65vh] overflow-y-auto mb-4 text-sm">
+                        <!-- Wiadomości będą dodawane tutaj -->
                     </div>
-
-                    <form id="message-form" class="flex gap-2 mb-4">
-                        <input type="text" id="message-input" placeholder="Napisz wiadomość." autocomplete="off"
-                            required class="flex-1 px-3 py-2 border border-gray-400 rounded-md" />
+                    <form id="message-form" class="flex gap-2">
+                        <input type="text" id="message-input" placeholder="ja pisze wiadomosc i zara wysle"
+                            autocomplete="off" required
+                            class="flex-1 px-3 py-2 rounded-full border border-gray-400 text-sm dark:bg-dark-surface dark:text-white font-jetbrains-mono placeholder:text-sm" />
                         <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Wyślij</button>
+                            class="px-5 py-2 bg-light-accent text-white font-bold rounded-full hover:bg-light-accentDark transition-colors text-sm">
+                            wyślij
+                        </button>
                     </form>
-
-                    <h4 class="text-lg font-semibold mb-1">Uczestnicy online</h4>
-                    <ul id="online-users" class="list-disc pl-5 mb-6 text-gray-700"></ul>
                 </div>
-            </div>
-            <div id="notes-container" class="flex flex-col gap-[2%] grow w-[32vw] w-full max-w-xl">
+            </section>
+            <section id="notes-container" class="flex flex-col gap-[2%] grow w-[32vw] w-full max-w-xl">
                 <div id="notes-container"
                     class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-[79%]">
                     <a href="#"
@@ -563,7 +616,8 @@
                             </div>
 
                         </div>
-                        <div id="notes-content" class="flex flex-col items-center justify-center w-full h-[90%]">
+                        <div id="notes-content"
+                            class="flex flex-col items-center justify-center w-full h-[90%] p-3 overflow-y-auto">
                             <div class="w-12 h-12 border-4 border-light-accent dark:border-dark-accent rounded-full animate-ping"
                                 role="status" aria-label="Ładowanie"></div>
                         </div>
@@ -571,7 +625,6 @@
 
                 </div>
                 <div id="dice-container" class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg h-[19%]">
-                    <!--
                     <div class="controls flex flex-wrap items-center gap-2 mb-4">
                         <button data-roll="1d6"
                             class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">1d6</button>
@@ -589,10 +642,9 @@
                     <div id="dice-result" class="text-lg font-medium text-center mb-4"></div>
                     <div id="dice-container" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
                     </div>
-                -->
                 </div>
-            </div>
         </div>
+        </section>
         <!-- Edytor notatki -->
         <div id="note-editor-backdrop"
             class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none bg-black/30 dark:bg-black/50 transition-opacity duration-300">
@@ -614,10 +666,6 @@
 </html>
 <script type="module">
     import DiceBox from "https://cdn.jsdelivr.net/npm/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
-
-    const roomId = window.location.pathname.split("/").pop();
-    document.getElementById("room-id").textContent = roomId;
-
     let username = null;
     let stompClient = null;
 
@@ -629,16 +677,13 @@
         });
 
     function initWebSocket() {
-        const socket = new SockJS("/ws");
-        stompClient = Stomp.over(socket);
+        const socket = new SockJS("/ws"); 
+        stompClient = Stomp.over(socket); 
         stompClient.debug = null;
         stompClient.connect({}, () => {
-            stompClient.subscribe(`/topic/chat/${roomId}`, msg => {
+            stompClient.subscribe(`/topic/chat/${roomId}`, msg => { 
                 const { from, content } = JSON.parse(msg.body);
-                appendMessage(from, content);
-            });
-            stompClient.subscribe(`/topic/chat/${roomId}/users`, msg => {
-                updateUsers(JSON.parse(msg.body));
+                appendMessage(from, content); 
             });
             stompClient.subscribe(`/topic/dice/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
@@ -650,26 +695,38 @@
             stompClient.send(`/app/join/${roomId}`, {}, {});
         });
     }
-
-    function escapeHtml(text) { // Prevent XSS
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    function escapeHtml(text) {
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
     }
-
-    function appendMessage(from, content) {  // Append message to chat
+    function appendMessage(from, content) {
         const chat = document.getElementById("chat");
-        const div = document.createElement("div");
-        div.classList.add("message");
-        div.innerHTML = `<strong>${escapeHtml(from)}</strong>: ${escapeHtml(content)}`;
-        chat.appendChild(div);
+        const msgWrapper = document.createElement("div");
+        const isSystem = from.includes("System") || from === "🧊 System";
+        msgWrapper.className = isSystem
+            ? "bg-white text-gray-600 italic text-center text-sm px-3 py-2 rounded-md shadow-sm font-jetbrains-mono"
+            : "bg-[#f5f6f8] px-4 py-2 rounded-lg shadow-sm font-jetbrains-mono text-sm";
+        if (isSystem) {
+            msgWrapper.textContent = content;
+        } else {
+            const usernameDiv = document.createElement("div");
+            usernameDiv.className = "text-red-600 font-bold mb-1";
+            usernameDiv.textContent = escapeHtml(from);
+
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "text-black";
+            contentDiv.textContent = escapeHtml(content);
+
+            msgWrapper.appendChild(usernameDiv);
+            msgWrapper.appendChild(contentDiv);
+        }
+        chat.appendChild(msgWrapper);
         chat.scrollTop = chat.scrollHeight;
     }
 
-    function updateUsers(users) {  // Update online users list
-        const ul = document.getElementById("online-users");
-        ul.innerHTML = users.map(user => `<li>${user}</li>`).join("");
-    }
-
-    document.getElementById("message-form").addEventListener("submit", e => {  // Send message
+    document.getElementById("message-form").addEventListener("submit", e => {
         e.preventDefault();
         const input = document.getElementById("message-input");
         const content = input.value.trim();
@@ -778,6 +835,7 @@
         document.getElementById("dice-input").value = rollPool.join("+");
     }
 </script>
+
 <script>
     // ==== Listener for Window Size ====
     var _isMobile = false;
@@ -797,6 +855,62 @@
             _isMobile = false;
         }
     });
+    // ==== Function to Parse Markdown in Real Time ====
+    let _markdownParserListeners = [];
+    function getLisinerParesr() {
+        const titleInput = document.getElementById('edit-note-title') || document.getElementById('note-title');
+        const contentInput = document.getElementById('edit-note-content') || document.getElementById('note-content');
+        const preview = document.getElementById('note-preview');
+        if (!titleInput || !contentInput || !preview) {
+            console.warn('Brakuje elementów do dynamicznego podglądu.');
+            return;
+        }
+        function updatePreviewLive() {
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+            const parsed = parseMarkdown(content || "", true);
+            preview.innerHTML = `
+            <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left py-1 pb-[1.3em]">${title || "Notatki bez tytułu?"}</h2>
+            <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                ${parsed.length > 0 ? parsed : "<p><em>*Podgląd pusty...*</em></p>"}
+            </div>
+        `;
+        }
+        titleInput.addEventListener('input', updatePreviewLive);
+        contentInput.addEventListener('input', updatePreviewLive);
+        _markdownParserListeners = [
+            { el: titleInput, fn: updatePreviewLive },
+            { el: contentInput, fn: updatePreviewLive }
+        ];
+        updatePreviewLive();
+    }
+    function disableLisinerParser() {
+        if (!_markdownParserListeners || _markdownParserListeners.length === 0) return;
+        _markdownParserListeners.forEach(({ el, fn }) => {
+            el.removeEventListener('input', fn);
+        });
+        _markdownParserListeners = [];
+    }
+    // ==== Pareser Markdown ====
+    function parseMarkdown(markdownText, ifAllNote = false) {
+        var parsedParagraph = marked.parse(markdownText);
+        if (ifAllNote) {
+            parsedParagraph = parsedParagraph.replace(/<p>/g, '<p class="mt-[-3em]">');
+        }
+        return parsedParagraph;
+    }
+    // ==== Truncate Text ====
+    function truncateText(text, maxLength = Infinity) {
+        return text.length > maxLength
+            ? text.slice(0, maxLength) + '...'
+            : text;
+    }
+    // ==== Format Date ====
+    function formatDate(dateString) {
+        return new Date(dateString).toLocaleString("pl-PL", {
+            year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit"
+        });
+    }
     // ==== Listener for Note ====
     document.addEventListener('click', (e) => {
         const backdrop = document.getElementById('note-editor-backdrop');
@@ -874,9 +988,9 @@
         return `
         <div class="flex justify-between items-center mb-4">
             <div class="flex flex-col items-start w-1/2">
-                <!-- 
-                    @TODO: DODAĆ OPIS GRY JAK BĘDZIE NAPRAWA API    
-                -->
+                <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${gameInfo.system}</p>
+                <p id="game-name" class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${gameInfo.name}</p>
+                <p id="game-description-new-note" class="text-xs font-bold text-light-textPrimary dark:text-dark-textPrimary">${gameInfo.description}</p>
             </div>
             <div class="flex flex-col lg:flex-row gap-2 items-right">
                 <button id="save-note"
