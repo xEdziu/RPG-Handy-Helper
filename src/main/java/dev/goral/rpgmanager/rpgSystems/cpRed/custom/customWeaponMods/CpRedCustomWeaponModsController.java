@@ -22,6 +22,11 @@ public class CpRedCustomWeaponModsController {
         return cpRedCustomWeaponModsService.getWeaponModById(weaponModId);
     }
 
+    @GetMapping(path = "/rpgSystems/cpRed/custom/weaponMods/game/{gameId}")
+    public Map<String, Object> getWeaponModsByGame(@PathVariable("gameId") Long gameId) {
+        return cpRedCustomWeaponModsService.getWeaponModsByGame(gameId);
+    }
+
     @PostMapping(path = "/rpgSystems/cpRed/custom/weaponMods/add")
     public Map<String, Object> addWeaponMod(@RequestBody CpRedCustomWeaponModsRequest cpRedCustomWeaponMods) {
         return cpRedCustomWeaponModsService.addWeaponMod(cpRedCustomWeaponMods);
