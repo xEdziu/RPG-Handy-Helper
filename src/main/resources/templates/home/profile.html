@@ -113,10 +113,10 @@
                 <img id="photoPreview" src=""
                      class="absolute inset-0 w-full h-full object-cover z-20" />
 
-                <label for="photoInput"
+                <button type="button" id="changePhotoBtn"
                        class="absolute top-1 right-1 z-30 bg-light-accent dark:bg-dark-accent w-10 h-10 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer">
                     <i class="fa-solid fa-pen text-sm"></i>
-                </label>
+                </button>
 
                 <form id="photoForm" enctype="multipart/form-data">
                     <input type="file" id="photoInput" name="file" accept="image/png, image/jpeg" class="hidden" />
@@ -314,8 +314,43 @@
     </div>
 </div>
 
+<div id="photoChoiceModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+    <div class="bg-light-surface dark:bg-dark-surface rounded-lg p-6 max-w-2xl w-full shadow-xl">
+        <h2 class="text-xl font-semibold mb-4 text-center text-light-textPrimary dark:text-dark-textPrimary">
+            Wybierz zdjęcie profilowe
+        </h2>
+
+        <div id="photoTileContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 place-items-center mb-6">
+            <label for="photoInput" class="w-24 h-24 bg-light-background dark:bg-dark-background rounded-md flex items-center justify-center cursor-pointer hover:scale-105 transition">
+                <div class="bg-light-accent dark:bg-dark-accent rounded-full w-10 h-10 flex items-center justify-center text-white text-xl">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+            </label>
+        </div>
+
+        <div class="flex justify-center gap-4">
+            <button onclick="closePhotoChoiceModal()"
+                    class="px-4 py-2 rounded-lg font-medium bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary border border-light-border dark:border-dark-border hover:bg-light-border hover:dark:bg-dark-border transition">
+                Anuluj
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 <script>
+    document.getElementById("changePhotoBtn").addEventListener("click", () => {
+        document.getElementById("photoChoiceModal").classList.remove("hidden");
+    });
+
+    function closePhotoChoiceModal() {
+        document.getElementById("photoChoiceModal").classList.add("hidden");
+    }
+
+
     document.addEventListener("DOMContentLoaded", function () {
         const toggleSwitch = document.getElementById("switch-component");
         const body = document.body;
