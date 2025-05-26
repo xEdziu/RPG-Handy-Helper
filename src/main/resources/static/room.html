@@ -875,7 +875,11 @@
         stompClient.connect({}, () => {
             stompClient.subscribe(`/topic/chat/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
-                appendMessage(from, content);
+                appendMessage(from, content, false);
+            });
+            stompClient.subscribe(`/user/topic/chat/${roomId}`, msg => {
+                const { from, content } = JSON.parse(msg.body);
+                appendMessage(from, content, true);  // trzeci parametr = prywatna
             });
             stompClient.subscribe(`/topic/dice/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
@@ -893,13 +897,24 @@
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
     }
-    function appendMessage(from, content) {
+
+    function appendMessage(from, content, pv = false) {
         const chat = document.getElementById("chat");
         const msgWrapper = document.createElement("div");
         const isSystem = from.includes("System") || from === "🧊 System";
+
         msgWrapper.className = isSystem
             ? "bg-white text-gray-600 italic text-center text-sm px-3 py-2 rounded-md shadow-sm font-jetbrains-mono"
             : "bg-[#f5f6f8] px-4 py-2 rounded-lg shadow-sm font-jetbrains-mono text-sm";
+
+        if (pv && !isSystem) {
+            msgWrapper.classList.add("bg-yellow-100", "border-l-4", "border-yellow-400");
+            const badge = document.createElement("span");
+            badge.textContent = "🔒 Prywatne";
+            badge.className = "inline-block text-xs font-bold mr-2 text-yellow-700";
+            msgWrapper.prepend(badge);
+        }
+
         if (isSystem) {
             msgWrapper.textContent = content;
         } else {
@@ -914,9 +929,11 @@
             msgWrapper.appendChild(usernameDiv);
             msgWrapper.appendChild(contentDiv);
         }
+
         chat.appendChild(msgWrapper);
         chat.scrollTop = chat.scrollHeight;
     }
+
 
     document.getElementById("message-form").addEventListener("submit", e => {
         e.preventDefault();
