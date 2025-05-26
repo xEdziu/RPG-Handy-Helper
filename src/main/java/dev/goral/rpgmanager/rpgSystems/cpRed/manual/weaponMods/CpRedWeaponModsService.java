@@ -3,6 +3,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.manual.weaponMods;
 import dev.goral.rpgmanager.rpgSystems.cpRed.manual.armors.CpRedArmors;
 import dev.goral.rpgmanager.rpgSystems.cpRed.manual.armors.CpRedArmorsDTO;
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,11 +36,21 @@ public class CpRedWeaponModsService {
         response.put("weaponMods", modsDTO);
         return response;
     }
-//
-//    // Pobierz modyfikacje broni po id
-//    public Map<String, Object> getWeaponModById(Long weaponModId) {
-//
-//    }
+
+    // Pobierz modyfikacje broni po id
+    public Map<String, Object> getWeaponModById(Long weaponModId) {
+        CpRedWeaponModsDTO weaponMod = cpRedWeaponModsRepository.findById(weaponModId)
+                .map(cpRedWeaponMods -> new CpRedWeaponModsDTO(
+                        cpRedWeaponMods.getName(),
+                        cpRedWeaponMods.getPrice(),
+                        cpRedWeaponMods.getSize(),
+                        cpRedWeaponMods.getAvailability().toString(),
+                        cpRedWeaponMods.getDescription()
+                )).orElseThrow(() -> new ResourceNotFoundException("Modyfikacja broni o id " + weaponModId + " nie została znaleziona"));
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano modyfikację broni");
+        response.put("weaponMod", weaponMod);
+        return response;
+    }
 //
 //    // Pobierz wszystkie modyfikacje broni dla admina
 //    public Map<String, Object> getAllWeaponModsForAdmin() {
