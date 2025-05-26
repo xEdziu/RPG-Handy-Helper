@@ -252,6 +252,26 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public Map<String, Object> getDefaultProfilePics() {
+        Path path = Paths.get("src/main/resources/static/img/profilePics").toAbsolutePath().normalize();
+        if (!Files.exists(path)) {
+            throw new IllegalStateException("Nie znaleziono katalogu ze zdjęciami profilowymi.");
+        }
+        List<String> defaultPics = new ArrayList<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "defaultProfilePic*")) {
+            for (Path entry : stream) {
+                if (Files.isRegularFile(entry)) {
+                    defaultPics.add("/img/profilePics/" + entry.getFileName().toString());
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Błąd przy odczycie katalogu ze zdjęciami profilowymi.");
+        }
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano domyślne zdjęcia profilowe.");
+        response.put("defaultProfilePics", defaultPics);
+        return response;
+    }
+
     private BufferedImage resizeImage(BufferedImage originalImage, String extension) {
         Image tmp = originalImage.getScaledInstance(512, 512, Image.SCALE_SMOOTH);
         BufferedImage resized;

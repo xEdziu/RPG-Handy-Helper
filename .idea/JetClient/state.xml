@@ -19,6 +19,14 @@
                 <option name="requests">
                   <list>
                     <requestState>
+                      <option name="description" value="Pobiera wszystkie domyślne zdjęcia użytkownika" />
+                      <option name="id" value="255957d8-d794-4c8f-bb81-b8dfab847a3d" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Get Default Photos" />
+                      <option name="sortWeight" value="250000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/user/photo/defaults" />
+                    </requestState>
+                    <requestState>
                       <option name="description" value="Zwraca infrmacje o zalogowanym użytkowniku" />
                       <option name="id" value="4723f425-dfb5-4036-9ecd-86bed6132e14" />
                       <option name="method" value="GET" />
