@@ -1,6 +1,7 @@
 package dev.goral.rpgmanager.user;
 
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -299,11 +300,11 @@ public class UserService implements UserDetailsService {
 
     public ResponseEntity<byte[]> getUserPhotoByUsername(String filename, String username) {
         if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
-            throw new IllegalStateException("Invalid filename");
+            throw new ResourceNotFoundException("Invalid filename");
         }
 
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika o nicku: " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o nicku: " + username));
 
         String userPhotoPath = user.getUserPhotoPath();
         if (userPhotoPath == null || !userPhotoPath.endsWith(filename)) {
