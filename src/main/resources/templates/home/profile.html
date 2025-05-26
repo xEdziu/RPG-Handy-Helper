@@ -367,6 +367,7 @@
     }
 
     let currentPhotoFilename = "";
+    let originalUsername = "";
 
     async function loadProfile() {
         Swal.fire({
@@ -389,6 +390,8 @@
             document.getElementById("firstName-label-text").textContent = data.firstName;
             document.getElementById("surname-label-text").textContent = data.surname;
             document.getElementById("email-label-text").textContent = data.email;
+
+            let originalUsername = data.username;
 
             const filename = data.userPhotoPath?.split("/").pop();
             currentPhotoFilename = filename;
@@ -681,6 +684,7 @@
 
     async function validateUsername(username) {
         if (username.trim() === '') return true;
+        if (username === originalUsername) return true;
 
         const regex = /^[a-zA-Z0-9_][\w\-*!?]{2,}$/;
         if (!regex.test(username)) {
