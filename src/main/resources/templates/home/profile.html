@@ -681,63 +681,72 @@
 
 
     async function validateUsername(username) {
-        if (username.trim() === '') return true;
-        if (username === originalUsername) return true;
+        const trimmed = username.trim();
+
+        if (trimmed === '') {
+            document.getElementById('usernameErrorTooltip').textContent =
+                'Pole nie może być puste ani zawierać wyłącznie spacji.';
+            return false;
+        }
 
         const regex = /^[a-zA-Z0-9_][\w\-*!?]{2,}$/;
-        if (!regex.test(username)) {
-        document.getElementById('usernameErrorTooltip').textContent =
-        'Nazwa użytkownika musi mieć co najmniej 3 znaki i nie może zawierać znaku specjalnego.';
-        return false;
-    }
+        if (!regex.test(trimmed)) {
+            document.getElementById('usernameErrorTooltip').textContent =
+                'Nazwa użytkownika musi mieć co najmniej 3 znaki i nie może zawierać znaku specjalnego.';
+            return false;
+        }
+
+        if (trimmed === originalUsername) return true;
 
         try {
-        const response = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(username)}`);
-        const data = await response.json();
-        if (data.error !== 200) {
-        document.getElementById('usernameErrorTooltip').textContent = 'Podana nazwa użytkownika jest już zajęta.';
-        return false;
-    }
-        return true;
-    } catch {
-        document.getElementById('usernameErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
-        return false;
-    }
+            const response = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(username)}`);
+            const data = await response.json();
+            if (data.error !== 200) {
+                document.getElementById('usernameErrorTooltip').textContent = 'Podana nazwa użytkownika jest już zajęta.';
+                return false;
+            }
+            return true;
+        } catch {
+            document.getElementById('usernameErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
+            return false;
+        }
     }
 
-        function validateName(name, fieldId) {
+    function validateName(name, fieldId) {
         if (name.trim() === '') return true;
 
         const regex = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]+$/;
         if (!regex.test(name)) {
-        document.getElementById(`${fieldId}ErrorTooltip`).textContent =
-        'Pole nie może zawierać cyfr ani znaków specjalnych.';
-        return false;
-    }
+            document.getElementById(`${fieldId}ErrorTooltip`).textContent =
+                'Pole nie może zawierać cyfr ani znaków specjalnych.';
+            return false;
+        }
         return true;
     }
 
-        document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
         const usernameInput = document.getElementById("username");
         const firstNameInput = document.getElementById("firstName");
         const surnameInput = document.getElementById("surname");
 
         usernameInput.addEventListener("blur", async () => {
-        const isValid = await validateUsername(usernameInput.value);
-        toggleError("usernameErrorTooltip", isValid, usernameInput);
-    });
+            const isValid = await validateUsername(usernameInput.value);
+            toggleError("usernameErrorTooltip", isValid, usernameInput);
+        });
 
         firstNameInput.addEventListener("blur", () => {
-        const isValid = validateName(firstNameInput.value, "firstName");
-        toggleError("firstNameErrorTooltip", isValid, firstNameInput);
-    });
+            const isValid = validateName(firstNameInput.value, "firstName");
+            toggleError("firstNameErrorTooltip", isValid, firstNameInput);
+        });
 
         surnameInput.addEventListener("blur", () => {
-        const isValid = validateName(surnameInput.value, "surname");
-        toggleError("surnameErrorTooltip", isValid, surnameInput);
-    });
+            const isValid = validateName(surnameInput.value, "surname");
+            toggleError("surnameErrorTooltip", isValid, surnameInput);
+        });
 
-        document.getElementById("updateForm").addEventListener("submit", async function (e) {
+
+    document.getElementById("updateForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
         let valid = true;
 
         const isUsernameValid = await validateUsername(usernameInput.value);
@@ -753,15 +762,15 @@
         valid = valid && isSurnameValid;
 
         if (!valid) {
-        e.preventDefault();
-        Swal.fire({
-        icon: 'error',
-        title: 'Błąd walidacji',
-        text: 'Popraw błędy w formularzu przed zapisem.'
+            Swal.fire({
+                icon: 'error',
+                title: 'Błąd walidacji',
+                text: 'Popraw błędy w formularzu przed zapisem.'
+            });
+        }
     });
-    }
     });
-    });
+
 
 </script>
 <script defer src="/scripts/footer.js"></script>
