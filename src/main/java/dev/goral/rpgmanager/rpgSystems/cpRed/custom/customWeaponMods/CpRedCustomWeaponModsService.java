@@ -1,6 +1,7 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.custom.customWeaponMods;
 
 import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +30,22 @@ public class CpRedCustomWeaponModsService {
         response.put("customWeaponMods", allCustomWeaponMods);
         return response;
     }
-//
-//    // Pobierz modyfikację broni po id
-//    public Map<String, Object> getWeaponModById(Long weaponModId) {
-//
-//    }
+
+
+    public Map<String, Object> getWeaponModById(Long weaponModId) {
+        CpRedCustomWeaponModsDTO cpRedCustomWeaponMods = cpRedCustomWeaponModsRepository.findById(weaponModId)
+                .map(CpRedCustomWeaponMods -> new CpRedCustomWeaponModsDTO(
+                        CpRedCustomWeaponMods.getGameId().getId(),
+                        CpRedCustomWeaponMods.getName(),
+                        CpRedCustomWeaponMods.getPrice(),
+                        CpRedCustomWeaponMods.getSize(),
+                        CpRedCustomWeaponMods.getAvailability().toString(),
+                        CpRedCustomWeaponMods.getDescription()
+                )).orElseThrow(() -> new ResourceNotFoundException("Customowa modyfikacja o id " + weaponModId + " nie istnieje."));
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowa modyfikacja broni została pobrana.");
+        response.put("customWeaponMod", cpRedCustomWeaponMods);
+        return response;
+    }
 //
 //    // Dodaj modyfikację broni
 //    public Map<String, Object> addWeaponMod(CpRedCustomWeaponMods cpRedCustomWeaponMods) {
