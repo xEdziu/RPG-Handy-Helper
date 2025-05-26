@@ -624,19 +624,211 @@
                     </div>
 
                 </div>
-                <div id="dice-container" class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg h-[19%]">
+                <div id="dice-container"
+                    class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg h-[19%] pt-8 p-6 flex-col justify-center items-center gap-1">
                     <div class="controls flex flex-wrap items-center gap-2 mb-4">
-                        <button data-roll="1d6"
-                            class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">1d6</button>
-                        <button data-roll="2d20"
-                            class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">2d20</button>
-                        <button data-roll="3d10"
-                            class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">3d10</button>
-                        <input type="text" id="dice-input" placeholder="Np. 4d10+3"
-                            class="px-3 py-2 border border-gray-400 rounded-md flex-1 min-w-[150px]" />
-                        <button id="rollCustom"
-                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Rzuć</button>
-                        <select id="dice-theme" class="px-3 py-2 border border-gray-400 rounded-md"></select>
+                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
+                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
+                            <div id="dicePopupD4"
+                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                                <button onclick="addDice('d4')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    +
+                                </button>
+                                <button onclick="removeDice('d4')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    −
+                                </button>
+                            </div>
+                            <!-- Ikona kości -->
+                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D4')">
+                                <img src="/img/assets/dice-icon-dark-version.svg"
+                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                                <img src="/img/assets/dice-icon-light-version.svg"
+                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                                <p
+                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                                    4
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
+                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
+                            <div id="dicePopupD6"
+                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                                <button onclick="addDice('d6')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    +
+                                </button>
+                                <button onclick="removeDice('d6')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    −
+                                </button>
+                            </div>
+                            <!-- Ikona kości -->
+                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D6')">
+                                <img src="/img/assets/dice-icon-dark-version.svg"
+                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                                <img src="/img/assets/dice-icon-light-version.svg"
+                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                                <p
+                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                                    6
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
+                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
+                            <div id="dicePopupD8"
+                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                                <button onclick="addDice('d8')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    +
+                                </button>
+                                <button onclick="removeDice('d8')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    −
+                                </button>
+                            </div>
+                            <!-- Ikona kości -->
+                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D8')">
+                                <img src="/img/assets/dice-icon-dark-version.svg"
+                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                                <img src="/img/assets/dice-icon-light-version.svg"
+                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                                <p
+                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                                    8
+                                </p>
+                            </div>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
+                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
+                            <div id="dicePopupD10"
+                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                                <button onclick="addDice('d10')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    +
+                                </button>
+                                <button onclick="removeDice('d10')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    −
+                                </button>
+                            </div>
+                            <!-- Ikona kości -->
+                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D10')">
+                                <img src="/img/assets/dice-icon-dark-version.svg"
+                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                                <img src="/img/assets/dice-icon-light-version.svg"
+                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                                <p
+                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                                    10
+                                </p>
+                            </div>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
+                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
+                            <div id="dicePopupD12"
+                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                                <button onclick="addDice('d12')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    +
+                                </button>
+                                <button onclick="removeDice('d12')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    −
+                                </button>
+                            </div>
+                            <!-- Ikona kości -->
+                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D12')">
+                                <img src="/img/assets/dice-icon-dark-version.svg"
+                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                                <img src="/img/assets/dice-icon-light-version.svg"
+                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                                <p
+                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                                    12
+                                </p>
+                            </div>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
+                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
+                            <div id="dicePopupD20"
+                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                                <button onclick="addDice('d20')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    +
+                                </button>
+                                <button onclick="removeDice('d20')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    −
+                                </button>
+                            </div>
+                            <!-- Ikona kości -->
+                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D20')">
+                                <img src="/img/assets/dice-icon-dark-version.svg"
+                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                                <img src="/img/assets/dice-icon-light-version.svg"
+                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                                <p
+                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                                    20
+                                </p>
+                            </div>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
+                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
+                            <div id="dicePopupD100"
+                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                                <button onclick="addDice('d100')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    +
+                                </button>
+                                <button onclick="removeDice('d100')"
+                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                                    −
+                                </button>
+                            </div>
+                            <!-- Ikona kości -->
+                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D100')">
+                                <img src="/img/assets/dice-icon-dark-version.svg"
+                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                                <img src="/img/assets/dice-icon-light-version.svg"
+                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                                <p
+                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                                    100
+                                </p>
+                            </div>
+                        </div>
+                        <input type="text" id="dice-input" placeholder="Np. 2d10"
+                            class="px-3 py-2 border border-gray-400 rounded-md flex-1 w-full text-light-textPrimary dark:text-dark-textPrimary" />
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="relative w-max">
+                            <select id="dice-theme"
+                                class="font-jetbrains-mono appearance-none bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary border border-black dark:border-white px-4 py-2 pr-10 rounded-md shadow-sm">
+                            </select>
+                            <img src="/img/assets/expand_button_light_version.svg"
+                                class="pointer-events-none absolute right-3 z-3 mt-[-2rem] dark:hidden block w-6 h-6"
+                                alt="Expand Light" />
+                            <img src="/img/assets/expand_button_dark_version.svg"
+                                class="pointer-events-none absolute right-3 z-3 mt-[-2rem] dark:block hidden w-6 h-6"
+                                alt="Expand Dark" />
+                        </div>
+                        <div>
+                            <button id="rollReset" onclick="resetDice()"
+                                class="text-base font-bold font-jetbrains-mono bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap">
+                                Reset
+                            </button>
+                            <button id="rollCustom"
+                                class="text-base font-bold font-jetbrains-mono bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap">
+                                Rzuć
+                            </button>
+                        </div>
                     </div>
 
                     <div id="dice-result" class="text-lg font-medium text-center mb-4"></div>
@@ -677,13 +869,13 @@
         });
 
     function initWebSocket() {
-        const socket = new SockJS("/ws"); 
-        stompClient = Stomp.over(socket); 
+        const socket = new SockJS("/ws");
+        stompClient = Stomp.over(socket);
         stompClient.debug = null;
         stompClient.connect({}, () => {
-            stompClient.subscribe(`/topic/chat/${roomId}`, msg => { 
+            stompClient.subscribe(`/topic/chat/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
-                appendMessage(from, content); 
+                appendMessage(from, content);
             });
             stompClient.subscribe(`/topic/dice/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
@@ -835,8 +1027,72 @@
         document.getElementById("dice-input").value = rollPool.join("+");
     }
 </script>
-
 <script>
+    // ==== Dice Popup ====
+    function showPopup(diceType) {
+        setTimeout(() => {
+            const dicePopups = document.querySelectorAll('.dicePopup');
+            const popupToShow = document.getElementById(`dicePopup${diceType}`);
+
+            dicePopups.forEach(popup => {
+                if (popup !== popupToShow) {
+                    popup.classList.add('hidden', 'opacity-0');
+                    popup.classList.remove('opacity-100');
+                }
+            });
+
+            if (popupToShow) {
+                popupToShow.classList.remove('hidden', 'opacity-0');
+                popupToShow.classList.add('opacity-100');
+            }
+        }, 0);
+    }
+    // ==== Dice Functions ====
+    function addDice(type) {
+        const diceInput = document.getElementById("dice-input");
+        const value = diceInput.value.toLowerCase().replace(/k/g, "d").replace(/\s+/g, "");
+        const regex = new RegExp(`(\\d*)${type}(?!\\d)`);
+        const match = value.match(regex);
+        let newValue;
+        if (match) {
+            let qty = parseInt(match[1] || "1");
+            qty++;
+            newValue = value.replace(regex, `${qty}${type}`);
+        } else {
+            newValue = value ? `${value}+1${type}` : `1${type}`;
+        }
+        diceInput.value = newValue;
+        updateDiceLabel(type);
+    }
+    function removeDice(type) {
+        const diceInput = document.getElementById("dice-input");
+        const value = diceInput.value.toLowerCase().replace(/k/g, "d").replace(/\s+/g, "");
+        const regex = new RegExp(`(\\d*)${type}(?!\\d)`);
+        const match = value.match(regex);
+        if (match) {
+            let qty = parseInt(match[1] || "1");
+            if (qty <= 1) {
+                const updated = value
+                    .split("+")
+                    .filter(part => !part.includes(type))
+                    .join("+");
+                diceInput.value = updated;
+            } else {
+                const newValue = value.replace(regex, `${qty - 1}${type}`);
+                diceInput.value = newValue;
+            }
+        }
+        updateDiceLabel(type);
+    }
+    function updateDiceLabel(type) {
+        const diceInput = document.getElementById("dice-input").value.toLowerCase();
+        const regex = new RegExp(`(\\d*)${type}(?!\\d)`);
+        const match = diceInput.match(regex);
+        const count = match ? parseInt(match[1] || "1") : 0;
+        const label = document.querySelector(`[data-roll="1${type}"] p`);
+        if (label) label.textContent = count > 0 ? count : "0";
+    }
+
     // ==== Listener for Window Size ====
     var _isMobile = false;
     window.addEventListener('resize', function () {
@@ -913,6 +1169,21 @@
     }
     // ==== Listener for Note ====
     document.addEventListener('click', (e) => {
+        const dicePopups = document.querySelectorAll('.dicePopup');
+        const isPopupButton = e.target.closest('[data-popup-trigger]') !== null;
+        let clickedInsideAnyPopup = false;
+        dicePopups.forEach(popup => {
+            if (popup.contains(e.target)) {
+                clickedInsideAnyPopup = true;
+            }
+        });
+        if (!clickedInsideAnyPopup && !isPopupButton) {
+            dicePopups.forEach(popup => {
+                popup.classList.add('hidden', 'opacity-0');
+                popup.classList.remove('opacity-100');
+            });
+        }
+
         const backdrop = document.getElementById('note-editor-backdrop');
         const editor = document.getElementById('note-editor');
         if (!editor || !backdrop) return;
@@ -1084,4 +1355,4 @@
         `;
     }
 </script>
-<script defer src="/scripts/footer.js"></script>
+<script defer src="/scripts/footer.js"></script> <!-- Footer script -->
