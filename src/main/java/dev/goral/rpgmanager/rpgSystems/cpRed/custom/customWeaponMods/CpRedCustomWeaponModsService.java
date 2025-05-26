@@ -1,8 +1,10 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.custom.customWeaponMods;
 
+import dev.goral.rpgmanager.security.CustomReturnables;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +13,22 @@ import java.util.Map;
 public class CpRedCustomWeaponModsService {
     private final CpRedCustomWeaponModsRepository cpRedCustomWeaponModsRepository;
 
-//    // Pobierz wszystkie modyfikacje broni
-//    public Map<String, Object> getAllWeaponMods() {
-//
-//    }
+
+    // Pobierz wszystkie modyfikacje broni
+    public Map<String, Object> getAllWeaponMods() {
+        List<CpRedCustomWeaponModsDTO> allCustomWeaponMods = cpRedCustomWeaponModsRepository.findAll().stream()
+                .map(CpRedCustomWeaponMods -> new CpRedCustomWeaponModsDTO(
+                        CpRedCustomWeaponMods.getGameId().getId(),
+                        CpRedCustomWeaponMods.getName(),
+                        CpRedCustomWeaponMods.getPrice(),
+                        CpRedCustomWeaponMods.getSize(),
+                        CpRedCustomWeaponMods.getAvailability().toString(),
+                        CpRedCustomWeaponMods.getDescription()
+                )).toList();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowe modyfikacje broni zostały pobrane.");
+        response.put("customWeaponMods", allCustomWeaponMods);
+        return response;
+    }
 //
 //    // Pobierz modyfikację broni po id
 //    public Map<String, Object> getWeaponModById(Long weaponModId) {
