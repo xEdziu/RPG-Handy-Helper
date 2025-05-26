@@ -824,6 +824,65 @@
                                   </option>
                                   <option name="sortWeight" value="6000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="c39b4a13-32a6-4e4f-8274-2f4cda26df6b" />
+                                  <option name="name" value="WeaponMods" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;mod&quot;,&#10;  price: 100,&#10;  size: 20,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;A cheap mod&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Tworzy modyfikację do broni" />
+                                        <option name="id" value="2def6f56-c1e5-4bd6-9ecb-fbe5efdeb4eb" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz modyfikacje" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weaponMods/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;mod 2.0&quot;,&#10;  price: 300,&#10;  size: 10,&#10;  availability: &quot;LUXURY&quot;,&#10;  description: &quot;Awesome mod&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zmienia dane w modyfikacji broni" />
+                                        <option name="id" value="cafe2f2d-28ba-4447-a418-50fe9a678a44" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj modyfikację" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weaponMods/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="a79a44b6-e92b-4f5c-96cb-83fd877e039e" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie modyfikacje broni" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/weaponMods/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="0071020d-ffb9-4ea5-b2b8-6b207dcd7084" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć modyfikację broni po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/weaponMods/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="b499a3a2-a7f9-4efb-a85f-3b00784ad88e" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie modyfikacje broni dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weaponMods/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="7000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />

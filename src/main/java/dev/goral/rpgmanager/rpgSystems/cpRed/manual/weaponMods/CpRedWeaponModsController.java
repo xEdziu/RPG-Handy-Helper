@@ -28,11 +28,11 @@ public class CpRedWeaponModsController {
     public Map<String, Object> getAllWeaponModsForAdmin() {
         return cpRedWeaponModsService.getAllWeaponModsForAdmin();
     }
-    @GetMapping(path = "/admin/rpgSystems/cpRed/weaponMods/add")
+    @PostMapping(path = "/admin/rpgSystems/cpRed/weaponMods/add")
     public Map<String, Object> addWeaponMod(@RequestBody CpRedWeaponMods cpRedWeaponMods) {
         return cpRedWeaponModsService.addWeaponMod(cpRedWeaponMods);
     }
-    @GetMapping(path = "/admin/rpgSystems/cpRed/weaponMods/update/{weaponModId}")
+    @PutMapping(path = "/admin/rpgSystems/cpRed/weaponMods/update/{weaponModId}")
     public Map<String, Object> updateWeaponMod(@PathVariable("weaponModId") Long weaponModId,
                                                @RequestBody CpRedWeaponMods cpRedWeaponMods) {
         return cpRedWeaponModsService.updateWeaponMod(weaponModId, cpRedWeaponMods);
