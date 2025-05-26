@@ -298,19 +298,16 @@ public class UserService implements UserDetailsService {
                 .body(image);
     }
 
-    public ResponseEntity<byte[]> getUserPhotoByUsername(String filename, String username) {
-        if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
-            throw new ResourceNotFoundException("Invalid filename");
-        }
-
+    public ResponseEntity<byte[]> getUserPhotoByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o nicku: " + username));
 
         String userPhotoPath = user.getUserPhotoPath();
-        if (userPhotoPath == null || !userPhotoPath.endsWith(filename)) {
-            throw new IllegalStateException("Użytkownik nie ma ustawionego zdjęcia profilowego.");
+        if (userPhotoPath == null || userPhotoPath.isEmpty()) {
+            throw new ResourceNotFoundException("Użytkownik nie ma ustawionego zdjęcia profilowego.");
         }
 
+        String filename = Paths.get(userPhotoPath).getFileName().toString();
         try {
             return getUserPhoto(filename);
         } catch (IOException e) {
