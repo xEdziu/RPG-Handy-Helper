@@ -46,6 +46,7 @@ public class CpRedAmmunitionCompatibilityService {
         List<CpRedAmmunitionCompatibilityDTO> allWeaponAmmunitionCompatibility = weaponAmmoRepository.findAll()
                 .stream()
                 .map(cpRedAmmunitionCompatibility -> new CpRedAmmunitionCompatibilityDTO(
+                        cpRedAmmunitionCompatibility.getId(),
                         cpRedAmmunitionCompatibility.getWeaponId(),
                         cpRedAmmunitionCompatibility.getAmmunitionId(),
                         cpRedAmmunitionCompatibility.isWeaponCustom(),
@@ -63,6 +64,7 @@ public class CpRedAmmunitionCompatibilityService {
                 .orElseThrow(() -> new ResourceNotFoundException("Kompatybilność amunicji o podanym id nie istnieje."));
 
         CpRedAmmunitionCompatibilityDTO compatibilityDTO = new CpRedAmmunitionCompatibilityDTO(
+                compatibility.getId(),
                 compatibility.getWeaponId(),
                 compatibility.getAmmunitionId(),
                 compatibility.isWeaponCustom(),
@@ -79,11 +81,24 @@ public class CpRedAmmunitionCompatibilityService {
                 getCompatibilityByWeaponRequest.getWeaponId(),
                 getCompatibilityByWeaponRequest.isWeaponCustom()
         ).stream().map(cpRedAmmunitionCompatibility -> new CpRedAmmunitionCompatibilityDTO(
+                cpRedAmmunitionCompatibility.getId(),
                 cpRedAmmunitionCompatibility.getWeaponId(),
                 cpRedAmmunitionCompatibility.getAmmunitionId(),
                 cpRedAmmunitionCompatibility.isWeaponCustom(),
                 cpRedAmmunitionCompatibility.isAmmunitionCustom()
         )).toList();
+
+        if (getCompatibilityByWeaponRequest.isWeaponCustom()){
+            // Sprawdzenie, czy podana customowa broń istnieje
+            if (!customWeaponRepository.existsById(getCompatibilityByWeaponRequest.getWeaponId())) {
+                throw new ResourceNotFoundException("Podana customowa broń nie istnieje.");
+            }
+        } else {
+            // Sprawdzenie, czy podana broń istnieje
+            if (!weaponRepository.existsById(getCompatibilityByWeaponRequest.getWeaponId())) {
+                throw new ResourceNotFoundException("Podana broń nie istnieje.");
+            }
+        }
 
         if (compatibilityByWeapon.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono kompatybilności amunicji dla podanej broni.");
@@ -99,11 +114,24 @@ public class CpRedAmmunitionCompatibilityService {
                 getCompatibilityByAmmunitionRequest.getAmmunitionId(),
                 getCompatibilityByAmmunitionRequest.isAmmunitionCustom()
         ).stream().map(cpRedAmmunitionCompatibility -> new CpRedAmmunitionCompatibilityDTO(
+                cpRedAmmunitionCompatibility.getId(),
                 cpRedAmmunitionCompatibility.getWeaponId(),
                 cpRedAmmunitionCompatibility.getAmmunitionId(),
                 cpRedAmmunitionCompatibility.isWeaponCustom(),
                 cpRedAmmunitionCompatibility.isAmmunitionCustom()
         )).toList();
+
+        if (getCompatibilityByAmmunitionRequest.isAmmunitionCustom()){
+            // Sprawdzenie, czy podana customowa amunicja istnieje
+            if (!customAmmunitionRepository.existsById(getCompatibilityByAmmunitionRequest.getAmmunitionId())) {
+                throw new ResourceNotFoundException("Podana customowa amunicja nie istnieje.");
+            }
+        } else {
+            // Sprawdzenie, czy podana amunicja istnieje
+            if (!ammunitionRepository.existsById(getCompatibilityByAmmunitionRequest.getAmmunitionId())) {
+                throw new ResourceNotFoundException("Podana amunicja nie istnieje.");
+            }
+        }
 
         if (compatibilityByAmmunition.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono kompatybilności amunicji dla podanej amunicji.");

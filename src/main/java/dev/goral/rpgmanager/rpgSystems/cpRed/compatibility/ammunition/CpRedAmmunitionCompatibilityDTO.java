@@ -8,6 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class CpRedAmmunitionCompatibilityDTO {
+    private Long id;
     private Long weaponId;
     private Long ammunitionId;
     private boolean isWeaponCustom;
