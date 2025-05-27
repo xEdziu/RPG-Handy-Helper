@@ -838,14 +838,15 @@
             return false;
         }
 
-        const regex = /^[a-zA-Z0-9_][\w\-*!?]{2,}$/;
-        if (!regex.test(trimmed)) {
+        const regex = /^[a-zA-Z0-9_][a-zA-Z0-9_\-*!?]{2,}$/;
+        if (!regex.test(username)) {
             document.getElementById('usernameErrorTooltip').textContent =
                 'Nazwa użytkownika musi mieć co najmniej 3 znaki, nie może zaczynać się od znaku specjalnego, ani zawierać spacji';
             return false;
         }
 
         if (trimmed === originalUsername) return true;
+        if (username === originalUsername) return true;
 
         try {
             const response = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(trimmed)}`);
