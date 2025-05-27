@@ -180,7 +180,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 2,&#10;//  &quot;gameId&quot;: 1,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 2,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 2,&#10;//  &quot;gameId&quot;: 1,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -408,7 +408,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Broń długa&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 1,&#10;  category: &quot;FIGHTING&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 1,&#10;  category: &quot;RANGED_WEAPON&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -1268,6 +1268,101 @@
                             <option name="id" value="be478e01-3cd6-4b0a-bd25-b519ab021bde" />
                             <option name="name" value="Custom" />
                             <option name="sortWeight" value="2000000" />
+                          </folderState>
+                          <folderState>
+                            <option name="folders">
+                              <list>
+                                <folderState>
+                                  <option name="id" value="aa67ce32-c9e7-4151-bad0-db421a499188" />
+                                  <option name="name" value="Weapon-Ammunition" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;ammunitionId&quot;: 1,&#10;  &quot;weaponId&quot;: 1,&#10;  &quot;weaponCustom&quot;: true,&#10;  &quot;ammunitionCustom&quot;: true&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje kompatybilność pomiędzy bronią i amunicją" />
+                                        <option name="id" value="6dd9e26d-d635-44ab-a443-e000e0b36d22" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj compatybilność" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera liste wszystkich kompatybliności" />
+                                        <option name="id" value="95419afc-082c-42ee-b923-d62e01d9fa6b" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca kompatybilność o podanym Id" />
+                                        <option name="id" value="2e1db7dc-227f-41d5-b177-a3c038059da1" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć kompatybilność po id" />
+                                        <option name="sortWeight" value="2500000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/3" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  weaponId: 1,&#10;  weaponCustom: false&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zwraca wszystkie kompatybilności dla podanej w body broni" />
+                                        <option name="id" value="dc0f3b11-3da5-4cd8-9d7f-7a3aa396cad2" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności dla danej broni" />
+                                        <option name="sortWeight" value="2750000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/forWeapon" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  ammunitionId: 1,&#10;  ammunitionCustom: true&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zwraca listę kompatybilności z daną w body bronią" />
+                                        <option name="id" value="c3773cbe-4d31-44ec-bec4-e2f00f602ce6" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności dla danej Amunicji" />
+                                        <option name="sortWeight" value="2875000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/forAmmunition" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="// !!! Trzeba podać wszystko !!!&#10;{&#10;  &quot;ammunitionId&quot;: 1,&#10;  &quot;weaponId&quot;: 1,&#10;  &quot;weaponCustom&quot;: false,&#10;  &quot;ammunitionCustom&quot;: false&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje kompatybilność, trzeba podać wszystko" />
+                                        <option name="id" value="3ec93fe0-6250-4401-baa3-4b8fc09e09ad" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj kompatybilność" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="1000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="d541d6c2-8bad-4471-843e-f869e1911bbb" />
+                                  <option name="name" value="Weapon-Mod" />
+                                  <option name="sortWeight" value="2000000" />
+                                </folderState>
+                              </list>
+                            </option>
+                            <option name="id" value="4527151b-3d39-42a7-b996-cd1bd64c9afd" />
+                            <option name="name" value="Compatibility" />
+                            <option name="sortWeight" value="3000000" />
                           </folderState>
                         </list>
                       </option>
