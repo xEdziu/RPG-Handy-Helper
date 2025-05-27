@@ -202,6 +202,11 @@ public class CpRedCustomCyberwaresService {
             if (cpRedCustomCyberwaresRepository.existsByNameAndGameId(cpRedCustomCyberwares.getName(), game)) {
                 throw new IllegalStateException("Customowy wszczep o tej nazwie już istnieje.");
             }
+
+            if (cyberwareToUpdate.getGameId().getId() != cpRedCustomCyberwares.getGameId()) {
+                throw new IllegalStateException("Nie można zmienić gry dla wszczepu.");
+            }
+
             if (cpRedCustomCyberwares.getName().isEmpty() ||
                     cpRedCustomCyberwares.getName().trim().isEmpty()) {
                 throw new IllegalStateException("Nazwa wszczepu nie może być pusta.");

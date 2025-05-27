@@ -288,6 +288,10 @@ public class CpRedCustomWeaponsService {
             throw new IllegalStateException("Tylko GM może modyfikować customową broń.");
         }
 
+        if (weaponToUpdate.getGameId().getId() != cpRedCustomWeapon.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla broni.");
+        }
+
         // Sprawdź przypisaną statystykę
         if (cpRedCustomWeapon.getRequiredSkillId() != -1) {
             CpRedSkills requiredSkill = cpRedSkillsRepository.findById(cpRedCustomWeapon.getRequiredSkillId())

@@ -189,6 +189,10 @@ public class CpRedCustomAmmunitionService {
             throw new IllegalStateException("Tylko GM może modyfikować amunicję.");
         }
 
+        if (ammunitionToUpdate.getGameId().getId() != cpRedCustomAmmunition.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla amunicji.");
+        }
+
         // Sprawdź nazwę
         if(cpRedCustomAmmunition.getName() != null) {
             // Sprawdzenie, czy amunicja o podanej nazwie już istnieje

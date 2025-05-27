@@ -154,6 +154,11 @@ public class CpRedCustomEquipmentsService {
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
             throw new IllegalStateException("Tylko GM może edytować wyposażenie w grze.");
         }
+
+        if (equipmentToUpdate.getGameId().getId() != cpRedCustomEquipments.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla wyposażenia.");
+        }
+
         if (cpRedCustomEquipments.getName() != null) {
             if (cpRedCustomEquipmentsRepository.existsByNameAndGameId(cpRedCustomEquipments.getName(), game)) {
                 throw new IllegalStateException("Customowy wyposażenie o tej nazwie już istnieje.");

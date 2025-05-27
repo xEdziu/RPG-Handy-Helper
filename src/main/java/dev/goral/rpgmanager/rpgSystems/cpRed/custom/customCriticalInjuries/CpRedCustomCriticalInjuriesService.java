@@ -178,6 +178,11 @@ public class CpRedCustomCriticalInjuriesService {
             throw new IllegalStateException("Tylko GM może modyfikować pancerz.");
         }
 
+        if (injuryToUpdate.getGameId().getId() != cpRedCustomCriticalInjuries.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla rany krytycznej.");
+        }
+
+
         if (cpRedCustomCriticalInjuries.getInjuryPlace() != null) {
             injuryToUpdate.setInjuryPlace(cpRedCustomCriticalInjuries.getInjuryPlace());
         }

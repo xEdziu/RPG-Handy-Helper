@@ -192,6 +192,10 @@ public class CpRedCustomArmorsService {
             throw new IllegalStateException("Tylko GM może modyfikować pancerz.");
         }
 
+        if (armorToUpdate.getGameId().getId() != cpRedCustomArmors.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla pancerza.");
+        }
+
         if(cpRedCustomArmors.getName() != null) {
             if (cpRedCustomArmorsRepository.existsByNameAndGameId(cpRedCustomArmors.getName(), armorToUpdate.getGameId())) {
                 throw new IllegalStateException("Customowy pancerz o tej nazwie już istnieje.");
