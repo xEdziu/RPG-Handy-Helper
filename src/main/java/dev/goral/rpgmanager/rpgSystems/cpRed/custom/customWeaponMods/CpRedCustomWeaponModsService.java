@@ -157,8 +157,9 @@ public class CpRedCustomWeaponModsService {
         CpRedCustomWeaponMods modToUpdate = cpRedCustomWeaponModsRepository.findById(weaponModId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customowa modyfikacja o id " + weaponModId + " nie istnieje."));
 
-        Game game = gameRepository.findById(cpRedCustomWeaponMods.getGameId())
-                .orElseThrow(() -> new ResourceNotFoundException("Gra o id "+ cpRedCustomWeaponMods.getGameId()+" nie istnieje."));
+        Game game = gameRepository.findById(modToUpdate.getGameId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id "+ modToUpdate.getGameId()+" nie istnieje."));
+
         if (game.getStatus() != GameStatus.ACTIVE) {
             throw new IllegalStateException("Gra o id " + modToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
@@ -167,6 +168,11 @@ public class CpRedCustomWeaponModsService {
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
             throw new IllegalStateException("Tylko GM może edytować wszczep w grze.");
         }
+
+        if (modToUpdate.getGameId().getId() != cpRedCustomWeaponMods.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla modyfikacji broni.");
+        }
+
         if(cpRedCustomWeaponMods.getName()!=null){
             if (cpRedCustomWeaponModsRepository.existsByNameAndGameId(cpRedCustomWeaponMods.getName(), game)) {
                 throw new IllegalStateException("Customowa modyfikacja broni o tej nazwie już istnieje.");
@@ -209,9 +215,7 @@ public class CpRedCustomWeaponModsService {
             }
             modToUpdate.setDescription(cpRedCustomWeaponMods.getDescription());
         }
-        if (modToUpdate.getGameId().getId() != cpRedCustomWeaponMods.getGameId()) {
-            throw new IllegalStateException("Nie można zmienić gry dla modyfikacji broni.");
-        }
+
         CpRedCustomWeaponMods updatedWeaponMod = cpRedCustomWeaponModsRepository.save(modToUpdate);
         return CustomReturnables.getOkResponseMap("Customowa modyfikacja broni została zaktualizowana.");
     }
