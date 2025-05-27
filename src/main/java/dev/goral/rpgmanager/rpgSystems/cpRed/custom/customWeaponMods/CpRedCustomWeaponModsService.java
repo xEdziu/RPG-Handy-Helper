@@ -29,8 +29,6 @@ public class CpRedCustomWeaponModsService {
     private final GameRepository gameRepository;
 
 
-
-    // Pobierz wszystkie modyfikacje broni
     public Map<String, Object> getAllWeaponMods() {
         List<CpRedCustomWeaponModsDTO> allCustomWeaponMods = cpRedCustomWeaponModsRepository.findAll().stream()
                 .map(CpRedCustomWeaponMods -> new CpRedCustomWeaponModsDTO(
@@ -159,8 +157,8 @@ public class CpRedCustomWeaponModsService {
         CpRedCustomWeaponMods modToUpdate = cpRedCustomWeaponModsRepository.findById(weaponModId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customowa modyfikacja o id " + weaponModId + " nie istnieje."));
 
-        Game game = gameRepository.findById(modToUpdate.getGameId().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Gra o id "+modToUpdate.getGameId().getId()+" nie istnieje."));
+        Game game = gameRepository.findById(cpRedCustomWeaponMods.getGameId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra o id "+ cpRedCustomWeaponMods.getGameId()+" nie istnieje."));
         if (game.getStatus() != GameStatus.ACTIVE) {
             throw new IllegalStateException("Gra o id " + modToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
@@ -210,6 +208,9 @@ public class CpRedCustomWeaponModsService {
                 throw new IllegalStateException("Opis modyfikacji broni nie może być dłuższy niż 500 znaków.");
             }
             modToUpdate.setDescription(cpRedCustomWeaponMods.getDescription());
+        }
+        if (modToUpdate.getGameId().getId() != cpRedCustomWeaponMods.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla modyfikacji broni.");
         }
         CpRedCustomWeaponMods updatedWeaponMod = cpRedCustomWeaponModsRepository.save(modToUpdate);
         return CustomReturnables.getOkResponseMap("Customowa modyfikacja broni została zaktualizowana.");
