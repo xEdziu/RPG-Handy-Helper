@@ -35,9 +35,6 @@ public class CpRedWeaponModsService {
                         mod.getDescription()
 
                 )).toList();
-        if(modsDTO.isEmpty()){
-            return CustomReturnables.getOkResponseMap("Brak modyfikacji broni");
-        }
         Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano modyfikacje broni");
         response.put("weaponMods", modsDTO);
         return response;
