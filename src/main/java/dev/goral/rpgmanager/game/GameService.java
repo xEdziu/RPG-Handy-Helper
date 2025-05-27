@@ -137,8 +137,9 @@ public class GameService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
-        if (!game.getGameMaster().getId().equals(currentUser.getId())) {
-            throw new IllegalArgumentException("Tylko GameMaster może dodawać użytkowników do swojej gry.");
+        GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(request.getGameId(), currentUser.getId());
+        if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalArgumentException("Nie możesz dodać użytkownika z gry, gdy nie jesteś jej GameMasterem.");
         }
 
         GameUsers gameUsers = new GameUsers();
@@ -200,9 +201,9 @@ public class GameService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
-        // Sprawdzenie, czy na pewno to GM próbuje zmienić swoja gre
-        if(!currentUser.getId().equals(gameToUpdate.getGameMaster().getId())) {
-            throw new IllegalArgumentException("Nie możesz zmienić gry gdy nie jesteś jej GameMasterem.");
+        GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(gameId, currentUser.getId());
+        if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalArgumentException("Nie możesz zmienić gry, gdy nie jesteś jej GameMasterem.");
         }
 
         if(game.getName() == null && game.getGameMaster() == null && game.getDescription() == null) {
@@ -271,9 +272,9 @@ public class GameService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
-        // Sprawdzenie, czy na pewno to GM próbuje zmienić swoja gre
-        if(!currentUser.getId().equals(gameToUpdate.getGameMaster().getId())) {
-            throw new IllegalArgumentException("Nie możesz zmienić gry gdy nie jesteś jej GameMasterem.");
+        GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(gameId, currentUser.getId());
+        if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalArgumentException("Nie możesz zmienić gry, gdy nie jesteś jej GameMasterem.");
         }
 
         if (statusStr == null) {
