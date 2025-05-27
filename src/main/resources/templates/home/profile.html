@@ -338,9 +338,6 @@
 </div>
 
 
-
-
-
 <script>
     document.getElementById("changePhotoBtn").addEventListener("click", async () => {
         document.getElementById("photoChoiceModal").classList.remove("hidden");
@@ -393,7 +390,9 @@
                         Swal.close();
 
                         if (uploadResponse.ok) {
+                            resetPhotoPreview();
                             updateProfilePhoto(fileName);
+                            currentPhotoFilename = fileName;
                             closePhotoChoiceModal();
                             Swal.fire({ icon: 'success', text: result.message || "Zdjęcie zostało ustawione!" });
                         } else {
@@ -506,7 +505,7 @@
 
     function updateProfilePhoto(filename) {
         if (!filename) return;
-        const url = `/api/v1/authorized/user/photo/${filename}`;
+        const url = `/api/v1/authorized/user/photo/${filename}?v=${Date.now()}`;
         document.getElementById("profilePhoto").src = url;
     }
 
@@ -643,6 +642,8 @@
 
     document.getElementById("photoInput").addEventListener("change", function (e) {
         document.getElementById("photoChoiceModal").classList.add("hidden");
+        let photoUpdated = false;
+        let uploadedPhotoFilename = "";
         const file = e.target.files[0];
         if (!file) return;
 
@@ -713,6 +714,13 @@
             const result = await response.json();
             Swal.close();
 
+            photoUpdated = true;
+            uploadedPhotoFilename = result.userPhotoPath?.split("/").pop();
+
+            const filename = data.userPhotoPath?.split("/").pop();
+            currentPhotoFilename = filename;
+            updateProfilePhoto(filename);
+
             if (response.ok) {
                 Swal.fire({ icon: 'success', text: result.message || "Zdjęcie zaktualizowane!" })
                     .then((result) => {
@@ -720,7 +728,6 @@
                             location.reload();
                         }
                     });
-                updateProfilePhoto(currentPhotoFilename);
             } else {
                 Swal.fire({ icon: 'error', text: result.message || "Błąd podczas przesyłania zdjęcia." });
             }
@@ -787,6 +794,7 @@
         });
     });
     document.getElementById("cancelCrop").addEventListener("click", () => {
+        resetPhotoPreview();
         cropper.destroy();
         cropModal.classList.add("hidden");
         document.getElementById("photoInput").value = "";
@@ -796,7 +804,7 @@
         cropper.getCroppedCanvas({
             width: 400,
             height: 400
-        }).toBlob((blob) => {
+        }).toBlob(async (blob) => {
             const newFile = new File([blob], "cropped-profile.jpg", { type: "image/jpeg" });
 
             const dataTransfer = new DataTransfer();
@@ -810,8 +818,49 @@
 
             cropper.destroy();
             cropModal.classList.add("hidden");
+
+            const formData = new FormData();
+            formData.append("file", newFile);
+
+            Swal.fire({
+                title: 'Wysyłanie...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            try {
+                const response = await fetch("/api/v1/authorized/user/photo", {
+                    method: "POST",
+                    headers: {
+                        'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                Swal.close();
+
+                if (response.ok) {
+                    const filename = result.userPhotoPath?.split("/").pop();
+                    currentPhotoFilename = filename;
+                    updateProfilePhoto(filename);
+                    document.getElementById("photoInput").value = "";
+                    await loadProfile();
+
+                    Swal.fire({
+                        icon: 'success',
+                        text: result.message || "Zdjęcie zostało zapisane!"
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', text: result.message || "Błąd podczas przesyłania zdjęcia." });
+                }
+            } catch (err) {
+                Swal.close();
+                Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
+            }
         }, "image/jpeg");
     });
+
 
     function toggleError(tooltipId, isValid, input) {
         const errorContainer = document.getElementById(`error-${input.id}`);
@@ -883,6 +932,13 @@
             return false;
         }
         return true;
+    }
+
+    function resetPhotoPreview() {
+        const preview = document.getElementById("photoPreview");
+        preview.src = "";
+        preview.style.display = "none";
+        preview.classList.add("hidden");
     }
 
 
