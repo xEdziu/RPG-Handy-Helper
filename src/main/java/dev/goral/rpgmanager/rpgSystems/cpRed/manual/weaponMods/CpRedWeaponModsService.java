@@ -25,8 +25,8 @@ public class CpRedWeaponModsService {
     private final UserRepository userRepository;
 
     public Map<String, Object> getAllWeaponMods() {
-        List<CpRedWeaponMods> mods= cpRedWeaponModsRepository.findAll();
-        List<CpRedWeaponModsDTO> modsDTO = mods.stream().map( mod->
+        List<CpRedWeaponMods> mods = cpRedWeaponModsRepository.findAll();
+        List<CpRedWeaponModsDTO> modsDTO = mods.stream().map(mod ->
                 new CpRedWeaponModsDTO(
                         mod.getName(),
                         mod.getPrice(),
@@ -35,7 +35,7 @@ public class CpRedWeaponModsService {
                         mod.getDescription()
 
                 )).toList();
-        Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano modyfikacje broni");
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano modyfikacje broni");
         response.put("weaponMods", modsDTO);
         return response;
     }
@@ -77,7 +77,7 @@ public class CpRedWeaponModsService {
             throw new IllegalStateException("Nie podano wszystkich parametrów");
         }
 
-        if(cpRedWeaponModsRepository.existsByName(cpRedWeaponMods.getName())) {
+        if (cpRedWeaponModsRepository.existsByName(cpRedWeaponMods.getName())) {
             throw new IllegalStateException("Modyfikacja o tej nazwie już istnieje.");
         }
         if (cpRedWeaponMods.getName().isEmpty() || cpRedWeaponMods.getName().trim().isEmpty()) {
@@ -87,27 +87,33 @@ public class CpRedWeaponModsService {
             throw new IllegalStateException("Nazwa modfikacji nie może być dłuższa niż 255 znaków.");
         }
 
-        if( cpRedWeaponMods.getPrice() < 0) {
+        if (cpRedWeaponMods.getPrice() < 0) {
             throw new IllegalStateException("Cena modyfikacji broni musi być większa lub równa 0");
         }
-        if( cpRedWeaponMods.getSize() <= 0) {
+        if (cpRedWeaponMods.getSize() <= 0) {
             throw new IllegalStateException("Rozmiar modyfikacji broni musi być większy od 0");
         }
         String description = cpRedWeaponMods.getDescription();
-        if(description.length() > 1000) {
-            throw new IllegalStateException("Opis nie może być dłuższy niż 1000 znaków");
+        if (cpRedWeaponMods.getDescription() != null) {
+            if (cpRedWeaponMods.getDescription().isEmpty() || cpRedWeaponMods.getDescription().trim().isEmpty()) {
+                throw new IllegalStateException("Opis modyfikacji nie może być pusty.");
+            }
+            if (cpRedWeaponMods.getDescription().length() > 500) {
+                throw new IllegalStateException("Opis modyfikacji nie może być dłuższy niż 500 znaków.");
+            }
         }
-        CpRedWeaponMods newWeaponMod = new CpRedWeaponMods(
-                null,
-                cpRedWeaponMods.getName(),
-                cpRedWeaponMods.getPrice(),
-                cpRedWeaponMods.getSize(),
-                cpRedWeaponMods.getAvailability(),
-                cpRedWeaponMods.getDescription()
-        );
-        cpRedWeaponModsRepository.save(newWeaponMod);
-        return CustomReturnables.getOkResponseMap("Dodano modyfikację broni");
+            CpRedWeaponMods newWeaponMod = new CpRedWeaponMods(
+                    null,
+                    cpRedWeaponMods.getName(),
+                    cpRedWeaponMods.getPrice(),
+                    cpRedWeaponMods.getSize(),
+                    cpRedWeaponMods.getAvailability(),
+                    cpRedWeaponMods.getDescription()
+            );
+            cpRedWeaponModsRepository.save(newWeaponMod);
+            return CustomReturnables.getOkResponseMap("Dodano modyfikację broni");
     }
+
 
     public Map<String, Object> updateWeaponMod(Long weaponModId, CpRedWeaponMods cpRedWeaponMods) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
