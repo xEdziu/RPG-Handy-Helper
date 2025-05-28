@@ -81,10 +81,10 @@ public class CpRedWeaponModsService {
             throw new IllegalStateException("Modyfikacja o tej nazwie już istnieje.");
         }
         if (cpRedWeaponMods.getName().isEmpty() || cpRedWeaponMods.getName().trim().isEmpty()) {
-            throw new IllegalStateException("Nazwa modfikacji nie może być pusta.");
+            throw new IllegalStateException("Nazwa modyfikacji nie może być pusta.");
         }
         if (cpRedWeaponMods.getName().length() > 255) {
-            throw new IllegalStateException("Nazwa modfikacji nie może być dłuższa niż 255 znaków.");
+            throw new IllegalStateException("Nazwa modyfikacji nie może być dłuższa niż 255 znaków.");
         }
 
         if (cpRedWeaponMods.getPrice() < 0) {
