@@ -647,8 +647,9 @@
                     toFilerGame.push(game.name);
                 }
             });
+            console.log(toFilerGame);
             toFilerGame.forEach(game => {
-                gameHTML += `<option value="${game.name}">${game.name}</option>`;
+                gameHTML += `<option value="${game}">${game}</option>`;
             });
             RpgSystem.forEach(system => {
                 campaing += `<option value="${system.name}">${system.name}</option>`;

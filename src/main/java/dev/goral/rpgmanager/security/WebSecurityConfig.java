@@ -37,20 +37,20 @@ public class WebSecurityConfig {
                                 .requestMatchers("/room/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                                 .requestMatchers("/api/v1/**").permitAll() // Publicly accessible, no login required
                                 .requestMatchers("/admin", "/admin/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/home", "/home/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                                .requestMatchers("/home", "/home/**").hasAuthority("ROLE_USER")
                                 .requestMatchers("/login", "/api/v1/**", "/register", "/activate").permitAll()
                                 .requestMatchers("/forgotPassword", "/resetPassword").permitAll()
                                 .requestMatchers("/", "/index.html", "/static/**", "/resources/**").permitAll() // Allow access to static resources
-                                .requestMatchers("/styles/**", "/scripts/**", "/img/**", "/assets/**", "/fonts/**").permitAll() // Allow access to static resources
+                                .requestMatchers("/styles/**", "/scripts/**", "/img/**", "/fonts/**").permitAll() // Allow access to static resources
                                 .requestMatchers("/actuator/health").permitAll() // Allow access to health check
                                 .requestMatchers("/styles/**", "/scripts/**", "/img/**", "/fonts/**").permitAll() // Allow access to static resources
                                 .anyRequest()
                                 .authenticated()
                 )
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/logout") // Wyłączenie CSRF tylko dla logout
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                .csrf(AbstractHttpConfigurer::disable
+//                        .ignoringRequestMatchers("/logout") // Wyłączenie CSRF tylko dla logout
+//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 )
                 .formLogin(httpConfig -> httpConfig
                         .loginPage("/login")
@@ -82,8 +82,8 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .maximumSessions(1)
                 )
-                .authenticationProvider(daoAuthenticationProvider())
-                .addFilterAfter(new CsrfTokenGeneratingFilter(), BasicAuthenticationFilter.class);
+                .authenticationProvider(daoAuthenticationProvider());
+//                .addFilterAfter(new CsrfTokenGeneratingFilter(), BasicAuthenticationFilter.class);
 
         return http.build();
     }
