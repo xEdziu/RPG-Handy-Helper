@@ -47,6 +47,11 @@ public class UserController {
         return userService.getUserPhoto(filename);
     }
 
+    @GetMapping("/user/photo/defaults")
+    public Map<String, Object> getDefaultUserPhotos() {
+        return userService.getDefaultProfilePics();
+    }
+
     @GetMapping("/admin/user/all")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
