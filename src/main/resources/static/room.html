@@ -17,8 +17,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
-    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
-    <!-- Dodanie Font Awesome -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script> <!-- Dodanie Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
@@ -32,7 +31,7 @@
                 extend: {
                     colors: {
                         dark: {
-                            background: "#1E1E1E",
+                            background: "#0F0F0F",
                             backgroundSecondary: "#181818",
                             backgroundTertiary: "#101010",
                             textPrimary: "#E1E1E1",
@@ -372,10 +371,6 @@
                     loadNotes();
                     hideNoteEditor();
                     document.getElementById('search-input').disabled = false;
-                    disableControlNoteControls(false);
-                    setTimeout(() => {
-                        forceReload();
-                    }, 1000);
                 }
             }).catch(error => {
                 console.error('Nie udało się zapisać notatki:', error);
@@ -558,7 +553,7 @@
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
         <div class="flex gap-[2%] flex-row flex-nowrap justify-center items-stretch w-[100vw] min-h-[80vh] p-4">
             <section id="character-card"
-                class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8">
+                class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-[80vh]">
                 <a href="#"
                     class="p-4 relative self-end -top-2 -right-6 text-light-textPrimary dark:text-dark-textPrimary z-10">
                     <i class="fa-solid fa-arrow-up-right-from-square text-3xl" aria-hidden="true"></i>
@@ -571,7 +566,7 @@
                 </div>
             </section>
             <section id="chat-container"
-                class="flex flex-col grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg w-full max-w-xl p-4">
+                class="flex flex-col grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg w-full max-w-xl p-4 h-[80vh]">
                 <div class="flex flex-col gap-2">
                     <div id="chat"
                         class="flex flex-col gap-2 bg-white dark:bg-dark-background border border-gray-300 dark:border-dark-border rounded-lg p-4 h-[65vh] overflow-y-auto mb-4 text-sm">
@@ -588,7 +583,7 @@
                     </form>
                 </div>
             </section>
-            <section id="personal-info" class="flex flex-col gap-[2%] grow w-[32vw] w-full max-w-xl">
+            <section id="personal-info" class="flex flex-col gap-[2%] grow w-[32vw] w-full max-w-xl h-[80vh]">
                 <div id="notes-container"
                     class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-[79%]">
                     <a href="#"
@@ -617,7 +612,7 @@
 
                         </div>
                         <div id="notes-content"
-                            class="flex flex-col items-center justify-center w-full h-[90%] p-3 overflow-y-auto">
+                            class="w-[100%] h-[100%] flex flex-col items-center justify-center p-3">
                             <div class="w-12 h-12 border-4 border-light-accent dark:border-dark-accent rounded-full animate-ping"
                                 role="status" aria-label="Ładowanie"></div>
                         </div>
@@ -860,7 +855,7 @@
     import DiceBox from "https://cdn.jsdelivr.net/npm/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
     let username = null;
     let stompClient = null;
-    const userColorMap = {};
+    const usersMap = {};
     const userColors = [
         "text-red-500",
         "text-blue-500",
@@ -1025,22 +1020,38 @@
         }
         document.getElementById("dice-input").value = rollPool.join("+");
     }
-    function getUserColor(username) {
-        if (!userColorMap[username]) {
-            const index = Object.keys(userColorMap).length % userColors.length;
-            userColorMap[username] = userColors[index];
+    function getUserColorAndPhoto(username) {
+        if (!usersMap[username]) {
+            const index = Object.keys(usersMap).length % userColors.length;
+            const color = userColors[index];
+            usersMap[username] = {
+                color: color,
+                photo: null
+            };
+            fetch(`/api/v1/user/photo/${username}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log(`Pobrano zdjęcie użytkownika ${username}:`, data);
+                    usersMap[username].photo = data.imageUrl;
+                })
+                .catch(err => {
+                    console.error(`Nie udało się pobrać zdjęcia użytkownika ${username}:`, err);
+                });
         }
-        return userColorMap[username];
+        return usersMap[username];
     }
-    function messageHTML(form, content) {
-        const userColor = getUserColor(form);
+    var styleMesege = "";
+    var styleMSG = ""
+    function messageHTML(form, content, pv="false") {
+        const userData = getUserColorAndPhoto(form);
+        console.log(userData);
         return `
             <div class="flex items-start justify-start bg-light-background dark:bg-dark-background p-3 rounded-lg">
                 <div id="user-photo" class="flex item-center justify-center">
-                    IMG
+                    <img src="${userData.photo}" alt="${form} Avatar" class="w-10 h-10 rounded-full mr-3">
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-light-textPrimary dark:text-dark-textPrimary font-bold ${userColor}">${escapeHtml(form)}</span>
+                    <span class="text-light-textPrimary dark:text-dark-textPrimary font-bold ${userData.color}">${escapeHtml(form)}</span>
                     <p class="text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
                         ${(content)}
                     </p>
