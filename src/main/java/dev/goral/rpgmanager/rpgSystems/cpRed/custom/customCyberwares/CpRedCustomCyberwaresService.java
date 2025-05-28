@@ -193,6 +193,11 @@ public class CpRedCustomCyberwaresService {
         if (game.getStatus() != GameStatus.ACTIVE) {
             throw new IllegalStateException("Gra o id " + cyberwareToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
+
+        if (cyberwareToUpdate.getGameId().getId() != cpRedCustomCyberwares.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla wszczepu.");
+        }
+
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), cyberwareToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
@@ -202,6 +207,9 @@ public class CpRedCustomCyberwaresService {
             if (cpRedCustomCyberwaresRepository.existsByNameAndGameId(cpRedCustomCyberwares.getName(), game)) {
                 throw new IllegalStateException("Customowy wszczep o tej nazwie już istnieje.");
             }
+
+
+
             if (cpRedCustomCyberwares.getName().isEmpty() ||
                     cpRedCustomCyberwares.getName().trim().isEmpty()) {
                 throw new IllegalStateException("Nazwa wszczepu nie może być pusta.");

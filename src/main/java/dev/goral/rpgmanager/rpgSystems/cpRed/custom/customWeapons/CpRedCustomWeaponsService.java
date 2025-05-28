@@ -279,6 +279,10 @@ public class CpRedCustomWeaponsService {
             throw new IllegalStateException("Gra o id " + weaponToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
 
+        if (weaponToUpdate.getGameId().getId() != cpRedCustomWeapon.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla broni.");
+        }
+
         // Sprawdź, czy użytkownik należy do gry
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), weaponToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));

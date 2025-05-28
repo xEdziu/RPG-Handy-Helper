@@ -180,6 +180,10 @@ public class CpRedCustomAmmunitionService {
             throw new IllegalStateException("Gra o id " + ammunitionToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
 
+        if (ammunitionToUpdate.getGameId().getId() != cpRedCustomAmmunition.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla amunicji.");
+        }
+
         // Sprawdź, czy użytkownik należy do tej gry
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), ammunitionToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));

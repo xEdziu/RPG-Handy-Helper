@@ -149,11 +149,19 @@ public class CpRedCustomEquipmentsService {
         if (game.getStatus() != GameStatus.ACTIVE) {
             throw new IllegalStateException("Gra o id " + equipmentToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
+
+        if (equipmentToUpdate.getGameId().getId() != cpRedCustomEquipments.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla wyposażenia.");
+        }
+
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), equipmentToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
             throw new IllegalStateException("Tylko GM może edytować wyposażenie w grze.");
         }
+
+
+
         if (cpRedCustomEquipments.getName() != null) {
             if (cpRedCustomEquipmentsRepository.existsByNameAndGameId(cpRedCustomEquipments.getName(), game)) {
                 throw new IllegalStateException("Customowy wyposażenie o tej nazwie już istnieje.");
