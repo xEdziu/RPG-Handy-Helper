@@ -855,14 +855,14 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Amunicja EMP zmodyfikowany 3&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 2000,&#10;  availability: &quot;COSTLY&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Amunicja EMP zmodyfikowany 3&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 2000,&#10;  availability: &quot;COSTLY&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
                                         <option name="description" value="Modyfikuje podane paramtery customowej broni" />
                                         <option name="id" value="bb5b8140-83a8-4931-9e9a-1acebee99066" />
                                         <option name="method" value="PUT" />
-                                        <option name="name" value="Modyfikuj customową broń" />
+                                        <option name="name" value="Modyfikuj customową amunicję" />
                                         <option name="sortWeight" value="1500000" />
                                         <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customAmmunition/update/1" />
                                       </requestState>
@@ -993,7 +993,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  requiredSkillId: 2,&#10;  name: &quot;zmodyfikoany test weapon&quot;,&#10;  type: &quot;ROCKET_LAUNCHER&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 3,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 20000,&#10;  availability: &quot;SUPER_LUXURY&quot;,&#10;  description: &quot;Jakiś jeszcze piękniejszy opis&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  requiredSkillId: 2,&#10;  name: &quot;zmodyfikoany test weapon&quot;,&#10;  type: &quot;ROCKET_LAUNCHER&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 3,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 20000,&#10;  availability: &quot;SUPER_LUXURY&quot;,&#10;  description: &quot;Jakiś jeszcze piękniejszy opis&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
