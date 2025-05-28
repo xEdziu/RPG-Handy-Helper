@@ -1,9 +1,12 @@
 package dev.goral.rpgmanager.game;
 
 import dev.goral.rpgmanager.game.gameUsers.*;
-import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.user.User;
 import lombok.AllArgsConstructor;
+import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,13 +22,18 @@ public class GameController {
     // ============ User methods ============
 
     @GetMapping(path = "/game/{gameId}")
-    public GameDTO getGame(@PathVariable("gameId") Long gameId) {
+    public Map<String, Object> getGame(@PathVariable("gameId") Long gameId) {
         return gameService.getGame(gameId);
     }
 
     @GetMapping(path = "/game/allPlayers/{gameId}")
-    public List<GameUsersDTO> getGamePlayers(@PathVariable("gameId") Long gameId) {
+    public Map<String, Object> getGamePlayers(@PathVariable("gameId") Long gameId) {
         return gameService.getGamePlayers(gameId);
+    }
+
+    @GetMapping(path = "/game/userGames")
+    public Map<String, Object> getUserGames(@AuthenticationPrincipal User currentUser) {
+        return gameService.getUserGames(currentUser);
     }
 
     @PostMapping(path = "/game/create")
@@ -37,10 +45,12 @@ public class GameController {
     public Map<String, Object> addUserToGame(@RequestBody AddUserToGameRequest request) {
         return gameService.addUserToGame(request);
     }
+
     @DeleteMapping(path = "/game/deleteUserFromGame")
     public Map<String, Object> deleteUserToGame(@RequestBody DeleteUserFromGameRequest request) {
         return gameService.deleteUserFromGame(request);
     }
+
 
     @PutMapping(path = "/game/updateGame/{gameId}")
     public Map<String, Object> updateGame(@PathVariable("gameId") Long gameId, @RequestBody Game game) {
@@ -60,7 +70,7 @@ public class GameController {
     // ============ Admin methods ============
 
     @GetMapping(path = "/admin/game/all")
-    public List<GameDTOAdmin> getAllGames() {
+    public Map<String, Object> getAllGames() {
         return gameService.getAllGames();
     }
 

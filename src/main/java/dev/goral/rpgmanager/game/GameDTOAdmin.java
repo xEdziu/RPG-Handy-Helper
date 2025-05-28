@@ -12,7 +12,7 @@ public class GameDTOAdmin {
     private final Long id;
     private final String name;
     private final String description;
-    private final Long gameMasterId;
+    private final Long OwnerId;
     private final Long rpgSystemId;
     private final String status;
 }

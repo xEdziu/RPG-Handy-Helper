@@ -5,6 +5,7 @@ import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.security.exceptions.ForbiddenActionException;
 import dev.goral.rpgmanager.security.exceptions.ResourceNotFoundException;
@@ -28,7 +29,7 @@ public class GameRoomController {
 
     @PostMapping("/create")
     public Map<String, Object> createGameRoom(@RequestParam Long gameId,
-                                                              @AuthenticationPrincipal User currentUser) {
+                                              @AuthenticationPrincipal User currentUser) {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Stworzono pokój gry.");
 
         Game game = gameRepository.findById(gameId).orElse(null);
@@ -41,8 +42,9 @@ public class GameRoomController {
             throw new ForbiddenActionException("Nie można stworzyć pokoju dla nieaktywnej gry.");
         }
 
-        if (!game.getGameMaster().getId().equals(currentUser.getId())) {
-            throw new ForbiddenActionException("Tylko GameMaster może stworzyć pokój dla tej gry.");
+        GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(gameId, currentUser.getId());
+        if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new IllegalArgumentException("Tylko GameMaster może stworzyć pokój dla tej gry.");
         }
 
         GameRoom room = gameRoomManager.createRoom(gameId, currentUser.getId());
