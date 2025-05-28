@@ -17,7 +17,8 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
-    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script> <!-- Dodanie Font Awesome -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
@@ -63,6 +64,15 @@
             },
         };
         // ==== Zmienne globalne ====
+        var numOfDice = {
+            D4: 0,
+            D6: 0,
+            D8: 0,
+            D10: 0,
+            D12: 0,
+            D20: 0,
+            D100: 0
+        };
         var userInfo = null;
         var gameId = null;
         var allNotesForGame = null;
@@ -76,6 +86,7 @@
         const roomId = window.location.pathname.split("/").pop()
         // ===== DOMContentLoaded =====
         document.addEventListener("DOMContentLoaded", () => {
+            loadDiceBox();
             getUserInfo();
             initThemeToggle();
             applyTheme(getSavedTheme());
@@ -609,10 +620,8 @@
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0" />
                                 </div>
                             </div>
-
                         </div>
-                        <div id="notes-content"
-                            class="w-[100%] h-[100%] flex flex-col items-center justify-center p-3">
+                        <div id="notes-content" class="w-[100%] h-[100%] flex flex-col items-center justify-center p-3">
                             <div class="w-12 h-12 border-4 border-light-accent dark:border-dark-accent rounded-full animate-ping"
                                 role="status" aria-label="Ładowanie"></div>
                         </div>
@@ -621,186 +630,8 @@
                 </div>
                 <div id="dice-container"
                     class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg h-[19%] pt-8 p-6 flex-col justify-center items-center gap-1">
-                    <div class="controls flex flex-wrap items-center gap-2 mb-4">
-                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
-                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
-                            <div id="dicePopupD4"
-                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
-                                <button onclick="addDice('d4')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    +
-                                </button>
-                                <button onclick="removeDice('d4')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    −
-                                </button>
-                            </div>
-                            <!-- Ikona kości -->
-                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D4')">
-                                <img src="/img/assets/dice-icon-dark-version.svg"
-                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
-                                <img src="/img/assets/dice-icon-light-version.svg"
-                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
-                                <p
-                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
-                                    4
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
-                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
-                            <div id="dicePopupD6"
-                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
-                                <button onclick="addDice('d6')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    +
-                                </button>
-                                <button onclick="removeDice('d6')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    −
-                                </button>
-                            </div>
-                            <!-- Ikona kości -->
-                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D6')">
-                                <img src="/img/assets/dice-icon-dark-version.svg"
-                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
-                                <img src="/img/assets/dice-icon-light-version.svg"
-                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
-                                <p
-                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
-                                    6
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
-                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
-                            <div id="dicePopupD8"
-                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
-                                <button onclick="addDice('d8')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    +
-                                </button>
-                                <button onclick="removeDice('d8')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    −
-                                </button>
-                            </div>
-                            <!-- Ikona kości -->
-                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D8')">
-                                <img src="/img/assets/dice-icon-dark-version.svg"
-                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
-                                <img src="/img/assets/dice-icon-light-version.svg"
-                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
-                                <p
-                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
-                                    8
-                                </p>
-                            </div>
-                        </div>
-                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
-                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
-                            <div id="dicePopupD10"
-                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
-                                <button onclick="addDice('d10')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    +
-                                </button>
-                                <button onclick="removeDice('d10')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    −
-                                </button>
-                            </div>
-                            <!-- Ikona kości -->
-                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D10')">
-                                <img src="/img/assets/dice-icon-dark-version.svg"
-                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
-                                <img src="/img/assets/dice-icon-light-version.svg"
-                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
-                                <p
-                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
-                                    10
-                                </p>
-                            </div>
-                        </div>
-                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
-                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
-                            <div id="dicePopupD12"
-                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
-                                <button onclick="addDice('d12')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    +
-                                </button>
-                                <button onclick="removeDice('d12')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    −
-                                </button>
-                            </div>
-                            <!-- Ikona kości -->
-                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D12')">
-                                <img src="/img/assets/dice-icon-dark-version.svg"
-                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
-                                <img src="/img/assets/dice-icon-light-version.svg"
-                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
-                                <p
-                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
-                                    12
-                                </p>
-                            </div>
-                        </div>
-                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
-                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
-                            <div id="dicePopupD20"
-                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
-                                <button onclick="addDice('d20')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    +
-                                </button>
-                                <button onclick="removeDice('d20')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    −
-                                </button>
-                            </div>
-                            <!-- Ikona kości -->
-                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D20')">
-                                <img src="/img/assets/dice-icon-dark-version.svg"
-                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
-                                <img src="/img/assets/dice-icon-light-version.svg"
-                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
-                                <p
-                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
-                                    20
-                                </p>
-                            </div>
-                        </div>
-                        <div class="relative flex flex-col items-center justify-center w-10 h-10 group">
-                            <!-- Popup pojawia się przy hover/focus lub może być na stałe -->
-                            <div id="dicePopupD100"
-                                class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
-                                <button onclick="addDice('d100')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    +
-                                </button>
-                                <button onclick="removeDice('d100')"
-                                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                                    −
-                                </button>
-                            </div>
-                            <!-- Ikona kości -->
-                            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('D100')">
-                                <img src="/img/assets/dice-icon-dark-version.svg"
-                                    class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
-                                <img src="/img/assets/dice-icon-light-version.svg"
-                                    class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
-                                <p
-                                    class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
-                                    100
-                                </p>
-                            </div>
-                        </div>
-                        <input type="text" id="dice-input" placeholder="Np. 2d10"
-                            class="px-3 py-2 border border-gray-400 rounded-md flex-1 w-full text-light-textPrimary dark:text-dark-textPrimary" />
+                    <div class="controls flex justify-around items-center gap-2 mb-4" id="diceContainer">
+                        <!-- Generowane kości JS-->
                     </div>
                     <div class="flex items-center justify-between">
                         <div class="relative w-max">
@@ -819,7 +650,7 @@
                                 class="text-base font-bold font-jetbrains-mono bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap">
                                 Reset
                             </button>
-                            <button id="rollCustom"
+                            <button id="rollCustom" onclick="rollAllDice()"
                                 class="text-base font-bold font-jetbrains-mono bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap">
                                 Rzuć
                             </button>
@@ -1042,7 +873,7 @@
     }
     var styleMesege = "";
     var styleMSG = ""
-    function messageHTML(form, content, pv="false") {
+    function messageHTML(form, content, pv = "false") {
         const userData = getUserColorAndPhoto(form);
         console.log(userData);
         return `
@@ -1059,8 +890,41 @@
             </div>
         `;
     }
+    
 </script>
 <script>
+    // ==== Load Dice Box ====
+    function loadDiceBox() {
+        const dicesBox = document.getElementById("diceContainer");
+        var diceTypes = ["D4", "D6", "D8", "D10", "D12", "D20", "D100"];
+        diceTypes.forEach(type => {
+            var diceBox = document.createElement("div");
+            diceBox.className = "relative flex flex-col items-center justify-center w-10 h-10 group";
+            diceBox.innerHTML = `
+                <div id="dicePopup${type}" class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                    <button onclick="addDice('${type.toLowerCase()}')"
+                        class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                        +
+                    </button>
+                    <button onclick="removeDice('${type.toLowerCase()}')"
+                        class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                        −
+                    </button>
+                </div>
+                <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('${type}')">
+                    <img src="/img/assets/dice-icon-dark-version.svg" class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                    <img src="/img/assets/dice-icon-light-version.svg" class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                    <p class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                        ${type.replace("D", "")}
+                    </p>
+                    <p id="diceCount${type}" class="hidden z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none -ml-[4.5rem]">
+                        0
+                    </p>
+                </div>
+            `;
+            dicesBox.appendChild(diceBox);
+        });
+    }
     // ==== Dice Popup ====
     function showPopup(diceType) {
         setTimeout(() => {
@@ -1082,48 +946,37 @@
     }
     // ==== Dice Functions ====
     function addDice(type) {
-        const diceInput = document.getElementById("dice-input");
-        const value = diceInput.value.toLowerCase().replace(/k/g, "d").replace(/\s+/g, "");
-        const regex = new RegExp(`(\\d*)${type}(?!\\d)`);
-        const match = value.match(regex);
-        let newValue;
-        if (match) {
-            let qty = parseInt(match[1] || "1");
-            qty++;
-            newValue = value.replace(regex, `${qty}${type}`);
-        } else {
-            newValue = value ? `${value}+1${type}` : `1${type}`;
+        if (!type || !(type.toUpperCase() in numOfDice)) return;
+        if (numOfDice[type.toUpperCase()] >= 20) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Maksymalna liczba kości osiągnięta',
+                text: 'Możesz mieć maksymalnie 20 kości tego typu.'
+            });
+            return;
         }
-        diceInput.value = newValue;
-        updateDiceLabel(type);
+        numOfDice[type.toUpperCase()]++;
+        updateDiceCount(type);
     }
     function removeDice(type) {
-        const diceInput = document.getElementById("dice-input");
-        const value = diceInput.value.toLowerCase().replace(/k/g, "d").replace(/\s+/g, "");
-        const regex = new RegExp(`(\\d*)${type}(?!\\d)`);
-        const match = value.match(regex);
-        if (match) {
-            let qty = parseInt(match[1] || "1");
-            if (qty <= 1) {
-                const updated = value
-                    .split("+")
-                    .filter(part => !part.includes(type))
-                    .join("+");
-                diceInput.value = updated;
-            } else {
-                const newValue = value.replace(regex, `${qty - 1}${type}`);
-                diceInput.value = newValue;
-            }
+        if (!type || !(type.toUpperCase() in numOfDice)) return;
+        const upperType = type.toUpperCase();
+        if (numOfDice[upperType] > 0) {
+            numOfDice[upperType]--;
+            updateDiceCount(type);
         }
-        updateDiceLabel(type);
     }
-    function updateDiceLabel(type) {
-        const diceInput = document.getElementById("dice-input").value.toLowerCase();
-        const regex = new RegExp(`(\\d*)${type}(?!\\d)`);
-        const match = diceInput.match(regex);
-        const count = match ? parseInt(match[1] || "1") : 0;
-        const label = document.querySelector(`[data-roll="1${type}"] p`);
-        if (label) label.textContent = count > 0 ? count : "0";
+    function updateDiceCount(type) {
+        const upperType = type.toUpperCase();
+        const element = document.getElementById(`diceCount${upperType}`);
+        if (element) {
+            if (numOfDice[upperType] == 0) {
+                element.classList.add('hidden');
+            } else {
+                element.classList.remove('hidden');
+            }
+            element.innerHTML = `${numOfDice[upperType]}:`;
+        }
     }
 
     // ==== Listener for Window Size ====
