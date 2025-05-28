@@ -185,15 +185,15 @@ public class CpRedCustomArmorsService {
             throw new IllegalStateException("Gra o id " + armorToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
 
+        if (armorToUpdate.getGameId().getId() != cpRedCustomArmors.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla pancerza.");
+        }
+
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), armorToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
 
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
             throw new IllegalStateException("Tylko GM może modyfikować pancerz.");
-        }
-
-        if (armorToUpdate.getGameId().getId() != cpRedCustomArmors.getGameId()) {
-            throw new IllegalStateException("Nie można zmienić gry dla pancerza.");
         }
 
         if(cpRedCustomArmors.getName() != null) {

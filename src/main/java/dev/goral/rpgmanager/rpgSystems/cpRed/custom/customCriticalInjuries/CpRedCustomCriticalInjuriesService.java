@@ -171,17 +171,16 @@ public class CpRedCustomCriticalInjuriesService {
             throw new IllegalStateException("Gra o id " + injuryToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
 
+        if (injuryToUpdate.getGameId().getId() != cpRedCustomCriticalInjuries.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla rany krytycznej.");
+        }
+
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), injuryToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
 
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
             throw new IllegalStateException("Tylko GM może modyfikować pancerz.");
         }
-
-        if (injuryToUpdate.getGameId().getId() != cpRedCustomCriticalInjuries.getGameId()) {
-            throw new IllegalStateException("Nie można zmienić gry dla rany krytycznej.");
-        }
-
 
         if (cpRedCustomCriticalInjuries.getInjuryPlace() != null) {
             injuryToUpdate.setInjuryPlace(cpRedCustomCriticalInjuries.getInjuryPlace());
