@@ -20,78 +20,71 @@ public class ChatController {
 
     @MessageMapping("/chat/{roomId}")
     public void send(@DestinationVariable String roomId,
-                     @Payload ChatMessage message,
+                     @Payload ChatMessage incomingMessage,
                      Principal principal,
                      StompHeaderAccessor accessor) {
 
-        String sender = principal.getName();
-        String text = message.getContent().trim();
+        String messageContent = incomingMessage.getContent().trim();
+        String clientReportedSender = incomingMessage.getFrom(); // Kto wg klienta wysłał wiadomość
+        String authenticatedSender = principal.getName(); // Kto faktycznie jest zalogowany
 
-        // (re) dodajemy użytkownika do pokoju i odświeżamy listę
-        roomManager.addUser(roomId, sender, accessor.getSessionId());
-        List<String> users = roomManager.getConnectedUsers(roomId);
-        messagingTemplate.convertAndSend("/topic/chat/" + roomId + "/users", users);
+        // Zarządzanie użytkownikami w pokoju: dodajemy/odświeżamy tylko, gdy wiadomość jest od rzeczywistego użytkownika
+        if (!"System".equalsIgnoreCase(clientReportedSender)) {
+            roomManager.addUser(roomId, authenticatedSender, accessor.getSessionId());
+            List<String> usersInRoom = roomManager.getConnectedUsers(roomId);
+            messagingTemplate.convertAndSend("/topic/chat/" + roomId + "/users", usersInRoom);
+        }
 
-        if (text.startsWith("/pv ")) {
-            String[] parts = text.split("\\s+", 3);
+        if (messageContent.startsWith("/pv ") && !"System".equalsIgnoreCase(clientReportedSender)) {
+            // Logika dla wiadomości prywatnych
+            String[] parts = messageContent.split("\\s+", 3);
             if (parts.length < 3) {
-                // niepoprawna składnia
                 messagingTemplate.convertAndSendToUser(
-                        sender,
+                        authenticatedSender,
                         "/topic/chat/" + roomId,
                         new ChatMessage("System", "Użyj: /pv <nick> <wiadomość>", true)
                 );
                 return;
             }
-            String target = parts[1];
+            String targetUser = parts[1];
             String privateText = parts[2];
+            List<String> currentUsersInRoom = roomManager.getConnectedUsers(roomId);
 
-            if (!users.contains(target)) {
-                // adresat nie w pokoju
+            if (!currentUsersInRoom.contains(targetUser)) {
                 messagingTemplate.convertAndSendToUser(
-                        sender,
+                        authenticatedSender,
                         "/topic/chat/" + roomId,
-                        new ChatMessage("System", "Użytkownik " + target + " nie jest w pokoju", true)
+                        new ChatMessage("System", "Użytkownik " + targetUser + " nie jest w pokoju.", true)
                 );
                 return;
             }
-            if (target.equals(sender)) {
-                // wiadomość do siebie
+            if (targetUser.equals(authenticatedSender)) {
                 messagingTemplate.convertAndSendToUser(
-                        sender,
+                        authenticatedSender,
                         "/topic/chat/" + roomId,
-                        new ChatMessage("System", "Nie możesz wysłać wiadomości prywatnej do siebie", true)
+                        new ChatMessage("System", "Nie możesz wysłać wiadomości prywatnej do siebie.", true)
                 );
                 return;
             }
-            // wysyłamy prywatnie
-            ChatMessage pmTo = new ChatMessage();
-            pmTo.setFrom(sender);
-            pmTo.setContent(privateText);
-            pmTo.setPrivateMessage(true);
-            messagingTemplate.convertAndSendToUser(
-                    target,
-                    "/topic/chat/" + roomId,
-                    pmTo
-            );
-            // potwierdzenie u nadawcy
-            ChatMessage pmFrom = new ChatMessage();
-            pmFrom.setFrom("Do " + target);
-            pmFrom.setContent(privateText);
-            pmFrom.setPrivateMessage(true);
-            messagingTemplate.convertAndSendToUser(
-                    sender,
-                    "/topic/chat/" + roomId,
-                    pmFrom
-            );
+
+            ChatMessage privateMessageToTarget = new ChatMessage(authenticatedSender, privateText, true);
+            messagingTemplate.convertAndSendToUser(targetUser, "/topic/chat/" + roomId, privateMessageToTarget);
+
+            ChatMessage confirmationToSender = new ChatMessage("Do " + targetUser, privateText, true);
+            messagingTemplate.convertAndSendToUser(authenticatedSender, "/topic/chat/" + roomId, confirmationToSender);
 
         } else {
-            // zwykły broadcast
-            ChatMessage broadcast = new ChatMessage();
-            broadcast.setFrom(sender);
-            broadcast.setContent(text);
-            broadcast.setPrivateMessage(false);
-            messagingTemplate.convertAndSend("/topic/chat/" + roomId, broadcast);
+            // Logika dla wiadomości publicznych (broadcast)
+            ChatMessage broadcastMessage = new ChatMessage();
+            broadcastMessage.setContent(messageContent);
+            broadcastMessage.setPrivateMessage(false);
+
+            if ("System".equalsIgnoreCase(clientReportedSender)) {
+                broadcastMessage.setFrom("System");
+            } else {
+                broadcastMessage.setFrom(authenticatedSender);
+            }
+            messagingTemplate.convertAndSend("/topic/chat/" + roomId, broadcastMessage);
         }
     }
 

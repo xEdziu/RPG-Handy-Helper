@@ -221,7 +221,7 @@
                 }
                 return response.json();
             }).then(data => {
-                if (data.error != "200") {
+                if (data.error !== 200) {
                     console.error('API Error:', data.error);
                 }
                 noteContent = data.gameNotes;
@@ -695,6 +695,7 @@
         .then(res => res.json())
         .then(data => {
             username = data.username;
+            getUserColorAndPhoto(username);
             initWebSocket();
         });
 
@@ -708,8 +709,9 @@
                 appendMessage(from, content, false);
             });
             stompClient.subscribe(`/user/topic/chat/${roomId}`, msg => {
+                 // tu zostawiamy prefix “Do …” w from, żeby widzieć “Do zuber”
                 const { from, content } = JSON.parse(msg.body);
-                appendMessage(from, content, true);  // trzeci parametr = prywatna
+                appendMessage(from, content, true);
             });
             stompClient.subscribe(`/topic/dice/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
@@ -731,8 +733,7 @@
     function appendMessage(from, content, pv = false) {
         const chat = document.getElementById("chat");
         const wrapper = document.createElement("div");
-        wrapper.className = "flex items-center justify-start bg-light-background dark:bg-dark-background p-3 rounded-lg min-h-[4rem]"
-        wrapper.innerHTML = messageHTML(from, content);
+        wrapper.innerHTML = messageHTML(from, content, pv);
         chat.appendChild(wrapper);
         chat.scrollTop = chat.scrollHeight;
     }
@@ -845,61 +846,77 @@
     });
 
     function getUserColorAndPhoto(username) {
+        if (!username || username === "System") {
+            return {
+                color: "text-gray-500",
+                photo: "/img/profilePics/cyberpunkDefaultProfilePic.png" // #TODO zmienić na kości
+            };
+        }
         if (!usersMap[username]) {
+            // przydzielamy od razu kolor + placeholder
             const index = Object.keys(usersMap).length % userColors.length;
             const color = userColors[index];
+            usersMap[username] = {
+                color,
+                photo: "/img/profilePics/cyberpunkDefaultProfilePic.png"
+            };
+            // fetchujemy w tle rzeczywisty URL
             fetch(`/api/v1/authorized/user/photo/username/${username}`)
                 .then(res => res.json())
                 .then(data => {
-                    usersMap[username] = {
-                        color: color,
-                        photo: data.userPhotoPath
-                    };
-                    return usersMap[username];
+                    usersMap[username].photo = data.userPhotoPath;
+                    // aktualizujemy już wyrenderowane <img data-username="...">
+                    document.querySelectorAll(`img[data-username="${username}"]`)
+                        .forEach(img => img.src = data.userPhotoPath);
                 })
-                .catch(err => {
-                    console.error(`Nie udało się pobrać zdjęcia użytkownika ${username}:`, err);
-                });
+                .catch(err => console.error(`Avatar ${username}:`, err));
         }
         return usersMap[username];
     }
-    var styleMesege = "";
+
+    var styleMessage = "";
     var styleMSG = ""
-    function messageHTML(from, content, pv = "false") {
-        console.log("Form: " + from);
-        var userData;
-        var retHtml = `
-            <div class="flex items-start justify-start bg-light-background dark:bg-dark-background p-3 rounded-lg">
-                <div id="user-photo" class="flex item-center justify-center w-[10%] h-auto">
-            `;
-        if (from == "System"){
-            retHtml += `
-                <img src="chat-dice-icon-light-version.svg" alt="" class="w-10 h-10 dark:hidden">
-                <img src="chat-dice-icon-dark-version.svg" alt="" class="w-10 h-10 hidden dark:block">
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-bold text-light-textPrimary dark:text-dark-textPrimary">${escapeHtml(from)}</span>
-                    <p class="text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
-                        ${(content)}
-                    </p>
-                </div>
-            </div>
-            `;
-        }else{
-            userData = getUserColorAndPhoto(from);
-            retHtml += `
-                <img src="${userData.photo}" alt="${from} Avatar" class="w-10 h-10 rounded-full mr-3">
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-bold ${userData.color}">${escapeHtml(from)}</span>
-                    <p class="text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
-                        ${(content)}
-                    </p>
-                </div>
-            </div>
+    function messageHTML(from, content, pv = false) {
+        const cleanFrom = from.replace(/^Do\s+/, "");
+        const isSystem = cleanFrom === "System" || cleanFrom === "🧊 System";
+
+        // 1. RENDER SYSTEM
+        if (isSystem) {
+            return `
+              <div class="w-full text-center italic text-gray-500 text-sm py-2">
+                ${escapeHtml(content)}
+              </div>
             `;
         }
-        return retHtml;
+
+        // 2. PUBLIC vs PRIVATE
+        const userData = getUserColorAndPhoto(cleanFrom);
+        const pvClasses = pv
+            ? "bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-400 dark:border-yellow-600"
+            : "bg-[#f5f6f8] dark:bg-gray-700";
+
+        return `
+            <div class="flex items-start ${pvClasses} p-3 rounded-lg mb-2">
+              <div class="flex-shrink-0 w-10 h-10 mr-3">
+                <img
+                  src="${userData.photo}"
+                  data-username="${cleanFrom}"
+                  alt="${cleanFrom} Avatar"
+                  class="w-10 h-10 rounded-full"
+                />
+              </div>
+              <div class="flex flex-col flex-1">
+                <span class="font-bold ${userData.color}">
+                  ${pv
+                    ? `<span class="text-xs font-semibold mr-1">🔒</span>${escapeHtml(from)}`
+                    : escapeHtml(cleanFrom)}
+                </span>
+                <p class="text-black dark:text-white whitespace-pre-wrap break-words mt-1">
+                  ${escapeHtml(content)}
+                </p>
+              </div>
+            </div>
+          `;
     }
     // ==== Load Dice Box ====
     const dicesBox = document.getElementById("diceContainer");
