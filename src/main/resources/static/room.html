@@ -86,7 +86,6 @@
         const roomId = window.location.pathname.split("/").pop()
         // ===== DOMContentLoaded =====
         document.addEventListener("DOMContentLoaded", () => {
-            loadDiceBox();
             getUserInfo();
             initThemeToggle();
             applyTheme(getSavedTheme());
@@ -224,7 +223,7 @@
                 }
                 return response.json();
             }).then(data => {
-                if (data.error !== "200") {
+                if (data.error != "200") {
                     console.error('API Error:', data.error);
                 }
                 noteContent = data.gameNotes;
@@ -646,19 +645,17 @@
                                 alt="Expand Dark" />
                         </div>
                         <div>
-                            <button id="rollReset" onclick="resetDice()"
+                            <button id="rollReset"
                                 class="text-base font-bold font-jetbrains-mono bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap">
                                 Reset
                             </button>
-                            <button id="rollCustom" onclick="rollAllDice()"
+                            <button id="rollCustom"
                                 class="text-base font-bold font-jetbrains-mono bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap">
                                 Rzuć
                             </button>
                         </div>
                     </div>
-
-                    <div id="dice-result" class="text-lg font-medium text-center mb-4"></div>
-                    <div id="dice-container" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
+                    <div id="dice-container-trow" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
                     </div>
                 </div>
         </div>
@@ -735,6 +732,7 @@
     }
 
     function appendMessage(from, content, pv = false) {
+        console.log(`Appending message from: ${from}, content: ${content}, pv: ${pv}`);
         const chat = document.getElementById("chat");
         const wrapper = document.createElement("div");
         wrapper.innerHTML = messageHTML(from, content);
@@ -753,12 +751,12 @@
         }
     });
 
+    // ==== DICE OPERATION ====
     const themes = [
         { id: "default", label: "Domyślny" },
         { id: "gemstoneMarble", label: "Gemstone Rainbow Marble" },
         { id: "blueGreenMetal", label: "Blue Green Metal" }
     ];
-
     const themeSelect = document.getElementById("dice-theme");
     const savedTheme = localStorage.getItem("selectedDiceTheme") || "default";
     themes.forEach(({ id, label }) => {
@@ -768,11 +766,10 @@
     themeSelect.addEventListener("change", () => {
         localStorage.setItem("selectedDiceTheme", themeSelect.value);
     });
-
-    const diceBox = new DiceBox("#dice-container", {
+    const diceBox = new DiceBox("#dice-container-trow", {
         assetPath: "/assets/",
         origin: location.origin,
-        scale: window.innerWidth < 600 ? 5 : window.innerWidth < 900 ? 6 : window.innerWidth < 1200 ? 7 : 9,
+        scale: 5,
         gravity: 3,
         friction: 0.5,
         strength: 10,
@@ -780,38 +777,53 @@
         throwForce: 6,
         mass: 3
     });
-
+    const canvas = document.querySelector("#dice-container-trow canvas");
+    const scaleFactor = window.devicePixelRatio || 1;
+    console.log("Scale factor:", scaleFactor);
+    canvas.width = window.innerWidth * scaleFactor;
+    canvas.height = window.innerHeight * scaleFactor;
+    canvas.style.width = "100vw";
+    canvas.style.height = "100vh";
     await diceBox.init();
     await diceBox.loadTheme("default");
-
     let rolling = false;
     let rollPool = [];
-
-    document.querySelectorAll('[data-roll]').forEach(btn => {
-        btn.addEventListener("click", () => addToPool(btn.dataset.roll));
-    });
-
-    document.getElementById("rollCustom").addEventListener("click", async () => {
-        const input = document.getElementById("dice-input").value.trim().toLowerCase().replace(/k/g, "d").replace(/\s+/g, "");
-        if (!/^\d*d(4|6|8|10|12|20|100)(\+\d*d(4|6|8|10|12|20|100))*$/.test(input)) {
-            return Swal.fire({ icon: 'error', title: 'Błędna notacja', text: 'Np. 2d6+1d8' });
-        }
-
-        const segments = input.split("+").map(seg => {
-            const [_, qty = "1", sides] = seg.match(/(\d*)d(\d+)/);
-            return { qty: +qty, sides: +sides };
-        });
-
+    document.getElementById("rollReset").addEventListener("click", () => {
         if (rolling) return;
         rolling = true;
         document.querySelectorAll('button[id^="roll"]').forEach(btn => btn.disabled = true);
+        diceBox.clear();
+        rollPool = [];
+        rolling = false;
+        Object.keys(numOfDice).forEach(k => numOfDice[k] = 0);
+        var diceCont = document.getElementsByClassName('diceCount');
+        for (let i = 0; i < diceCont.length; i++) {
+            diceCont[i].innerText = "";
+        }
+    });
+    document.getElementById("rollCustom").addEventListener("click", async () => {
+        const segments = Object.entries(numOfDice)
+            .filter(([type, qty]) => qty > 0)
+            .map(([type, qty]) => ({ qty, sides: parseInt(type.slice(1)) }));
 
+        if (segments.length === 0) {
+            return Swal.fire({ icon: 'warning', title: 'Brak kości', text: 'Wybierz co najmniej jedną kość.' });
+        }
+        if (rolling) return;
+        rolling = true;
+        document.querySelectorAll('button[id^="roll"]').forEach(btn => btn.disabled = true);
         let total = 0, nat = [];
         const theme = themeSelect.value;
         if (!diceBox.themesLoadedData[theme]) await diceBox.loadTheme(theme);
-
         for (let { qty, sides } of segments) {
-            const res = await diceBox.roll(`${qty}d${sides}`, { theme });
+            const res = await diceBox.roll(`${qty}d${sides}`, {
+                theme,
+                throwStartPosition: {
+                    x: Math.random() * 2 - 1, // od -1 do 1
+                    y: Math.random() * 2 - 1, // od -1 do 1
+                    z: 0
+                }
+            });
             total += res.reduce((sum, die) => sum + die.value, 0);
             res.forEach(d => {
                 nat.push(d.sides === 20 && (d.value === 1 || d.value === 20)
@@ -821,36 +833,21 @@
             await new Promise(r => setTimeout(r, 1500));
             diceBox.clear();
         }
-
-        document.getElementById("dice-result").textContent = `Łączny wynik: ${total}`;
         stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({
             from: "System",
             content: `${username} wylosował ${total} (${nat.join(", ")})`
         }));
-
-        rollPool = [];
-        document.getElementById("dice-input").value = "";
+        Object.keys(numOfDice).forEach(k => numOfDice[k] = 0);
+        rolling = false;
+        var visibleDiceCount = document.getElementsByClassName('diceCount');
+        for (let i = 0; i < visibleDiceCount.length; i++) {
+            visibleDiceCount[i].innerText = "";
+        }
+        Object.keys(numOfDice).forEach(k => numOfDice[k] = 0);
         document.querySelectorAll('button[id^="roll"]').forEach(btn => btn.disabled = false);
         rolling = false;
     });
 
-    function addToPool(notation) {
-        notation = notation.toLowerCase().replace(/k/g, "d");
-        const match = notation.match(/(\d+)d(\d+)/);
-        if (!match) return Swal.fire({ icon: 'error', title: 'Nieprawidłowa notacja', text: notation });
-
-        const [_, qty, sides] = match;
-        const existing = rollPool.findIndex(r => r.endsWith(`d${sides}`));
-        if (existing !== -1) {
-            const m = rollPool[existing].match(/(\d+)d(\d+)/);
-            const newQty = +m[1] + +qty;
-            if (newQty > 20) return Swal.fire({ icon: 'warning', title: 'Za dużo kości', text: `Już masz ${m[1]}d${sides}` });
-            rollPool[existing] = `${newQty}d${sides}`;
-        } else {
-            rollPool.push(`${qty}d${sides}`);
-        }
-        document.getElementById("dice-input").value = rollPool.join("+");
-    }
     function getUserColorAndPhoto(username) {
         if (!usersMap[username]) {
             const index = Object.keys(usersMap).length % userColors.length;
@@ -859,7 +856,7 @@
                 color: color,
                 photo: null
             };
-            fetch(`/api/v1/user/photo/${username}`)
+            fetch(`/api/v1/authorized/user/photo/${username}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log(`Pobrano zdjęcie użytkownika ${username}:`, data);
@@ -874,6 +871,7 @@
     var styleMesege = "";
     var styleMSG = ""
     function messageHTML(form, content, pv = "false") {
+        console.log(`Generating message HTML for: ${form}, content: ${content}, pv: ${pv}`);
         const userData = getUserColorAndPhoto(form);
         console.log(userData);
         return `
@@ -882,7 +880,7 @@
                     <img src="${userData.photo}" alt="${form} Avatar" class="w-10 h-10 rounded-full mr-3">
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-light-textPrimary dark:text-dark-textPrimary font-bold ${userData.color}">${escapeHtml(form)}</span>
+                    <span class="font-bold ${userData.color}">${escapeHtml(form)}</span>
                     <p class="text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
                         ${(content)}
                     </p>
@@ -890,41 +888,38 @@
             </div>
         `;
     }
-    
-</script>
-<script>
+
+
     // ==== Load Dice Box ====
-    function loadDiceBox() {
-        const dicesBox = document.getElementById("diceContainer");
-        var diceTypes = ["D4", "D6", "D8", "D10", "D12", "D20", "D100"];
-        diceTypes.forEach(type => {
-            var diceBox = document.createElement("div");
-            diceBox.className = "relative flex flex-col items-center justify-center w-10 h-10 group";
-            diceBox.innerHTML = `
-                <div id="dicePopup${type}" class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
-                    <button onclick="addDice('${type.toLowerCase()}')"
-                        class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                        +
-                    </button>
-                    <button onclick="removeDice('${type.toLowerCase()}')"
-                        class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
-                        −
-                    </button>
-                </div>
-                <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('${type}')">
-                    <img src="/img/assets/dice-icon-dark-version.svg" class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
-                    <img src="/img/assets/dice-icon-light-version.svg" class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
-                    <p class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
-                        ${type.replace("D", "")}
-                    </p>
-                    <p id="diceCount${type}" class="hidden z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none -ml-[4.5rem]">
-                        0
-                    </p>
-                </div>
-            `;
-            dicesBox.appendChild(diceBox);
-        });
-    }
+    const dicesBox = document.getElementById("diceContainer");
+    var diceTypes = ["D4", "D6", "D8", "D10", "D12", "D20", "D100"];
+    diceTypes.forEach(type => {
+        var diceBox = document.createElement("div");
+        diceBox.className = "relative flex flex-col items-center justify-center w-10 h-10 group";
+        diceBox.innerHTML = `
+            <div id="dicePopup${type}" class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                <button onclick="addDice('${type.toLowerCase()}')"
+                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                    +
+                </button>
+                <button onclick="removeDice('${type.toLowerCase()}')"
+                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                    −
+                </button>
+            </div>
+            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('${type}')">
+                <img src="/img/assets/dice-icon-dark-version.svg" class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                <img src="/img/assets/dice-icon-light-version.svg" class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                <p class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                    ${type.replace("D", "")}
+                </p>
+                <p id="diceCount${type}" class="diceCount hidden z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none -ml-[4.5rem]">
+                    0
+                </p>
+            </div>
+        `;
+        dicesBox.appendChild(diceBox);
+    });
     // ==== Dice Popup ====
     function showPopup(diceType) {
         setTimeout(() => {
@@ -944,6 +939,7 @@
             }
         }, 0);
     }
+    window.showPopup = showPopup;
     // ==== Dice Functions ====
     function addDice(type) {
         if (!type || !(type.toUpperCase() in numOfDice)) return;
@@ -958,6 +954,7 @@
         numOfDice[type.toUpperCase()]++;
         updateDiceCount(type);
     }
+    window.addDice = addDice;
     function removeDice(type) {
         if (!type || !(type.toUpperCase() in numOfDice)) return;
         const upperType = type.toUpperCase();
@@ -966,6 +963,7 @@
             updateDiceCount(type);
         }
     }
+    window.removeDice = removeDice;
     function updateDiceCount(type) {
         const upperType = type.toUpperCase();
         const element = document.getElementById(`diceCount${upperType}`);
@@ -978,7 +976,9 @@
             element.innerHTML = `${numOfDice[upperType]}:`;
         }
     }
-
+    window.updateDiceCount = updateDiceCount;
+</script>
+<script>
     // ==== Listener for Window Size ====
     var _isMobile = false;
     window.addEventListener('resize', function () {
