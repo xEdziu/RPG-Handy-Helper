@@ -204,8 +204,6 @@
                 return response.json();
             }).then(data3 => {
                 gameInfo.system = data3.rpgSystem.name;
-
-                console.log("Final gameInfo:", gameInfo);
             }).catch(error => {
                 console.error('Error fetching game info:', error);
             });
@@ -265,7 +263,6 @@
         function displayNote(idNote) {
             noteEditorMode = 'preview';
             const note = noteContent.find(note => note.id == idNote);
-            console.log(note);
             const noteEditor = document.getElementById('note-editor');
             noteEditor.innerHTML = '';
             noteEditor.innerHTML = generateNoteHTML(note);
@@ -683,7 +680,7 @@
     import DiceBox from "https://cdn.jsdelivr.net/npm/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
     let username = null;
     let stompClient = null;
-    const usersMap = {};
+    var usersMap = {};
     const userColors = [
         "text-red-500",
         "text-blue-500",
@@ -732,9 +729,9 @@
     }
 
     function appendMessage(from, content, pv = false) {
-        console.log(`Appending message from: ${from}, content: ${content}, pv: ${pv}`);
         const chat = document.getElementById("chat");
         const wrapper = document.createElement("div");
+        wrapper.className = "flex items-center justify-start bg-light-background dark:bg-dark-background p-3 rounded-lg min-h-[4rem]"
         wrapper.innerHTML = messageHTML(from, content);
         chat.appendChild(wrapper);
         chat.scrollTop = chat.scrollHeight;
@@ -779,7 +776,6 @@
     });
     const canvas = document.querySelector("#dice-container-trow canvas");
     const scaleFactor = window.devicePixelRatio || 1;
-    console.log("Scale factor:", scaleFactor);
     canvas.width = window.innerWidth * scaleFactor;
     canvas.height = window.innerHeight * scaleFactor;
     canvas.style.width = "100vw";
@@ -852,15 +848,14 @@
         if (!usersMap[username]) {
             const index = Object.keys(usersMap).length % userColors.length;
             const color = userColors[index];
-            usersMap[username] = {
-                color: color,
-                photo: null
-            };
-            fetch(`/api/v1/authorized/user/photo/${username}`)
+            fetch(`/api/v1/authorized/user/photo/username/${username}`)
                 .then(res => res.json())
                 .then(data => {
-                    console.log(`Pobrano zdjęcie użytkownika ${username}:`, data);
-                    usersMap[username].photo = data.imageUrl;
+                    usersMap[username] = {
+                        color: color,
+                        photo: data.userPhotoPath
+                    };
+                    return usersMap[username];
                 })
                 .catch(err => {
                     console.error(`Nie udało się pobrać zdjęcia użytkownika ${username}:`, err);
@@ -870,26 +865,42 @@
     }
     var styleMesege = "";
     var styleMSG = ""
-    function messageHTML(form, content, pv = "false") {
-        console.log(`Generating message HTML for: ${form}, content: ${content}, pv: ${pv}`);
-        const userData = getUserColorAndPhoto(form);
-        console.log(userData);
-        return `
+    function messageHTML(from, content, pv = "false") {
+        console.log("Form: " + from);
+        var userData;
+        var retHtml = `
             <div class="flex items-start justify-start bg-light-background dark:bg-dark-background p-3 rounded-lg">
-                <div id="user-photo" class="flex item-center justify-center">
-                    <img src="${userData.photo}" alt="${form} Avatar" class="w-10 h-10 rounded-full mr-3">
+                <div id="user-photo" class="flex item-center justify-center w-[10%] h-auto">
+            `;
+        if (from == "System"){
+            retHtml += `
+                <img src="chat-dice-icon-light-version.svg" alt="" class="w-10 h-10 dark:hidden">
+                <img src="chat-dice-icon-dark-version.svg" alt="" class="w-10 h-10 hidden dark:block">
                 </div>
                 <div class="flex flex-col">
-                    <span class="font-bold ${userData.color}">${escapeHtml(form)}</span>
+                    <span class="font-bold text-light-textPrimary dark:text-dark-textPrimary">${escapeHtml(from)}</span>
                     <p class="text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
                         ${(content)}
                     </p>
                 </div>
             </div>
-        `;
+            `;
+        }else{
+            userData = getUserColorAndPhoto(from);
+            retHtml += `
+                <img src="${userData.photo}" alt="${from} Avatar" class="w-10 h-10 rounded-full mr-3">
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-bold ${userData.color}">${escapeHtml(from)}</span>
+                    <p class="text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                        ${(content)}
+                    </p>
+                </div>
+            </div>
+            `;
+        }
+        return retHtml;
     }
-
-
     // ==== Load Dice Box ====
     const dicesBox = document.getElementById("diceContainer");
     var diceTypes = ["D4", "D6", "D8", "D10", "D12", "D20", "D100"];
