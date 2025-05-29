@@ -268,8 +268,8 @@
                                 if (toFilerRPGSystyem.indexOf(note.rpgSystemName) == -1) {
                                     toFilerRPGSystyem.push(note.rpgSystemName);
                                 }
-                                if (toFilerGame.indexOf(note.gameName) == -1) {
-                                    toFilerGame.push(note.gameName);
+                                if (!toFilerGame.some(n => n.gameId === note.gameId)) {
+                                    toFilerGame.push(note);
                                 }
                             });
                             notesContainer.innerHTML = resultHtml;
@@ -566,9 +566,15 @@
         function loadAllOptionsToFilters(data, location, dafaultText) {
             const optionBar = document.getElementById(location);
             var optionsHTML = `<option value='' disabled selected>${dafaultText}</option>`;
-            data.forEach(item => {
-                optionsHTML += `<option value="${item}">${item}</option>`;
-            });
+            if (location == 'campaign-name-filter') {
+                data.forEach(item => {
+                    optionsHTML += `<option value="${item.gameId}">${item.gameName}</option>`;
+                });
+            } else {
+                data.forEach(item => {
+                    optionsHTML += `<option value="${item}">${item}</option>`;
+                });
+            }
             optionBar.innerHTML = optionsHTML;
             getLisinerForFilters(location);
         }
@@ -584,7 +590,7 @@
                 filteredNotes = filteredNotes.filter(note => note.rpgSystemName === systemFilter);
             }
             if (campaignFilter) {
-                filteredNotes = filteredNotes.filter(note => note.gameName === campaignFilter);
+                filteredNotes = filteredNotes.filter(note => note.gameId == campaignFilter);
             }
             if (searchQuery) {
                 filteredNotes = filteredNotes.filter(note =>
@@ -621,13 +627,18 @@
             const campaignFilter = document.getElementById('campaign-name-filter');
             const campaigns = noteContent
                 .filter(note => !selectedSystem || note.rpgSystemName === selectedSystem)
-                .map(note => note.gameName);
-            const uniqueCampaigns = [...new Set(campaigns)];
-            campaignFilter.innerHTML = '<option value="">Kampania</option>'; // domyślna opcja
-            uniqueCampaigns.forEach(campaign => {
+                .map(note => ({ id: note.gameId, name: note.gameName }));
+            const uniqueCampaignsMap = new Map();
+            campaigns.forEach(c => {
+                if (!uniqueCampaignsMap.has(c.id)) {
+                    uniqueCampaignsMap.set(c.id, c.name);
+                }
+            });
+            campaignFilter.innerHTML = '<option value="" disabled selected>Kampania</option>';
+            uniqueCampaignsMap.forEach((name, id) => {
                 const option = document.createElement('option');
-                option.value = campaign;
-                option.textContent = campaign;
+                option.value = id;
+                option.textContent = name;
                 campaignFilter.appendChild(option);
             });
         }
@@ -641,15 +652,8 @@
             gameFilter.innerHTML = "";
             var campaing = `<option value="" disabled selected>System gry</option>`;
             var gameHTML = `<option value="" disabled selected>Kampania</option>`;
-            toFilerGame = [];
-            gameAccessible.forEach(game => {
-                if (toFilerGame.indexOf(game.name) == -1) {
-                    toFilerGame.push(game.name);
-                }
-            });
-            console.log(toFilerGame);
             toFilerGame.forEach(game => {
-                gameHTML += `<option value="${game}">${game}</option>`;
+                gameHTML += `<option value="${game.gameId}">${game.gameName}</option>`;
             });
             RpgSystem.forEach(system => {
                 campaing += `<option value="${system.name}">${system.name}</option>`;
@@ -796,6 +800,7 @@
     </footer>
 </body>
 <script defer src="/scripts/footer.js"></script>
+
 </html>
 <script>
     // ==== Listener for Window Size ====
