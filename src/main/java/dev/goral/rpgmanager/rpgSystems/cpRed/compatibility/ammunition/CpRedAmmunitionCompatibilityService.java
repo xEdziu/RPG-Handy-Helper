@@ -20,7 +20,6 @@ import dev.goral.rpgmanager.user.User;
 import dev.goral.rpgmanager.user.UserRepository;
 import dev.goral.rpgmanager.user.UserRole;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -134,10 +133,10 @@ public class CpRedAmmunitionCompatibilityService {
         }
 
         if (compatibilityByAmmunition.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono kompatybilności amunicji dla podanej amunicji.");
+            throw new ResourceNotFoundException("Nie znaleziono kompatybilności broni dla podanej amunicji.");
         }
 
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Kompatybilność amunicji dla amunicji została pobrana");
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Kompatybilność amunicji dla broni została pobrana");
         response.put("weaponAmmunitionCompatibility", compatibilityByAmmunition);
         return response;
     }
@@ -156,7 +155,7 @@ public class CpRedAmmunitionCompatibilityService {
         // Sprawdzenie, podana amunicja istnieje
         if (addRequest.isAmmunitionCustom()){
             if (!customAmmunitionRepository.existsById(addRequest.getAmmunitionId())) {
-                throw new ResourceNotFoundException("Podana amunicja nie istnieje.");
+                throw new ResourceNotFoundException("Podana customowa amunicja nie istnieje.");
             }
         } else {
             if (!ammunitionRepository.existsById(addRequest.getAmmunitionId())) {
@@ -167,7 +166,7 @@ public class CpRedAmmunitionCompatibilityService {
         // Sprawdzenie, podana broń istnieje
         if (addRequest.isWeaponCustom()){
             if (!customWeaponRepository.existsById(addRequest.getWeaponId())) {
-                throw new ResourceNotFoundException("Podana broń nie istnieje.");
+                throw new ResourceNotFoundException("Podana customowa broń nie istnieje.");
             }
         } else {
             if (!weaponRepository.existsById(addRequest.getWeaponId())) {
@@ -208,7 +207,7 @@ public class CpRedAmmunitionCompatibilityService {
                         .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie należy do gry, do której należy broń."));
                 // Sprawdzenie, czy użytkownik jest GM w grze, do której należy broń
                 if (weaponGameUser.getRole() != GameUsersRole.GAMEMASTER) {
-                    throw new IllegalStateException("Użytkownik nie jest GM w grze, do której należy amunicja.");
+                    throw new IllegalStateException("Użytkownik nie jest GM w grze, do której należy broń.");
                 }
                 // Czy gra jest aktywna
                 if (weaponGame.getStatus() != GameStatus.ACTIVE) {
@@ -329,7 +328,7 @@ public class CpRedAmmunitionCompatibilityService {
                         .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie należy do gry, do której należy broń."));
                 // Sprawdzenie, czy użytkownik jest GM w grze, do której należy broń
                 if (weaponGameUser.getRole() != GameUsersRole.GAMEMASTER) {
-                    throw new IllegalStateException("Użytkownik nie jest GM w grze, do której należy amunicja.");
+                    throw new IllegalStateException("Użytkownik nie jest GM w grze, do której należy broń.");
                 }
                 // Czy gra jest aktywna
                 if (weaponGame.getStatus() != GameStatus.ACTIVE) {
