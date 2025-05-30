@@ -74,16 +74,22 @@ public class ChatController {
             messagingTemplate.convertAndSendToUser(authenticatedSender, "/topic/chat/" + roomId, confirmationToSender);
 
         } else {
-            // Logika dla wiadomości publicznych (broadcast)
             ChatMessage broadcastMessage = new ChatMessage();
             broadcastMessage.setContent(messageContent);
             broadcastMessage.setPrivateMessage(false);
 
-            if ("System".equalsIgnoreCase(clientReportedSender)) {
-                broadcastMessage.setFrom("System");
+            // Wykrywamy rzuty kością (możesz rozszerzyć warunek)
+            if (clientReportedSender != null && !clientReportedSender.equalsIgnoreCase("System")) {
+                // Sprawdzamy, czy to rzuty kością-np. czy content zawiera "wyrzucił" lub "wylosował"
+                if (messageContent.toLowerCase().contains("wyrzucił") || messageContent.toLowerCase().contains("wylosował")) {
+                    broadcastMessage.setFrom("🎲 Rzut kością");
+                } else {
+                    broadcastMessage.setFrom(authenticatedSender);
+                }
             } else {
-                broadcastMessage.setFrom(authenticatedSender);
+                broadcastMessage.setFrom("System");
             }
+
             messagingTemplate.convertAndSend("/topic/chat/" + roomId, broadcastMessage);
         }
     }
