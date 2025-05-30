@@ -2,7 +2,6 @@ package dev.goral.rpgmanager.user.register;
 
 import dev.goral.rpgmanager.security.recaptcha.RecaptchaService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -27,5 +26,15 @@ public class RegisterController {
     @GetMapping(path="/confirm")
     public Map<String, Object> confirm(@RequestParam("token") String token){
         return registerService.confirmEmail(token);
+    }
+
+    @GetMapping(path = "/checkUsername")
+    public Map<String, Object> checkUsername(@RequestParam("username") String username){
+        return registerService.checkUsernameAvailability(username);
+    }
+
+    @GetMapping(path = "/checkEmail")
+    public Map<String, Object> checkEmail(@RequestParam("email") String email){
+        return registerService.checkEmailAvailability(email);
     }
 }
