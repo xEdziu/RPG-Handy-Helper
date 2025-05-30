@@ -94,6 +94,7 @@
             setTimeout(() => {
                 loadNotes();
             }, 1000);
+            getListenerSearchInput();
         });
         // ==== Changing the theme ====
         function initThemeToggle() {
@@ -522,6 +523,38 @@
             editor.classList.add('scale-95', 'opacity-0');
             editor.classList.remove('scale-100', 'opacity-100');
         }
+        function getListenerSearchInput() {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    console.log("Wyszukiwanie notatek...");
+                    const searchTerm = this.value.toLowerCase();
+                    const notesContent = document.getElementById("notes-content");
+                    notesContent.innerHTML = "";
+                    if (searchTerm === "") {
+                        allNotesForGame.forEach(note => {
+                            notesContent.innerHTML += generatePieceOfNoteHTML(note);
+                        });
+                        return;
+                    }
+                    const filteredNotes = allNotesForGame.filter(note =>
+                        note.title.toLowerCase().includes(searchTerm) ||
+                        note.content.toLowerCase().includes(searchTerm)
+                    );
+                    if (filteredNotes.length === 0) {
+                        notesContent.innerHTML = generateInfoHTML(
+                            `Nie znaleziono notatek!`,
+                            `Spróbuj zmienić słowo kluczowe.`,
+                            `Upewnij się, że wpisujesz poprawne słowa kluczowe.`
+                        );
+                    } else {
+                        filteredNotes.forEach(note => {
+                            notesContent.innerHTML += generatePieceOfNoteHTML(note);
+                        });
+                    }
+                });
+            }
+        }
     </script>
 </head>
 
@@ -558,7 +591,7 @@
     </nav>
     <main
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
-        <div class="flex flex-col lg:flex-row items-center justify-center w-[100%] min-h-[80vh] p-4">
+        <div id="content-box" class="flex flex-col lg:flex-row items-center justify-center w-[100%] min-h-[80vh] p-4">
             <section id="character-card"
                 class="flex flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-auto m-3">
                 <div id="character-card-info"
@@ -581,7 +614,7 @@
                     </div>
                 </div>
 
-                <div id="character-card-contrent" class="hidden">
+                <div id="character-card-contrent" class="hidden lg:block">
                     <h1 class="font-jetbrains-mono text-3xl">#Będzie</h1>
                 </div>
             </section>
@@ -604,13 +637,12 @@
                     </form>
                 </div>
             </section>
-
             <section id="personal-info"
-                class="flex flex-col-reverse md:flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[32vw] w-full max-w-xl h-auto">
+                class="flex flex-col-reverse lg:flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[32vw] w-full max-w-xl h-auto">
                 <article id="notes-card"
                     class="flex flex-col items-start justify-start grow w-[100%] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl h-[79%] my-3 p-4">
                     <div id="notes-card-info"
-                        class="flex flex-row items-center justify-between w-full my-4 cursor-pointer"
+                        class="flex flex-row items-center justify-between w-full my-4 cursor-pointer lg:hidden"
                         onclick="toggleCard('notes-card-contrent', 'notes-card-buttons', 'notes-card-link')">
                         <h1 class="font-jetbrains-mono text-3xl text-light-textPrimary dark:text-dark-textPrimary">
                             Notatki
@@ -629,15 +661,15 @@
                         </div>
                     </div>
 
-                    <div id="notes-card-contrent" class="hidden w-full flex flex-col items-center justify-start mt-5">
-                        <div id="notes-info"
-                            class="flex flex-col items-center justify-center h-[10%] w-full mb-8">
+                    <div id="notes-card-contrent"
+                        class="hidden lg:block w-full flex flex-col items-center justify-start mt-5">
+                        <div id="notes-info" class="flex flex-col items-center justify-center h-[10%] w-full mb-8">
                             <button id="add-note"
                                 class="text-2xl sm:text-3xl py-4 px-[1em] mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
                                 onclick="createNote()">
                                 STWÓRZ NOWĄ NOTATKĘ
                             </button>
-                            <div class="sm:w-full flex items-center space-x-2">
+                            <div class="w-full flex items-center space-x-2">
                                 <label
                                     class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
                                     Wyszukaj
@@ -686,8 +718,7 @@
                     <div id="dice-container-trow" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
                     </div>
                 </article>
-        </div>
-        </section>
+            </section>
         </div>
         <!-- Edytor notatki -->
         <div id="note-editor-backdrop"
@@ -697,22 +728,6 @@
             </div>
         </div>
     </main>
-    <script>
-        function toggleCard(cardContent, cardButton, linkButton) {
-            const content = document.getElementById(cardContent);
-            const button = document.getElementById(cardButton);
-            const link = document.getElementById(linkButton);
-
-            const isHidden = content.classList.contains("hidden");
-
-            content.classList.toggle("hidden");
-            link.classList.toggle("invisible");
-
-            // Obracanie ikon
-            const icons = button.querySelectorAll(".toggle-icon");
-            icons.forEach(icon => icon.classList.toggle("-rotate-90"));
-        }
-    </script>
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
         <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
@@ -777,7 +792,6 @@
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
     }
-
     function appendMessage(from, content, pv = false) {
         const chat = document.getElementById("chat");
         const wrapper = document.createElement("div");
@@ -785,8 +799,6 @@
         chat.appendChild(wrapper);
         chat.scrollTop = chat.scrollHeight;
     }
-
-
     document.getElementById("message-form").addEventListener("submit", e => {
         e.preventDefault();
         const input = document.getElementById("message-input");
@@ -796,7 +808,6 @@
             input.value = "";
         }
     });
-
     // ==== DICE OPERATION ====
     const themes = [
         { id: "default", label: "Domyślny" },
@@ -940,10 +951,6 @@
         }
         return usersMap[username];
     }
-
-
-    var styleMessage = "";
-    var styleMSG = ""
     function messageHTML(from, content, pv = false) {
         const cleanFrom = from.replace(/^Do\s+/, "");
         const isSystem = cleanFrom === "System" || cleanFrom === "🧊 System";
@@ -1233,6 +1240,19 @@
             hideNoteEditor();
         }
     });
+    function toggleCard(cardContent, cardButton, linkButton) {
+        if (window.innerWidth >= 1024) {
+            return;
+        }
+        const content = document.getElementById(cardContent);
+        const button = document.getElementById(cardButton);
+        const link = document.getElementById(linkButton);
+        const isHidden = content.classList.contains("hidden");
+        content.classList.toggle("hidden");
+        link.classList.toggle("invisible");
+        const icons = button.querySelectorAll(".toggle-icon");
+        icons.forEach(icon => icon.classList.toggle("-rotate-90"));
+    }
     // ==== Variable for Styling ====
     var noteStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary mb-4";
     var infoStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg  cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono";
