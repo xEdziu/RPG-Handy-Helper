@@ -1,10 +1,9 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.Mod;
+package dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.weaponMod;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Repository

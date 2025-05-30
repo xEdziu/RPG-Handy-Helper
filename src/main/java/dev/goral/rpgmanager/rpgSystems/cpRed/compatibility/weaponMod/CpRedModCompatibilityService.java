@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.Mod;
+package dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.weaponMod;
 
 import dev.goral.rpgmanager.game.Game;
 import dev.goral.rpgmanager.game.GameRepository;
@@ -6,14 +6,10 @@ import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsers;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
-import dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.ammunition.AddAmmunitionCompatibilityRequest;
-import dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.ammunition.CpRedAmmunitionCompatibility;
-import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customAmmunition.CpRedCustomAmmunition;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customWeaponMods.CpRedCustomWeaponMods;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customWeaponMods.CpRedCustomWeaponModsRepository;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customWeapons.CpRedCustomWeapons;
 import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customWeapons.CpRedCustomWeaponsRepository;
-import dev.goral.rpgmanager.rpgSystems.cpRed.manual.ammunition.CpRedAmmunition;
 import dev.goral.rpgmanager.rpgSystems.cpRed.manual.weaponMods.CpRedWeaponMods;
 import dev.goral.rpgmanager.rpgSystems.cpRed.manual.weaponMods.CpRedWeaponModsRepository;
 import dev.goral.rpgmanager.rpgSystems.cpRed.manual.weapons.CpRedWeapons;
@@ -45,9 +41,9 @@ public class CpRedModCompatibilityService {
 
     public Map<String, Object> getAllCompatibility() {
 
-        List<dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.Mod.CpRedModCompatibilityDTO> allWeaponModCompatibility = weaponModRepository.findAll()
+        List<dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.weaponMod.CpRedModCompatibilityDTO> allWeaponModCompatibility = weaponModRepository.findAll()
                 .stream()
-                .map(cpRedModCompatibility -> new dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.Mod.CpRedModCompatibilityDTO(
+                .map(cpRedModCompatibility -> new dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.weaponMod.CpRedModCompatibilityDTO(
                         cpRedModCompatibility.getId(),
                         cpRedModCompatibility.getWeaponId(),
                         cpRedModCompatibility.getModId(),
@@ -65,7 +61,7 @@ public class CpRedModCompatibilityService {
         CpRedModCompatibility compatibility = weaponModRepository.findById(modCompatibilityId)
                 .orElseThrow(() -> new ResourceNotFoundException("Kompatybilność modyfikacji o podanym id nie istnieje."));
 
-        dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.Mod.CpRedModCompatibilityDTO compatibilityDTO = new dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.Mod.CpRedModCompatibilityDTO(
+        dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.weaponMod.CpRedModCompatibilityDTO compatibilityDTO = new dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.weaponMod.CpRedModCompatibilityDTO(
                 compatibility.getId(),
                 compatibility.getWeaponId(),
                 compatibility.getModId(),
@@ -79,10 +75,10 @@ public class CpRedModCompatibilityService {
     }
 
     public Map<String, Object> getCompatibilityByWeaponId(GetModCompatibilityByWeaponRequest getModCompatibilityByWeaponRequest) {
-        List<dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.Mod.CpRedModCompatibilityDTO> compatibilityByWeapon = weaponModRepository.findAllByWeaponIdAndIsWeaponCustom(
+        List<dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.weaponMod.CpRedModCompatibilityDTO> compatibilityByWeapon = weaponModRepository.findAllByWeaponIdAndIsWeaponCustom(
                 getModCompatibilityByWeaponRequest.getWeaponId(),
                 getModCompatibilityByWeaponRequest.isWeaponCustom()
-        ).stream().map(cpRedModCompatibility -> new dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.Mod.CpRedModCompatibilityDTO(
+        ).stream().map(cpRedModCompatibility -> new dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.weaponMod.CpRedModCompatibilityDTO(
                 cpRedModCompatibility.getId(),
                 cpRedModCompatibility.getWeaponId(),
                 cpRedModCompatibility.getModId(),
@@ -201,7 +197,7 @@ public class CpRedModCompatibilityService {
             if (addRequest.isWeaponCustom()){
                 // Pobranie customowej broni
                 CpRedCustomWeapons customWeapon = customWeaponRepository.findById(addRequest.getWeaponId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Podana broń nie istnieje."));
+                        .orElseThrow(() -> new ResourceNotFoundException("Podana customowa broń nie istnieje."));
                 // Pobranie gry, do której należy broń
                 weaponGame = gameRepository.findById(customWeapon.getGameId().getId())
                         .orElseThrow(() -> new ResourceNotFoundException("Gra do, której należy broń nie istnieje."));
@@ -321,7 +317,7 @@ public class CpRedModCompatibilityService {
             if (updateRequest.isWeaponCustom()){
                 // Pobranie customowej broni
                 CpRedCustomWeapons customWeapon = customWeaponRepository.findById(updateRequest.getWeaponId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Podana broń nie istnieje."));
+                        .orElseThrow(() -> new ResourceNotFoundException("Podana customowa broń nie istnieje."));
                 // Pobranie gry, do której należy broń
                 weaponGame = gameRepository.findById(customWeapon.getGameId().getId())
                         .orElseThrow(() -> new ResourceNotFoundException("Gra do, której należy broń nie istnieje."));

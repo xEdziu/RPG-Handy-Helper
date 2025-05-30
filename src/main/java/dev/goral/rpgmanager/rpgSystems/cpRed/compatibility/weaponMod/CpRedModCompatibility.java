@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.Mod;
+package dev.goral.rpgmanager.rpgSystems.cpRed.compatibility.weaponMod;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
