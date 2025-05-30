@@ -1484,6 +1484,82 @@
                                 <folderState>
                                   <option name="id" value="d541d6c2-8bad-4471-843e-f869e1911bbb" />
                                   <option name="name" value="Weapon-Mod" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;modId&quot;: 1,&#10;  &quot;weaponId&quot;: 1,&#10;  &quot;weaponCustom&quot;: true,&#10;  &quot;modCustom&quot;: true&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje kompatybilność pomiędzy bronią i modyfikacją" />
+                                        <option name="id" value="338eb098-bb26-47bd-921e-1679cb77b88c" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodać kompatybilność modyfikacji" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobranie listy kompatybilności dla modów" />
+                                        <option name="id" value="48b88695-cf94-407e-8006-3e23475178fa" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilność modyfikacji" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca kompatybilność modyfikacji po id kompatybilności" />
+                                        <option name="id" value="b126eda2-e232-4c64-9a49-69527d644f7c" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć kompatybilność modyfikacji po id" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  weaponId: 1,&#10;  weaponCustom: false&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zwraca wszystkie kompatybilności modyfikacji dal podanej w body broni" />
+                                        <option name="id" value="3d09d952-4544-4b88-88bb-faf3416ad1e4" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności modyfikacji dla danej broni" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/forWeapon" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  modId: 1,&#10;  modCustom: true&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zwraca listę kompatybilności dla danej w body modyfikacji" />
+                                        <option name="id" value="825704c7-3bd9-49d8-96dc-bbab8eccace9" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności dla danej Modyfikacji" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/forMod" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;modId&quot;: 1,&#10;  &quot;weaponId&quot;: 1,&#10;  &quot;weaponCustom&quot;: false,&#10;  &quot;modCustom&quot;: false&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje kompatybilność modyfikacji, trzeba podać wszystki" />
+                                        <option name="id" value="ec7bbb9e-4da4-4499-8098-f0db8708f7de" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj kompatybilność modyfikacji" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
                                   <option name="sortWeight" value="2000000" />
                                 </folderState>
                               </list>
