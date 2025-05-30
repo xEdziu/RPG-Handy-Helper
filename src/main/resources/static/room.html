@@ -558,25 +558,39 @@
     </nav>
     <main
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
-        <div class="flex gap-[2%] flex-row flex-nowrap justify-center items-stretch w-[100vw] min-h-[80vh] p-4">
+        <div class="flex flex-col lg:flex-row items-center justify-center w-[100%] min-h-[80vh] p-4">
             <section id="character-card"
-                class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-[80vh]">
-                <a href="#"
-                    class="p-4 relative self-end -top-2 -right-6 text-light-textPrimary dark:text-dark-textPrimary z-10">
-                    <i class="fa-solid fa-arrow-up-right-from-square text-3xl" aria-hidden="true"></i>
-                </a>
-                <h1
-                    class="font-jetbrains-mono text-3xl mt-[-1.75em] text-light-textPrimary dark:text-dark-textPrimary m-3">
-                    Karta Postaci</h1>
-                <div id="character-card-info">
+                class="flex flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-auto m-3">
+                <div id="character-card-info"
+                    class="flex flex-row items-center justify-between w-full my-4 cursor-pointer"
+                    onclick="toggleCard('character-card-contrent', 'character-card-buttons', 'character-card-link')">
+                    <h1 class="font-jetbrains-mono text-3xl text-light-textPrimary dark:text-dark-textPrimary">
+                        Karta Postaci
+                    </h1>
+                    <div class="flex" class="h-10">
+                        <a href="#" id="character-card-link" class="invisible" target="_blank">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-3xl text-light-textPrimary dark:text-dark-textPrimary mr-3"
+                                aria-hidden="true"></i>
+                        </a>
+                        <div id="character-card-buttons">
+                            <img src="/img/assets/expand_button_light_version.svg"
+                                class="toggle-icon h-10 w-10 transition-transform duration-5000 ease-in-out dark:hidden">
+                            <img src="/img/assets/expand_button_dark_version.svg"
+                                class="toggle-icon h-10 w-10 transition-transform duration-5000 ease-in-out hidden dark:block">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="character-card-contrent" class="hidden">
                     <h1 class="font-jetbrains-mono text-3xl">#Będzie</h1>
                 </div>
             </section>
+
             <section id="chat-container"
-                class="flex flex-col grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg w-full max-w-xl p-4 h-[80vh]">
-                <div class="flex flex-col gap-2">
+                class="flex flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-2 h-auto m-3">
+                <div class="flex flex-col gap-2 w-full ">
                     <div id="chat"
-                        class="flex flex-col gap-2 bg-white dark:bg-dark-background border border-gray-300 dark:border-dark-border rounded-lg p-4 h-[65vh] overflow-y-auto mb-4 text-sm">
+                        class="flex flex-col gap-2 bg-white dark:bg-dark-background border border-gray-300 dark:border-dark-border rounded-lg p-4 h-[50vh] overflow-y-auto mb-4 text-sm ">
                         <!-- Wiadomości będą dodawane tutaj -->
                     </div>
                     <form id="message-form" class="flex gap-2">
@@ -584,25 +598,42 @@
                             required
                             class="flex-1 px-3 py-2 rounded-full border border-gray-400 text-sm dark:bg-dark-surface dark:text-white font-jetbrains-mono placeholder:text-sm" />
                         <button type="submit"
-                            class="px-5 py-2 bg-light-accent text-white font-bold rounded-full hover:bg-light-accentDark transition-colors text-sm">
+                            class="px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary transition-colors text-sm">
                             Wyślij
                         </button>
                     </form>
                 </div>
             </section>
-            <section id="personal-info" class="flex flex-col gap-[2%] grow w-[32vw] w-full max-w-xl h-[80vh]">
-                <div id="notes-container"
-                    class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-[79%]">
-                    <a href="#"
-                        class="p-4 relative self-end -top-2 -right-6 text-light-textPrimary dark:text-dark-textPrimary z-10">
-                        <i class="fa-solid fa-arrow-up-right-from-square text-3xl" aria-hidden="true"></i>
-                    </a>
-                    <div id="notes-container-info"
-                        class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg  w-full max-w-xl">
+
+            <section id="personal-info"
+                class="flex flex-col-reverse md:flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[32vw] w-full max-w-xl h-auto">
+                <article id="notes-card"
+                    class="flex flex-col items-start justify-start grow w-[100%] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl h-[79%] my-3 p-4">
+                    <div id="notes-card-info"
+                        class="flex flex-row items-center justify-between w-full my-4 cursor-pointer"
+                        onclick="toggleCard('notes-card-contrent', 'notes-card-buttons', 'notes-card-link')">
+                        <h1 class="font-jetbrains-mono text-3xl text-light-textPrimary dark:text-dark-textPrimary">
+                            Notatki
+                        </h1>
+                        <div class="flex" class="h-10">
+                            <a href="#" id="notes-card-link" class="invisible" target="_blank">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-3xl text-light-textPrimary dark:text-dark-textPrimary mr-3"
+                                    aria-hidden="true"></i>
+                            </a>
+                            <div id="notes-card-buttons">
+                                <img src="/img/assets/expand_button_light_version.svg"
+                                    class="toggle-icon h-10 w-10 transition-transform duration-5000 ease-in-out dark:hidden">
+                                <img src="/img/assets/expand_button_dark_version.svg"
+                                    class="toggle-icon h-10 w-10 transition-transform duration-5000 ease-in-out hidden dark:block">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="notes-card-contrent" class="hidden w-full flex flex-col items-center justify-start mt-5">
                         <div id="notes-info"
-                            class="flex flex-col items-center justify-center h-[10%] w-full mt-[-1rem]">
+                            class="flex flex-col items-center justify-center h-[10%] w-full mb-8">
                             <button id="add-note"
-                                class="text-2xl sm:text-3xl py-4 px-5 sm:px-10 mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
+                                class="text-2xl sm:text-3xl py-4 px-[1em] mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
                                 onclick="createNote()">
                                 STWÓRZ NOWĄ NOTATKĘ
                             </button>
@@ -617,15 +648,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="notes-content" class="w-[100%] h-[100%] flex flex-col items-center justify-center p-3">
+                        <div id="notes-content"
+                            class="w-[100%] max-h-[45vh] flex flex-col items-center justify-start p-3 overflow-y-auto">
                             <div class="w-12 h-12 border-4 border-light-accent dark:border-dark-accent rounded-full animate-ping"
                                 role="status" aria-label="Ładowanie"></div>
                         </div>
                     </div>
-
-                </div>
-                <div id="dice-container"
-                    class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg h-[19%] pt-8 p-6 flex-col justify-center items-center gap-1">
+                </article>
+                <article id="dice-container"
+                    class="w-full bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg h-[19%] pt-8 p-6 flex-col justify-center items-center gap-1 my-3">
                     <div class="controls flex justify-around items-center gap-2 mb-4" id="diceContainer">
                         <!-- Generowane kości JS-->
                     </div>
@@ -641,7 +672,7 @@
                                 class="pointer-events-none absolute right-3 z-3 mt-[-2rem] dark:block hidden w-6 h-6"
                                 alt="Expand Dark" />
                         </div>
-                        <div>
+                        <div class="flex flex-col-reverse items-center gap-2">
                             <button id="rollReset"
                                 class="text-base font-bold font-jetbrains-mono bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap">
                                 Reset
@@ -654,9 +685,10 @@
                     </div>
                     <div id="dice-container-trow" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
                     </div>
-                </div>
+                </article>
         </div>
         </section>
+        </div>
         <!-- Edytor notatki -->
         <div id="note-editor-backdrop"
             class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none bg-black/30 dark:bg-black/50 transition-opacity duration-300">
@@ -665,6 +697,22 @@
             </div>
         </div>
     </main>
+    <script>
+        function toggleCard(cardContent, cardButton, linkButton) {
+            const content = document.getElementById(cardContent);
+            const button = document.getElementById(cardButton);
+            const link = document.getElementById(linkButton);
+
+            const isHidden = content.classList.contains("hidden");
+
+            content.classList.toggle("hidden");
+            link.classList.toggle("invisible");
+
+            // Obracanie ikon
+            const icons = button.querySelectorAll(".toggle-icon");
+            icons.forEach(icon => icon.classList.toggle("-rotate-90"));
+        }
+    </script>
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
         <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
@@ -921,7 +969,7 @@
                 </div>
                 <div class="flex flex-col flex-1">
                     <span class="font-bold">
-                        <span class="text-xs font-semibold mr-1">🎲 Kości Powiedziały: </span>
+                        <span class="text-xs font-semibold mr-1 text-black dark:text-white">🎲 Kości Powiedziały: </span>
                     </span>
                     <p class="text-black dark:text-white break-words mt-1">
                         ${content}
@@ -976,7 +1024,7 @@
                 <p class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
                     ${type.replace("D", "")}
                 </p>
-                <p id="diceCount${type}" class="diceCount hidden z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none -ml-[4.5rem]">
+                <p id="diceCount${type}" class="diceCount hidden z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-base pointer-events-none -ml-[3.75rem]">
                     0
                 </p>
             </div>
@@ -1186,8 +1234,8 @@
         }
     });
     // ==== Variable for Styling ====
-    var noteStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary break-words whitespace-normal overflow-hidden text-ellipsis";
-    var infoStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg m-2 cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono";
+    var noteStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary mb-4";
+    var infoStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg  cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono";
     // ==== Function to generate html ====
     function generateInfoHTML(info1, info2, info3) {
         return `
@@ -1202,7 +1250,7 @@
         return `
         <div class="${noteStyle}" onclick="displayNote(${note.id})">
             <div class="flex items-center justify-between mb-2">
-                <div class="flex flex-col sm:flex-row text-xl font-semibold mb-1 font-jetbrains-mono gap-x-4">
+                <div class="flex flex-col text-xl font-semibold mb-1 font-jetbrains-mono gap-x-4">
                     <span class="text-light-accent dark:text-dark-accent"> ${note.gameName}</span>
                     ${note.rpgSystemName}
                 </div>
