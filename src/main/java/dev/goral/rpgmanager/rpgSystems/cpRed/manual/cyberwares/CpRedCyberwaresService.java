@@ -133,7 +133,7 @@ public class CpRedCyberwaresService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do dodawania wszczepów.");
+            throw new IllegalStateException("Nie masz uprawnień do modyfikowania wszczepów.");
         }
         CpRedCyberwares cyberwareToUpdate = cpRedCyberwaresRepository.findById(cyberwareId)
                 .orElseThrow(() -> new ResourceNotFoundException("Wszczep o id " + cyberwareId + " nie istnieje"));

@@ -104,7 +104,7 @@ public class CpRedArmorsService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
         if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do dodawania pancerzy.");
+            throw new IllegalStateException("Nie masz uprawnień do modyfikowania pancerzy.");
         }
 
         CpRedArmors armorToUpdate = cpRedArmorsRepository.findById(armorId)
