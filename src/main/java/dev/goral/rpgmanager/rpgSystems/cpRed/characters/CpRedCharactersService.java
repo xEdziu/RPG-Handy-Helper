@@ -165,7 +165,7 @@ public class CpRedCharactersService {
         cpRedCharacter.setExpAvailable(character.getExpAvailable());
         cpRedCharacter.setCash(character.getCash());
         if(character.getCharacterPhotoPath() == null) {
-            character.setCharacterPhotoPath("static/img/profilePics/defaultProfilePic-cyberpunk.png");
+            character.setCharacterPhotoPath("static/img/profilePics/cyberpunkDefaultProfilePic.png");
         } else {
             character.setCharacterPhotoPath(character.getCharacterPhotoPath());
         }
@@ -221,14 +221,14 @@ public class CpRedCharactersService {
         }
 
         if(character.getName() == null &&
-            character.getNickname() == null &&
-            character.getType() == null &&
-            character.getExpAll() == null &&
-            character.getExpAvailable() == null &&
-            character.getCash() == null &&
-            character.getCharacterPhotoPath() == null &&
-            character.getUser() == null &&
-            character.getGame() == null) {
+                character.getNickname() == null &&
+                character.getType() == null &&
+                character.getExpAll() == null &&
+                character.getExpAvailable() == null &&
+                character.getCash() == null &&
+                character.getCharacterPhotoPath() == null &&
+                character.getUser() == null &&
+                character.getGame() == null) {
             throw new IllegalStateException("Należy podać jeden z parametrów");
         }
 

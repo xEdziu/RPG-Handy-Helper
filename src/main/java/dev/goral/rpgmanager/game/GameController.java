@@ -49,6 +49,12 @@ public class GameController {
         return gameService.addUserToGame(request);
     }
 
+    @DeleteMapping(path = "/game/deleteUserFromGame")
+    public Map<String, Object> deleteUserToGame(@RequestBody DeleteUserFromGameRequest request) {
+        return gameService.deleteUserFromGame(request);
+    }
+
+
     @PutMapping(path = "/game/updateGame/{gameId}")
     public Map<String, Object> updateGame(@PathVariable("gameId") Long gameId, @RequestBody Game game) {
         return gameService.updateGame(gameId, game);
