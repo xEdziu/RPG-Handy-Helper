@@ -1,11 +1,8 @@
 package dev.goral.rpgmanager.game;
 
-import dev.goral.rpgmanager.game.gameUsers.AddUserToGameRequest;
+import dev.goral.rpgmanager.game.gameUsers.*;
 import dev.goral.rpgmanager.user.User;
 import lombok.AllArgsConstructor;
-import dev.goral.rpgmanager.game.gameUsers.GameUsers;
-import dev.goral.rpgmanager.game.gameUsers.GameUsersDTO;
-import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import dev.goral.rpgmanager.security.CustomReturnables;
 import dev.goral.rpgmanager.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
