@@ -580,8 +580,8 @@
                         <!-- Wiadomości będą dodawane tutaj -->
                     </div>
                     <form id="message-form" class="flex gap-2">
-                        <input type="text" id="message-input" placeholder="Wyślij wiadomość..."
-                            autocomplete="off" required
+                        <input type="text" id="message-input" placeholder="Wyślij wiadomość..." autocomplete="off"
+                            required
                             class="flex-1 px-3 py-2 rounded-full border border-gray-400 text-sm dark:bg-dark-surface dark:text-white font-jetbrains-mono placeholder:text-sm" />
                         <button type="submit"
                             class="px-5 py-2 bg-light-accent text-white font-bold rounded-full hover:bg-light-accentDark transition-colors text-sm">
@@ -709,7 +709,7 @@
                 appendMessage(from, content, false);
             });
             stompClient.subscribe(`/user/topic/chat/${roomId}`, msg => {
-                 // tu zostawiamy prefix „Do …” w from, żeby widzieć „Do zuber”
+                // tu zostawiamy prefix „Do …” w from, żeby widzieć „Do zuber”
                 const { from, content } = JSON.parse(msg.body);
                 appendMessage(from, content, true);
             });
@@ -900,31 +900,34 @@
         const cleanFrom = from.replace(/^Do\s+/, "");
         const isSystem = cleanFrom === "System" || cleanFrom === "🧊 System";
         const isDiceRoll = cleanFrom.startsWith("🎲 Rzut kością");
-
-        // 1. Renderowanie wiadomości systemowych (italic, centrowane, szary kolor)
+        // 1. Wiadomość systemowa
         if (isSystem) {
             return `
-          <div class="w-full text-center italic text-gray-500 text-sm py-2">
-            ${escapeHtml(content)}
-          </div>
+            <div class="w-full text-center italic text-gray-500 text-sm py-2">
+                ${escapeHtml(content)}
+            </div>
         `;
         }
-
-        // 2. Renderowanie dymka rzutu kością #TODO @PEXEL2002, wybacz już mi się nie chciało bardziej stylować XD
+        // 2. Rzut kością
         if (isDiceRoll) {
+            var userName = content.split(" ")[0];
+            var userColor = getUserColorAndPhoto(userName).color;
+            content = content.replace(userName, `<span class="${userColor} font-semibold">${escapeHtml(userName)}</span>`);
             return `
-              <div class="max-w-md mx-auto bg-dark-backgroundTertiary text-accent rounded-2xl p-4 mb-4 shadow-lg relative border border-accentDark text-sm font-jetbrains-mono">
-                <div class="flex items-center gap-2 mb-2 font-semibold">
-                  <span class="text-lg">🎲</span>
-                  <span>Rzut kością</span>
+            <div class="flex items-start bg-[#f5f6f8] dark:bg-gray-700 p-3 rounded-lg mb-2">
+                <div class="flex-shrink-0 w-12 h-12 mr-3">
+                    <img id="logo-light" src="/img/assets/chat-dice-icon-light-version.svg" alt="" class="h-12 w-12 dark:hidden">
+                    <img id="logo-dark" src="/img/assets/chat-dice-icon-dark-version.svg" alt="" class="h-12 w-12 hidden dark:block">
                 </div>
-                <div class="whitespace-pre-wrap break-words">${escapeHtml(content)}</div>
-                <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0
-                            border-t-8 border-t-dark-backgroundTertiary
-                            border-l-8 border-l-transparent
-                            border-r-8 border-r-transparent">
+                <div class="flex flex-col flex-1">
+                    <span class="font-bold">
+                        <span class="text-xs font-semibold mr-1">🎲 Kości Powiedziały: </span>
+                    </span>
+                    <p class="text-black dark:text-white break-words mt-1">
+                        ${content}
+                    </p>
                 </div>
-              </div>
+            </div>
             `;
         }
         // 3. Publiczne i prywatne wiadomości (żółty border dla prywatnych)
@@ -934,27 +937,20 @@
             : "bg-[#f5f6f8] dark:bg-gray-700";
 
         return `
-      <div class="flex items-start ${pvClasses} p-3 rounded-lg mb-2">
-        <div class="flex-shrink-0 w-10 h-10 mr-3">
-          <img
-            src="${userData.photo}"
-            data-username="${cleanFrom}"
-            alt="${cleanFrom} Avatar"
-            class="w-10 h-10 rounded-full"
-          />
+        <div class="flex items-start ${pvClasses} p-3 rounded-lg mb-2">
+            <div class="flex-shrink-0 w-12 h-12 mr-3">
+                <img src="${userData.photo}" data-username="${cleanFrom}" alt="${cleanFrom} Avatar" class="w-12 h-12 rounded-full"/>
+            </div>
+            <div class="flex flex-col flex-1">
+                <span class="font-bold ${userData.color}">
+                    ${pv ? `<span class="text-xs font-semibold mr-1">🔒</span>${escapeHtml(from)}` : escapeHtml(cleanFrom)}
+                </span>
+                <p class="text-black dark:text-white break-words mt-1">
+                    ${escapeHtml(content)}
+                </p>
+            </div>
         </div>
-        <div class="flex flex-col flex-1">
-          <span class="font-bold ${userData.color}">
-            ${pv
-            ? `<span class="text-xs font-semibold mr-1">🔒</span>${escapeHtml(from)}`
-            : escapeHtml(cleanFrom)}
-          </span>
-          <p class="text-black dark:text-white whitespace-pre-wrap break-words mt-1">
-            ${escapeHtml(content)}
-          </p>
-        </div>
-      </div>
-    `;
+        `;
     }
 
     // ==== Load Dice Box ====
