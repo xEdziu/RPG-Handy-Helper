@@ -81,18 +81,26 @@ jobs:
         echo "recaptcha.secret-key= ${{ secrets.RECAPTCHA_SECRET }}" >> src/main/resources/application.properties
 
     - name: Build and run application
-      run: mvn spring-boot:run &
+      run: mvn spring-boot:run 2>&1 | grep -vE '(^Download(ed|ing) from central:|^Progress \()' > spring_boot_run.log &
 
     - name: Wait for application to start completely
       run: |
+        app_started=false
         for i in {1..5}; do
           if curl -s http://localhost:8080/actuator/health | grep -q '"status":"UP"'; then
             echo "Application is up!"
+            app_started=true
             break
           fi
-          echo "Waiting for application to start..."
-          sleep 60
+          echo "Waiting for application to start... (attempt $i/5)"
+          sleep 30
         done
 
-    - name: Send test request
-      run: curl http://localhost:8080/actuator/health
+        if [ "$app_started" = true ]; then
+          echo "Application started successfully."
+        else
+          echo "Application failed to start after 5 attempts."
+          echo "Displaying last 50 lines of application logs:"
+          tail -n 50 spring_boot_run.log
+          exit 1
+        fi
