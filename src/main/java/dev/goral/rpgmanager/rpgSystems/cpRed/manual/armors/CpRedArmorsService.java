@@ -72,8 +72,9 @@ public class CpRedArmorsService {
             throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
         }
         if(armor.getType() == null ||
-                armor.getArmorPoints() == 0 ||
-                armor.getPrice() == 0 ||
+                armor.getArmorPoints() == -1 ||
+                armor.getPrice() == -1 ||
+                armor.getPenalty() == -1 ||
                 armor.getAvailability() == null ||
                 armor.getDescription() == null) {
             throw new IllegalStateException("Nie podano wszystkich parametrów");
@@ -114,19 +115,25 @@ public class CpRedArmorsService {
             armorToUpdate.setType(armor.getType());
         }
 
-        if(armor.getArmorPoints() <0) {
-            throw new IllegalStateException("Punkty pancerza nie mogą być ujemne.");
+        if(armor.getArmorPoints()!=-1) {
+            if(armor.getArmorPoints() <0) {
+                throw new IllegalStateException("Punkty pancerza nie mogą być ujemne.");
+            }
+            armorToUpdate.setArmorPoints(armor.getArmorPoints());
         }
-        armorToUpdate.setArmorPoints(armor.getArmorPoints());
+        if(armor.getPenalty() != -1) {
+            if(armor.getPenalty() < 0) {
+                throw new IllegalStateException("Kara nie może być ujemna.");
+            }
+            armorToUpdate.setPenalty(armor.getPenalty());
+        }
+        if(armor.getPrice() != -1) {
+            if(armor.getPrice() < 0) {
+                throw new IllegalStateException("Cena nie może być ujemna.");
+            }
+            armorToUpdate.setPrice(armor.getPrice());
+        }
 
-        if(armor.getPenalty() < 0) {
-            throw new IllegalStateException("Kara nie może być ujemna.");
-        }
-        armorToUpdate.setPenalty(armor.getPenalty());
-        if(armor.getPrice() < 0) {
-            throw new IllegalStateException("Cena nie może być ujemna.");
-        }
-        armorToUpdate.setPrice(armor.getPrice());
         if(armor.getAvailability() != null) {
             armorToUpdate.setAvailability(armor.getAvailability());
         }

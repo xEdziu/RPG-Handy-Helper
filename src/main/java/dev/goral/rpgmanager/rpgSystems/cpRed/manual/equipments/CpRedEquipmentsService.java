@@ -71,6 +71,7 @@ public class CpRedEquipmentsService {
         }
         if (cpRedEquipments.getName() == null ||
                 cpRedEquipments.getAvailability() == null ||
+                cpRedEquipments.getPrice() == -1 ||
                 cpRedEquipments.getDescription() == null) {
             throw new IllegalStateException("Nie podano wszystkich parametrów");
         }
@@ -102,7 +103,6 @@ public class CpRedEquipmentsService {
         return CustomReturnables.getOkResponseMap("Przedmiot " + cpRedEquipments.getName() + " został dodany");
     }
 
-    // Modyfikuj przedmiot
     public Map<String, Object> updateEquipment(Long equipmentId, CpRedEquipments cpRedEquipments) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -127,11 +127,12 @@ public class CpRedEquipmentsService {
             }
             eqToUpdate.setName(cpRedEquipments.getName());
         }
-
-        if (cpRedEquipments.getPrice() < 0) {
-            throw new IllegalStateException("Cena nie może być ujemna.");
+        if(cpRedEquipments.getPrice() !=-1) {
+            if (cpRedEquipments.getPrice() < 0) {
+                throw new IllegalStateException("Cena nie może być ujemna.");
+            }
+            eqToUpdate.setPrice(cpRedEquipments.getPrice());
         }
-        eqToUpdate.setPrice(cpRedEquipments.getPrice());
 
         if (cpRedEquipments.getAvailability() != null) {
             eqToUpdate.setAvailability(cpRedEquipments.getAvailability());

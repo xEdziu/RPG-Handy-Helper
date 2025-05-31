@@ -25,7 +25,7 @@ public class CpRedEquipments {
     )
     private Long id;
     private String name;
-    private int price;
+    private int price=-1;
     @Enumerated(EnumType.STRING)
     private CpRedItemsAvailability availability;
     private String description;

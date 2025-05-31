@@ -70,8 +70,8 @@ public class CpRedWeaponModsService {
             throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
         }
         if (cpRedWeaponMods.getName() == null ||
-                cpRedWeaponMods.getPrice() == 0 ||
-                cpRedWeaponMods.getSize() == 0 ||
+                cpRedWeaponMods.getPrice() == -1 ||
+                cpRedWeaponMods.getSize() == -1 ||
                 cpRedWeaponMods.getAvailability() == null ||
                 cpRedWeaponMods.getDescription() == null) {
             throw new IllegalStateException("Nie podano wszystkich parametrów");
@@ -86,7 +86,6 @@ public class CpRedWeaponModsService {
         if (cpRedWeaponMods.getName().length() > 255) {
             throw new IllegalStateException("Nazwa modyfikacji nie może być dłuższa niż 255 znaków.");
         }
-
         if (cpRedWeaponMods.getPrice() < 0) {
             throw new IllegalStateException("Cena modyfikacji broni musi być większa lub równa 0");
         }
@@ -138,15 +137,19 @@ public class CpRedWeaponModsService {
             }
             modToUpdate.setName(cpRedWeaponMods.getName());
         }
-        if (cpRedWeaponMods.getSize() <= 0) {
-            throw new IllegalStateException("Rozmiar nie może być ujemny lub równy zero.");
+        if (cpRedWeaponMods.getSize() != -1) {
+            if (cpRedWeaponMods.getSize() < 0) {
+                throw new IllegalStateException("Rozmiar nie może być ujemny.");
+            }
+            modToUpdate.setSize(cpRedWeaponMods.getSize());
         }
-        modToUpdate.setSize(cpRedWeaponMods.getSize());
 
-        if (cpRedWeaponMods.getPrice() < 0) {
-            throw new IllegalStateException("Cena nie może być ujemna.");
+        if(cpRedWeaponMods.getPrice() != -1) {
+            if (cpRedWeaponMods.getPrice() < 0) {
+                throw new IllegalStateException("Cena nie może być ujemna.");
+            }
+            modToUpdate.setPrice(cpRedWeaponMods.getPrice());
         }
-        modToUpdate.setPrice(cpRedWeaponMods.getPrice());
         if (cpRedWeaponMods.getAvailability() != null) {
             modToUpdate.setAvailability(cpRedWeaponMods.getAvailability());
         }

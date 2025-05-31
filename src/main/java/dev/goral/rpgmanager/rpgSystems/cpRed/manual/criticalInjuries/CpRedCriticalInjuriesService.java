@@ -69,6 +69,7 @@ public class CpRedCriticalInjuriesService {
         }
         if(cpRedCriticalInjuries.getInjuryPlace()==null ||
                 cpRedCriticalInjuries.getName()==null ||
+                cpRedCriticalInjuries.getRollValue()== -1 ||
                 cpRedCriticalInjuries.getEffects()==null ||
                 cpRedCriticalInjuries.getPatching()==null ||
                 cpRedCriticalInjuries.getTreating()==null) {
@@ -130,11 +131,12 @@ public class CpRedCriticalInjuriesService {
         CpRedCriticalInjuries injuriesToUpdate = cpRedCriticalInjuriesRepository.findById(criticalInjuryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Rany krytyczne o id " + criticalInjuryId + " nie istnieją"));
 
-        if(cpRedCriticalInjuries.getRollValue() <= 0) {
-            throw new IllegalStateException("Wartość rzutu nie może być ujemna lub równa zero.");
+        if(cpRedCriticalInjuries.getRollValue() != -1) {
+            if(cpRedCriticalInjuries.getRollValue() <= 0) {
+                throw new IllegalStateException("Wartość rzutu nie może być ujemna.");
+            }
+            injuriesToUpdate.setRollValue(cpRedCriticalInjuries.getRollValue());
         }
-        injuriesToUpdate.setRollValue(cpRedCriticalInjuries.getRollValue());
-
         if(cpRedCriticalInjuries.getInjuryPlace() != null) {
             injuriesToUpdate.setInjuryPlace(cpRedCriticalInjuries.getInjuryPlace());
         }

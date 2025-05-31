@@ -23,7 +23,7 @@ public class CpRedCriticalInjuries {
             generator = "cpRedCriticalinjuries_sequence"
     )
     private Long id;
-    private int rollValue;
+    private int rollValue=-1;
     @Enumerated(EnumType.STRING)
     private CpRedCriticalInjuriesInjuryPlace injuryPlace;
     private String name;

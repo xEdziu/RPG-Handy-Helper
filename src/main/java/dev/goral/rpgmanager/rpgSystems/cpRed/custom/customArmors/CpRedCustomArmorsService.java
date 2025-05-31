@@ -233,7 +233,7 @@ public class CpRedCustomArmorsService {
 
         if (cpRedCustomArmors.getPrice() != armorToUpdate.getPrice()) {
             if (cpRedCustomArmors.getPrice() != -1){
-                if (cpRedCustomArmors.getPrice() < 0) {
+                if (cpRedCustomArmors.getPrice() <  0) {
                     throw new IllegalStateException("Cena pancerza musi być większa od 0.");
                 }
                 armorToUpdate.setPrice(cpRedCustomArmors.getPrice());
