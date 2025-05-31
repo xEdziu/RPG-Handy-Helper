@@ -158,10 +158,10 @@ public class CpRedCustomCyberwaresService {
             throw new IllegalStateException("Opis wszczepu nie może być dłuższy niż 500 znaków.");
         }
         if (cpRedCustomCyberwares.getSize() < 0) {
-            throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy lub równy 0.");
+            throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy od 0.");
         }
         if (cpRedCustomCyberwares.getPrice() < 0) {
-            throw new IllegalStateException("Cena wszczepu nie może być mniejsza lub równa 0.");
+            throw new IllegalStateException("Cena wszczepu nie może być mniejsza od 0.");
         }
         CpRedCustomCyberwares newCpRedCustomCyberwares = new CpRedCustomCyberwares(
                 null,
@@ -244,8 +244,8 @@ public class CpRedCustomCyberwaresService {
         }
         if(cpRedCustomCyberwares.getSize()!=cyberwareToUpdate.getSize()){
             if(cpRedCustomCyberwares.getSize()!=-1) {
-                if (cpRedCustomCyberwares.getSize() <= 0) {
-                    throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy lub równy 0.");
+                if (cpRedCustomCyberwares.getSize() < 0) {
+                    throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy od 0.");
                 }
                 cyberwareToUpdate.setSize(cpRedCustomCyberwares.getSize());
             }
@@ -255,8 +255,8 @@ public class CpRedCustomCyberwaresService {
         }
         if(cpRedCustomCyberwares.getPrice()!=cyberwareToUpdate.getPrice()){
             if(cpRedCustomCyberwares.getPrice()!=-1) {
-                if (cpRedCustomCyberwares.getPrice() <= 0) {
-                    throw new IllegalStateException("Cena wszczepu nie może być mniejsza lub równa 0.");
+                if (cpRedCustomCyberwares.getPrice() < 0) {
+                    throw new IllegalStateException("Cena wszczepu nie może być mniejsza od 0.");
                 }
                 cyberwareToUpdate.setPrice(cpRedCustomCyberwares.getPrice());
             }

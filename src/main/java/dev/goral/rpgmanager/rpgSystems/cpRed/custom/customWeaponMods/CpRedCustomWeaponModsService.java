@@ -131,10 +131,10 @@ public class CpRedCustomWeaponModsService {
             throw new IllegalStateException("Opis modyfikacji nie może być dłuższy niż 500 znaków.");
         }
         if (cpRedCustomWeaponMods.getSize() < 0) {
-            throw new IllegalStateException("Rozmiar modyfikacji nie może być mniejszy lub równy 0.");
+            throw new IllegalStateException("Rozmiar modyfikacji nie może być mniejszy od 0.");
         }
         if (cpRedCustomWeaponMods.getPrice() < 0) {
-            throw new IllegalStateException("Cena modyfikacji nie może być mniejsza lub równa 0.");
+            throw new IllegalStateException("Cena modyfikacji nie może być mniejsza od 0.");
         }
         CpRedCustomWeaponMods newWeaponMod = new CpRedCustomWeaponMods(
                 null,
@@ -188,16 +188,16 @@ public class CpRedCustomWeaponModsService {
         }
         if(cpRedCustomWeaponMods.getPrice()!=modToUpdate.getPrice()){
             if (cpRedCustomWeaponMods.getPrice() !=-1) {
-                if (cpRedCustomWeaponMods.getPrice() <= 0) {
-                    throw new IllegalStateException("Cena modyfikacji broni nie może być mniejsza lub równa 0.");
+                if (cpRedCustomWeaponMods.getPrice() < 0) {
+                    throw new IllegalStateException("Cena modyfikacji broni nie może być mniejsza od 0.");
                 }
                 modToUpdate.setPrice(cpRedCustomWeaponMods.getPrice());
             }
         }
         if(cpRedCustomWeaponMods.getSize()!=modToUpdate.getSize()){
             if (cpRedCustomWeaponMods.getSize() !=-1) {
-                if (cpRedCustomWeaponMods.getSize() <= 0) {
-                    throw new IllegalStateException("Rozmiar modyfikacji broni nie może być mniejszy lub równy 0.");
+                if (cpRedCustomWeaponMods.getSize() < 0) {
+                    throw new IllegalStateException("Rozmiar modyfikacji broni nie może być mniejszy od 0.");
                 }
                 modToUpdate.setSize(cpRedCustomWeaponMods.getSize());
             }
