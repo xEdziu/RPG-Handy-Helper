@@ -221,14 +221,14 @@ public class CpRedCharactersService {
         }
 
         if(character.getName() == null &&
-            character.getNickname() == null &&
-            character.getType() == null &&
-            character.getExpAll() == null &&
-            character.getExpAvailable() == null &&
-            character.getCash() == null &&
-            character.getCharacterPhotoPath() == null &&
-            character.getUser() == null &&
-            character.getGame() == null) {
+                character.getNickname() == null &&
+                character.getType() == null &&
+                character.getExpAll() == null &&
+                character.getExpAvailable() == null &&
+                character.getCash() == null &&
+                character.getCharacterPhotoPath() == null &&
+                character.getUser() == null &&
+                character.getGame() == null) {
             throw new IllegalStateException("Należy podać jeden z parametrów");
         }
 

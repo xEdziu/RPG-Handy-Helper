@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddUserToGameRequest {
+public class DeleteUserFromGameRequest {
     private Long userId;
     private Long gameId;
-    private String role;
 }

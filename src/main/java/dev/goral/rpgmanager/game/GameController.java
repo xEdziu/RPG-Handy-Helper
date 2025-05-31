@@ -1,8 +1,11 @@
 package dev.goral.rpgmanager.game;
 
-import dev.goral.rpgmanager.game.gameUsers.AddUserToGameRequest;
+import dev.goral.rpgmanager.game.gameUsers.*;
 import dev.goral.rpgmanager.user.User;
 import lombok.AllArgsConstructor;
+import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpgmanager.user.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +44,12 @@ public class GameController {
     public Map<String, Object> addUserToGame(@RequestBody AddUserToGameRequest request) {
         return gameService.addUserToGame(request);
     }
+
+    @DeleteMapping(path = "/game/deleteUserFromGame")
+    public Map<String, Object> deleteUserToGame(@RequestBody DeleteUserFromGameRequest request) {
+        return gameService.deleteUserFromGame(request);
+    }
+
 
     @PutMapping(path = "/game/updateGame/{gameId}")
     public Map<String, Object> updateGame(@PathVariable("gameId") Long gameId, @RequestBody Game game) {

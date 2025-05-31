@@ -223,9 +223,7 @@ public class UserService implements UserDetailsService {
 
             // Usuń poprzednie zdjęcie, jeśli nie jest domyślne
             String oldPath = user.getUserPhotoPath();
-            if (oldPath != null &&
-                    !oldPath.equals("/img/profilePics/defaultProfilePic.png") &&
-                    !oldPath.equals("/img/profilePics/cyberpunkDefaultProfilePic.png")) {
+            if (oldPath != null && !oldPath.startsWith("/img/profilePics/defaultProfilePic")) {
 
                 Path baseDir = Paths.get("src/main/resources/static/img/profilePics").normalize().toAbsolutePath();
                 String oldFilename = Paths.get(oldPath).getFileName().toString();
@@ -255,6 +253,26 @@ public class UserService implements UserDetailsService {
         } catch (IOException e) {
             throw new IllegalStateException("Błąd przy zapisie zdjęcia");
         }
+    }
+
+    public Map<String, Object> getDefaultProfilePics() {
+        Path path = Paths.get("src/main/resources/static/img/profilePics").toAbsolutePath().normalize();
+        if (!Files.exists(path)) {
+            throw new IllegalStateException("Nie znaleziono katalogu ze zdjęciami profilowymi.");
+        }
+        List<String> defaultPics = new ArrayList<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "defaultProfilePic*")) {
+            for (Path entry : stream) {
+                if (Files.isRegularFile(entry)) {
+                    defaultPics.add("/img/profilePics/" + entry.getFileName().toString());
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Błąd przy odczycie katalogu ze zdjęciami profilowymi.");
+        }
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano domyślne zdjęcia profilowe.");
+        response.put("defaultProfilePics", defaultPics);
+        return response;
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, String extension) {
