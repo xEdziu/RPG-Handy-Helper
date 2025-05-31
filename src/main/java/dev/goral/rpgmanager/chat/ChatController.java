@@ -19,20 +19,79 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat/{roomId}")
-    @SendTo("/topic/chat/{roomId}")
-    public ChatMessage send(@DestinationVariable String roomId,
-                            ChatMessage message,
-                            Principal principal,
-                            StompHeaderAccessor accessor) {
+    public void send(@DestinationVariable String roomId,
+                     @Payload ChatMessage incomingMessage,
+                     Principal principal,
+                     StompHeaderAccessor accessor) {
 
-        String sessionId = accessor.getSessionId();
-        roomManager.addUser(roomId, principal.getName(), sessionId);
+        String messageContent = incomingMessage.getContent().trim();
+        String clientReportedSender = incomingMessage.getFrom(); // Kto wg klienta wysłał wiadomość
+        String authenticatedSender = principal.getName(); // Kto faktycznie jest zalogowany
 
-        List<String> users = roomManager.getConnectedUsers(roomId);
-        System.out.println("Connected users in room " + roomId + ": " + users);
-        messagingTemplate.convertAndSend("/topic/chat/" + roomId + "/users", users);
+        // Zarządzanie użytkownikami w pokoju: dodajemy/odświeżamy tylko, gdy wiadomość jest od rzeczywistego użytkownika
+        if (!"System".equalsIgnoreCase(clientReportedSender)) {
+            roomManager.addUser(roomId, authenticatedSender, accessor.getSessionId());
+            List<String> usersInRoom = roomManager.getConnectedUsers(roomId);
+            messagingTemplate.convertAndSend("/topic/chat/" + roomId + "/users", usersInRoom);
+        }
 
-        return message;
+        if (messageContent.startsWith("/pv ") && !"System".equalsIgnoreCase(clientReportedSender)) {
+            // Logika dla wiadomości prywatnych
+            String[] parts = messageContent.split("\\s+", 3);
+            if (parts.length < 3) {
+                messagingTemplate.convertAndSendToUser(
+                        authenticatedSender,
+                        "/topic/chat/" + roomId,
+                        new ChatMessage("System", "Użyj: /pv <nick> <wiadomość>", true)
+                );
+                return;
+            }
+            String targetUser = parts[1];
+            String privateText = parts[2];
+            List<String> currentUsersInRoom = roomManager.getConnectedUsers(roomId);
+
+            if (!currentUsersInRoom.contains(targetUser)) {
+                messagingTemplate.convertAndSendToUser(
+                        authenticatedSender,
+                        "/topic/chat/" + roomId,
+                        new ChatMessage("System", "Użytkownik " + targetUser + " nie jest w pokoju.", true)
+                );
+                return;
+            }
+            if (targetUser.equals(authenticatedSender)) {
+                messagingTemplate.convertAndSendToUser(
+                        authenticatedSender,
+                        "/topic/chat/" + roomId,
+                        new ChatMessage("System", "Nie możesz wysłać wiadomości prywatnej do siebie.", true)
+                );
+                return;
+            }
+
+            ChatMessage privateMessageToTarget = new ChatMessage(authenticatedSender, privateText, true);
+            messagingTemplate.convertAndSendToUser(targetUser, "/topic/chat/" + roomId, privateMessageToTarget);
+
+            ChatMessage confirmationToSender = new ChatMessage("Do " + targetUser, privateText, true);
+            messagingTemplate.convertAndSendToUser(authenticatedSender, "/topic/chat/" + roomId, confirmationToSender);
+
+        } else {
+            ChatMessage broadcastMessage = new ChatMessage();
+            broadcastMessage.setContent(messageContent);
+            broadcastMessage.setPrivateMessage(false);
+
+            // Wykrywamy rzuty kością (możesz rozszerzyć warunek)
+            if (clientReportedSender != null && !clientReportedSender.equalsIgnoreCase("System")) {
+                // Sprawdzamy, czy to rzuty kością-np. czy content zawiera "wyrzucił" lub "wylosował"
+                if (messageContent.toLowerCase().contains("wyrzucił") || messageContent.toLowerCase().contains("wylosował")) {
+                    broadcastMessage.setFrom("🎲 Rzut kością");
+                } else {
+                    broadcastMessage.setFrom(authenticatedSender);
+                }
+            } else {
+                broadcastMessage.setFrom("System");
+            }
+
+            messagingTemplate.convertAndSend("/topic/chat/" + roomId, broadcastMessage);
+        }
     }
 
     @MessageMapping("/join/{roomId}")
@@ -45,6 +104,11 @@ public class ChatController {
 
         List<String> users = roomManager.getConnectedUsers(roomId);
         messagingTemplate.convertAndSend("/topic/chat/" + roomId + "/users", users);
+    }
+
+    @MessageMapping("/dice/{roomId}")
+    public void rollDice(@DestinationVariable String roomId, @Payload ChatMessage message) {
+        messagingTemplate.convertAndSend("/topic/dice/" + roomId, message);
     }
 
 

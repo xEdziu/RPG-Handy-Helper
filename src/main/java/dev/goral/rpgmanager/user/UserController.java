@@ -47,13 +47,19 @@ public class UserController {
         return userService.getUserPhoto(filename);
     }
 
+
+    @GetMapping("/user/photo/username/{username}")
+    public Map<String, Object> getUserPhotoByUsername(@PathVariable String username) throws IOException {
+        return userService.getUserPhotoByUsername(username);
+    }
+
     @GetMapping("/user/photo/defaults")
     public Map<String, Object> getDefaultUserPhotos() {
         return userService.getDefaultProfilePics();
     }
 
     @GetMapping("/admin/user/all")
-    public List<User> getAllUsers() {
+    public Map<String, Object> getAllUsers() {
         return userService.getAllUsers();
     }
 

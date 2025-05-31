@@ -162,6 +162,22 @@
                       <option name="sortWeight" value="7000000" />
                       <option name="url" value="http://localhost:8888/logout" />
                     </requestState>
+                    <requestState>
+                      <option name="description" value="Pobierz zdjęcie po username" />
+                      <option name="id" value="dc05ba37-3be6-4154-82db-412bfc62f380" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Get User Photo" />
+                      <option name="pathVariables">
+                        <list>
+                          <pathVariableState>
+                            <option name="key" value="username" />
+                            <option name="value" value="user2" />
+                          </pathVariableState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="8000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/user/photo/username/{username}" />
+                    </requestState>
                   </list>
                 </option>
                 <option name="sortWeight" value="1000000" />
@@ -189,7 +205,6 @@
                       <option name="body">
                         <bodyState>
                           <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
-                          <option name="type" value="JSON" />
                         </bodyState>
                       </option>
                       <option name="description" value="Dodaje użytkownika do gry z odpowiednią rolą" />
@@ -218,7 +233,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 4&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;owner&quot;: {&#10;    id: 3,&#10;  },&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 4&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;owner&quot;: {&#10;    id: 3&#10;  },&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -232,7 +247,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{ &#10;  &quot;role&quot;: &quot;SPECTATOR&quot;&#10;}" />
+                          <option name="raw" value="{ &#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -241,7 +256,7 @@
                       <option name="method" value="PUT" />
                       <option name="name" value="Modyfikuj role użytkownika w grze" />
                       <option name="sortWeight" value="5000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/3" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/updateGameUserRole/2" />
                     </requestState>
                     <requestState>
                       <option name="body">
@@ -375,7 +390,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Amunicja zapalająca 2.0&quot;,&#10;  description: &quot;zmodyfikowany opis&quot;,&#10;  pricePerBullet: 225,&#10;  availability: &quot;CHEAP&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Amunicja zapalająca&quot;,&#10;  description: &quot;zmodyfikowany opis&quot;,&#10;  pricePerBullet: 225,&#10;  availability: &quot;CHEAP&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -1306,7 +1321,7 @@
                           <requestState>
                             <option name="body">
                               <bodyState>
-                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
+                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher 3&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
                                 <option name="type" value="JSON" />
                               </bodyState>
                             </option>
@@ -1328,7 +1343,7 @@
                           <requestState>
                             <option name="body">
                               <bodyState>
-                                <option name="raw" value="{&#10;  &quot;user&quot;: {&#10;    &quot;id&quot;: 3&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
+                                <option name="raw" value="{&#10;//  &quot;user&quot;: {&#10;//    &quot;id&quot;: 3&#10;//  },&#10;  &quot;name&quot;: &quot;Adam Smasher2&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
                                 <option name="type" value="JSON" />
                               </bodyState>
                             </option>
@@ -1337,7 +1352,7 @@
                             <option name="method" value="PUT" />
                             <option name="name" value="Modyfikuj postać" />
                             <option name="sortWeight" value="4000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/1" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/3" />
                           </requestState>
                           <requestState>
                             <option name="body">
@@ -1351,7 +1366,15 @@
                             <option name="method" value="PUT" />
                             <option name="name" value="Zrób z postaci NPC" />
                             <option name="sortWeight" value="5000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/1" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/3" />
+                          </requestState>
+                          <requestState>
+                            <option name="description" value="Zmienia parametr alive " />
+                            <option name="id" value="1287af64-6ca1-4311-b691-ef8e41f5198a" />
+                            <option name="method" value="PUT" />
+                            <option name="name" value="Zmień czy postać żyje" />
+                            <option name="sortWeight" value="6000000" />
+                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/changeAlive/3" />
                           </requestState>
                         </list>
                       </option>

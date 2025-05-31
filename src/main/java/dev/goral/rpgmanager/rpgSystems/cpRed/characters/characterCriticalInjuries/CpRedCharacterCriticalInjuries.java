@@ -1,7 +1,7 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCriticalInjuries;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.criticalInjuries.CpRedCriticalInjuries;
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.criticalInjuries.CpRedCriticalInjuries;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
