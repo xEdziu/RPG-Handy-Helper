@@ -1,7 +1,7 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterSkills;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.skills.CpRedSkills;
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.skills.CpRedSkills;
 import jakarta.persistence.*;
 import lombok.*;
 

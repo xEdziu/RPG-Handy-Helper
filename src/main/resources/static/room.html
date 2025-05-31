@@ -1,74 +1,260 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <title>Pokój czatu</title>
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 2rem;
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
         }
 
-        #chat {
-            background-color: white;
-            border: 1px solid #ccc;
-            padding: 1rem;
-            height: 300px;
-            overflow-y: auto;
-            margin-bottom: 1rem;
-        }
-
-        #chat .message {
-            margin-bottom: 0.5rem;
-        }
-
-        #chat .message strong {
-            color: #333;
-        }
-
-        #message-form {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        #message-input {
-            flex: 1;
-            padding: 0.5rem;
-            border: 1px solid #aaa;
-        }
-
-        button {
-            padding: 0.5rem 1rem;
-        }
-
-        #online-users {
-            margin-top: 1rem;
-            padding-left: 1.2rem;
-        }
-
-        h2, h4 {
-            margin-bottom: 0.5rem;
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script> <!-- Dodanie SockJS -->
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script> <!-- Dodanie STOMP -->
+    <script>
+        // ===== Ustawienia Tailwind CSS =====
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    },
+                },
+            },
+        };
+        // ===== DOMContentLoaded =====
+        document.addEventListener("DOMContentLoaded", () => {
+            initThemeToggle();
+            applyTheme(getSavedTheme());
+        });
+        // ==== Changing the theme ====
+        function initThemeToggle() {
+            const wrapper = document.getElementById("theme-toggle-wrapper");
+            const toggle = document.getElementById("switch-component");
+            if (!toggle) return;
+
+            const updateTheme = () => {
+                const theme = toggle.checked ? "dark" : "light";
+                applyTheme(theme);
+            };
+
+            toggle.addEventListener("change", updateTheme);
+            wrapper?.addEventListener("click", () => {
+                toggle.checked = !toggle.checked;
+                updateTheme();
+            });
+        }
+
+        function applyTheme(theme) {
+            document.body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+
+            const toggle = document.getElementById("switch-component");
+            if (toggle) {
+                toggle.checked = (theme === "dark");
+            }
+        }
+
+        function updateFavicon(theme) {
+            const favicon = document.getElementById("favicon");
+            if (favicon) {
+                favicon.href = `/img/logo/logo-${theme}.svg`;
+            }
+        }
+
+        function getSavedTheme() {
+            return localStorage.getItem("theme") ||
+                (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        }
+    </script>
 </head>
-<body>
 
-<h2>Pokój czatowy: <span id="room-id"></span></h2>
+<body class="bg-gray-100 min-h-screen font-sans">
+    <nav
+        class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+        <a href="/home">
+            <div class="flex items-center">
+                <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+                <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+                <h1
+                    class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    RPG Handy Helper
+                </h1>
+            </div>
+        </a>
+        <div id="theme-toggle-wrapper" class="flex items-center justify-center">
+            <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+            <div class="relative inline-block w-12 h-6">
+                <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
+                       bg-light-accent dark:bg-dark-accent
+                       shadow-md transition-all duration-300 
+                       peer-checked:translate-x-[0.75rem] 
+                       peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                       cursor-pointer hover:shadow-lg">
+                </label>
+                <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                        bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary">
+                </div>
+            </div>
+            <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+        </div>
+    </nav>
+    <main
+        class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
+        <div class="flex gap-[2%] flex-row flex-nowrap justify-center items-stretch w-[100vw] min-h-[80vh] p-4">
+            <div id="character-card"
+                class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8">
+                <a href="#"
+                    class="p-4 relative self-end -top-2 -right-6 text-light-textPrimary dark:text-dark-textPrimary z-10">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-3xl" aria-hidden="true"></i>
+                </a>
+                <h1
+                    class="font-jetbrains-mono text-3xl mt-[-1.75em] text-light-textPrimary dark:text-dark-textPrimary m-3">
+                    Karta Postaci</h1>
+                <div id="character-card-info">
+                    <h1 class="font-jetbrains-mono text-3xl">#Będzie</h1>
+                </div>
+            </div>
 
-<div id="chat"></div>
+            <div id="chat-container"
+                class="flex flex-col grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4">
+                <div class="max-w-3xl mx-auto p-4">
 
-<form id="message-form">
-    <input type="text" id="message-input" placeholder="Napisz wiadomość..." autocomplete="off" required />
-    <button type="submit">Wyślij</button>
-</form>
 
-<h4>Uczestnicy online</h4>
-<ul id="online-users"></ul>
+                    <h2 class="text-2xl font-bold mb-2">Pokój czatowy: <span id="room-id" class="font-mono"></span></h2>
 
-<script>
+                    <div id="chat" class="bg-white border border-gray-300 rounded-md p-4 h-72 overflow-y-auto mb-4">
+                    </div>
+
+                    <form id="message-form" class="flex gap-2 mb-4">
+                        <input type="text" id="message-input" placeholder="Napisz wiadomość." autocomplete="off"
+                            required class="flex-1 px-3 py-2 border border-gray-400 rounded-md" />
+                        <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Wyślij</button>
+                    </form>
+
+                    <h4 class="text-lg font-semibold mb-1">Uczestnicy online</h4>
+                    <ul id="online-users" class="list-disc pl-5 mb-6 text-gray-700"></ul>
+                </div>
+            </div>
+            <div id="notes-container" class="flex flex-col gap-[2%] grow w-[32vw] w-full max-w-xl">
+                <div id="notes-container"
+                    class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-[79%]">
+                    <a href="#"
+                        class="p-4 relative self-end -top-2 -right-6 text-light-textPrimary dark:text-dark-textPrimary z-10">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-3xl" aria-hidden="true"></i>
+                    </a>
+                    <div id="notes-container-info"
+                        class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg  w-full max-w-xl">
+                        <div id="notes-info"
+                            class="flex flex-col items-center justify-center h-[10%] w-full mt-[-1rem]">
+                            <button id="add-note"
+                                class="text-2xl sm:text-3xl py-4 px-5 sm:px-10 mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
+                                onclick="createNote()">
+                                STWÓRZ NOWĄ NOTATKĘ
+                            </button>
+                            <div class="sm:w-full flex items-center space-x-2">
+                                <label
+                                    class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
+                                    Wyszukaj
+                                </label>
+                                <div class="w-full">
+                                    <input type="text" placeholder="Wpisz słowo klucz" id="search-input"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="notes-content" class="flex flex-col items-center justify-center w-full h-[90%]">
+                            <div class="w-12 h-12 border-4 border-light-accent dark:border-dark-accent rounded-full animate-ping"
+                                role="status" aria-label="Ładowanie"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="dice-container" class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg h-[19%]">
+                    <!--
+                    <div class="controls flex flex-wrap items-center gap-2 mb-4">
+                        <button data-roll="1d6"
+                            class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">1d6</button>
+                        <button data-roll="2d20"
+                            class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">2d20</button>
+                        <button data-roll="3d10"
+                            class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">3d10</button>
+                        <input type="text" id="dice-input" placeholder="Np. 4d10+3"
+                            class="px-3 py-2 border border-gray-400 rounded-md flex-1 min-w-[150px]" />
+                        <button id="rollCustom"
+                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Rzuć</button>
+                        <select id="dice-theme" class="px-3 py-2 border border-gray-400 rounded-md"></select>
+                    </div>
+
+                    <div id="dice-result" class="text-lg font-medium text-center mb-4"></div>
+                    <div id="dice-container" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
+                    </div>
+                -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+        <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+            class="text-light-accent dark:text-dark-accent">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </footer>
+</body>
+
+</html>
+<script type="module">
+    import DiceBox from "https://cdn.jsdelivr.net/npm/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
+
     const roomId = window.location.pathname.split("/").pop();
     document.getElementById("room-id").textContent = roomId;
 
@@ -76,80 +262,159 @@
     let stompClient = null;
 
     fetch("/api/v1/authorized/user")
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
             username = data.username;
-            connectWebSocket();
-        })
-        .catch(err => {
-            alert("Nie udało się pobrać danych użytkownika – czy jesteś zalogowany?");
+            initWebSocket();
         });
 
-    function connectWebSocket() {
+    function initWebSocket() {
         const socket = new SockJS("/ws");
         stompClient = Stomp.over(socket);
-        stompClient.debug = null; // wyłączenie logowania
-
-        stompClient.connect({}, function () {
-            stompClient.subscribe(`/topic/chat/${roomId}`, function (message) {
-                const msg = JSON.parse(message.body);
-                displayMessage(msg.from, msg.content);
+        stompClient.debug = null;
+        stompClient.connect({}, () => {
+            stompClient.subscribe(`/topic/chat/${roomId}`, msg => {
+                const { from, content } = JSON.parse(msg.body);
+                appendMessage(from, content);
             });
-
-            stompClient.subscribe(`/topic/chat/${roomId}/users`, function (message) {
-                const users = JSON.parse(message.body);
-                updateOnlineUsers(users);
+            stompClient.subscribe(`/topic/chat/${roomId}/users`, msg => {
+                updateUsers(JSON.parse(msg.body));
+            });
+            stompClient.subscribe(`/topic/dice/${roomId}`, msg => {
+                const { from, content } = JSON.parse(msg.body);
+                if (from !== username) {
+                    const [notation, theme] = content.split("|");
+                    rollDice(notation, theme, from);
+                }
             });
             stompClient.send(`/app/join/${roomId}`, {}, {});
         });
     }
 
-
-    function escapeHtml(unsafe) {
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+    function escapeHtml(text) { // Prevent XSS
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    function displayMessage(from, content) {
+    function appendMessage(from, content) {  // Append message to chat
         const chat = document.getElementById("chat");
         const div = document.createElement("div");
         div.classList.add("message");
-
-        const safeFrom = escapeHtml(from);
-        const safeContent = escapeHtml(content);
-
-        div.innerHTML = `<strong>${safeFrom}</strong>: ${safeContent}`;
+        div.innerHTML = `<strong>${escapeHtml(from)}</strong>: ${escapeHtml(content)}`;
         chat.appendChild(div);
         chat.scrollTop = chat.scrollHeight;
     }
 
-    function updateOnlineUsers(users) {
+    function updateUsers(users) {  // Update online users list
         const ul = document.getElementById("online-users");
-        ul.innerHTML = "";
-        users.forEach(user => {
-            const li = document.createElement("li");
-            li.textContent = user;
-            ul.appendChild(li);
-        });
+        ul.innerHTML = users.map(user => `<li>${user}</li>`).join("");
     }
 
-    document.getElementById("message-form").addEventListener("submit", function (e) {
+    document.getElementById("message-form").addEventListener("submit", e => {  // Send message
         e.preventDefault();
         const input = document.getElementById("message-input");
         const content = input.value.trim();
-        if (content && stompClient && stompClient.connected) {
-            stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({
-                from: username,
-                content: content
-            }));
+        if (content && stompClient?.connected) {
+            stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({ from: username, content }));
             input.value = "";
         }
     });
+    const themes = [
+        { id: "default", label: "Domyślny" },
+        { id: "gemstoneMarble", label: "Gemstone Rainbow Marble" },
+        { id: "blueGreenMetal", label: "Blue Green Metal" }
+    ];
+
+    const themeSelect = document.getElementById("dice-theme");
+    const savedTheme = localStorage.getItem("selectedDiceTheme") || "default";
+    themes.forEach(({ id, label }) => {
+        const opt = new Option(label, id, false, id === savedTheme);
+        themeSelect.appendChild(opt);
+    });
+    themeSelect.addEventListener("change", () => {
+        localStorage.setItem("selectedDiceTheme", themeSelect.value);
+    });
+
+    const diceBox = new DiceBox("#dice-container", {
+        assetPath: "/assets/",
+        origin: location.origin,
+        scale: window.innerWidth < 600 ? 5 : window.innerWidth < 900 ? 6 : window.innerWidth < 1200 ? 7 : 9,
+        gravity: 3,
+        friction: 0.5,
+        strength: 10,
+        spinForce: 6,
+        throwForce: 6,
+        mass: 3
+    });
+
+    await diceBox.init();
+    await diceBox.loadTheme("default");
+
+    let rolling = false;
+    let rollPool = [];
+
+    document.querySelectorAll('[data-roll]').forEach(btn => {
+        btn.addEventListener("click", () => addToPool(btn.dataset.roll));
+    });
+
+    document.getElementById("rollCustom").addEventListener("click", async () => {
+        const input = document.getElementById("dice-input").value.trim().toLowerCase().replace(/k/g, "d").replace(/\s+/g, "");
+        if (!/^\d*d(4|6|8|10|12|20|100)(\+\d*d(4|6|8|10|12|20|100))*$/.test(input)) {
+            return Swal.fire({ icon: 'error', title: 'Błędna notacja', text: 'Np. 2d6+1d8' });
+        }
+
+        const segments = input.split("+").map(seg => {
+            const [_, qty = "1", sides] = seg.match(/(\d*)d(\d+)/);
+            return { qty: +qty, sides: +sides };
+        });
+
+        if (rolling) return;
+        rolling = true;
+        document.querySelectorAll('button[id^="roll"]').forEach(btn => btn.disabled = true);
+
+        let total = 0, nat = [];
+        const theme = themeSelect.value;
+        if (!diceBox.themesLoadedData[theme]) await diceBox.loadTheme(theme);
+
+        for (let { qty, sides } of segments) {
+            const res = await diceBox.roll(`${qty}d${sides}`, { theme });
+            total += res.reduce((sum, die) => sum + die.value, 0);
+            res.forEach(d => {
+                nat.push(d.sides === 20 && (d.value === 1 || d.value === 20)
+                    ? (d.value === 20 ? '🎯 NAT20' : '💀 NAT1')
+                    : `d${d.sides}: ${d.value}`);
+            });
+            await new Promise(r => setTimeout(r, 1500));
+            diceBox.clear();
+        }
+
+        document.getElementById("dice-result").textContent = `Łączny wynik: ${total}`;
+        stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({
+            from: "🧊 System",
+            content: `${username} wylosował ${total} (${nat.join(", ")})`
+        }));
+
+        rollPool = [];
+        document.getElementById("dice-input").value = "";
+        document.querySelectorAll('button[id^="roll"]').forEach(btn => btn.disabled = false);
+        rolling = false;
+    });
+
+    function addToPool(notation) {
+        notation = notation.toLowerCase().replace(/k/g, "d");
+        const match = notation.match(/(\d+)d(\d+)/);
+        if (!match) return Swal.fire({ icon: 'error', title: 'Nieprawidłowa notacja', text: notation });
+
+        const [_, qty, sides] = match;
+        const existing = rollPool.findIndex(r => r.endsWith(`d${sides}`));
+        if (existing !== -1) {
+            const m = rollPool[existing].match(/(\d+)d(\d+)/);
+            const newQty = +m[1] + +qty;
+            if (newQty > 20) return Swal.fire({ icon: 'warning', title: 'Za dużo kości', text: `Już masz ${m[1]}d${sides}` });
+            rollPool[existing] = `${newQty}d${sides}`;
+        } else {
+            rollPool.push(`${qty}d${sides}`);
+        }
+        document.getElementById("dice-input").value = rollPool.join("+");
+    }
 </script>
-<script defer src="/scripts/footer.js"></script>
-</body>
-</html>
+

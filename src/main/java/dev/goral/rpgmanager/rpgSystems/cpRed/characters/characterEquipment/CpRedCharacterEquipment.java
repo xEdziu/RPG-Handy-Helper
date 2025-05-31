@@ -1,8 +1,8 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterEquipment;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.items.CpRedItemsAvailability;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.equipments.CpRedEquipments;
+import dev.goral.rpgmanager.rpgSystems.cpRed.items.CpRedItemsAvailability;
+import dev.goral.rpgmanager.rpgSystems.cpRed.manual.equipments.CpRedEquipments;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

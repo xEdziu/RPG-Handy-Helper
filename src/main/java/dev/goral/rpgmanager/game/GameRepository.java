@@ -10,3 +10,4 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findGameByName(String name);
 
 }
+

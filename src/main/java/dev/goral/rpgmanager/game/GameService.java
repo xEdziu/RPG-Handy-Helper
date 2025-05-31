@@ -177,6 +177,7 @@ public class GameService {
         GameUsers gameUser = gameUsersRepository.findByGameIdAndUserId(request.getGameId(), currentUser.getId());
         if (gameUser == null || gameUser.getRole() != GameUsersRole.GAMEMASTER) {
             throw new IllegalArgumentException("Nie możesz dodać użytkownika do gry, gdy nie jesteś jej GameMasterem.");
+
         }
 
         GameUsers gameUsers = new GameUsers();
