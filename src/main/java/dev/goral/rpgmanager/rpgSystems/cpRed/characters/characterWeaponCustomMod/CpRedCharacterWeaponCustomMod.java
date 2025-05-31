@@ -1,8 +1,7 @@
 package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterWeaponCustomMod;
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeapon;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.customWeaponMods.CpRedCustomWeaponMods;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.weaponMods.CpRedWeaponMods;
+import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customWeaponMods.CpRedCustomWeaponMods;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

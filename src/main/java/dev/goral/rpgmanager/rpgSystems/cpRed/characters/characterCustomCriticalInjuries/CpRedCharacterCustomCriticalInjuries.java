@@ -2,7 +2,7 @@ package dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCustomCritical
 
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpgmanager.rpgSystems.cpRed.characters.characterCriticalInjuries.CpRedCharacterCriticalInjuriesStatus;
-import dev.goral.rpgmanager.rpgSystems.cpRed.characters.customCriticalInjuries.CpRedCustomCriticalInjuries;
+import dev.goral.rpgmanager.rpgSystems.cpRed.custom.customCriticalInjuries.CpRedCustomCriticalInjuries;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

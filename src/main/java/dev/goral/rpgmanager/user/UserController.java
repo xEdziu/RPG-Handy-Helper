@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/admin/user/all")
-    public List<User> getAllUsers() {
+    public Map<String, Object> getAllUsers() {
         return userService.getAllUsers();
     }
 

@@ -51,7 +51,7 @@ public class CpRedCharacters {
     private Integer expAvailable;
     private Integer cash;
     private String characterPhotoPath;
-    private boolean alive;
+    private boolean alive = true;
 
     public CpRedCharacters(Long id,
                            Game game,
@@ -71,6 +71,5 @@ public class CpRedCharacters {
         this.expAvailable = expAvailable;
         this.cash = cash;
         this.characterPhotoPath = characterPhotoPath;
-        this.alive = true;
     }
 }
