@@ -289,7 +289,7 @@ public class CpRedCustomWeaponsService {
 
         // Sprawdź, czy użytkownik jest GM
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może modyfikować customową broń.");
+            throw new IllegalStateException("Tylko GM może modyfikować broń.");
         }
 
         // Sprawdź przypisaną statystykę

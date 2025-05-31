@@ -166,7 +166,7 @@ public class CpRedCustomWeaponModsService {
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), modToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może edytować modyfikację broni w grze.");
+            throw new IllegalStateException("Tylko GM może modykifować modyfikację broni.");
         }
 
         if (modToUpdate.getGameId().getId() != cpRedCustomWeaponMods.getGameId()) {

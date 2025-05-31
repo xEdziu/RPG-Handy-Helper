@@ -157,7 +157,7 @@ public class CpRedCustomEquipmentsService {
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), equipmentToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może edytować wyposażenie w grze.");
+            throw new IllegalStateException("Tylko GM może modyfikować wyposażenie.");
         }
 
 

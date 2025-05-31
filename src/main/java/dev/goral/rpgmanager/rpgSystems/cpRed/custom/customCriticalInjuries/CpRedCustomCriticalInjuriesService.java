@@ -108,7 +108,7 @@ public class CpRedCustomCriticalInjuriesService {
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), cpRedCustomCriticalInjuries.getGameId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może dodać pancerz do gry.");
+            throw new IllegalStateException("Tylko GM może dodać rany krytyczne do gry.");
         }
         if (cpRedCustomCriticalInjuriesRepository.existsByNameAndGameId(cpRedCustomCriticalInjuries.getName(), game)) {
             throw new IllegalStateException("Customowe rany krytyczne o tej nazwie już istnieje w tej grze.");
@@ -179,7 +179,7 @@ public class CpRedCustomCriticalInjuriesService {
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
 
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może modyfikować pancerz.");
+            throw new IllegalStateException("Tylko GM może modyfikować rany krytyczne.");
         }
 
         if (cpRedCustomCriticalInjuries.getInjuryPlace() != null) {

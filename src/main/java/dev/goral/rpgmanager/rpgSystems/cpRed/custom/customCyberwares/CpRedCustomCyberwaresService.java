@@ -201,7 +201,7 @@ public class CpRedCustomCyberwaresService {
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), cyberwareToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może edytować wszczep w grze.");
+            throw new IllegalStateException("Tylko GM może modyfikować wszczep.");
         }
         if(cpRedCustomCyberwares.getName()!=null){
             if (cpRedCustomCyberwaresRepository.existsByNameAndGameId(cpRedCustomCyberwares.getName(), game)) {
