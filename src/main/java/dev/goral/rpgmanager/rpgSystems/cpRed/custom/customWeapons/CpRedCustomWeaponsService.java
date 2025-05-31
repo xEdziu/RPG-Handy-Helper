@@ -175,7 +175,7 @@ public class CpRedCustomWeaponsService {
 
         // Sprawdź, czy użytkownik należy do tej gry
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), addCustomWeaponRequest.getGameId())
-                .orElseThrow(() -> new ResourceNotFoundException("Nie jesteś graczem wybranej gry."));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
 
         // Sprawdź, czy użytkownik jest GM
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
