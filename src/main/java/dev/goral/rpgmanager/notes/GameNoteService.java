@@ -91,15 +91,16 @@ public class GameNoteService {
             throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
 
         List<GameNote> gameNotes = gameNoteRepository.findByUserId(loggedInUser.getId());
-        List<GameNoteViewDto> gameNoteDtos = new ArrayList<>();
+        List<GameNoteWithGameIdDto> gameNoteDtos = new ArrayList<>();
 
         for (GameNote gameNote : gameNotes) {
-            GameNoteViewDto gameNoteDto = new GameNoteViewDto();
+            GameNoteWithGameIdDto gameNoteDto = new GameNoteWithGameIdDto();
             gameNoteDto.setId(gameNote.getId());
             gameNoteDto.setTitle(gameNote.getTitle());
             gameNoteDto.setContent(gameNote.getContent());
             gameNoteDto.setCreatedAt(gameNote.getCreatedAt());
             gameNoteDto.setUpdatedAt(gameNote.getUpdatedAt());
+            gameNoteDto.setGameId(gameNote.getGame().getId());
             gameNoteDto.setGameName(gameNote.getGame().getName());
             gameNoteDto.setRpgSystemName(gameNote.getGame().getRpgSystem().getName());
             gameNoteDtos.add(gameNoteDto);

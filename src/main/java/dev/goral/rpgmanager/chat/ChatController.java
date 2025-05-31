@@ -47,6 +47,11 @@ public class ChatController {
         messagingTemplate.convertAndSend("/topic/chat/" + roomId + "/users", users);
     }
 
+    @MessageMapping("/dice/{roomId}")
+    public void rollDice(@DestinationVariable String roomId, @Payload ChatMessage message) {
+        messagingTemplate.convertAndSend("/topic/dice/" + roomId, message);
+    }
+
 
     @EventListener
     public void handleDisconnect(SessionDisconnectEvent event) {
