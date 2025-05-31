@@ -4,6 +4,7 @@ import dev.goral.rpgmanager.email.EmailService;
 import dev.goral.rpgmanager.game.GameRepository;
 import dev.goral.rpgmanager.game.GameStatus;
 import dev.goral.rpgmanager.game.gameUsers.GameUsersRepository;
+import dev.goral.rpgmanager.game.gameUsers.GameUsersRole;
 import dev.goral.rpgmanager.scheduler.dto.common.TimeRangeDto;
 import dev.goral.rpgmanager.scheduler.dto.request.CreateSchedulerRequest;
 import dev.goral.rpgmanager.scheduler.dto.request.EditSchedulerRequest;

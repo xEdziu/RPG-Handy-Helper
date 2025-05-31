@@ -88,7 +88,7 @@
                       <option name="method" value="POST" />
                       <option name="name" value="Login Admin" />
                       <option name="sortWeight" value="3000000" />
-                      <option name="url" value="http://localhost:8888/login" />
+                      <option name="url" value="+http://localhost:8888/login" />
                     </requestState>
                     <requestState>
                       <option name="body">
@@ -174,7 +174,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 2&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description. 2&quot;,&#10;  &quot;rpgSystem&quot;: {&#10;    &quot;id&quot;: 1&#10;  }&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game D&amp;D 1&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description. D&amp;D 1&quot;,&#10;  &quot;rpgSystem&quot;: {&#10;    &quot;id&quot;: 1&#10;  }&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -218,7 +218,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 4&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;owner&quot;: {&#10;    id: 3&#10;  },&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Example Game 4&quot;,&#10;  &quot;description&quot;: &quot;This is an example game description after edit.&quot;,&#10;  &quot;owner&quot;: {&#10;    id: 3,&#10;  },&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -258,12 +258,18 @@
                       <option name="url" value="http://localhost:8888/api/v1/authorized/game/changeStatus/1" />
                     </requestState>
                     <requestState>
-                      <option name="description" value="Zwraca id, nazwe i opis gier d otórych należy zalogowany gracz" />
-                      <option name="id" value="bc5e0f27-f494-456c-8455-b4595db94201" />
-                      <option name="method" value="GET" />
-                      <option name="name" value="Gry dla gracza" />
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1&#10;}" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Usuwa połączenie między użytkownikiem a grą" />
+                      <option name="id" value="241bcf32-28ff-4503-9c28-b92f2a8b8204" />
+                      <option name="method" value="DELETE" />
+                      <option name="name" value="Usuń użytkownika z gry" />
                       <option name="sortWeight" value="7000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/userGames" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/deleteUserFromGame" />
                     </requestState>
                   </list>
                 </option>
@@ -369,7 +375,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Amunicja zapalająca&quot;,&#10;  description: &quot;zmodyfikowany opis&quot;,&#10;  pricePerBullet: 225,&#10;  availability: &quot;CHEAP&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Amunicja zapalająca 2.0&quot;,&#10;  description: &quot;zmodyfikowany opis&quot;,&#10;  pricePerBullet: 225,&#10;  availability: &quot;CHEAP&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -1667,7 +1673,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;Dungeons &amp; Dragons&quot;,&#10;  &quot;description&quot;: &quot;A fantasy tabletop role-playing game. &quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;name&quot;: &quot;D&amp;D&quot;,&#10;  &quot;description&quot;: &quot;A fantasy tabletop role-playing game. &quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -1757,7 +1763,7 @@
                       <option name="method" value="GET" />
                       <option name="name" value="Notatki użytkownika w grze" />
                       <option name="sortWeight" value="1000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameNotes/game/2" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/gameNotes/game/1" />
                     </requestState>
                   </list>
                 </option>
