@@ -969,7 +969,7 @@
             var userColor = getUserColorAndPhoto(userName).color;
             content = content.replace(userName, `<span class="${userColor} font-semibold">${escapeHtml(userName)}</span>`);
             return `
-            <div class="flex items-start bg-[#f5f6f8] dark:bg-gray-700 p-3 rounded-lg mb-2">
+            <div class="flex items-start bg-[#f5f6f8] dark:bg-gray-700 p-3 border-2 border-light-accentDark dark:border-dark-accentDark rounded-lg mb-2">
                 <div class="flex-shrink-0 w-12 h-12 mr-3">
                     <img id="logo-light" src="/img/assets/chat-dice-icon-light-version.svg" alt="" class="h-12 w-12 dark:hidden">
                     <img id="logo-dark" src="/img/assets/chat-dice-icon-dark-version.svg" alt="" class="h-12 w-12 hidden dark:block">
