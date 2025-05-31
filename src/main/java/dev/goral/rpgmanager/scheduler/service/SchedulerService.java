@@ -76,6 +76,11 @@ public class SchedulerService {
         if (!gameUsersRepository.findUserInGame(request.getGameId(), creator.getId())
                 .map(gameUsers -> gameUsers.getRole() == GameUsersRole.GAMEMASTER)
                 .orElse(false)) {
+          
+        // Sprawdź, czy twórca harmonogramu to GameMaster
+        if (!gameRepository.findById(request.getGameId())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId()))
+                .getOwner().getId().equals(creator.getId())) {
             throw new IllegalStateException("Tylko GameMaster może stworzyć harmonogram");
         }
 

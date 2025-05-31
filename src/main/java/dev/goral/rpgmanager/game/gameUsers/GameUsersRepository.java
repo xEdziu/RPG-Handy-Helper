@@ -32,6 +32,6 @@ public interface GameUsersRepository extends JpaRepository<GameUsers, Long> {
     Optional<GameUsers> findUserInGame(@Param("gameId") Long gameId, @Param("userId") Long userId);
 
     boolean existsByGameIdAndUserId(Long gameId, Long id);
-  
+
     GameUsers findByGameIdAndUserId(Long gameId, Long id);
 }

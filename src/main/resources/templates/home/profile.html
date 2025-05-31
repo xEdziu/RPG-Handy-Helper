@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mój Profil</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
+    <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
@@ -21,7 +26,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
-    <script>// Ustawienia Tailwind CSS
+    <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -55,45 +60,414 @@
                             error: "#b388FF",
                             warning: "#FF6F00",
                         },
-                    },
-                },
-            },
+                    }
+                }
+            }
         };
     </script>
-</head>
-<body>
-<a href="/home">Powrót</a>
-<h1>Mój Profil</h1>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=League+Spartan&display=swap');
 
-<!-- Widok danych użytkownika -->
-<div id="profileView">
-    <img id="profilePhoto" src="" alt="Zdjęcie profilowe" width="150" height="150" /><br/>
-    <p>Username: <span id="viewUsername"></span></p>
-    <p>Imię: <span id="viewFirstName"></span></p>
-    <p>Nazwisko: <span id="viewSurname"></span></p>
-    <p>Email: <span id="viewEmail"></span></p>
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+
+<body class="font-league-spartan justify-between min-h-screen flex flex-col">
+
+<nav class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+    <a href="/">
+        <div class="flex items-center">
+            <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+            <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+            <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                RPG Handy Helper
+            </h1>
+        </div>
+    </a>
+    <div class="flex items-center justify-center">
+        <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+        <div class="relative inline-block w-12 h-6">
+            <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+            <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
+                           bg-light-accent dark:bg-dark-accent
+                           shadow-md transition-all duration-300
+                           peer-checked:translate-x-[1.5rem]
+                           peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                           cursor-pointer hover:shadow-lg">
+            </label>
+            <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                            bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary">
+            </div>
+        </div>
+        <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+    </div>
+</nav>
+
+<main class="flex-grow flex flex-col items-center justify-center px-4 bg-light-background dark:bg-dark-background">
+
+    <div class="p-4 m-3 flex items-center justify-center text-3xl border-b-4 border-light-accentDark dark:border-dark-accentDark">
+        <h1 class="font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+            MÓJ PROFIL
+        </h1>
+    </div>
+
+    <div class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg p-8 mb-6 max-w-4xl w-full flex flex-col md:grid md:grid-cols-2 gap-2 items-stretch">
+
+        <div class="flex items-center justify-center md:mr-20">
+            <div class="relative w-[66%] sm:w-full max-w-xs mx-auto rounded-xl bg-dark-backgroundSecondary aspect-square md:aspect-auto md:h-[18rem] md:w-[18rem]">
+
+                <img id="profilePhoto" src=""
+                     class="absolute inset-0 w-full h-full object-cover z-10 bg-dark-accent" />
+
+                <img id="photoPreview" src=""
+                     class="absolute inset-0 w-full h-full object-cover z-20" />
+
+                <button type="button" id="changePhotoBtn"
+                       class="absolute top-1 right-1 z-30 bg-light-accent dark:bg-dark-accent w-10 h-10 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer">
+                    <i class="fa-solid fa-pen text-sm"></i>
+                </button>
+
+                <form id="photoForm" enctype="multipart/form-data">
+                    <input type="file" id="photoInput" name="file" accept="image/png, image/jpeg" class="hidden" />
+                </form>
+            </div>
+        </div>
+
+
+        <form id="updateForm" class="flex flex-col space-y-4 justify-center w-[66%] sm:w-full max-w-xs mx-auto text-sm sm:text-base md:ml-6">
+            <div class="relative w-full">
+                <label for="username"
+                       class="absolute top-1.5 left-1 px-2 text-sm z-10 flex items-center gap-1 text-light-textPrimary dark:text-dark-textPrimary rounded">
+                    <i class="fa-solid fa-user-ninja text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    Nazwa użytkownika:
+                </label>
+                </div>
+            <div class="field-container flex items-start sm:items-center justify-between flex-wrap gap-2
+            bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2 border-light-border dark:border-dark-border">
+
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <label id="label-username"
+                           class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2 max-w-[calc(100%-0.5rem)] overflow-x-auto whitespace-nowrap scrollbar-none">
+                        <span id="username-label-text">Nazwa użytkownika</span>
+                    </label>
+
+                    <input type="text" id="username" name="username" maxlength="30"
+                           class="hidden w-full max-w-full flex-1 block rounded-t-lg
+               text-light-textPrimary dark:text-dark-textPrimary
+               bg-light-background dark:bg-dark-surface
+               focus:outline-none focus:ring-0
+               placeholder-light-textSecondary dark:placeholder-dark-textSecondary" />
+                </div>
+
+                <button type="button"
+                        class="edit-btn text-light-accent dark:text-dark-accent self-start sm:self-center"
+                        data-target="username">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+            </div>
+
+            <p id="error-username" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                <i id="usernameErrorIcon" class="fa-solid fa-circle-exclamation text-error"></i>
+                <span id="usernameErrorTooltip"></span>
+            </p>
+            <div class="relative w-full">
+                <label for="firstName"
+                       class="absolute top-1.5 left-1 px-2 text-sm z-10 flex items-center gap-1 text-light-textPrimary dark:text-dark-textPrimary rounded">
+                    <i class="fa-solid fa-user text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    Imię:
+                </label>
+            </div>
+            <div class="field-container flex items-start sm:items-center justify-between flex-wrap gap-2
+            bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2 border-light-border dark:border-dark-border">
+
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <label id="label-firstName"
+                           class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2 max-w-[calc(100%-0.5rem)] overflow-x-auto whitespace-nowrap scrollbar-none">
+                        <span id="firstName-label-text">Imię</span>
+                    </label>
+
+                    <input type="text" id="firstName" name="firstName" maxlength="30"
+                           class="hidden w-full max-w-full flex-1 block rounded-t-lg
+                      text-light-textPrimary dark:text-dark-textPrimary
+                      bg-light-background dark:bg-dark-surface
+                      focus:outline-none focus:ring-0
+                      placeholder-light-textSecondary dark:placeholder-dark-textSecondary" />
+                </div>
+
+                <button type="button"
+                        class="edit-btn text-light-accent dark:text-dark-accent self-start sm:self-center"
+                        data-target="firstName">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+            </div>
+
+            <p id="error-firstName" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                <i class="fa-solid fa-circle-exclamation text-error"></i>
+                <span id="firstNameErrorTooltip"></span>
+            </p>
+            <div class="relative w-full">
+                <label for="surname"
+                       class="absolute top-1.5 left-1 px-2 text-sm z-10 flex items-center gap-1 text-light-textPrimary dark:text-dark-textPrimary rounded">
+                    <i class="fa-solid fa-id-badge text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    Nazwisko:
+                </label>
+            </div>
+            <div class="field-container flex items-start sm:items-center justify-between flex-wrap gap-2
+            bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2 border-light-border dark:border-dark-border">
+
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <label id="label-surname"
+                           class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2 max-w-[calc(100%-0.5rem)] overflow-x-auto whitespace-nowrap scrollbar-none">
+                        <span id="surname-label-text">Nazwisko</span>
+                    </label>
+
+                    <input type="text" id="surname" name="surname" maxlength="30"
+                           class="hidden w-full max-w-full flex-1 block rounded-t-lg
+                      text-light-textPrimary dark:text-dark-textPrimary
+                      bg-light-background dark:bg-dark-surface
+                      focus:outline-none focus:ring-0
+                      placeholder-light-textSecondary dark:placeholder-dark-textSecondary" />
+                </div>
+
+                <button type="button"
+                        class="edit-btn text-light-accent dark:text-dark-accent self-start sm:self-center"
+                        data-target="surname">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+            </div>
+
+            <p id="error-surname" class="hidden text-light-error dark:text-dark-error text-sm mt-1 mb-[-6px]">
+                <i class="fa-solid fa-circle-exclamation text-error"></i>
+                <span id="surnameErrorTooltip"></span>
+            </p>
+
+
+            <div class="relative w-full">
+                <label for="email"
+                       class="absolute top-1.5 left-1 px-2 text-sm z-10 flex items-center gap-1 text-light-textPrimary dark:text-dark-textPrimary rounded">
+                    <i class="fa-solid fa-envelope text-light-textSecondary dark:text-dark-textSecondary"></i>
+                    Email:
+                </label>
+            </div>
+            <div class="flex items-center justify-between bg-light-background dark:bg-dark-background rounded-md px-3 py-3 sm:py-4 md:py-3 sm:px-4 w-full border-b-2  border-light-border dark:border-dark-border">
+                <div class ="flex items-center gap-3 w-full">
+                    <label id="label-email" class="text-light-textPrimary dark:text-dark-textPrimary text-sm flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none">
+                        <span id="email-label-text">E-mail</span>
+                    </label>
+                </div>
+                <input type="text" id="email" name="email" class="hidden block rounded-t-lg
+                           text-light-textPrimary dark:text-dark-textPrimary
+                           bg-light-background dark:bg-dark-surface
+                           border-0 border-b-2 border-light-border dark:border-dark-border
+                           focus:outline-none focus:ring-0
+                           focus:border-light-accent peer dark:focus:border-dark-accent
+                           placeholder-light-textSecondary dark:placeholder-dark-textSecondary"/>
+            </div>
+
+        </form>
+
+        <div class="flex items-center justify-center md:col-span-2 mt-4">
+            <button type="submit" form="updateForm" class="px-12 py-3 text-lg font-semibold
+                   dark:text-light-textPrimary text-dark-textPrimary
+                   bg-light-accent dark:bg-dark-accent
+                   border border-light-border dark:border-dark-border
+                   rounded-lg transition-all duration-300
+                   hover:bg-light-accentDark hover:dark:bg-dark-accentDark
+                   focus:outline-none focus:ring-4 focus:ring-light-accent/50 dark:focus:ring-dark-accent/50
+                   active:scale-95 text-font-jetbrains-mono">
+                ZAKTUALIZUJ DANE
+            </button>
+        </div>
+
+        <p class=" text-sm w-full text-center text-light-textSecondary dark:text-dark-textSecondary md:col-span-2">
+            Sprawdź też:
+            <a href="/my-games" class="text-light-accent dark:text-dark-accent hover:underline visited:text-light-accentDark dark:visited:text-dark-accentDark">Moje gry</a>
+            lub wróć na:
+            <a href="/" class="text-light-accent dark:text-dark-accent hover:underline visited:text-light-accentDark dark:visited:text-dark-accentDark">Stronę główną</a>
+        </p>
+    </div>
+</main>
+
+
+
+<footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+    <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+    <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+       class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
+</footer>
+
+
+<div id="cropModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div class="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow-lg max-w-xl w-full">
+        <h2 class="text-xl font-semibold mb-4 text-center text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+            Przytnij zdjęcie
+        </h2>
+        <div class="w-full aspect-square relative overflow-hidden border border-light-border dark:border-dark-border rounded-md">
+            <img id="cropImage" class="max-h-[60vh] mx-auto" />
+        </div>
+        <div class="flex justify-center gap-4 mt-6">
+            <button id="cancelCrop"
+                    class="px-4 py-2 rounded-lg font-medium text-light-textPrimary dark:text-dark-textPrimary
+                           bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border
+                           hover:bg-light-border hover:dark:bg-dark-border transition">
+                Anuluj
+            </button>
+            <button id="confirmCrop"
+                    class="px-4 py-2 rounded-lg font-medium dark:text-light-textPrimary text-dark-textPrimary
+                   bg-light-accent dark:bg-dark-accent border border-light-border dark:border-dark-border
+                           hover:bg-light-accentDark hover:dark:bg-dark-accentDark transition">
+                Zapisz
+            </button>
+        </div>
+    </div>
 </div>
 
-<hr />
+<div id="photoChoiceModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+    <div class="bg-light-surface dark:bg-dark-surface rounded-lg p-6 max-w-2xl w-full shadow-xl">
+        <h2 class="text-xl font-semibold mb-4 text-center text-light-textPrimary dark:text-dark-textPrimary">
+            Wybierz zdjęcie profilowe
+        </h2>
 
-<!-- Formularz aktualizacji profilu -->
-<h2>Edycja profilu</h2>
-<form id="updateForm">
-    <label>Username: <input type="text" id="username" /></label><br />
-    <label>Imię: <input type="text" id="firstName" /></label><br />
-    <label>Nazwisko: <input type="text" id="surname" /></label><br />
-    <button type="submit">Zapisz zmiany</button>
-</form>
+        <div id="photoTileContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 place-items-center mb-6">
+            <label for="photoInput" class="w-24 h-24 bg-light-background dark:bg-dark-background rounded-md flex items-center justify-center cursor-pointer hover:scale-105 transition">
+                <div class="bg-light-accent dark:bg-dark-accent rounded-full w-10 h-10 flex items-center justify-center text-white text-xl">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+            </label>
+        </div>
 
-<hr />
+        <div class="flex justify-center gap-4">
+            <button onclick="closePhotoChoiceModal()"
+                    class="px-4 py-2 rounded-lg font-medium bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary border border-light-border dark:border-dark-border hover:bg-light-border hover:dark:bg-dark-border transition">
+                Anuluj
+            </button>
+        </div>
+    </div>
+</div>
 
-<!-- Formularz uploadu zdjęcia z podglądem -->
-<h2>Aktualizacja zdjęcia profilowego</h2>
-<form id="photoForm" enctype="multipart/form-data">
-    <label>Wybierz zdjęcie: <input type="file" accept="image/png, image/jpeg" name="file" id="photoInput" /></label><br />
-    <img id="photoPreview" src="" alt="Podgląd zdjęcia" width="150" height="150" style="display:none;" /><br/>
-    <button type="submit">Prześlij zdjęcie</button>
-</form>
+
+<script>
+    document.getElementById("changePhotoBtn").addEventListener("click", async () => {
+        document.getElementById("photoChoiceModal").classList.remove("hidden");
+
+        const container = document.getElementById("photoTileContainer");
+
+        while (container.children.length > 1) {
+            container.removeChild(container.lastChild);
+        }
+
+        try {
+            const response = await fetch("/api/v1/authorized/user/photo/defaults");
+            const data = await response.json();
+
+            if (data.error !== 200 || !Array.isArray(data.defaultProfilePics)) {
+                throw new Error("Nie udało się pobrać domyślnych zdjęć.");
+            }
+
+            data.defaultProfilePics.forEach(path => {
+                const img = document.createElement("img");
+                img.src = path;
+                img.alt = "Zdjęcie profilowe";
+                img.className = "w-24 h-24 rounded-md object-cover cursor-pointer hover:scale-105 transition";
+
+                img.addEventListener("click", async () => {
+                    try {
+                        Swal.fire({
+                            title: "Wysyłanie...",
+                            text: "Trwa przesyłanie zdjęcia.",
+                            allowOutsideClick: false,
+                            didOpen: () => Swal.showLoading()
+                        });
+
+                        const imageBlob = await fetch(path).then(res => res.blob());
+                        const fileName = path.split('/').pop();
+                        const file = new File([imageBlob], fileName, { type: imageBlob.type });
+
+                        const formData = new FormData();
+                        formData.append("file", file);
+
+                        const uploadResponse = await fetch("/api/v1/authorized/user/photo", {
+                            method: "POST",
+                            headers: {
+                                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN")
+                            },
+                            body: formData
+                        });
+
+                        const result = await uploadResponse.json();
+                        Swal.close();
+
+                        if (uploadResponse.ok) {
+                            resetPhotoPreview();
+                            updateProfilePhoto(fileName);
+                            currentPhotoFilename = fileName;
+                            closePhotoChoiceModal();
+                            Swal.fire({ icon: 'success', text: result.message || "Zdjęcie zostało ustawione!" });
+                        } else {
+                            Swal.fire({ icon: 'error', text: result.message || "Błąd podczas ustawiania zdjęcia." });
+                        }
+                    } catch (err) {
+                        Swal.close();
+                        Swal.fire({ icon: 'error', text: "Nie udało się połączyć z serwerem." });
+                    }
+                });
+
+
+                container.appendChild(img);
+            });
+        } catch (error) {
+            console.error(error);
+            Swal.fire({ icon: 'error', text: "Wystąpił problem z załadowaniem zdjęć." });
+        }
+    });
+
+    function closePhotoChoiceModal() {
+        document.getElementById("photoChoiceModal").classList.add("hidden");
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleSwitch = document.getElementById("switch-component");
+        const body = document.body;
+        const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+        const favicon = document.getElementById("favicon");
+        function updateFavicon(theme) {
+            if (favicon) {
+                favicon.href = theme === "dark"
+                    ? "/img/logo/logo-dark.svg"
+                    : "/img/logo/logo-light.svg";
+            }
+        }
+        function applyTheme(theme) {
+            body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+            if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+        }
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        applyTheme(savedTheme);
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener("change", function () {
+                const newTheme = toggleSwitch.checked ? "dark" : "light";
+                applyTheme(newTheme);
+            });
+        }
+        if (themeToggleDiv) {
+            themeToggleDiv.addEventListener("click", function (e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                const newTheme = body.classList.contains("dark") ? "light" : "dark";
+                applyTheme(newTheme);
+            });
+        }
+    });
+</script>
 
 <script>
     function getCookie(name) {
@@ -108,6 +482,7 @@
     }
 
     let currentPhotoFilename = "";
+    let originalUsername = "";
 
     async function loadProfile() {
         Swal.fire({
@@ -121,88 +496,205 @@
             const data = await response.json();
             Swal.close();
 
-            document.getElementById("viewUsername").textContent = data.username;
-            document.getElementById("viewFirstName").textContent = data.firstName;
-            document.getElementById("viewSurname").textContent = data.surname;
-            document.getElementById("viewEmail").textContent = data.email;
+            document.getElementById("username").value = data.username;
+            document.getElementById("firstName").value = data.firstName;
+            document.getElementById("surname").value = data.surname;
+            document.getElementById("email").value = data.email;
+
+            document.getElementById("username-label-text").textContent = data.username;
+            document.getElementById("firstName-label-text").textContent = data.firstName;
+            document.getElementById("surname-label-text").textContent = data.surname;
+            document.getElementById("email-label-text").textContent = data.email;
+
+            originalUsername = data.username;
 
             const filename = data.userPhotoPath?.split("/").pop();
             currentPhotoFilename = filename;
             updateProfilePhoto(filename);
-
-            document.getElementById("username").value = data.username;
-            document.getElementById("firstName").value = data.firstName;
-            document.getElementById("surname").value = data.surname;
         } catch (error) {
             Swal.close();
             Swal.fire({ icon: 'error', text: 'Nie udało się załadować danych użytkownika.' });
         }
     }
 
+
     function updateProfilePhoto(filename) {
         if (!filename) return;
-        const url = `/api/v1/authorized/user/photo/${filename}`;
+        const url = `/api/v1/authorized/user/photo/${filename}?v=${Date.now()}`;
         document.getElementById("profilePhoto").src = url;
     }
 
     loadProfile();
+    document.addEventListener("DOMContentLoaded", () => {
+        const usernameInput = document.getElementById("username");
+        const firstNameInput = document.getElementById("firstName");
+        const surnameInput = document.getElementById("surname");
 
-    document.getElementById("updateForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        Swal.fire({
-            title: 'Zapisywanie...',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading()
+        usernameInput.addEventListener("blur", async () => {
+            const isValid = await validateUsername(usernameInput.value);
+            toggleError("usernameErrorTooltip", isValid, usernameInput);
         });
 
-        try {
-            const response = await fetch("/api/v1/authorized/user/update", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
-                },
-                body: JSON.stringify({
-                    username: document.getElementById("username").value,
-                    firstName: document.getElementById("firstName").value,
-                    surname: document.getElementById("surname").value,
-                    email: document.getElementById("viewEmail").textContent
-                })
-            });
+        firstNameInput.addEventListener("blur", () => {
+            const isValid = validateName(firstNameInput.value, "firstName");
+            toggleError("firstNameErrorTooltip", isValid, firstNameInput);
+        });
 
-            const result = await response.json();
-            Swal.close();
+        surnameInput.addEventListener("blur", () => {
+            const isValid = validateName(surnameInput.value, "surname");
+            toggleError("surnameErrorTooltip", isValid, surnameInput);
+        });
 
-            if (response.ok) {
-                Swal.fire({ icon: 'success', text: result.message || "Profil zaktualizowany" });
-                await loadProfile();
-            } else {
-                Swal.fire({ icon: 'error', text: result.message || "Błąd aktualizacji profilu" });
-            }
-        } catch (error) {
-            Swal.close();
-            Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
-        }
-    });
+        document.getElementById("updateForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-    document.getElementById("photoInput").addEventListener("change", function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                Swal.fire({ icon: 'warning', text: 'Plik jest za duży. Maksymalny rozmiar to 5 MB.' });
-                e.target.value = ""; // Clear the input
+            let valid = true;
+
+            const isUsernameValid = await validateUsername(usernameInput.value);
+            toggleError("usernameErrorTooltip", isUsernameValid, usernameInput);
+            valid = valid && isUsernameValid;
+
+            const isFirstNameValid = validateName(firstNameInput.value, "firstName");
+            toggleError("firstNameErrorTooltip", isFirstNameValid, firstNameInput);
+            valid = valid && isFirstNameValid;
+
+            const isSurnameValid = validateName(surnameInput.value, "surname");
+            toggleError("surnameErrorTooltip", isSurnameValid, surnameInput);
+            valid = valid && isSurnameValid;
+
+            if (!valid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd walidacji',
+                    text: 'Popraw błędy w formularzu przed zapisem.'
+                });
                 return;
             }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById("photoPreview");
-                preview.src = e.target.result;
-                preview.style.display = "block";
+
+            const fileInput = document.getElementById("photoInput");
+            const file = fileInput.files[0];
+            let photoUpdated = false;
+            let uploadedPhotoFilename = "";
+
+            if (file) {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                try {
+                    const photoResponse = await fetch("/api/v1/authorized/user/photo", {
+                        method: "POST",
+                        headers: {
+                            'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
+                        },
+                        body: formData
+                    });
+
+                    const result = await photoResponse.json();
+
+                    if (!photoResponse.ok) {
+                        Swal.fire({ icon: 'error', text: result.message || "Błąd przesyłania zdjęcia." });
+                        return;
+                    }
+
+                    photoUpdated = true;
+                    uploadedPhotoFilename = result.userPhotoPath?.split("/").pop();
+
+                } catch (photoError) {
+                    Swal.fire({ icon: 'error', text: "Błąd połączenia przy przesyłaniu zdjęcia." });
+                    return;
+                }
             }
-            reader.readAsDataURL(file);
-        }
+
+            Swal.fire({
+                title: 'Zapisywanie...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            try {
+                const response = await fetch("/api/v1/authorized/user/update", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
+                    },
+                    body: JSON.stringify({
+                        username: usernameInput.value,
+                        firstName: firstNameInput.value,
+                        surname: surnameInput.value,
+                        email: document.getElementById("email").value
+                    })
+                });
+
+                const result = await response.json();
+                Swal.close();
+
+                if (response.ok) {
+                    Swal.fire({ icon: 'success', text: result.message || "Profil zaktualizowany" });
+
+                    if (photoUpdated && uploadedPhotoFilename) {
+                        updateProfilePhoto(uploadedPhotoFilename);
+                    }
+
+                    await loadProfile();
+                    fileInput.value = "";
+                } else {
+                    Swal.fire({ icon: 'error', text: result.message || "Błąd aktualizacji profilu" });
+                }
+            } catch (error) {
+                Swal.close();
+                Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
+            }
+        });
+
     });
+
+
+
+    let cropper;
+    const cropModal = document.getElementById('cropModal');
+    const cropImage = document.getElementById('cropImage');
+
+    document.getElementById("photoInput").addEventListener("change", function (e) {
+        document.getElementById("photoChoiceModal").classList.add("hidden");
+        let photoUpdated = false;
+        let uploadedPhotoFilename = "";
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const allowedTypes = ['image/jpeg', 'image/png'];
+
+        if (!allowedTypes.includes(file.type)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Nieprawidłowy format',
+                text: 'Możesz przesłać tylko pliki JPG lub PNG.',
+            });
+            e.target.value = "";
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            Swal.fire({ icon: 'warning', text: 'Plik jest za duży. Maksymalny rozmiar to 5 MB.' });
+            e.target.value = "";
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            cropImage.src = e.target.result;
+            cropModal.classList.remove("hidden");
+
+            if (cropper) cropper.destroy();
+
+            cropper = new Cropper(cropImage, {
+                aspectRatio: 1,
+                viewMode: 1
+            });
+        };
+        reader.readAsDataURL(file);
+    });
+
 
     document.getElementById("photoForm").addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -237,6 +729,13 @@
             const result = await response.json();
             Swal.close();
 
+            photoUpdated = true;
+            uploadedPhotoFilename = result.userPhotoPath?.split("/").pop();
+
+            const filename = data.userPhotoPath?.split("/").pop();
+            currentPhotoFilename = filename;
+            updateProfilePhoto(filename);
+
             if (response.ok) {
                 Swal.fire({ icon: 'success', text: result.message || "Zdjęcie zaktualizowane!" })
                     .then((result) => {
@@ -244,22 +743,221 @@
                             location.reload();
                         }
                     });
-                updateProfilePhoto(currentPhotoFilename);
             } else {
                 Swal.fire({ icon: 'error', text: result.message || "Błąd podczas przesyłania zdjęcia." });
             }
-
         } catch (error) {
             Swal.close();
             Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
         }
     });
+
+
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-target');
+            const input = document.getElementById(target);
+            const label = document.getElementById(`label-${target}`);
+            const labelTextSpan = document.getElementById(`${target}-label-text`);
+            const floatingLabel = document.querySelector(`label[for="${target}"]`);
+            const icon = floatingLabel?.querySelector('i');
+            const container = btn.closest('.field-container');
+
+            if (input && label) {
+                input.classList.remove('hidden');
+                label.classList.add('hidden');
+
+                input.value = labelTextSpan.textContent;
+                input.focus();
+
+                if (container) {
+                    container.classList.add('border-light-accent', 'dark:border-dark-accent');
+                    container.classList.remove('border-light-border', 'dark:border-dark-border');
+                }
+
+                if (floatingLabel) {
+                    floatingLabel.classList.add('text-light-accent', 'dark:text-dark-accent');
+                    floatingLabel.classList.remove('text-light-textPrimary', 'dark:text-dark-textPrimary');
+                }
+
+                if (icon) {
+                    icon.classList.add('text-light-accent', 'dark:text-dark-accent');
+                    icon.classList.remove('text-light-textSecondary', 'dark:text-dark-textSecondary');
+                }
+
+                input.addEventListener('blur', () => {
+                    labelTextSpan.textContent = input.value;
+                    input.classList.add('hidden');
+                    label.classList.remove('hidden');
+
+                    if (container) {
+                        container.classList.remove('border-light-accent', 'dark:border-dark-accent');
+                        container.classList.add('border-light-border', 'dark:border-dark-border');
+                    }
+
+                    if (floatingLabel) {
+                        floatingLabel.classList.remove('text-light-accent', 'dark:text-dark-accent');
+                        floatingLabel.classList.add('text-light-textPrimary', 'dark:text-dark-textPrimary');
+                    }
+
+                    if (icon) {
+                        icon.classList.remove('text-light-accent', 'dark:text-dark-accent');
+                        icon.classList.add('text-light-textSecondary', 'dark:text-dark-textSecondary');
+                    }
+                }, { once: true });
+            }
+        });
+    });
+    document.getElementById("cancelCrop").addEventListener("click", () => {
+        resetPhotoPreview();
+        cropper.destroy();
+        cropModal.classList.add("hidden");
+        document.getElementById("photoInput").value = "";
+    });
+
+    document.getElementById("confirmCrop").addEventListener("click", () => {
+        cropper.getCroppedCanvas({
+            width: 400,
+            height: 400
+        }).toBlob(async (blob) => {
+            const newFile = new File([blob], "cropped-profile.jpg", { type: "image/jpeg" });
+
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(newFile);
+            document.getElementById("photoInput").files = dataTransfer.files;
+
+            const preview = document.getElementById("photoPreview");
+            preview.src = URL.createObjectURL(blob);
+            preview.style.display = "block";
+            preview.classList.remove("hidden");
+
+            cropper.destroy();
+            cropModal.classList.add("hidden");
+
+            const formData = new FormData();
+            formData.append("file", newFile);
+
+            Swal.fire({
+                title: 'Wysyłanie...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            try {
+                const response = await fetch("/api/v1/authorized/user/photo", {
+                    method: "POST",
+                    headers: {
+                        'X-XSRF-TOKEN': getCookie("XSRF-TOKEN")
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                Swal.close();
+
+                if (response.ok) {
+                    const filename = result.userPhotoPath?.split("/").pop();
+                    currentPhotoFilename = filename;
+                    updateProfilePhoto(filename);
+                    document.getElementById("photoInput").value = "";
+                    await loadProfile();
+
+                    Swal.fire({
+                        icon: 'success',
+                        text: result.message || "Zdjęcie zostało zapisane!"
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', text: result.message || "Błąd podczas przesyłania zdjęcia." });
+                }
+            } catch (err) {
+                Swal.close();
+                Swal.fire({ icon: 'error', text: "Błąd połączenia z serwerem." });
+            }
+        }, "image/jpeg");
+    });
+
+
+    function toggleError(tooltipId, isValid, input) {
+        const errorContainer = document.getElementById(`error-${input.id}`);
+        const tooltip = document.getElementById(tooltipId);
+
+        if (isValid || input.value.trim() === '') {
+            errorContainer.classList.add('hidden');
+            input.classList.remove('border-b-2', 'border-light-error', 'dark:border-dark-error');
+            input.classList.add('border-b-2', 'border-light-border', 'dark:border-dark-border');
+        } else {
+            errorContainer.classList.remove('hidden');
+            input.classList.remove('border-light-border', 'dark:border-dark-border');
+            input.classList.add('border-light-error', 'dark:border-dark-error');
+        }
+    }
+
+
+    async function validateUsername(username) {
+        const trimmed = username.trim();
+
+        if (trimmed === '') {
+            document.getElementById('usernameErrorTooltip').textContent =
+                'Pole nie może być puste ani zawierać wyłącznie spacji.';
+            return false;
+        }
+
+        const regex = /^[a-zA-Z0-9_][a-zA-Z0-9_\-*!?]{2,}$/;
+        if (!regex.test(username)) {
+            document.getElementById('usernameErrorTooltip').textContent =
+                'Nazwa użytkownika musi mieć co najmniej 3 znaki, nie może zaczynać się od znaku specjalnego, ani zawierać spacji';
+            return false;
+        }
+
+        if (trimmed === originalUsername) return true;
+        if (username === originalUsername) return true;
+
+        try {
+            const response = await fetch(`/api/v1/register/checkUsername?username=${encodeURIComponent(trimmed)}`);
+            const data = await response.json();
+            if (data.error !== 200) {
+                document.getElementById('usernameErrorTooltip').textContent = 'Podana nazwa użytkownika jest już zajęta.';
+                return false;
+            }
+            return true;
+        } catch {
+            document.getElementById('usernameErrorTooltip').textContent = 'Błąd połączenia z serwerem.';
+            return false;
+        }
+    }
+
+    function validateName(name, fieldId) {
+        let trimmed = name.trim();
+        if (trimmed === '') return true;
+
+        const regex = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]+$/;
+        if (!regex.test(trimmed)) {
+            document.getElementById(`${fieldId}ErrorTooltip`).textContent =
+                'Pole nie może zawierać cyfr ani znaków specjalnych.';
+            return false;
+        }
+        if (trimmed.length < 3){
+            document.getElementById(`${fieldId}ErrorTooltip`).textContent =
+                'Pole musi zawierać minimum 3 znaki.';
+            return false;
+        }
+        if (trimmed === ''){
+            document.getElementById(`${fieldId}ErrorTooltip`).textContent =
+                'Pole nie może być puste';
+            return false;
+        }
+        return true;
+    }
+
+    function resetPhotoPreview() {
+        const preview = document.getElementById("photoPreview");
+        preview.src = "";
+        preview.style.display = "none";
+        preview.classList.add("hidden");
+    }
+
+
 </script>
-<footer
-        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
-        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
-        <a href="/home/notes" 
-            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
-    </footer>
+<script defer src="/scripts/footer.js"></script>
 </body>
 </html>

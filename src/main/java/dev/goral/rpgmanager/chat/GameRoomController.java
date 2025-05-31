@@ -29,7 +29,7 @@ public class GameRoomController {
 
     @PostMapping("/create")
     public Map<String, Object> createGameRoom(@RequestParam Long gameId,
-                                                              @AuthenticationPrincipal User currentUser) {
+                                              @AuthenticationPrincipal User currentUser) {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Stworzono pokój gry.");
 
         Game game = gameRepository.findById(gameId).orElse(null);
