@@ -140,7 +140,7 @@ public class CpRedCustomArmorsService {
             throw new IllegalStateException("Kara pancerza nie może być mniejsza od 0.");
         }
         if (cpRedCustomArmors.getPrice() < 0) {
-            throw new IllegalStateException("Cena pancerza nie może być mniejsza lub równa 0.");
+            throw new IllegalStateException("Cena pancerza nie może być mniejsza od 0.");
         }
         if (cpRedCustomArmors.getDescription().isEmpty() ||
                 cpRedCustomArmors.getDescription().trim().isEmpty()) {
@@ -185,6 +185,10 @@ public class CpRedCustomArmorsService {
             throw new IllegalStateException("Gra o id " + armorToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
 
+        if (armorToUpdate.getGameId().getId() != cpRedCustomArmors.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla pancerza.");
+        }
+
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), armorToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
 
@@ -212,7 +216,7 @@ public class CpRedCustomArmorsService {
         if (cpRedCustomArmors.getArmorPoints() != armorToUpdate.getArmorPoints()) {
             if (cpRedCustomArmors.getArmorPoints() != -1){
                 if (cpRedCustomArmors.getArmorPoints() < 0) {
-                    throw new IllegalStateException("Punkty pancerza muszą być większe lub równe 0.");
+                    throw new IllegalStateException("Punkty pancerza muszą być większe od 0.");
                 }
                 armorToUpdate.setArmorPoints(cpRedCustomArmors.getArmorPoints());
             }
@@ -221,7 +225,7 @@ public class CpRedCustomArmorsService {
         if (cpRedCustomArmors.getPenalty() != armorToUpdate.getPenalty()) {
             if (cpRedCustomArmors.getPenalty() != -1){
                 if (cpRedCustomArmors.getPenalty() < 0) {
-                    throw new IllegalStateException("Kara pancerza musi być większa lub równa 0.");
+                    throw new IllegalStateException("Kara pancerza musi być większa od 0.");
                 }
                 armorToUpdate.setPenalty(cpRedCustomArmors.getPenalty());
             }
@@ -229,7 +233,7 @@ public class CpRedCustomArmorsService {
 
         if (cpRedCustomArmors.getPrice() != armorToUpdate.getPrice()) {
             if (cpRedCustomArmors.getPrice() != -1){
-                if (cpRedCustomArmors.getPrice() <= 0) {
+                if (cpRedCustomArmors.getPrice() <  0) {
                     throw new IllegalStateException("Cena pancerza musi być większa od 0.");
                 }
                 armorToUpdate.setPrice(cpRedCustomArmors.getPrice());

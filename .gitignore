@@ -48,3 +48,4 @@ maven-wrapper.properties
 *.log
 logs/*
 /src/main/java/dev/goral/rpgmanager/user/UserConfig.java
+!/src/main/java/dev/goral/rpgmanager/security/WebSecurityConfig.java
