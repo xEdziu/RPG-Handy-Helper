@@ -812,7 +812,7 @@
             input.value = "";
         }
     });
-    // ==== DICE OPERATION ====
+    // ==== DICE OPERATIONS ====
     const themes = [
         { id: "default", label: "Domyślny" },
         { id: "gemstoneMarble", label: "Gemstone Rainbow Marble" },
@@ -1257,6 +1257,7 @@
         const icons = button.querySelectorAll(".toggle-icon");
         icons.forEach(icon => icon.classList.toggle("-rotate-90"));
     }
+  
     // ==== Variable for Styling ====
     var noteStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary mb-4";
     var infoStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg  cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono";

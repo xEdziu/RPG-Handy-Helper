@@ -75,12 +75,15 @@
 
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
+            clearFilters();
             getAllGamesForUser();
             getAllSystems();
             getUserInfo();
             initThemeToggle();
             applyTheme(getSavedTheme());
-            loadNotes();
+            setTimeout(() => {
+                loadNotes();
+            }, 100);
         });
 
         // ==== Changing the theme ====
@@ -266,8 +269,8 @@
                                 if (toFilerRPGSystyem.indexOf(note.rpgSystemName) == -1) {
                                     toFilerRPGSystyem.push(note.rpgSystemName);
                                 }
-                                if (toFilerGame.indexOf(note.gameName) == -1) {
-                                    toFilerGame.push(note.gameName);
+                                if (!toFilerGame.some(n => n.gameId === note.gameId)) {
+                                    toFilerGame.push(note);
                                 }
                             });
                             notesContainer.innerHTML = resultHtml;
@@ -564,9 +567,15 @@
         function loadAllOptionsToFilters(data, location, dafaultText) {
             const optionBar = document.getElementById(location);
             var optionsHTML = `<option value='' disabled selected>${dafaultText}</option>`;
-            data.forEach(item => {
-                optionsHTML += `<option value="${item}">${item}</option>`;
-            });
+            if (location == 'campaign-name-filter') {
+                data.forEach(item => {
+                    optionsHTML += `<option value="${item.gameId}">${item.gameName}</option>`;
+                });
+            } else {
+                data.forEach(item => {
+                    optionsHTML += `<option value="${item}">${item}</option>`;
+                });
+            }
             optionBar.innerHTML = optionsHTML;
             getLisinerForFilters(location);
         }
@@ -582,7 +591,7 @@
                 filteredNotes = filteredNotes.filter(note => note.rpgSystemName === systemFilter);
             }
             if (campaignFilter) {
-                filteredNotes = filteredNotes.filter(note => note.gameName === campaignFilter);
+                filteredNotes = filteredNotes.filter(note => note.gameId == campaignFilter);
             }
             if (searchQuery) {
                 filteredNotes = filteredNotes.filter(note =>
@@ -619,22 +628,45 @@
             const campaignFilter = document.getElementById('campaign-name-filter');
             const campaigns = noteContent
                 .filter(note => !selectedSystem || note.rpgSystemName === selectedSystem)
-                .map(note => note.gameName);
-            const uniqueCampaigns = [...new Set(campaigns)];
-            campaignFilter.innerHTML = '<option value="">Kampania</option>'; // domyślna opcja
-            uniqueCampaigns.forEach(campaign => {
+                .map(note => ({ id: note.gameId, name: note.gameName }));
+            const uniqueCampaignsMap = new Map();
+            campaigns.forEach(c => {
+                if (!uniqueCampaignsMap.has(c.id)) {
+                    uniqueCampaignsMap.set(c.id, c.name);
+                }
+            });
+            campaignFilter.innerHTML = '<option value="" disabled selected>Kampania</option>';
+            uniqueCampaignsMap.forEach((name, id) => {
                 const option = document.createElement('option');
-                option.value = campaign;
-                option.textContent = campaign;
+                option.value = id;
+                option.textContent = name;
                 campaignFilter.appendChild(option);
             });
         }
         function clearFilters() {
             document.getElementById('search-input').value = '';
-            document.getElementById('game-name-filter').selectedIndex = '';
-            document.getElementById('campaign-name-filter').selectedIndex = 0;
-            document.getElementById('sort-by').value = 'data-modify';
-            document.getElementById('sort-order').value = 'DESC';
+            const campaignFilter = document.getElementById('campaign-name-filter');
+            const gameFilter = document.getElementById('game-name-filter');
+            const sortBy = document.getElementById('sort-by');
+            const sortOrder = document.getElementById('sort-order');
+            campaignFilter.innerHTML = ""
+            gameFilter.innerHTML = "";
+            var campaing = `<option value="" disabled selected>System gry</option>`;
+            var gameHTML = `<option value="" disabled selected>Kampania</option>`;
+            toFilerGame.forEach(game => {
+                gameHTML += `<option value="${game.gameId}">${game.gameName}</option>`;
+            });
+            RpgSystem.forEach(system => {
+                campaing += `<option value="${system.name}">${system.name}</option>`;
+            });
+            campaignFilter.innerHTML = gameHTML;
+            gameFilter.innerHTML = campaing;
+            sortBy.value = 'data-modify';
+            sortOrder.innerHTML = `
+                <option value="DESC" class="block" selected>Od Najnowszych</option>
+                <option value="ASC" class="block">Od Najstarszych</option>
+            `;
+            sortOrder.value = 'DESC';
             applyFilters();
         }
     </script>
@@ -768,6 +800,7 @@
         </a>
     </footer>
 </body>
+<script defer src="/scripts/footer.js"></script>
 
 </html>
 <script>
@@ -902,10 +935,9 @@
             const systemSelect = document.getElementById('game-system');
             systemSelect.selectedIndex = 0;
             if (selectedGame) {
-                console.log(selectedGame);
-                const systems = gameAccessible.find(game => game.id == selectedGame);
-                document.getElementById('game-description-new-note').innerText = systems.description;
-                document.getElementById('game-system').textContent = RpgSystem.find(system => system.id === systems.id).name;
+                const selected = gameAccessible.find(game => game.id == selectedGame);
+                document.getElementById('game-description-new-note').innerText = selected.description;
+                document.getElementById('game-system').textContent = RpgSystem.find(system => system.id == selected.rpgSystemId).name;
             }
         });
     }
@@ -1025,8 +1057,6 @@
         `;
     }
     function generateNewNoteHTML() {
-        console.log(gameAccessible);
-        console.log(RpgSystem);
         return `
         <div class="flex justify-between items-center mb-4">
             <div class="flex flex-col items-start w-1/2">
