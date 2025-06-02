@@ -1,9 +1,0 @@
-package dev.goral.rpgmanager.rpgSystems.cpRed.manual.cyberwares;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface CpRedCyberwaresRepository extends JpaRepository<CpRedCyberwares, Long> {
-    boolean existsByName(String name);
-}
