@@ -59,6 +59,7 @@ public class WebSecurityConfig {
 
         http
                 .securityMatcher("/api/mobile/v1/**")
+                // CSRF disabled intentionally because this chain uses stateless JWT in Authorization header (no cookies)
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for mobile API
                 .authorizeHttpRequests(customizer ->
                         customizer
