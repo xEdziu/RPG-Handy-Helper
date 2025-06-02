@@ -35,7 +35,7 @@ public class LoggerService {
 
     public static void log(String operationName, String level) {
         cleanupOldLogs();
-        String message = String.format("Operacja: %s", operationName);
+        String message = String.format("Akcja: %s", operationName);
         String entry = formatter.format(new java.util.logging.LogRecord(
                 java.util.logging.Level.parse(level), message));
         String filename = String.format("%s/log-%s.log", LOG_DIR, LocalDate.now().format(FILE_DATE_FORMAT));
@@ -50,9 +50,9 @@ public class LoggerService {
         log(operationName, "WARNING");
     }
 
-    public static void logError(String operationName, Exception ex) {
+    public static void logError(String method, Exception ex) {
         cleanupOldLogs();
-        String message = String.format("Operacja: %s, Błąd: %s", operationName, ex.getMessage());
+        String message = String.format("Błąd: %s, Szczegóły: %s", method, ex.getMessage());
         String entry = formatter.format(new java.util.logging.LogRecord(
                 java.util.logging.Level.SEVERE, message));
         String filename = String.format("%s/log-%s.log", LOG_DIR, LocalDate.now().format(FILE_DATE_FORMAT));
