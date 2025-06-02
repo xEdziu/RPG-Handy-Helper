@@ -3,26 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel użytkownika</title>
+    <title>Mój Profil</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
+    <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
+    <script>// Ustawienia Tailwind CSS
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=League+Spartan&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
 </head>
-<body>
-<h1>Witaj na swoim koncie!</h1>
-<p>Zalogowałeś się pomyślnie.</p>
-<br>
-<a href="/profile">Mój profil</a>
-<p>UWAGA: Ten formularz jest do testowania ustawienia hasła, gdy użytkownik zarejestruje się poprzez Discord!</p>
-<p>Jest tutaj tymczasowo, w przyszłości będzie na to osobne miejsce na panelu użytkownika</p>
-<form>
-    <label for="password1">Hasło:</label><br>
-    <input type="password" id="password1" name="password" required><br>
-    <label for="password2">Powtórz Hasło:</label><br>
-    <input type="password" id="password2" name="password" required><br>
-    <button type="submit">Ustaw hasło</button>
-</form>
-<a href="/logout">Wyloguj się</a>
+
+<body class="h-screen overflow-hidden flex flex-col bg-light-background dark:bg-dark-background font-league-spartan text-light-textPrimary dark:text-dark-textPrimary">
+
+<nav class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+    <a href="/">
+        <div class="flex items-center">
+            <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+            <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+            <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                RPG Handy Helper
+            </h1>
+        </div>
+    </a>
+    <div class="flex items-center justify-center">
+        <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+        <div class="relative inline-block w-12 h-6">
+            <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+            <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
+                       bg-light-accent dark:bg-dark-accent
+                       shadow-md transition-all duration-300
+                       peer-checked:translate-x-[1.5rem]
+                       peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                       cursor-pointer hover:shadow-lg">
+            </label>
+            <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                        bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary">
+            </div>
+        </div>
+        <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+    </div>
+</nav>
+
+
+<main class="flex flex-1 overflow-hidden">
+    <aside class="w-64 flex flex-col items-center gap-4 p-4 bg-light-surface dark:bg-dark-surface">
+        <nav class="flex flex-col w-full gap-2 mt-4">
+            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center">MÓJ PROFIL</a>
+            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center">MOJE GRY</a>
+            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center">MOJE NOTATKI</a>
+            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center">MOJE SPOTKANIA</a>
+            <a href="#" class="border border-light-border dark:border-dark-border px-4 py-2 rounded text-center">WYLOGUJ SIĘ</a>
+        </nav>
+    </aside>
+
+
+    <section class="flex-1 p-6 overflow-hidden flex flex-col">
+        <div class="flex items-center mb-6">
+            <div class="w-16 h-16 bg-light-border dark:bg-dark-border rounded-full flex items-center justify-center text-3xl mr-4">
+                <i class="fa-regular fa-user"></i>
+            </div>
+            <h2 class="text-4xl font-bold">Cześć, <span class="text-light-accent dark:text-dark-accent">[username]</span>!</h2>
+        </div>
+
+        <div class="grid grid-cols-3 grid-rows-2 gap-6 h-full">
+            <div class="col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+
+            <div class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+
+            <div class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+
+            <div class="col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+        </div>
+    </section>
+</main>
+
+<footer class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+    <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Z miłości do TTRPG 💙 © 2025 RPG Handy Helper</h3>
+    <a href="/home/notes" class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
+</footer>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleSwitch = document.getElementById("switch-component");
+        const body = document.body;
+        const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+        const favicon = document.getElementById("favicon");
+        function updateFavicon(theme) {
+            if (favicon) {
+                favicon.href = theme === "dark"
+                    ? "/img/logo/logo-dark.svg"
+                    : "/img/logo/logo-light.svg";
+            }
+        }
+        function applyTheme(theme) {
+            body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+            if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+        }
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        applyTheme(savedTheme);
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener("change", function () {
+                const newTheme = toggleSwitch.checked ? "dark" : "light";
+                applyTheme(newTheme);
+            });
+        }
+        if (themeToggleDiv) {
+            themeToggleDiv.addEventListener("click", function (e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                const newTheme = body.classList.contains("dark") ? "light" : "dark";
+                applyTheme(newTheme);
+            });
+        }
+    });
+
+
 
     function getCookie(name) {
         const cookies = document.cookie.split('; ');
