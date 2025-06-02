@@ -1,6 +1,7 @@
 package dev.goral.rpghandyhelper.user;
 
 import dev.goral.rpghandyhelper.security.CustomReturnables;
+import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
