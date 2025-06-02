@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,22 +51,39 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDTO getAuthorizedUser() {
-        Object principal = getAuthentication().getPrincipal();
 
-        if (principal instanceof User foundUser) {
-            return new UserDTO(foundUser.getId(), foundUser.getUsername(), foundUser.getFirstName(), foundUser.getSurname(), foundUser.getEmail(), foundUser.getUserPhotoPath());
-        } else if (principal instanceof DefaultOAuth2User oauthUser) {
-            String email = oauthUser.getAttribute("email");
-            Optional<User> userOptional = userRepository.findByEmail(email);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
 
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getSurname(), user.getEmail(), user.getUserPhotoPath());
-            } else {
-                throw new IllegalStateException("Nie udało się znaleźć użytkownika w bazie danych.");
+        switch (principal) {
+            case User foundUser -> {
+                return new UserDTO(foundUser.getId(), foundUser.getUsername(), foundUser.getFirstName(), foundUser.getSurname(), foundUser.getEmail(), foundUser.getUserPhotoPath());
             }
-        } else {
-            throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
+            case Jwt jwt -> {
+                String username = jwt.getClaimAsString("sub");
+                User userEntity = userRepository.findByUsername(username)
+                        .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika: " + username));
+                return new UserDTO(
+                        userEntity.getId(),
+                        userEntity.getUsername(),
+                        userEntity.getFirstName(),
+                        userEntity.getSurname(),
+                        userEntity.getEmail(),
+                        userEntity.getUserPhotoPath()
+                );
+            }
+            case DefaultOAuth2User oauthUser -> {
+                String email = oauthUser.getAttribute("email");
+                Optional<User> userOptional = userRepository.findByEmail(email);
+
+                if (userOptional.isPresent()) {
+                    User user = userOptional.get();
+                    return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getSurname(), user.getEmail(), user.getUserPhotoPath());
+                } else {
+                    throw new IllegalStateException("Nie udało się znaleźć użytkownika w bazie danych.");
+                }
+            }
+            case null, default -> throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
         }
     }
 

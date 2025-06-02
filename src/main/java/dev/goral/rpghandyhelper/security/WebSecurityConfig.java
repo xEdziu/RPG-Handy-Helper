@@ -1,33 +1,85 @@
 package dev.goral.rpghandyhelper.security;
 
+import dev.goral.rpghandyhelper.config.jwt.JwtAuthenticationFilter;
+import dev.goral.rpghandyhelper.config.jwt.JwtTokenProvider;
 import dev.goral.rpghandyhelper.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
-    protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    @Order(1)
+    protected SecurityFilterChain mobileSecurityFilterChain(HttpSecurity http) throws Exception {
+
+        JwtAuthenticationConverter jwtAuthConverter = new JwtAuthenticationConverter();
+        jwtAuthConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            // np. JWT ma w sobie pole "roles": ["ROLE_USER","ROLE_ADMIN"]
+            List<String> roles = jwt.getClaim("roles");
+            return roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        });
+
+        http
+                .securityMatcher("/api/mobile/v1/**")
+                // CSRF disabled intentionally because this chain uses stateless JWT in Authorization header (no cookies)
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for mobile API
+                .authorizeHttpRequests(customizer ->
+                        customizer
+                                .requestMatchers("/api/mobile/v1/auth/login").permitAll() // Allow login without authentication
+                                .anyRequest().authenticated() // All other requests require authentication
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session management for mobile API
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter))
+                );
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    protected SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(customizer ->
                         customizer

@@ -79,6 +79,8 @@ jobs:
         echo "baseUrl=http://localhost:8080" >> src/main/resources/application.properties
         echo "server.port=8080" >> src/main/resources/application.properties
         echo "recaptcha.secret-key= ${{ secrets.RECAPTCHA_SECRET }}" >> src/main/resources/application.properties
+        echo "jwt.secret=${{ secrets.JWT_SECRET }}" >> src/main/resources/application.properties
+        echo "jwt.expiration-in-ms=${{ secrets.JWT_EXPIRATION }}" >> src/main/resources/application.properties
 
     - name: Build and run application
       run: mvn spring-boot:run 2>&1 | grep -vE '(^Download(ed|ing) from central:|^Progress \()' > spring_boot_run.log &
