@@ -33,21 +33,20 @@ public class LoggerService {
         }
     }
 
-    public static void log(String operationName, String level) {
+    public static void log(String message, String level) {
         cleanupOldLogs();
-        String message = String.format("Akcja: %s", operationName);
         String entry = formatter.format(new java.util.logging.LogRecord(
                 java.util.logging.Level.parse(level), message));
         String filename = String.format("%s/log-%s.log", LOG_DIR, LocalDate.now().format(FILE_DATE_FORMAT));
         writeToFile(filename, entry);
     }
 
-    public static void logInfo(String operationName) {
-        log(operationName, "INFO");
+    public static void logInfo(String message) {
+        log(message, "INFO");
     }
 
-    public static void logWarning(String operationName) {
-        log(operationName, "WARNING");
+    public static void logWarning(String message) {
+        log(message, "WARNING");
     }
 
     public static void logError(String method, Exception ex) {
