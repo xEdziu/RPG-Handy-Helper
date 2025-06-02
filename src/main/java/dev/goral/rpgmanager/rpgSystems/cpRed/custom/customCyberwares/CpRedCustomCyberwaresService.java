@@ -64,7 +64,7 @@ public class CpRedCustomCyberwaresService {
                         CpRedCustomCyberwares.getAvailability().toString(),
                         CpRedCustomCyberwares.getDescription()
                 )).orElseThrow(()-> new ResourceNotFoundException("Customowy wszczep o id " + cyberwareId + " nie istnieje."));
-        Map<String,Object> response = CustomReturnables.getOkResponseMap("Customowy wszczep został pobran.");
+        Map<String,Object> response = CustomReturnables.getOkResponseMap("Customowy wszczep został pobrany.");
         response.put("customCyberware", customCyberware);
         return response;
 
@@ -158,10 +158,10 @@ public class CpRedCustomCyberwaresService {
             throw new IllegalStateException("Opis wszczepu nie może być dłuższy niż 500 znaków.");
         }
         if (cpRedCustomCyberwares.getSize() < 0) {
-            throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy lub równy 0.");
+            throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy od 0.");
         }
         if (cpRedCustomCyberwares.getPrice() < 0) {
-            throw new IllegalStateException("Cena wszczepu nie może być mniejsza lub równa 0.");
+            throw new IllegalStateException("Cena wszczepu nie może być mniejsza od 0.");
         }
         CpRedCustomCyberwares newCpRedCustomCyberwares = new CpRedCustomCyberwares(
                 null,
@@ -193,15 +193,23 @@ public class CpRedCustomCyberwaresService {
         if (game.getStatus() != GameStatus.ACTIVE) {
             throw new IllegalStateException("Gra o id " + cyberwareToUpdate.getGameId().getId() + " nie jest aktywna.");
         }
+
+        if (cyberwareToUpdate.getGameId().getId() != cpRedCustomCyberwares.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla wszczepu.");
+        }
+
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), cyberwareToUpdate.getGameId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może edytować wszczep w grze.");
+            throw new IllegalStateException("Tylko GM może modyfikować wszczep.");
         }
         if(cpRedCustomCyberwares.getName()!=null){
             if (cpRedCustomCyberwaresRepository.existsByNameAndGameId(cpRedCustomCyberwares.getName(), game)) {
                 throw new IllegalStateException("Customowy wszczep o tej nazwie już istnieje.");
             }
+
+
+
             if (cpRedCustomCyberwares.getName().isEmpty() ||
                     cpRedCustomCyberwares.getName().trim().isEmpty()) {
                 throw new IllegalStateException("Nazwa wszczepu nie może być pusta.");
@@ -236,8 +244,8 @@ public class CpRedCustomCyberwaresService {
         }
         if(cpRedCustomCyberwares.getSize()!=cyberwareToUpdate.getSize()){
             if(cpRedCustomCyberwares.getSize()!=-1) {
-                if (cpRedCustomCyberwares.getSize() <= 0) {
-                    throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy lub równy 0.");
+                if (cpRedCustomCyberwares.getSize() < 0) {
+                    throw new IllegalStateException("Rozmiar wszczepu nie może być mniejszy od 0.");
                 }
                 cyberwareToUpdate.setSize(cpRedCustomCyberwares.getSize());
             }
@@ -247,8 +255,8 @@ public class CpRedCustomCyberwaresService {
         }
         if(cpRedCustomCyberwares.getPrice()!=cyberwareToUpdate.getPrice()){
             if(cpRedCustomCyberwares.getPrice()!=-1) {
-                if (cpRedCustomCyberwares.getPrice() <= 0) {
-                    throw new IllegalStateException("Cena wszczepu nie może być mniejsza lub równa 0.");
+                if (cpRedCustomCyberwares.getPrice() < 0) {
+                    throw new IllegalStateException("Cena wszczepu nie może być mniejsza od 0.");
                 }
                 cyberwareToUpdate.setPrice(cpRedCustomCyberwares.getPrice());
             }

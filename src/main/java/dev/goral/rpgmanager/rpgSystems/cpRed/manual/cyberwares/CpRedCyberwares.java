@@ -29,10 +29,10 @@ public class CpRedCyberwares {
     private CpRedCyberwaresMountPlace mountPlace;
     private String requirements;
     private String humanityLoss;
-    private int size;
+    private int size=-1;
     @Enumerated(EnumType.STRING)
     private CpRedCyberwaresInstallationPlace installationPlace;
-    private int price;
+    private int price=-1;
     @Enumerated(EnumType.STRING)
     private CpRedItemsAvailability availability;
     private String description;

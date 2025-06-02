@@ -95,7 +95,7 @@ public class CpRedCustomAmmunitionService {
 
         // Sprawdź, czy wszystkie wymagane pola są wypełnione
         if (cpRedCustomAmmunition.getGameId() == null || cpRedCustomAmmunition.getName() == null ||
-                cpRedCustomAmmunition.getDescription() == null || cpRedCustomAmmunition.getPricePerBullet() <= 0 ||
+                cpRedCustomAmmunition.getDescription() == null || cpRedCustomAmmunition.getPricePerBullet() < 0 ||
                 cpRedCustomAmmunition.getAvailability() == null) {
             throw new IllegalStateException("Wszystkie pola muszą być wypełnione.");
         }
@@ -140,14 +140,13 @@ public class CpRedCustomAmmunitionService {
             throw new IllegalStateException("Opis amunicji nie może być dłuższy niż 500 znaków.");
         }
 
-        // Sprawdź, czy cena nie jest mniejsza od 0
         if (cpRedCustomAmmunition.getPricePerBullet() < 0) {
             throw new IllegalStateException("Cena za pocisk nie może być mniejsza od 0.");
         }
 
         // Zapisanie amunicji do bazy danych
         CpRedCustomAmmunition newCustomAmmunition = new CpRedCustomAmmunition(
-                0,
+                null,
                 game,
                 cpRedCustomAmmunition.getName(),
                 cpRedCustomAmmunition.getDescription(),
@@ -178,6 +177,10 @@ public class CpRedCustomAmmunitionService {
         // Sprawdź, czy gra jest aktywna
         if (game.getStatus() != GameStatus.ACTIVE) {
             throw new IllegalStateException("Gra o id " + ammunitionToUpdate.getGameId().getId() + " nie jest aktywna.");
+        }
+
+        if (ammunitionToUpdate.getGameId().getId() != cpRedCustomAmmunition.getGameId()) {
+            throw new IllegalStateException("Nie można zmienić gry dla amunicji.");
         }
 
         // Sprawdź, czy użytkownik należy do tej gry
@@ -222,8 +225,8 @@ public class CpRedCustomAmmunitionService {
         // Sprawdzenie ceny
         if (cpRedCustomAmmunition.getPricePerBullet() != ammunitionToUpdate.getPricePerBullet()) {
             if (cpRedCustomAmmunition.getPricePerBullet() != -1){
-                if (cpRedCustomAmmunition.getPricePerBullet() <= 0) {
-                    throw new IllegalStateException("Cena za pocisk musi być większa od 0.");
+                if (cpRedCustomAmmunition.getPricePerBullet() < 0) {
+                    throw new IllegalStateException("Cena za pocisk nie może być mniejsza od 0.");
                 }
                 ammunitionToUpdate.setPricePerBullet(cpRedCustomAmmunition.getPricePerBullet());
             }

@@ -10,4 +10,5 @@ import java.util.List;
 public interface CpRedCustomCyberwaresRepository extends JpaRepository<CpRedCustomCyberwares, Long> {
     boolean existsByNameAndGameId(String name, Game game);
     List<CpRedCustomCyberwares> findAllByGameId(Game game);
+
 }

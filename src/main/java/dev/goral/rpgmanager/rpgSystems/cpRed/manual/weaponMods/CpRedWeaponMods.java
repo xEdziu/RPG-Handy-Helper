@@ -25,8 +25,8 @@ public class CpRedWeaponMods {
     )
     private Long id;
     private String name;
-    private int price;
-    private int size;
+    private int price=-1;
+    private int size=-1;
     @Enumerated(EnumType.STRING)
     private CpRedItemsAvailability availability;
     private String description;

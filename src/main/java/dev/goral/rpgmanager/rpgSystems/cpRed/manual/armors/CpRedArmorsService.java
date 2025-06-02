@@ -37,7 +37,7 @@ public class CpRedArmorsService {
             return CustomReturnables.getOkResponseMap("Brak pancerzy");
         }
         Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano pancerze");
-        response.put("classes", armorsDTO);
+        response.put("armors", armorsDTO);
         return response;
     }
 
@@ -72,8 +72,9 @@ public class CpRedArmorsService {
             throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
         }
         if(armor.getType() == null ||
-                armor.getArmorPoints() == 0 ||
-                armor.getPrice() == 0 ||
+                armor.getArmorPoints() == -1 ||
+                armor.getPrice() == -1 ||
+                armor.getPenalty() == -1 ||
                 armor.getAvailability() == null ||
                 armor.getDescription() == null) {
             throw new IllegalStateException("Nie podano wszystkich parametrów");
@@ -104,32 +105,47 @@ public class CpRedArmorsService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
         if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
+            throw new IllegalStateException("Nie masz uprawnień do modyfikowania pancerzy.");
         }
-        if(armor.getType() == null ||
-                armor.getArmorPoints() == 0 ||
-                armor.getPrice() == 0 ||
-                armor.getAvailability() == null ||
-                armor.getDescription() == null) {
-            throw new IllegalStateException("Nie podano wszystkich parametrów");
-        }
-        if(armor.getArmorPoints() < 0 ||
-                armor.getPenalty() < 0 ||
-                armor.getPrice() < 0) {
-            throw new IllegalStateException("Parametry nie mogą być ujemne");
-        }
-        String description = armor.getDescription();
-        if(description.length() > 1000) {
-            throw new IllegalStateException("Opis nie może być dłuższy niż 1000 znaków");
-        }
+
         CpRedArmors armorToUpdate = cpRedArmorsRepository.findById(armorId)
-                .orElseThrow(() -> new IllegalStateException("Armor with id " + armorId + " does not exist"));
-        armorToUpdate.setType(armor.getType());
-        armorToUpdate.setArmorPoints(armor.getArmorPoints());
-        armorToUpdate.setPenalty(armor.getPenalty());
-        armorToUpdate.setPrice(armor.getPrice());
-        armorToUpdate.setAvailability(armor.getAvailability());
-        armorToUpdate.setDescription(armor.getDescription());
+                .orElseThrow(() -> new ResourceNotFoundException("Pancerz o id " + armorId + " nie istnieje"));
+
+        if(armor.getType() != null) {
+            armorToUpdate.setType(armor.getType());
+        }
+
+        if(armor.getArmorPoints()!=-1) {
+            if(armor.getArmorPoints() <0) {
+                throw new IllegalStateException("Punkty pancerza nie mogą być ujemne.");
+            }
+            armorToUpdate.setArmorPoints(armor.getArmorPoints());
+        }
+        if(armor.getPenalty() != -1) {
+            if(armor.getPenalty() < 0) {
+                throw new IllegalStateException("Kara nie może być ujemna.");
+            }
+            armorToUpdate.setPenalty(armor.getPenalty());
+        }
+        if(armor.getPrice() != -1) {
+            if(armor.getPrice() < 0) {
+                throw new IllegalStateException("Cena nie może być ujemna.");
+            }
+            armorToUpdate.setPrice(armor.getPrice());
+        }
+
+        if(armor.getAvailability() != null) {
+            armorToUpdate.setAvailability(armor.getAvailability());
+        }
+        if (armor.getDescription() != null) {
+            if (armor.getDescription().isEmpty() || armor.getDescription().trim().isEmpty()) {
+                throw new IllegalStateException("Opis pancerza nie może być pusty.");
+            }
+            if (armor.getDescription().length() > 500) {
+                throw new IllegalStateException("Opis pancerza nie może być dłuższy niż 500 znaków.");
+            }
+            armorToUpdate.setDescription(armor.getDescription());
+        }
         cpRedArmorsRepository.save(armorToUpdate);
         return CustomReturnables.getOkResponseMap("Pancerz został zaktualizowany");
     }

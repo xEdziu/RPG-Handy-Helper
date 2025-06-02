@@ -204,7 +204,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;,&#10;}" />
+                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 2,&#10;//  &quot;gameId&quot;: 1,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -438,7 +438,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Broń długa&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 1,&#10;  category: &quot;FIGHTING&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa&quot;,&#10;  description: &quot;Broń długa to rodzaj broni, która jest przeznaczona do strzelania z większej odległości. W przeciwieństwie do broni krótkiej, broń długa ma dłuższy lufę i zazwyczaj jest używana przez snajperów lub myśliwych. Broń długa może być używana zarówno do celów sportowych, jak i myśliwskich.&quot;,&#10;  connectedStatId: 1,&#10;  category: &quot;RANGED_WEAPON&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -854,6 +854,65 @@
                                   </option>
                                   <option name="sortWeight" value="6000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="c39b4a13-32a6-4e4f-8274-2f4cda26df6b" />
+                                  <option name="name" value="WeaponMods" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;mod&quot;,&#10;  price: 100,&#10;  size: 20,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;A cheap mod&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Tworzy modyfikację do broni" />
+                                        <option name="id" value="2def6f56-c1e5-4bd6-9ecb-fbe5efdeb4eb" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz modyfikacje" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weaponMods/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  name: &quot;mod 2.0&quot;,&#10;  price: 300,&#10;  size: 10,&#10;  availability: &quot;LUXURY&quot;,&#10;  description: &quot;Awesome mod&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zmienia dane w modyfikacji broni" />
+                                        <option name="id" value="cafe2f2d-28ba-4447-a418-50fe9a678a44" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj modyfikację" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weaponMods/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="a79a44b6-e92b-4f5c-96cb-83fd877e039e" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie modyfikacje broni" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/weaponMods/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="id" value="0071020d-ffb9-4ea5-b2b8-6b207dcd7084" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć modyfikację broni po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/weaponMods/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="b499a3a2-a7f9-4efb-a85f-3b00784ad88e" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie modyfikacje broni dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weaponMods/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="7000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="22a51bac-54eb-48dd-a9c8-e0df68e57dae" />
@@ -885,14 +944,14 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Amunicja EMP zmodyfikowany 3&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 2000,&#10;  availability: &quot;COSTLY&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;Amunicja EMP zmodyfikowany 3&quot;,&#10;  description: &quot;Amunicja EMP, która wyłącza elektronikę w pojazdach i broniach.&quot;,&#10;  pricePerBullet: 2000,&#10;  availability: &quot;COSTLY&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
                                         <option name="description" value="Modyfikuje podane paramtery customowej broni" />
                                         <option name="id" value="bb5b8140-83a8-4931-9e9a-1acebee99066" />
                                         <option name="method" value="PUT" />
-                                        <option name="name" value="Modyfikuj customową broń" />
+                                        <option name="name" value="Modyfikuj customową amunicję" />
                                         <option name="sortWeight" value="1500000" />
                                         <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customAmmunition/update/1" />
                                       </requestState>
@@ -1023,7 +1082,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  requiredSkillId: 2,&#10;  name: &quot;zmodyfikoany test weapon&quot;,&#10;  type: &quot;ROCKET_LAUNCHER&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 3,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 20000,&#10;  availability: &quot;SUPER_LUXURY&quot;,&#10;  description: &quot;Jakiś jeszcze piękniejszy opis&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  requiredSkillId: 2,&#10;  name: &quot;zmodyfikoany test weapon&quot;,&#10;  type: &quot;ROCKET_LAUNCHER&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 3,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 20000,&#10;  availability: &quot;SUPER_LUXURY&quot;,&#10;  description: &quot;Jakiś jeszcze piękniejszy opis&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -1293,11 +1352,251 @@
                                   </option>
                                   <option name="sortWeight" value="4000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="31f97970-3b01-42f2-b390-b54711135d75" />
+                                  <option name="name" value="CustomWeaponMods" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;my mod&quot;,&#10;  price: 100,&#10;  size: 10,&#10;  availability: &quot;CHEAP&quot;,&#10;  description: &quot;good custom mod&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje customową modyfikację broni" />
+                                        <option name="id" value="637385e7-0163-41c4-92d8-d88ad39904be" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj modyfikację" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  name: &quot;my new mod&quot;,&#10;  price: 150,&#10;  size: 5,&#10;  availability: &quot;LUXURY&quot;,&#10;  description: &quot;better custom mod&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Pozwala zmienić dane w customowej modyfikacji broni" />
+                                        <option name="id" value="b5599b21-2175-45fb-8da5-6ff20a732682" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj modyfikację" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera wszystkie customowe modyfikacje broni" />
+                                        <option name="id" value="89c18f56-e4de-4e1f-bc78-dde7dc9112e7" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie modyfikacje" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customową modyfikację broni po id" />
+                                        <option name="id" value="63723131-05cd-4f8f-8b2b-c47eacd8fd9f" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz modyfikację po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera customowe modyfikacje broni z konkretnej gry" />
+                                        <option name="id" value="321ec261-e0c1-4a8d-8a7c-0570c6e7f9d7" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie modyfikację po gameId" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeaponMods/game/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="pobiera wszystkie customowe modyfikacje broni w formie obiektów" />
+                                        <option name="id" value="ab1e75b1-c7d6-4955-80f3-37ab7c377d3c" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie modyfikacje dla admina" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/customWeaponMods/all" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="5000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="be478e01-3cd6-4b0a-bd25-b519ab021bde" />
                             <option name="name" value="Custom" />
                             <option name="sortWeight" value="2000000" />
+                          </folderState>
+                          <folderState>
+                            <option name="folders">
+                              <list>
+                                <folderState>
+                                  <option name="id" value="aa67ce32-c9e7-4151-bad0-db421a499188" />
+                                  <option name="name" value="Weapon-Ammunition" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;ammunitionId&quot;: 1,&#10;  &quot;weaponId&quot;: 1,&#10;  &quot;weaponCustom&quot;: true,&#10;  &quot;ammunitionCustom&quot;: true&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje kompatybilność pomiędzy bronią i amunicją" />
+                                        <option name="id" value="6dd9e26d-d635-44ab-a443-e000e0b36d22" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj compatybilność" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobiera liste wszystkich kompatybliności" />
+                                        <option name="id" value="95419afc-082c-42ee-b923-d62e01d9fa6b" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca kompatybilność o podanym Id" />
+                                        <option name="id" value="2e1db7dc-227f-41d5-b177-a3c038059da1" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć kompatybilność po id" />
+                                        <option name="sortWeight" value="2500000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/3" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  weaponId: 1,&#10;  weaponCustom: false&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zwraca wszystkie kompatybilności dla podanej w body broni" />
+                                        <option name="id" value="dc0f3b11-3da5-4cd8-9d7f-7a3aa396cad2" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności dla danej broni" />
+                                        <option name="sortWeight" value="2750000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/forWeapon" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  ammunitionId: 1,&#10;  ammunitionCustom: true&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zwraca listę kompatybilności z daną w body bronią" />
+                                        <option name="id" value="c3773cbe-4d31-44ec-bec4-e2f00f602ce6" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności dla danej Amunicji" />
+                                        <option name="sortWeight" value="2875000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/forAmmunition" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="// !!! Trzeba podać wszystko !!!&#10;{&#10;  &quot;ammunitionId&quot;: 1,&#10;  &quot;weaponId&quot;: 1,&#10;  &quot;weaponCustom&quot;: false,&#10;  &quot;ammunitionCustom&quot;: false&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje kompatybilność, trzeba podać wszystko" />
+                                        <option name="id" value="3ec93fe0-6250-4401-baa3-4b8fc09e09ad" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj kompatybilność" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/ammunition/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="1000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="id" value="d541d6c2-8bad-4471-843e-f869e1911bbb" />
+                                  <option name="name" value="Weapon-Mod" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;modId&quot;: 1,&#10;  &quot;weaponId&quot;: 1,&#10;  &quot;weaponCustom&quot;: true,&#10;  &quot;modCustom&quot;: true&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje kompatybilność pomiędzy bronią i modyfikacją" />
+                                        <option name="id" value="338eb098-bb26-47bd-921e-1679cb77b88c" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodać kompatybilność modyfikacji" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Pobranie listy kompatybilności dla modów" />
+                                        <option name="id" value="48b88695-cf94-407e-8006-3e23475178fa" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilność modyfikacji" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca kompatybilność modyfikacji po id kompatybilności" />
+                                        <option name="id" value="b126eda2-e232-4c64-9a49-69527d644f7c" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć kompatybilność modyfikacji po id" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  weaponId: 1,&#10;  weaponCustom: false&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zwraca wszystkie kompatybilności modyfikacji dal podanej w body broni" />
+                                        <option name="id" value="3d09d952-4544-4b88-88bb-faf3416ad1e4" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności modyfikacji dla danej broni" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/forWeapon" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  modId: 1,&#10;  modCustom: true&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zwraca listę kompatybilności dla danej w body modyfikacji" />
+                                        <option name="id" value="825704c7-3bd9-49d8-96dc-bbab8eccace9" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie kompatybilności dla danej Modyfikacji" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/forMod" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;modId&quot;: 1,&#10;  &quot;weaponId&quot;: 1,&#10;  &quot;weaponCustom&quot;: false,&#10;  &quot;modCustom&quot;: false&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Modyfikuje kompatybilność modyfikacji, trzeba podać wszystki" />
+                                        <option name="id" value="ec7bbb9e-4da4-4499-8098-f0db8708f7de" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj kompatybilność modyfikacji" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/compatibility/mod/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="2000000" />
+                                </folderState>
+                              </list>
+                            </option>
+                            <option name="id" value="4527151b-3d39-42a7-b996-cd1bd64c9afd" />
+                            <option name="name" value="Compatibility" />
+                            <option name="sortWeight" value="3000000" />
                           </folderState>
                         </list>
                       </option>
@@ -1430,7 +1729,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;gameId&quot;: 1,&#10;  &quot;userId&quot;: 2,&#10;  &quot;title&quot;: &quot;Test 3&quot;,&#10;  &quot;content&quot;: &quot;# **Test**&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;gameId&quot;: 1,&#10;  &quot;userId&quot;: 1,&#10;  &quot;title&quot;: &quot;Test 3&quot;,&#10;  &quot;content&quot;: &quot;# **Test**&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>

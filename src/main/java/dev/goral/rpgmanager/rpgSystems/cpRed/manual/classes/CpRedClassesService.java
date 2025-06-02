@@ -106,34 +106,35 @@ public class CpRedClassesService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
         if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
+            throw new IllegalStateException("Nie masz uprawnień do modyfikowania klas.");
         }
-        CpRedClasses existingClass = cpRedClassesRepository.findById(classId)
+        CpRedClasses classToUpdate = cpRedClassesRepository.findById(classId)
                 .orElseThrow(() -> new ResourceNotFoundException("Klasa o id " + classId + " nie istnieje"));
-        if(cpRedClasses.getName() == null ||
-                cpRedClasses.getDescription() == null){
-            throw new IllegalStateException("Nie podano wszystkich parametrów");
+
+        if (cpRedClasses.getName() != null) {
+            if (cpRedClassesRepository.existsByName(cpRedClasses.getName())) {
+                throw new IllegalStateException("Klasa o tej nazwie już istnieje.");
+            }
+            if (cpRedClasses.getName().isEmpty() || cpRedClasses.getName().trim().isEmpty()) {
+                throw new IllegalStateException("Nazwa klasy nie może być pusta.");
+            }
+            if (cpRedClasses.getName().length() > 255) {
+                throw new IllegalStateException("Nazwa klasy nie może być dłuższa niż 255 znaków.");
+            }
+            classToUpdate.setName(cpRedClasses.getName());
         }
-        String name = cpRedClasses.getName().trim();
-        if (name.isEmpty()) {
-            throw new IllegalArgumentException("Niewłaściwa nazwa klasy");
+
+        if (cpRedClasses.getDescription() != null) {
+            if (cpRedClasses.getDescription().isEmpty() || cpRedClasses.getDescription().trim().isEmpty()) {
+                throw new IllegalStateException("Opis klasy nie może być pusty.");
+            }
+            if (cpRedClasses.getDescription().length() > 500) {
+                throw new IllegalStateException("Opis klasy nie może być dłuższy niż 500 znaków.");
+            }
+            classToUpdate.setDescription(cpRedClasses.getDescription());
         }
-        if (name.length() > 255) {
-            throw new IllegalArgumentException("Nazwa klasy nie może mieć więcej niż 255 znaków.");
-        }
-        String description = cpRedClasses.getDescription().trim();
-        if (description.isEmpty()) {
-            throw new IllegalArgumentException("Opis klasy jest wymagany.");
-        }
-        if (description.length() > 1000) {
-            throw new IllegalArgumentException("Opis klasy nie może mieć więcej niż 1000 znaków.");
-        }
-        if(cpRedClassesRepository.existsByName(name)) {
-            throw new IllegalStateException("Klasa o nazwie " + name + " już istnieje");
-        }
-        existingClass.setName(name);
-        existingClass.setDescription(description);
-        cpRedClassesRepository.save(existingClass);
-        return CustomReturnables.getOkResponseMap("Klasa " + cpRedClasses.getName() + " została zaktualizowana");
+
+        cpRedClassesRepository.save(classToUpdate);
+        return CustomReturnables.getOkResponseMap("Klasa została zaktualizowana");
     }
 }
