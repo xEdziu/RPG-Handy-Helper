@@ -648,7 +648,8 @@
                             Notatki
                         </h1>
                         <div class="flex" class="h-10">
-                            <a href="/home/notes" id="notes-card-link" class="invisible 2xl:block 2xl:visible" target="_blank">
+                            <a href="/home/notes" id="notes-card-link" class="invisible 2xl:block 2xl:visible"
+                                target="_blank">
                                 <i class="fa-solid fa-arrow-up-right-from-square text-3xl text-light-textPrimary dark:text-dark-textPrimary mr-3"
                                     aria-hidden="true"></i>
                             </a>
@@ -660,7 +661,8 @@
                             </div>
                         </div>
                     </div>
-                    <a href="/home/notes" id="notes-card-link" class="z-5 relative -right-[94%] top-3 hidden 2xl:block" target="_blank">
+                    <a href="/home/notes" id="notes-card-link" class="z-5 relative -right-[94%] top-3 hidden 2xl:block"
+                        target="_blank">
                         <i class="fa-solid fa-arrow-up-right-from-square text-3xl text-light-textPrimary dark:text-dark-textPrimary mr-3"
                             aria-hidden="true"></i>
                     </a>
@@ -673,14 +675,13 @@
                                 onclick="createNote()">
                                 STWÓRZ NOWĄ NOTATKĘ
                             </button>
-                            <div class="w-full flex items-center space-x-2 mb-3">
-                                <label
-                                    class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
-                                    Wyszukaj
-                                </label>
-                                <div class="w-full">
+                            <div class="w-full flex items-center justify-center space-x-2 mb-3">
+                                <div class="w-[80%] flex items-center justify-center">
+                                    <label class="font-semibold text-light-textPrimary dark:text-dark-textPrimary mr-4">
+                                        Wyszukaj
+                                    </label>
                                     <input type="text" placeholder="Wpisz słowo klucz" id="search-input"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0" />
+                                        class="w-[80%] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0">
                                 </div>
                             </div>
                         </div>
@@ -1257,7 +1258,7 @@
         const icons = button.querySelectorAll(".toggle-icon");
         icons.forEach(icon => icon.classList.toggle("-rotate-90"));
     }
-  
+
     // ==== Variable for Styling ====
     var noteStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary mb-4";
     var infoStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg  cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono";
@@ -1388,4 +1389,5 @@
 </script>
 <script defer src="/scripts/footer.js"></script> <!-- Footer script -->
 </body>
+
 </html>
