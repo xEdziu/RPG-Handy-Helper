@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.mobile.models;
+package dev.goral.rpghandyhelper.mobile.models;
 
 import lombok.*;
 

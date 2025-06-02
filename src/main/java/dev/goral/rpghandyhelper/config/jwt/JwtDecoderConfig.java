@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.config.jwt;
+package dev.goral.rpghandyhelper.config.jwt;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package dev.goral.rpgmanager.config.jwt;
+package dev.goral.rpghandyhelper.config.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

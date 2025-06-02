@@ -1,11 +1,10 @@
-package dev.goral.rpgmanager.mobile;
+package dev.goral.rpghandyhelper.mobile;
 
-import dev.goral.rpgmanager.config.jwt.JwtTokenProvider;
-import dev.goral.rpgmanager.mobile.models.AuthRequest;
-import dev.goral.rpgmanager.mobile.models.AuthResponse;
-import dev.goral.rpgmanager.security.CustomReturnables;
+import dev.goral.rpghandyhelper.config.jwt.JwtTokenProvider;
+import dev.goral.rpghandyhelper.mobile.models.AuthRequest;
+import dev.goral.rpghandyhelper.mobile.models.AuthResponse;
+import dev.goral.rpghandyhelper.security.CustomReturnables;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

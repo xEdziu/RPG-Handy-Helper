@@ -1,7 +1,7 @@
-package dev.goral.rpgmanager.mobile;
+package dev.goral.rpghandyhelper.mobile;
 
-import dev.goral.rpgmanager.user.UserDTO;
-import dev.goral.rpgmanager.user.UserService;
+import dev.goral.rpghandyhelper.user.UserDTO;
+import dev.goral.rpghandyhelper.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

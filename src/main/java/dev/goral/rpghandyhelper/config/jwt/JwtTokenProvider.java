@@ -1,6 +1,6 @@
-package dev.goral.rpgmanager.config.jwt;
+package dev.goral.rpghandyhelper.config.jwt;
 
-import dev.goral.rpgmanager.user.UserService;
+import dev.goral.rpghandyhelper.user.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
