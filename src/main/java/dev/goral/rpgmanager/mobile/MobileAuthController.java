@@ -3,15 +3,18 @@ package dev.goral.rpgmanager.mobile;
 import dev.goral.rpgmanager.config.jwt.JwtTokenProvider;
 import dev.goral.rpgmanager.mobile.models.AuthRequest;
 import dev.goral.rpgmanager.mobile.models.AuthResponse;
+import dev.goral.rpgmanager.security.CustomReturnables;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,7 +26,7 @@ public class MobileAuthController {
     private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+    public Map<String, Object> login(@RequestBody AuthRequest request) {
         try {
             Authentication auth = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -34,9 +37,11 @@ public class MobileAuthController {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
             String token = tokenProvider.createToken(auth.getName(), roles);
-            return ResponseEntity.ok(new AuthResponse(token, tokenProvider.getValidityInMs()));
+            Map<String, Object> response = CustomReturnables.getOkResponseMap("Poprawne logowanie");
+            response.put("authResponse", new AuthResponse(token, tokenProvider.getValidityInMs()));
+            return response;
         } catch (Exception e) {
-            return ResponseEntity.status(401).body("Nieprawidłowa nazwa użytkownika lub hasło");
+            throw new UsernameNotFoundException("Niepoprawny login lub hasło");
         }
     }
 }
