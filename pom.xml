@@ -18,7 +18,60 @@
         <license/>
     </licenses>
     <developers>
-        <developer/>
+        <developer>
+            <id>xEdziu</id>
+            <name>Adrian Goral</name>
+            <email>adrian.goral@gmail.com</email>
+            <url>adrian-goral.dev</url>
+            <roles>
+                <role>project manager</role>
+                <role>developer</role>
+                <role>devops</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>ZuberRS03</id>
+            <name>Mateusz Zubrzycki</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>MANDRW</id>
+            <name>Mateusz Andrzejewski</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>PEXEL2002</id>
+            <name>Bartłomiej Kuk</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>Myjem</id>
+            <name>Wiktor Siepka</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>szxxlc</id>
+            <name>Paulina Szulc</name>
+            <roles>
+                <role>designer</role>
+                <role>tester</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>Kosiorny</id>
+            <name>Piotr Kosior</name>
+            <roles>
+                <role>tester</role>
+            </roles>
+        </developer>
     </developers>
     <scm>
         <connection/>
