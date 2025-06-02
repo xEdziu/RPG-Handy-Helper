@@ -543,9 +543,9 @@
                     );
                     if (filteredNotes.length === 0) {
                         notesContent.innerHTML = generateInfoHTML(
-                            `Nie znaleziono notatek!`,
-                            `Spróbuj zmienić słowo kluczowe.`,
-                            `Upewnij się, że wpisujesz poprawne słowa kluczowe.`
+                            ``,
+                            `Brak notatek spełniających wybrane kryterium.`,
+                            ``
                         );
                     } else {
                         filteredNotes.forEach(note => {
