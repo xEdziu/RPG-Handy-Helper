@@ -23,16 +23,20 @@ public class MobileAuthController {
     private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        Authentication auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(), request.getPassword()
-                )
-        );
-        List<String> roles = auth.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-        String token = tokenProvider.createToken(auth.getName(), roles);
-        return ResponseEntity.ok(new AuthResponse(token, tokenProvider.getValidityInMs()));
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+        try {
+            Authentication auth = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(), request.getPassword()
+                    )
+            );
+            List<String> roles = auth.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+            String token = tokenProvider.createToken(auth.getName(), roles);
+            return ResponseEntity.ok(new AuthResponse(token, tokenProvider.getValidityInMs()));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Nieprawidłowa nazwa użytkownika lub hasło");
+        }
     }
 }
