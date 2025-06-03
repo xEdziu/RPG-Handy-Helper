@@ -35,6 +35,12 @@ public class CpRedCharacterEnemiesController {
     public Map<String, Object> addEnemy(@RequestBody CpRedCharacterEnemies cpRedCharacterEnemies) {
         return cpRedCharacterEnemiesService.addEnemy(cpRedCharacterEnemies);
     }
+
+    @DeleteMapping(path = "/rpgSystems/cpRed/character/enemies/delete/{enemyId}")
+    public Map<String, Object> deleteEnemy(@PathVariable("enemyId") Long enemyId) {
+        return cpRedCharacterEnemiesService.deleteEnemy(enemyId);
+    }
+
     @PutMapping(path = "/rpgSystems/cpRed/character/enemies/update/{enemyId}")
     public Map<String, Object> updateEnemy(@PathVariable("enemyId") Long enemyId,
                                            @RequestBody CpRedCharacterEnemies cpRedCharacterEnemies) {
