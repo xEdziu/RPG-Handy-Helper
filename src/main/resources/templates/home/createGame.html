@@ -206,8 +206,9 @@
                             class="text-2xl h-[20vh] lg:h-full w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary resize-none"></textarea>
                     </article>
                     <article id="user-box"
-                        class="w-[2/5] h-[40vh] lg:h-full flex flex-col items-center justify-center w-full rounded-md border border-light-border dark:border-dark-border">
-                        <div id="users-list" class="w-full h-full flex flex-col items-center justify-center gap-4 overflow-y-auto">
+                        class="w-[45%] h-[40vh] lg:h-full flex flex-col items-center justify-center w-full rounded-md border border-light-border dark:border-dark-border">
+                        <div id="users-list"
+                            class="w-full h-full flex flex-col items-center justify-start gap-4 overflow-y-auto">
 
                         </div>
                         <div class="w-full flex items-end justify-end p-4">
@@ -251,7 +252,28 @@
 <script defer src="/scripts/footer.js"></script>
 
 </html>
-
 <script>
-    
+    addUserToList({
+        username: "Edziu",
+        id: 1
+    });
+    function addUserToList(user) {
+        const usersList = document.getElementById("users-list");
+        const userDiv = document.createElement("div");
+        userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl";
+        userDiv.innerHTML = userHTML(user);
+        usersList.appendChild(userDiv);
+    }
+    function userHTML(user) {
+        return `
+        <p>
+            <i class="fa-solid fa-xmark mr-3"></i>${user.username}
+        </p>
+        <select id="roleSelect" class="w-[40%] font-bold px-4 py-2 rounded-md transition duration-200">
+            <option value="player">Player</option>
+            <option value="spectator">Spectator</option>
+            <option value="gm">GameMaster</option>
+        </select>
+        `
+    }
 </script>
