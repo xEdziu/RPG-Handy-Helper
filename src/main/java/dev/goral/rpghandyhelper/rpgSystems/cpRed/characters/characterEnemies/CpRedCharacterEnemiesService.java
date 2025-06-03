@@ -71,4 +71,11 @@ public class CpRedCharacterEnemiesService {
         return response;
     }
 
+    public Map<String, Object> getAllEnemiesForAdmin() {
+        List<CpRedCharacterEnemies> allEnemies = CpRedCharacterEnemiesRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wrogów");
+        response.put("enemies", allEnemies);
+        return response;
+    }
+
 }
