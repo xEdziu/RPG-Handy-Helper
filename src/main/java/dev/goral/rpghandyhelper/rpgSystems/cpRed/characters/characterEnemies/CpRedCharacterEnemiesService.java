@@ -50,4 +50,25 @@ public class CpRedCharacterEnemiesService {
         response.put("enemy", enemy);
         return response;
     }
+
+    public Map<String, Object> getEnemiesByCharacterId(Long characterId) {
+        List<CpRedCharacterEnemies> enemies = CpRedCharacterEnemiesRepository.findAllByCharacterId_Id(characterId);
+        if (enemies.isEmpty()) {
+            return CustomReturnables.getOkResponseMap("Brak wrogów dla postaci o id " + characterId);
+        }
+        List<CpRedCharacterEnemiesDTO> enemiesDTO = enemies.stream().map(enemy ->
+                new CpRedCharacterEnemiesDTO(
+                        enemy.getCharacterId().getId(),
+                        enemy.getName(),
+                        enemy.getWhoIs(),
+                        enemy.getCauseOfConflict(),
+                        enemy.getWhatHas(),
+                        enemy.getIntends(),
+                        enemy.getDescription()
+                )).toList();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wrogów dla postaci o id " + characterId);
+        response.put("enemies", enemiesDTO);
+        return response;
+    }
+
 }
