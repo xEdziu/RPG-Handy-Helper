@@ -182,5 +182,31 @@ public class CpRedCharacterEnemiesService {
         cpRedCharacterEnemiesRepository.save(newEnemy);
         return CustomReturnables.getOkResponseMap("Wróg został dodany.");
     }
+    public Map<String, Object> deleteEnemy(Long enemyId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        CpRedCharacterEnemies enemy = cpRedCharacterEnemiesRepository.findById(enemyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Wróg o id " + enemyId + " nie został znaleziony"));
+
+        CpRedCharacters character = cpRedCharactersRepository.findById(enemy.getCharacterId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + enemy.getCharacterId().getId() + " nie została znaleziona"));
+
+
+        GameUsers gameUsers = gameUsersRepository.findByUserId(currentUser.getId());
+        if (gameUsers == null) {
+            throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
+        }
+
+        if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+            if (!character.getUser().getId().equals(currentUser.getId())) {
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów.");
+            }
+        }
+        cpRedCharacterEnemiesRepository.deleteById(enemyId);
+        return CustomReturnables.getOkResponseMap("Wróg o id " + enemyId + " został usunięty.");
+    }
 
 }
