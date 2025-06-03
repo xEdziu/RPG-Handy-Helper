@@ -1,6 +1,7 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterEnemies;
 
 import dev.goral.rpghandyhelper.security.CustomReturnables;
+import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,22 @@ public class CpRedCharacterEnemiesService {
         }
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wrogów");
         response.put("enemies", enemiesDTO);
+        return response;
+    }
+
+    public  Map<String, Object> getEnemyById(Long enemyId) {
+        CpRedCharacterEnemiesDTO enemy = CpRedCharacterEnemiesRepository.findById(enemyId)
+                .map(cpRedCharacterEnemies -> new CpRedCharacterEnemiesDTO(
+                        cpRedCharacterEnemies.getCharacterId().getId(),
+                        cpRedCharacterEnemies.getName(),
+                        cpRedCharacterEnemies.getWhoIs(),
+                        cpRedCharacterEnemies.getCauseOfConflict(),
+                        cpRedCharacterEnemies.getWhatHas(),
+                        cpRedCharacterEnemies.getIntends(),
+                        cpRedCharacterEnemies.getDescription()
+                )).orElseThrow(() -> new ResourceNotFoundException("Wróg o id " + enemyId + " nie został znaleziony"));
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wroga");
+        response.put("enemy", enemy);
         return response;
     }
 }
