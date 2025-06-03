@@ -65,11 +65,14 @@
 
         // ===== Zmienne Globalne =====
         var RpgSystem = [];
-
+        var userInfo = [];
+        var userList = [];
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
             initThemeToggle();
             applyTheme(getSavedTheme());
+            getUserInfo();
+            getAllSystems();
         });
 
         // ==== Changing the theme ====
@@ -142,13 +145,54 @@
                     return;
                 }
                 RpgSystem = data;
+                generateSystemSelect(data);
             }).catch(error => {
                 console.error('Error fetching user systems:', error);
+            });
+        }
+        // ==== Generate System Select ====
+        function generateSystemSelect(systems) {
+            const select = document.querySelector("select");
+            if (!select) return;
+
+            systems.forEach(system => {
+                const option = document.createElement("option");
+                option.value = system.id;
+                option.textContent = system.name;
+                select.appendChild(option);
             });
         }
         // ==== Force Reload ====
         function forceReload() {
             location.reload();
+        }
+        // ==== Get User Info ====
+        function getUserInfo() {
+            fetch('/api/v1/authorized/user', {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                userInfo = data;
+                const usersList = document.getElementById("users-list");
+                const userDiv = document.createElement("div");
+                userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl";
+                userDiv.innerHTML = `
+                <p>
+                    <i class="fa-solid fa-xmark mr-3"></i>${user.username}
+                </p>
+                <span class="w-[40%] font-bold px-4 py-2"> GameMaster</span>
+                `;
+                usersList.appendChild(userDiv);
+            }).catch(error => {
+                console.error('Error fetching user info:', error);
+            });
         }
     </script>
 </head>
@@ -213,7 +257,7 @@
                         </div>
                         <div class="w-full flex items-end justify-end p-4">
                             <div id="add-user"
-                                class="w-20 h-20 rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary hover:bg-light-accentDark dark:hover:bg-dark-accentDark transitionduration-300 cursor-pointer flex items-center justify-center">
+                                class="w-20 h-20 rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary hover:bg-light-accentDark dark:hover:bg-dark-accentDark transitionduration-300 cursor-pointer flex items-center justify-center" onclick="addUserToList()">
                                 <i class="fa-solid fa-plus text-5xl"></i>
                             </div>
                         </div>
@@ -253,16 +297,27 @@
 
 </html>
 <script>
-    addUserToList({
-        username: "Edziu",
-        id: 1
-    });
-    function addUserToList(user) {
-        const usersList = document.getElementById("users-list");
-        const userDiv = document.createElement("div");
-        userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl";
-        userDiv.innerHTML = userHTML(user);
-        usersList.appendChild(userDiv);
+    function addUserToList() {
+        document.getElementById("editor-backdrop").classList.remove("opacity-0", "pointer-events-none");
+        document.getElementById("editor-backdrop").classList.add("opacity-100", "pointer-events-auto");
+        document.getElementById("create-editor").classList.remove("scale-95", "opacity-0");
+        document.getElementById("create-editor").classList.add("scale-100", "opacity-100");
+        const editor = document.getElementById("create-editor");
+        editor.innerHTML = `
+            <div class="w-[80vw] md:w-[40vw] flex flex-col items-center justify-center">
+                <div class="w-full flex items-center justify-center mb-4">
+                    <h1 class="text-lg">Wyszukaj</h1>
+                    <input type="text" id="usernameInput" placeholder="Nazwa użytkownika"
+                        class="text-lg w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary mb-4" />
+                </div>
+                <div id="users-list" class="w-full flex flex-col items-start justify-start gap-4 overflow-y-auto">
+                    <span class="text-xl text-light-textPrimary dark:text-dark-textPrimary font-bold mb-2">
+                        Wpisz nazwę użytkownika,</br>
+                        aby móc dodać go do gry.
+                    </span>
+                </div>
+            </div>
+        `;
     }
     function userHTML(user) {
         return `
