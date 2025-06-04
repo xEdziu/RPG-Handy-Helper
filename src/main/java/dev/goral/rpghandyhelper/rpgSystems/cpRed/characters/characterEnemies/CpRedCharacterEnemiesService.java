@@ -113,7 +113,7 @@ public class CpRedCharacterEnemiesService {
         CpRedCharacters character = cpRedCharactersRepository.findById(cpRedCharacterEnemies.getCharacterId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + cpRedCharacterEnemies.getCharacterId().getId() + " nie została znaleziona"));
 
-        GameUsers gameUsers = gameUsersRepository.findByUserId(currentUser.getId());
+        GameUsers gameUsers = gameUsersRepository.findByGameIdAndUserId(character.getGame().getId(), currentUser.getId());
         if (gameUsers == null) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
@@ -134,37 +134,17 @@ public class CpRedCharacterEnemiesService {
         if(cpRedCharacterEnemies.getName().length()>255){
             throw new IllegalArgumentException("Nazwa wroga nie może być dłuższa niż 255 znaków.");
         }
-        if(cpRedCharacterEnemies.getWhoIs().isEmpty()||
-                cpRedCharacterEnemies.getWhoIs().trim().isEmpty()){
-            throw new IllegalArgumentException("Pochodzenie wroga nie może być pusty.");
-        }
         if(cpRedCharacterEnemies.getWhoIs().length()>255){
             throw new IllegalArgumentException("Pochodzenie wroga nie może być dłuższy niż 500 znaków.");
-        }
-        if(cpRedCharacterEnemies.getCauseOfConflict().isEmpty()||
-                cpRedCharacterEnemies.getCauseOfConflict().trim().isEmpty()){
-            throw new IllegalArgumentException("Przyczyna konfliktu nie może być pusta.");
         }
         if(cpRedCharacterEnemies.getCauseOfConflict().length()>255) {
             throw new IllegalArgumentException("Przyczyna konfliktu nie może być dłuższa niż 255 znaków.");
         }
-        if(cpRedCharacterEnemies.getWhatHas().isEmpty()||
-                cpRedCharacterEnemies.getWhatHas().trim().isEmpty()){
-            throw new IllegalArgumentException("To co posiada wróg nie może być puste.");
-        }
         if(cpRedCharacterEnemies.getWhatHas().length()>255) {
             throw new IllegalArgumentException("To co posiada wróg nie może być dłuższe niż 255 znaków.");
         }
-        if(cpRedCharacterEnemies.getIntends().isEmpty()||
-                cpRedCharacterEnemies.getIntends().trim().isEmpty()){
-            throw new IllegalArgumentException("Zamiary wroga nie mogą być puste.");
-        }
         if(cpRedCharacterEnemies.getIntends().length()>255) {
             throw new IllegalArgumentException("Zamiary wroga nie mogą być dłuższe niż 255 znaków.");
-        }
-        if(cpRedCharacterEnemies.getDescription().isEmpty()||
-                cpRedCharacterEnemies.getDescription().trim().isEmpty()){
-            throw new IllegalArgumentException("Opis wroga nie może być pusty.");
         }
         if(cpRedCharacterEnemies.getDescription().length()>500) {
             throw new IllegalArgumentException("Opis wroga nie może być dłuższy niż 500 znaków.");
