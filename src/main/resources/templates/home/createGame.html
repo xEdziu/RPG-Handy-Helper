@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moje Notatki</title>
+    <title>Tworzenie Gry</title>
     <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
@@ -185,7 +185,7 @@
                 userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl";
                 userDiv.innerHTML = `
                 <p>
-                    <i class="fa-solid fa-xmark mr-3"></i>${user.username}
+                    ${userInfo.username} (Ty)
                 </p>
                 <span class="w-[40%] font-bold px-4 py-2"> GameMaster</span>
                 `;
@@ -255,9 +255,11 @@
                             class="w-full h-full flex flex-col items-center justify-start gap-4 overflow-y-auto">
 
                         </div>
+                        <!-- Add user button -->
                         <div class="w-full flex items-end justify-end p-4">
                             <div id="add-user"
-                                class="w-20 h-20 rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary hover:bg-light-accentDark dark:hover:bg-dark-accentDark transitionduration-300 cursor-pointer flex items-center justify-center" onclick="addUserToList()">
+                                class="w-20 h-20 rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary hover:bg-light-accentDark dark:hover:bg-dark-accentDark transitionduration-300 cursor-pointer flex items-center justify-center"
+                                onclick="addUserToListHTML()">
                                 <i class="fa-solid fa-plus text-5xl"></i>
                             </div>
                         </div>
@@ -278,7 +280,8 @@
             <div id="editor-backdrop"
                 class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none bg-black/30 dark:bg-black/50 transition-opacity duration-300">
                 <div id="create-editor"
-                    class="w-[90vw] sm:w-[95vw] md:w-[70vw] lg:w-[50vw] bg-white dark:bg-dark-surface text-black dark:text-white p-6 px-10 rounded-lg shadow-xl overflow-auto flex-col justify-between transition-all duration-300 ease-in-out scale-95 opacity-0">
+                    class="h-[50vh] w-[90vw] sm:w-[95vw] md:w-[70vw] lg:w-[50vw] bg-white dark:bg-dark-surface text-black dark:text-white p-6 px-10 rounded-lg shadow-xl overflow-auto flex-col justify-between transition-all duration-300 ease-in-out scale-100 opacity-100">
+                    
                 </div>
             </div>
         </div>
@@ -297,37 +300,56 @@
 
 </html>
 <script>
-    function addUserToList() {
+    function addUserToList(user){
+        userList.push(user);
+        const divUserList = document.getElementById("users-list");
+        const userDiv = document.createElement("div");
+        userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl";
+        userDiv.innerHTML = userHTML(user);
+        divUserList.appendChild(userDiv);
+    }
+    function addUserToListHTML() {
         document.getElementById("editor-backdrop").classList.remove("opacity-0", "pointer-events-none");
         document.getElementById("editor-backdrop").classList.add("opacity-100", "pointer-events-auto");
         document.getElementById("create-editor").classList.remove("scale-95", "opacity-0");
         document.getElementById("create-editor").classList.add("scale-100", "opacity-100");
         const editor = document.getElementById("create-editor");
         editor.innerHTML = `
-            <div class="w-[80vw] md:w-[40vw] flex flex-col items-center justify-center">
-                <div class="w-full flex items-center justify-center mb-4">
-                    <h1 class="text-lg">Wyszukaj</h1>
+            <div class="w-full flex flex-col items-center justify-center">
+                <div class="h-[3rem] w-[80%] flex items-center justify-center">
+                    <h1 class="text-lg font-bold mx-4">Wyszukaj</h1>
                     <input type="text" id="usernameInput" placeholder="Nazwa użytkownika"
-                        class="text-lg w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary mb-4" />
+                        class="text-md w-[80%] p-1 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary">
                 </div>
-                <div id="users-list" class="w-full flex flex-col items-start justify-start gap-4 overflow-y-auto">
-                    <span class="text-xl text-light-textPrimary dark:text-dark-textPrimary font-bold mb-2">
-                        Wpisz nazwę użytkownika,</br>
+                <div id="users-list-search"
+                    class="w-full flex flex-col items-center justify-start gap-4 overflow-y-auto">
+                    <span class="text-xl text-light-textPrimary dark:text-dark-textPrimary font-bold mt-[18vh]">
+                        Wpisz nazwę użytkownika,<br>
                         aby móc dodać go do gry.
                     </span>
                 </div>
             </div>
         `;
     }
+    function userAddHTML(user){
+        const usersList = document.getElementById("users-list");
+        const userDiv = document.createElement("div");
+        userDiv.className = "user-item w-full flex flex-row items-center justify-start p-4 text-xl bg-light-background dark:bg-dark-background rounded-md";
+        userDiv.onclick = addUserToList(user);
+        userDiv.innerHTML = `
+            <img src="${user}" alt="User Avatar" class="w-12 h-12 rounded-full">
+            <span class="w-[40%] font-bold px-4 py-2">${user}</span>
+        `
+    }
     function userHTML(user) {
         return `
         <p>
             <i class="fa-solid fa-xmark mr-3"></i>${user.username}
         </p>
-        <select id="roleSelect" class="w-[40%] font-bold px-4 py-2 rounded-md transition duration-200">
-            <option value="player">Player</option>
-            <option value="spectator">Spectator</option>
-            <option value="gm">GameMaster</option>
+        <select class="roleSelect w-[40%] font-bold px-4 py-2 rounded-md transition duration-200">
+            <option value="PLAYER">Player</option>
+            <option value="SPECTATOR">Spectator</option>
+            <option value="GAMEMASTER">GameMaster</option>
         </select>
         `
     }
