@@ -975,7 +975,4 @@ public class SchedulerService {
             this.delta = delta;
         }
     }
-
-
-
 }
