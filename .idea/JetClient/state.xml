@@ -1582,86 +1582,172 @@
                             <option name="name" value="Compatibility" />
                             <option name="sortWeight" value="3000000" />
                           </folderState>
+                          <folderState>
+                            <option name="folders">
+                              <list>
+                                <folderState>
+                                  <option name="id" value="28400773-5ea7-486b-a325-1515d79aaf5a" />
+                                  <option name="name" value="Enemies" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  characterId: 1,&#10;  name: &quot;The worst enemy&quot;,&#10;  whoIs: &quot;The worst enemy&quot;,&#10;  causeOfConflict: &quot;The worst cause of conflict&quot;,&#10;  whatHas: &quot;Nothing&quot;,&#10;  intends: &quot;To destroy everything&quot;,&#10;  description: &quot;A very bad enemy who causes a lot of trouble&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Tworzy wroga przypisanego do konkretnej karty postaci" />
+                                        <option name="id" value="b20421e4-10e7-4810-a94e-89c37a79ef5d" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz wroga" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Usuwa wroga przypisanego do konkretnej karty postaci" />
+                                        <option name="id" value="6be99324-7022-482d-b4d8-880271215069" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń wroga" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/delete/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca każdego wroga z każdej karty postaci" />
+                                        <option name="id" value="22d9552e-39b9-482a-a35d-fe31ca9019db" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkich wrogów" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wroga po unikalnym id" />
+                                        <option name="id" value="fae323dd-c4cc-4e20-b9fb-cb57430a833b" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wroga po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="c950b47d-99a7-4850-ad7e-45c0ab7705ed" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkich wrogów dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/enemies/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkich wrogów z konkretnej karty postaci" />
+                                        <option name="id" value="a7110631-5a0d-4432-8c97-de406eeb2363" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wroga po characterId" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/character/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  characterId: 1,&#10;  name: &quot;The enemy&quot;,&#10;  whoIs: &quot;Who knows&quot;,&#10;  causeOfConflict: &quot;I don't know&quot;,&#10;  whatHas: &quot;everything&quot;,&#10;  intends: &quot;I don't know&quot;,&#10;  description: &quot;Wierd guy, I don't know what he wants, but he is not good&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zmień dane wroga" />
+                                        <option name="id" value="986c3e11-4120-44f1-84a5-7ffe6944acee" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj wroga" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="1000000" />
+                                </folderState>
+                              </list>
+                            </option>
+                            <option name="id" value="8a34e9df-ba8d-4e2d-a5d3-98775455502f" />
+                            <option name="name" value="Characters" />
+                            <option name="requests">
+                              <list>
+                                <requestState>
+                                  <option name="body">
+                                    <bodyState>
+                                      <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Johnny Goldboy&quot;,&#10;  &quot;nickname&quot;: &quot;Goldhand&quot;,&#10;  &quot;type&quot;: &quot;PLAYER&quot;,&#10;  &quot;expAll&quot;: 1000,&#10;  &quot;expAvailable&quot;: 500,&#10;  &quot;cash&quot;: 2000&#10;}" />
+                                      <option name="type" value="JSON" />
+                                    </bodyState>
+                                  </option>
+                                  <option name="description" value="Tworzy nową grywalną postać w systemie cyberpunka" />
+                                  <option name="id" value="6fc6c286-01db-4216-9ea8-72e07d1bb0ea" />
+                                  <option name="method" value="POST" />
+                                  <option name="name" value="Stwórz postać" />
+                                  <option name="sortWeight" value="1000000" />
+                                  <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/create" />
+                                </requestState>
+                                <requestState>
+                                  <option name="body">
+                                    <bodyState>
+                                      <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher 3&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
+                                      <option name="type" value="JSON" />
+                                    </bodyState>
+                                  </option>
+                                  <option name="description" value="Wtorzy postać niegrywalną" />
+                                  <option name="id" value="a3844127-40cb-42cf-b4a7-15395f9e8b2f" />
+                                  <option name="method" value="POST" />
+                                  <option name="name" value="Stwórz NPC" />
+                                  <option name="sortWeight" value="2000000" />
+                                  <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/create" />
+                                </requestState>
+                                <requestState>
+                                  <option name="description" value="Zwraca wszystkie postacie" />
+                                  <option name="id" value="8ada6801-13c6-4264-9050-b2cab8fa11cb" />
+                                  <option name="method" value="GET" />
+                                  <option name="name" value="All Characters" />
+                                  <option name="sortWeight" value="3000000" />
+                                  <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/all" />
+                                </requestState>
+                                <requestState>
+                                  <option name="body">
+                                    <bodyState>
+                                      <option name="raw" value="{&#10;//  &quot;user&quot;: {&#10;//    &quot;id&quot;: 3&#10;//  },&#10;  &quot;name&quot;: &quot;Adam Smasher2&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
+                                      <option name="type" value="JSON" />
+                                    </bodyState>
+                                  </option>
+                                  <option name="description" value="Pozwala na modyfikacje danych postaci" />
+                                  <option name="id" value="0a04e0cf-9e18-497f-afa3-8d830117dc72" />
+                                  <option name="method" value="PUT" />
+                                  <option name="name" value="Modyfikuj postać" />
+                                  <option name="sortWeight" value="4000000" />
+                                  <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/3" />
+                                </requestState>
+                                <requestState>
+                                  <option name="body">
+                                    <bodyState>
+                                      <option name="raw" value="{&#10;  &quot;user&quot;: null,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;} " />
+                                      <option name="type" value="JSON" />
+                                    </bodyState>
+                                  </option>
+                                  <option name="description" value="Usuwa usera z postaci" />
+                                  <option name="id" value="8595f81c-9831-4056-b5a8-09c8b3b50d5b" />
+                                  <option name="method" value="PUT" />
+                                  <option name="name" value="Zrób z postaci NPC" />
+                                  <option name="sortWeight" value="5000000" />
+                                  <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/3" />
+                                </requestState>
+                                <requestState>
+                                  <option name="description" value="Zmienia parametr alive " />
+                                  <option name="id" value="1287af64-6ca1-4311-b691-ef8e41f5198a" />
+                                  <option name="method" value="PUT" />
+                                  <option name="name" value="Zmień czy postać żyje" />
+                                  <option name="sortWeight" value="6000000" />
+                                  <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/changeAlive/3" />
+                                </requestState>
+                              </list>
+                            </option>
+                            <option name="sortWeight" value="4000000" />
+                          </folderState>
                         </list>
                       </option>
                       <option name="id" value="be9e305b-7eae-442e-9183-34c14c9991a5" />
                       <option name="name" value="CpRed" />
-                      <option name="requests">
-                        <list>
-                          <requestState>
-                            <option name="body">
-                              <bodyState>
-                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Johnny Goldboy&quot;,&#10;  &quot;nickname&quot;: &quot;Goldhand&quot;,&#10;  &quot;type&quot;: &quot;PLAYER&quot;,&#10;  &quot;expAll&quot;: 1000,&#10;  &quot;expAvailable&quot;: 500,&#10;  &quot;cash&quot;: 2000&#10;}" />
-                                <option name="type" value="JSON" />
-                              </bodyState>
-                            </option>
-                            <option name="description" value="Tworzy nową grywalną postać w systemie cyberpunka" />
-                            <option name="id" value="6fc6c286-01db-4216-9ea8-72e07d1bb0ea" />
-                            <option name="method" value="POST" />
-                            <option name="name" value="Stwórz postać" />
-                            <option name="sortWeight" value="1000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/create" />
-                          </requestState>
-                          <requestState>
-                            <option name="body">
-                              <bodyState>
-                                <option name="raw" value="{&#10;  &quot;game&quot;: {&#10;    &quot;id&quot;: 1&#10;  },&#10;  &quot;name&quot;: &quot;Adam Smasher 3&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
-                                <option name="type" value="JSON" />
-                              </bodyState>
-                            </option>
-                            <option name="description" value="Wtorzy postać niegrywalną" />
-                            <option name="id" value="a3844127-40cb-42cf-b4a7-15395f9e8b2f" />
-                            <option name="method" value="POST" />
-                            <option name="name" value="Stwórz NPC" />
-                            <option name="sortWeight" value="2000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/create" />
-                          </requestState>
-                          <requestState>
-                            <option name="description" value="Zwraca wszystkie postacie" />
-                            <option name="id" value="8ada6801-13c6-4264-9050-b2cab8fa11cb" />
-                            <option name="method" value="GET" />
-                            <option name="name" value="All Characters" />
-                            <option name="sortWeight" value="3000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/all" />
-                          </requestState>
-                          <requestState>
-                            <option name="body">
-                              <bodyState>
-                                <option name="raw" value="{&#10;//  &quot;user&quot;: {&#10;//    &quot;id&quot;: 3&#10;//  },&#10;  &quot;name&quot;: &quot;Adam Smasher2&quot;,&#10;  &quot;nickname&quot;: &quot;Smasher&quot;,&#10;  &quot;expAll&quot;: 5000,&#10;  &quot;expAvailable&quot;: 0,&#10;  &quot;cash&quot;: 100000&#10;}" />
-                                <option name="type" value="JSON" />
-                              </bodyState>
-                            </option>
-                            <option name="description" value="Pozwala na modyfikacje danych postaci" />
-                            <option name="id" value="0a04e0cf-9e18-497f-afa3-8d830117dc72" />
-                            <option name="method" value="PUT" />
-                            <option name="name" value="Modyfikuj postać" />
-                            <option name="sortWeight" value="4000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/update/3" />
-                          </requestState>
-                          <requestState>
-                            <option name="body">
-                              <bodyState>
-                                <option name="raw" value="{&#10;  &quot;user&quot;: null,&#10;  &quot;type&quot;: &quot;NPC&quot;,&#10;} " />
-                                <option name="type" value="JSON" />
-                              </bodyState>
-                            </option>
-                            <option name="description" value="Usuwa usera z postaci" />
-                            <option name="id" value="8595f81c-9831-4056-b5a8-09c8b3b50d5b" />
-                            <option name="method" value="PUT" />
-                            <option name="name" value="Zrób z postaci NPC" />
-                            <option name="sortWeight" value="5000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/playerToNpc/3" />
-                          </requestState>
-                          <requestState>
-                            <option name="description" value="Zmienia parametr alive " />
-                            <option name="id" value="1287af64-6ca1-4311-b691-ef8e41f5198a" />
-                            <option name="method" value="PUT" />
-                            <option name="name" value="Zmień czy postać żyje" />
-                            <option name="sortWeight" value="6000000" />
-                            <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/changeAlive/3" />
-                          </requestState>
-                        </list>
-                      </option>
                       <option name="sortWeight" value="1000000" />
                     </folderState>
                   </list>

@@ -27,7 +27,6 @@ public class CpRedCharacterEnemiesService {
     private final UserRepository userRepository;
     private final CpRedCharactersRepository cpRedCharactersRepository;
     private  final GameUsersRepository gameUsersRepository;
-    private final GameRepository gameRepository;
     private final CpRedCharacterEnemiesRepository cpRedCharacterEnemiesRepository;
 
 
@@ -94,13 +93,12 @@ public class CpRedCharacterEnemiesService {
         return response;
     }
 
-    public Map<String,Object> addEnemy(CpRedCharacterEnemies cpRedCharacterEnemies) {
+    public Map<String,Object> addEnemy(CpRedCharacterEnemiesRequest cpRedCharacterEnemies) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-        if(cpRedCharacterEnemies.getCharacterId() == null ||
-            cpRedCharacterEnemies.getName() == null ||
+        if(cpRedCharacterEnemies.getName() == null ||
             cpRedCharacterEnemies.getWhoIs() == null ||
             cpRedCharacterEnemies.getCauseOfConflict() == null ||
             cpRedCharacterEnemies.getWhatHas() == null ||
@@ -110,8 +108,8 @@ public class CpRedCharacterEnemiesService {
             throw new IllegalArgumentException("Wszystkie pola są wymagane.");
         }
 
-        CpRedCharacters character = cpRedCharactersRepository.findById(cpRedCharacterEnemies.getCharacterId().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + cpRedCharacterEnemies.getCharacterId().getId() + " nie została znaleziona"));
+        CpRedCharacters character = cpRedCharactersRepository.findById(cpRedCharacterEnemies.getCharacterId())
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + cpRedCharacterEnemies.getCharacterId() + " nie została znaleziona"));
 
         GameUsers gameUsers = gameUsersRepository.findByGameIdAndUserId(character.getGame().getId(), currentUser.getId());
         if (gameUsers == null) {
@@ -124,7 +122,7 @@ public class CpRedCharacterEnemiesService {
             }
         }
 
-        if( CpRedCharacterEnemiesRepository.existsByNameAndCharacterId(cpRedCharacterEnemies.getName(), character.getId())) {
+        if( CpRedCharacterEnemiesRepository.existsByNameAndCharacterId(cpRedCharacterEnemies.getName(), character)) {
             throw new IllegalArgumentException("Wróg o tej nazwie już istnieje dla tej postaci.");
         }
         if(cpRedCharacterEnemies.getName().isEmpty()||
@@ -189,7 +187,7 @@ public class CpRedCharacterEnemiesService {
         return CustomReturnables.getOkResponseMap("Wróg o id " + enemyId + " został usunięty.");
     }
 
-    public Map<String, Object> updateEnemy(Long enemyId, CpRedCharacterEnemies cpRedCharacterEnemies) {
+    public Map<String, Object> updateEnemy(Long enemyId, CpRedCharacterEnemiesRequest cpRedCharacterEnemies) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
@@ -212,11 +210,11 @@ public class CpRedCharacterEnemiesService {
             }
         }
 
-        if (enemyToUpdate.getCharacterId() != cpRedCharacterEnemies.getCharacterId()) {
+        if (enemyToUpdate.getCharacterId().getId() != cpRedCharacterEnemies.getCharacterId()) {
             throw new IllegalArgumentException("Nie można zmienić postaci wroga.");
         }
         if (cpRedCharacterEnemies.getName() != null) {
-            if (cpRedCharacterEnemiesRepository.existsByNameAndCharacterId(cpRedCharacterEnemies.getName(), character.getId())) {
+            if (cpRedCharacterEnemiesRepository.existsByNameAndCharacterId(cpRedCharacterEnemies.getName(), character)) {
                 throw new IllegalArgumentException("Wróg o tej nazwie już istnieje dla tej postaci.");
             }
             if (cpRedCharacterEnemies.getName().isEmpty() ||

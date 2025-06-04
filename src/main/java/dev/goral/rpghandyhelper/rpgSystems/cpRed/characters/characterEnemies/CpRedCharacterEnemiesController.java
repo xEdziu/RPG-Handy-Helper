@@ -11,6 +11,7 @@ import java.util.Map;
 public class CpRedCharacterEnemiesController {
     private final CpRedCharacterEnemiesService cpRedCharacterEnemiesService;
 
+
     @GetMapping(path = "/rpgSystems/cpRed/character/enemies/all")
     public Map<String, Object> getAllEnemies() {
         return cpRedCharacterEnemiesService.getAllEnemies();
@@ -32,7 +33,7 @@ public class CpRedCharacterEnemiesController {
     }
 
     @PostMapping(path = "/rpgSystems/cpRed/character/enemies/add")
-    public Map<String, Object> addEnemy(@RequestBody CpRedCharacterEnemies cpRedCharacterEnemies) {
+    public Map<String, Object> addEnemy(@RequestBody CpRedCharacterEnemiesRequest cpRedCharacterEnemies) {
         return cpRedCharacterEnemiesService.addEnemy(cpRedCharacterEnemies);
     }
 
@@ -43,7 +44,7 @@ public class CpRedCharacterEnemiesController {
 
     @PutMapping(path = "/rpgSystems/cpRed/character/enemies/update/{enemyId}")
     public Map<String, Object> updateEnemy(@PathVariable("enemyId") Long enemyId,
-                                           @RequestBody CpRedCharacterEnemies cpRedCharacterEnemies) {
+                                           @RequestBody CpRedCharacterEnemiesRequest cpRedCharacterEnemies) {
         return cpRedCharacterEnemiesService.updateEnemy(enemyId, cpRedCharacterEnemies);
     }
 }
