@@ -21,6 +21,11 @@ public class UserController {
         return userService.getAuthorizedUser();
     }
 
+    @GetMapping("/user/find/{regexUsername}")
+    public Map<String, Object> findUsersByRegexUsername(@PathVariable String regexUsername) {
+        return userService.findUsersByRegexUsername(regexUsername);
+    }
+
     @PostMapping("/setPassword")
     public Map<String, Object> setPassword(@RequestBody PasswordRequest passwordRequest) {
         return userService.setPassword(passwordRequest.getPassword());

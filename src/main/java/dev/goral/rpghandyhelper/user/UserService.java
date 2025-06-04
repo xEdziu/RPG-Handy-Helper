@@ -332,4 +332,19 @@ public class UserService implements UserDetailsService {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
                 .body(image);
     }
+
+    public Map<String, Object> findUsersByRegexUsername(String regexUsername) {
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano użytkowników pasujących do wzorca.");
+        if (regexUsername == null || regexUsername.isEmpty()) {
+            response.put("users", Collections.emptyList());
+            return response;
+        }
+        List<User> users = userRepository.findByUsernameRegex(regexUsername);
+        List<UserDTO> userDTOs = new ArrayList<>();
+        for (User user : users) {
+            userDTOs.add(new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getSurname(), user.getEmail(), user.getUserPhotoPath()));
+        }
+        response.put("users", userDTOs);
+        return response;
+    }
 }
