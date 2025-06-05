@@ -44,9 +44,9 @@ public class CpRedCharacterEnemiesService {
                         enemy.getDescription()
                 )).toList();
         if (enemiesDTO.isEmpty()) {
-            return CustomReturnables.getOkResponseMap("Brak wrogów");
+            return CustomReturnables.getOkResponseMap("Brak wrogów dla tej postaci.");
         }
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wrogów");
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wrogów dla tej postaci.");
         response.put("enemies", enemiesDTO);
         return response;
     }
@@ -62,7 +62,7 @@ public class CpRedCharacterEnemiesService {
                         cpRedCharacterEnemies.getIntends(),
                         cpRedCharacterEnemies.getDescription()
                 )).orElseThrow(() -> new ResourceNotFoundException("Wróg o id " + enemyId + " nie został znaleziony"));
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wroga");
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wroga dla tej postaci.");
         response.put("enemy", enemy);
         return response;
     }
@@ -89,7 +89,7 @@ public class CpRedCharacterEnemiesService {
 
     public Map<String, Object> getAllEnemiesForAdmin() {
         List<CpRedCharacterEnemies> allEnemies = CpRedCharacterEnemiesRepository.findAll();
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wrogów");
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano wrogów dla tej postaci.");
         response.put("enemies", allEnemies);
         return response;
     }
@@ -128,7 +128,7 @@ public class CpRedCharacterEnemiesService {
 
         if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów.");
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów dla tej postaci.");
             }
         }
 
@@ -137,25 +137,25 @@ public class CpRedCharacterEnemiesService {
         }
         if(cpRedCharacterEnemies.getName().isEmpty()||
                 cpRedCharacterEnemies.getName().trim().isEmpty()){
-            throw new IllegalArgumentException("Nazwa tego wroga nie może być pusta.");
+            throw new IllegalArgumentException("Nazwa tego wroga dla tej postaci nie może być pusta.");
         }
         if(cpRedCharacterEnemies.getName().length()>255){
-            throw new IllegalArgumentException("Nazwa tego wroga nie może być dłuższa niż 255 znaków.");
+            throw new IllegalArgumentException("Nazwa tego wroga dla tej postaci nie może być dłuższa niż 255 znaków.");
         }
         if(cpRedCharacterEnemies.getWhoIs().length()>255){
-            throw new IllegalArgumentException("Pochodzenie tego wroga nie może być dłuższy niż 500 znaków.");
+            throw new IllegalArgumentException("Pochodzenie tego wroga dla tej postaci nie może być dłuższy niż 500 znaków.");
         }
         if(cpRedCharacterEnemies.getCauseOfConflict().length()>255) {
-            throw new IllegalArgumentException("Przyczyna konfliktu tego wroga nie może być dłuższa niż 255 znaków.");
+            throw new IllegalArgumentException("Przyczyna konfliktu tego wroga dla tej postaci nie może być dłuższa niż 255 znaków.");
         }
         if(cpRedCharacterEnemies.getWhatHas().length()>255) {
-            throw new IllegalArgumentException("To co posiada ten wróg nie może być dłuższe niż 255 znaków.");
+            throw new IllegalArgumentException("To co posiada ten wróg dla tej postaci nie może być dłuższe niż 255 znaków.");
         }
         if(cpRedCharacterEnemies.getIntends().length()>255) {
-            throw new IllegalArgumentException("Zamiary tego wroga nie mogą być dłuższe niż 255 znaków.");
+            throw new IllegalArgumentException("Zamiary tego wroga dla tej postaci nie mogą być dłuższe niż 255 znaków.");
         }
         if(cpRedCharacterEnemies.getDescription().length()>500) {
-            throw new IllegalArgumentException("Opis tego wroga nie może być dłuższy niż 500 znaków.");
+            throw new IllegalArgumentException("Opis tego wroga dla tej postaci nie może być dłuższy niż 500 znaków.");
         }
         CpRedCharacterEnemies newEnemy = new CpRedCharacterEnemies(
                 null,
@@ -168,7 +168,7 @@ public class CpRedCharacterEnemiesService {
                 cpRedCharacterEnemies.getDescription()
         );
         cpRedCharacterEnemiesRepository.save(newEnemy);
-        return CustomReturnables.getOkResponseMap("Wróg został dodany.");
+        return CustomReturnables.getOkResponseMap("Wróg dla tej postaci został dodany.");
     }
     public Map<String, Object> deleteEnemy(Long enemyId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -197,7 +197,7 @@ public class CpRedCharacterEnemiesService {
 
         if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do usuwania wrogów.");
+                throw new IllegalStateException("Nie masz uprawnień do usuwania wrogów dla tej postaci.");
             }
         }
         cpRedCharacterEnemiesRepository.deleteById(enemyId);
@@ -232,7 +232,7 @@ public class CpRedCharacterEnemiesService {
 
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do modyfikacji tego wroga.");
+                throw new IllegalStateException("Nie masz uprawnień do modyfikacji tego wroga dla tej postaci.");
             }
         }
 
@@ -245,22 +245,22 @@ public class CpRedCharacterEnemiesService {
             }
             if (cpRedCharacterEnemies.getName().isEmpty() ||
                     cpRedCharacterEnemies.getName().trim().isEmpty()) {
-                throw new IllegalArgumentException("Nazwa tego wroga nie może być pusta.");
+                throw new IllegalArgumentException("Nazwa tego wroga dla tej postaci nie może być pusta.");
             }
             if (cpRedCharacterEnemies.getName().length() > 255) {
-                throw new IllegalArgumentException("Nazwa tego wroga nie może być dłuższa niż 255 znaków.");
+                throw new IllegalArgumentException("Nazwa tego wroga dla tej postaci nie może być dłuższa niż 255 znaków.");
             }
             enemyToUpdate.setName(cpRedCharacterEnemies.getName());
         }
         if (cpRedCharacterEnemies.getWhoIs() != null) {
             if (cpRedCharacterEnemies.getWhoIs().length() > 255) {
-                throw new IllegalArgumentException("Pochodzenie tego wroga nie może być dłuższe niż 255 znaków.");
+                throw new IllegalArgumentException("Pochodzenie tego wroga dla tej postaci nie może być dłuższe niż 255 znaków.");
             }
             enemyToUpdate.setWhoIs(cpRedCharacterEnemies.getWhoIs());
         }
         if (cpRedCharacterEnemies.getCauseOfConflict() != null) {
             if (cpRedCharacterEnemies.getCauseOfConflict().length() > 255) {
-                throw new IllegalArgumentException("Przyczyna konfliktu tego wroga nie może być dłuższa niż 255 znaków.");
+                throw new IllegalArgumentException("Przyczyna konfliktu tego wroga dla tej postaci nie może być dłuższa niż 255 znaków.");
             }
             enemyToUpdate.setCauseOfConflict(cpRedCharacterEnemies.getCauseOfConflict());
         }
@@ -272,13 +272,13 @@ public class CpRedCharacterEnemiesService {
         }
         if (cpRedCharacterEnemies.getIntends() != null) {
             if (cpRedCharacterEnemies.getIntends().length() > 255) {
-                throw new IllegalArgumentException("Zamiary tego wroga nie mogą być dłuższe niż 255 znaków.");
+                throw new IllegalArgumentException("Zamiary tego wroga dla tej postaci nie mogą być dłuższe niż 255 znaków.");
             }
             enemyToUpdate.setIntends(cpRedCharacterEnemies.getIntends());
         }
         if (cpRedCharacterEnemies.getDescription() != null) {
             if (cpRedCharacterEnemies.getDescription().length() > 500) {
-                throw new IllegalArgumentException("Opis tego wroga nie może być dłuższy niż 500 znaków.");
+                throw new IllegalArgumentException("Opis tego wroga dla tej postaci nie może być dłuższy niż 500 znaków.");
             }
             enemyToUpdate.setDescription(cpRedCharacterEnemies.getDescription());
         }
