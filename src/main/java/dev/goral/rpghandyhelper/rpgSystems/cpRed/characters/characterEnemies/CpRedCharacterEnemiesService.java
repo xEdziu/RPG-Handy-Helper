@@ -2,6 +2,7 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterEnemies;
 
 import dev.goral.rpghandyhelper.game.Game;
 import dev.goral.rpghandyhelper.game.GameRepository;
+import dev.goral.rpghandyhelper.game.GameStatus;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
@@ -111,6 +112,15 @@ public class CpRedCharacterEnemiesService {
         CpRedCharacters character = cpRedCharactersRepository.findById(cpRedCharacterEnemies.getCharacterId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + cpRedCharacterEnemies.getCharacterId() + " nie została znaleziona"));
 
+        Game game=character.getGame();
+        if (game == null) {
+            throw new ResourceNotFoundException("Gra dla tej postaci nie została znaleziona.");
+        }
+
+        if (game.getStatus()!= GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra nie jest aktywna.");
+        }
+
         GameUsers gameUsers = gameUsersRepository.findByGameIdAndUserId(character.getGame().getId(), currentUser.getId());
         if (gameUsers == null) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
@@ -172,7 +182,14 @@ public class CpRedCharacterEnemiesService {
         CpRedCharacters character = cpRedCharactersRepository.findById(enemy.getCharacterId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + enemy.getCharacterId().getId() + " nie została znaleziona"));
 
+        Game game=character.getGame();
+        if (game == null) {
+            throw new ResourceNotFoundException("Gra dla tej postaci nie została znaleziona.");
+        }
 
+        if (game.getStatus()!= GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra nie jest aktywna.");
+        }
         GameUsers gameUsers = gameUsersRepository.findByUserId(currentUser.getId());
         if (gameUsers == null) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
@@ -180,7 +197,7 @@ public class CpRedCharacterEnemiesService {
 
         if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów.");
+                throw new IllegalStateException("Nie masz uprawnień do usuwania wrogów.");
             }
         }
         cpRedCharacterEnemiesRepository.deleteById(enemyId);
@@ -199,6 +216,15 @@ public class CpRedCharacterEnemiesService {
         CpRedCharacters character = cpRedCharactersRepository.findById(enemyToUpdate.getCharacterId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + enemyToUpdate.getCharacterId().getId() + " nie została znaleziona"));
 
+        Game game=character.getGame();
+        if (game == null) {
+            throw new ResourceNotFoundException("Gra dla tej postaci nie została znaleziona.");
+        }
+
+        if (game.getStatus()!= GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra nie jest aktywna.");
+        }
+
         GameUsers gameUsers = gameUsersRepository.findByGameIdAndUserId(character.getGame().getId(), currentUser.getId());
         if (gameUsers == null) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
@@ -206,12 +232,12 @@ public class CpRedCharacterEnemiesService {
 
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do aktualizacji wrogów.");
+                throw new IllegalStateException("Nie masz uprawnień do modyfikacji tego wroga.");
             }
         }
 
         if (enemyToUpdate.getCharacterId().getId() != cpRedCharacterEnemies.getCharacterId()) {
-            throw new IllegalArgumentException("Nie można zmienić postaci wroga.");
+            throw new IllegalArgumentException("Nie można zmienić postaci tego wroga.");
         }
         if (cpRedCharacterEnemies.getName() != null) {
             if (cpRedCharacterEnemiesRepository.existsByNameAndCharacterId(cpRedCharacterEnemies.getName(), character)) {
@@ -219,45 +245,45 @@ public class CpRedCharacterEnemiesService {
             }
             if (cpRedCharacterEnemies.getName().isEmpty() ||
                     cpRedCharacterEnemies.getName().trim().isEmpty()) {
-                throw new IllegalArgumentException("Nazwa wroga nie może być pusta.");
+                throw new IllegalArgumentException("Nazwa tego wroga nie może być pusta.");
             }
             if (cpRedCharacterEnemies.getName().length() > 255) {
-                throw new IllegalArgumentException("Nazwa wroga nie może być dłuższa niż 255 znaków.");
+                throw new IllegalArgumentException("Nazwa tego wroga nie może być dłuższa niż 255 znaków.");
             }
             enemyToUpdate.setName(cpRedCharacterEnemies.getName());
         }
         if (cpRedCharacterEnemies.getWhoIs() != null) {
             if (cpRedCharacterEnemies.getWhoIs().length() > 255) {
-                throw new IllegalArgumentException("Pochodzenie wroga nie może być dłuższy niż 255 znaków.");
+                throw new IllegalArgumentException("Pochodzenie tego wroga nie może być dłuższe niż 255 znaków.");
             }
             enemyToUpdate.setWhoIs(cpRedCharacterEnemies.getWhoIs());
         }
         if (cpRedCharacterEnemies.getCauseOfConflict() != null) {
             if (cpRedCharacterEnemies.getCauseOfConflict().length() > 255) {
-                throw new IllegalArgumentException("Przyczyna konfliktu nie może być dłuższa niż 255 znaków.");
+                throw new IllegalArgumentException("Przyczyna konfliktu tego wroga nie może być dłuższa niż 255 znaków.");
             }
             enemyToUpdate.setCauseOfConflict(cpRedCharacterEnemies.getCauseOfConflict());
         }
         if (cpRedCharacterEnemies.getWhatHas() != null) {
             if (cpRedCharacterEnemies.getWhatHas().length() > 255) {
-                throw new IllegalArgumentException("To co posiada wróg nie może być dłuższe niż 255 znaków.");
+                throw new IllegalArgumentException("To co posiada ten wróg nie może być dłuższe niż 255 znaków.");
             }
             enemyToUpdate.setWhatHas(cpRedCharacterEnemies.getWhatHas());
         }
         if (cpRedCharacterEnemies.getIntends() != null) {
             if (cpRedCharacterEnemies.getIntends().length() > 255) {
-                throw new IllegalArgumentException("Zamiary wroga nie mogą być dłuższe niż 255 znaków.");
+                throw new IllegalArgumentException("Zamiary tego wroga nie mogą być dłuższe niż 255 znaków.");
             }
             enemyToUpdate.setIntends(cpRedCharacterEnemies.getIntends());
         }
         if (cpRedCharacterEnemies.getDescription() != null) {
             if (cpRedCharacterEnemies.getDescription().length() > 500) {
-                throw new IllegalArgumentException("Opis wroga nie może być dłuższy niż 500 znaków.");
+                throw new IllegalArgumentException("Opis tego wroga nie może być dłuższy niż 500 znaków.");
             }
             enemyToUpdate.setDescription(cpRedCharacterEnemies.getDescription());
         }
         cpRedCharacterEnemiesRepository.save(enemyToUpdate);
-        return CustomReturnables.getOkResponseMap("Wrog postaci został zaktualizowany.");
+        return CustomReturnables.getOkResponseMap("Wrog dla tej postaci został zaktualizowany.");
     }
 
 
