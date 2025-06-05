@@ -95,6 +95,7 @@
                 loadNotes();
             }, 1000);
             getListenerSearchInput();
+
         });
         // ==== Changing the theme ====
         function initThemeToggle() {
@@ -133,7 +134,7 @@
             return localStorage.getItem("theme") ||
                 (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
         }
-        // ==== CRF Token ====
+        // ==== CSRF Token ====
         function getCsrfToken() {
             const name = "XSRF-TOKEN=";
             const cookies = document.cookie.split(';');
@@ -596,7 +597,7 @@
                 class="flex flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[45vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-auto 2xl:h-[85vh] m-3">
                 <div id="character-card-info"
                     class="flex flex-row items-center justify-between w-full my-4 cursor-pointer"
-                    onclick="toggleCard('character-card-contrent', 'character-card-buttons', 'character-card-link')">
+                    onclick="toggleCard('character-card-content', 'character-card-buttons', 'character-card-link')">
                     <h1 class="font-jetbrains-mono text-3xl text-light-textPrimary dark:text-dark-textPrimary">
                         Karta Postaci
                     </h1>
@@ -614,28 +615,44 @@
                     </div>
                 </div>
 
-                <div id="character-card-contrent" class="hidden 2xl:block">
+                <div id="character-card-content" class="hidden 2xl:block">
                     <h1 class="font-jetbrains-mono text-3xl">#Będzie</h1>
                 </div>
             </section>
 
             <section id="chat-container"
-                class="flex flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[45vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-2 h-auto 2xl:h-[85vh] m-3">
-                <div class="flex flex-col gap-2 w-full ">
-                    <div id="chat"
-                        class="flex flex-col gap-2 bg-white dark:bg-dark-background border border-gray-300 dark:border-dark-border rounded-lg p-4 h-[50vh] 2xl:h-[72vh] overflow-y-auto mb-4 text-sm ">
-                        <!-- Wiadomości będą dodawane tutaj -->
-                    </div>
-                    <form id="message-form" class="flex gap-2">
-                        <input type="text" id="message-input" placeholder="Wyślij wiadomość..." autocomplete="off"
-                            required
-                            class="flex-1 px-3 py-2 rounded-full border border-gray-400 text-sm dark:bg-dark-surface dark:text-white font-jetbrains-mono placeholder:text-sm" />
-                        <button type="submit"
-                            class="px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary transition-colors text-sm">
-                            Wyślij
-                        </button>
-                    </form>
+                     class="flex flex-col justify-between items-start
+                         bg-light-surface dark:bg-dark-surface
+                         rounded-lg shadow-lg
+                         p-4
+                         w-full
+                         h-auto 2xl:h-[85vh]
+                         m-3">
+                <div id="pinned-poll-container" class="w-full"></div>
+
+                <div id="chat"
+                  class="flex-1
+                    bg-white dark:bg-dark-background
+                    border border-gray-300 dark:border-dark-border
+                    rounded-lg
+                    p-4
+                    overflow-y-auto
+                    text-sm mb-4 w-full">
+                    <!-- Wiadomości będą dodawane tutaj -->
                 </div>
+                <form id="message-form" class="flex gap-2 mt-2">
+                    <input type="text" id="message-input" placeholder="Wyślij wiadomość…" autocomplete="off" required
+                           class="flex-1 px-3 py-2 rounded-full border border-gray-400 text-sm dark:bg-dark-surface dark:text-white font-jetbrains-mono placeholder:text-sm" />
+                    <button type="submit"
+                            class="px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary transition-colors text-sm">
+                        Wyślij
+                    </button>
+                    <button type="button" id="open-poll-modal"
+                            class="px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary transition-colors text-sm"
+                            onclick="openPollModal()">
+                        Ankieta
+                    </button>
+                </form>
             </section>
             <section id="personal-info"
                 class="flex flex-col-reverse 2xl:flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[45vw] w-full max-w-xl h-auto 2xl:h-[85vh]">
@@ -643,7 +660,7 @@
                     class="flex flex-col items-start justify-start grow w-[100%] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl h-[79%] mb-3 p-4">
                     <div id="notes-card-info"
                         class="flex flex-row items-center justify-between w-full my-4 cursor-pointer 2xl:hidden"
-                        onclick="toggleCard('notes-card-contrent', 'notes-card-buttons', 'notes-card-link')">
+                        onclick="toggleCard('notes-card-content', 'notes-card-buttons', 'notes-card-link')">
                         <h1 class="font-jetbrains-mono text-3xl text-light-textPrimary dark:text-dark-textPrimary">
                             Notatki
                         </h1>
@@ -661,13 +678,13 @@
                             </div>
                         </div>
                     </div>
-                    <a href="/home/notes" id="notes-card-link" class="z-5 relative -right-[94%] top-3 hidden 2xl:block"
-                        target="_blank">
-                        <i class="fa-solid fa-arrow-up-right-from-square text-3xl text-light-textPrimary dark:text-dark-textPrimary mr-3"
-                            aria-hidden="true"></i>
-                    </a>
+<!--                    <a href="/home/notes" id="notes-card-link" class="z-5 relative -right-[94%] top-3 hidden 2xl:block"-->
+<!--                        target="_blank">-->
+<!--                        <i class="fa-solid fa-arrow-up-right-from-square text-3xl text-light-textPrimary dark:text-dark-textPrimary mr-3"-->
+<!--                            aria-hidden="true"></i>-->
+<!--                    </a>-->
 
-                    <div id="notes-card-contrent"
+                    <div id="notes-card-content"
                         class="hidden 2xl:block w-full flex flex-col items-center justify-start 2xl:mt-[3rem]">
                         <div id="notes-info" class="flex flex-col items-center justify-center h-[10%] w-full mb-8">
                             <button id="add-note"
@@ -720,7 +737,7 @@
                             </button>
                         </div>
                     </div>
-                    <div id="dice-container-trow" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
+                    <div id="dice-container-throw" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
                     </div>
                 </article>
             </section>
@@ -733,6 +750,65 @@
             </div>
         </div>
     </main>
+    <!-- ===== Modal konfiguracyjny ankiety ===== -->
+    <div id="poll-modal-backdrop"
+         class="fixed inset-0 bg-black/50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 z-50">
+        <div id="poll-modal"
+             class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl w-[90vw] max-w-md p-6 transform scale-95 opacity-0 transition-all duration-200">
+            <h2 class="text-2xl font-semibold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary mb-4">
+                Nowa ankieta
+            </h2>
+            <form id="poll-form" class="flex flex-col gap-4" onsubmit="createPoll(event)">
+                <!-- Pytanie / nazwa ankiety -->
+                <div class="flex flex-col">
+                    <label for="poll-question" class="font-semibold text-light-textPrimary dark:text-dark-textPrimary mb-1">Pytanie ankiety</label>
+                    <input type="text" id="poll-question" maxlength="100"
+                           class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono"
+                           placeholder="Wpisz pytanie…" required />
+                </div>
+                <!-- Lista opcji odpowiedzi -->
+                <div id="poll-options-container" class="flex flex-col gap-2">
+                    <label class="font-semibold text-light-textPrimary dark:text-dark-textPrimary mb-1">Opcje odpowiedzi</label>
+                    <!-- Początkowo dwa pola, można dodać więcej -->
+                    <div class="flex gap-2">
+                        <input type="text" class="poll-option-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono" placeholder="Opcja 1" required/>
+                        <button type="button" onclick="removeOptionField(this)"
+                                class="text-light-error dark:text-dark-error text-xl">&times;</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" class="poll-option-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono" placeholder="Opcja 2" required/>
+                        <button type="button" onclick="removeOptionField(this)"
+                                class="text-light-error dark:text-dark-error text-xl">&times;</button>
+                    </div>
+                    <button type="button" id="add-option-button" onclick="addOptionField()"
+                            class="self-start px-3 py-1 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition font-semibold font-jetbrains-mono text-sm">
+                        Dodaj opcję
+                    </button>
+                </div>
+                <!-- Czas trwania ankiety -->
+                <div class="flex flex-col">
+                    <label for="poll-duration" class="font-semibold text-light-textPrimary dark:text-dark-textPrimary mb-1">
+                        Czas trwania (sekundy)
+                    </label>
+                    <input type="number" id="poll-duration" min="30" max="120" value="60"
+                           class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono"
+                           required />
+                    <small class="text-xs text-light-textSecondary dark:text-dark-textSecondary">Min: 30 s, Max: 120 s</small>
+                </div>
+                <!-- Przyciski akcji -->
+                <div class="flex justify-end space-x-2 mt-4">
+                    <button type="button" onclick="closePollModal()"
+                            class="px-4 py-2 bg-light-error dark:bg-dark-error text-white rounded hover:bg-red-600 transition font-semibold font-jetbrains-mono">
+                        Anuluj
+                    </button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition font-semibold font-jetbrains-mono">
+                        Utwórz
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
         <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
@@ -759,13 +835,16 @@
         "text-indigo-500",
         "text-emerald-500",
     ];
-    fetch("/api/v1/authorized/user")
-        .then(res => res.json())
-        .then(data => {
-            username = data.username;
-            getUserColorAndPhoto(username);
-            initWebSocket();
-        });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("/api/v1/authorized/user")
+            .then(res => res.json())
+            .then(data => {
+                username = data.username;
+                getUserColorAndPhoto(username);
+                initWebSocket();
+            });
+    })
 
     function initWebSocket() {
         const socket = new SockJS("/ws");
@@ -787,6 +866,10 @@
                     const [notation, theme] = content.split("|");
                     rollDice(notation, theme, from);
                 }
+            });
+            stompClient.subscribe(`/topic/poll/${roomId}`, msg => {
+                const payload = JSON.parse(msg.body);
+                handleIncomingPoll(payload);
             });
             stompClient.send(`/app/join/${roomId}`, {}, {});
         });
@@ -828,7 +911,7 @@
     themeSelect.addEventListener("change", () => {
         localStorage.setItem("selectedDiceTheme", themeSelect.value);
     });
-    const diceBox = new DiceBox("#dice-container-trow", {
+    const diceBox = new DiceBox("#dice-container-throw", {
         assetPath: "/assets/",
         origin: location.origin,
         scale: 5,
@@ -839,7 +922,7 @@
         throwForce: 6,
         mass: 3
     });
-    const canvas = document.querySelector("#dice-container-trow canvas");
+    const canvas = document.querySelector("#dice-container-throw canvas");
     const scaleFactor = window.devicePixelRatio || 1;
     canvas.width = window.innerWidth * scaleFactor;
     canvas.height = window.innerHeight * scaleFactor;
@@ -990,6 +1073,24 @@
             </div>
             `;
         }
+        // 2.a) Wyświetlanie systemowej wiadomości z wynikami ankiety
+        const isPollSummary = cleanFrom.startsWith("📊 Wynik Ankiety");
+        if (isPollSummary) {
+            const boldedContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            return `
+                <div class="flex items-start bg-[#eef5ff] dark:bg-gray-800 p-3 border-2 border-blue-400 dark:border-blue-600 rounded-lg mb-2">
+                  <div class="flex-shrink-0 w-12 h-12 mr-3">
+                    <i class="fa-solid fa-poll text-3xl text-blue-500"></i>
+                  </div>
+                  <div class="flex flex-col flex-1">
+                    <span class="font-bold text-blue-500">
+                      ${escapeHtml(cleanFrom)}
+                    </span>
+                    <pre class="text-black dark:text-white whitespace-pre-wrap mt-1">${boldedContent}</pre>
+                  </div>
+                </div>
+              `;
+        }
         // 3. Publiczne i prywatne wiadomości (żółty border dla prywatnych)
         const userData = getUserColorAndPhoto(cleanFrom);
         const pvClasses = pv
@@ -1109,6 +1210,482 @@
             privateMessage: false
         }));
     }
+    let currentPoll = null;       // Obiekt aktywnej ankiety
+    let hasVoted = false;         // Flaga: czy bieżący użytkownik już oddał głos
+    let voteSelection = null;     // (Opcjonalnie) indeks wybranej opcji
+    let pollTimerHandle = null;   // Uchwyt do setTimeout zamykającego ankietę
+
+    // ========================
+    // 1) openPollModal()
+    //    – otwiera modal konfiguracyjny.
+    // ========================
+    function openPollModal() {
+        // Wyczyszczenie poprzednich wartości
+        document.getElementById('poll-question').value = '';
+        document.getElementById('poll-duration').value = 60;
+
+        // Usuń wszystkie pola opcji poza dwoma pierwszymi
+        const container = document.getElementById('poll-options-container');
+        const inputs = container.querySelectorAll('.poll-option-input');
+        inputs.forEach((inp, idx) => {
+            if (idx > 1) {
+                inp.parentElement.remove();
+            } else {
+                inp.value = '';
+                inp.placeholder = `Opcja ${idx + 1}`;
+            }
+        });
+
+        // Wyświetl modal
+        const backdrop = document.getElementById('poll-modal-backdrop');
+        const modal = document.getElementById('poll-modal');
+        if (backdrop && modal) {
+            backdrop.classList.remove('opacity-0', 'pointer-events-none');
+            backdrop.classList.add('opacity-100', 'pointer-events-auto');
+            modal.classList.remove('scale-95', 'opacity-0');
+            modal.classList.add('scale-100', 'opacity-100');
+        }
+    }
+
+    // ========================
+    // 2) closePollModal()
+    //    – zamyka modal.
+    // ========================
+    function closePollModal() {
+        const backdrop = document.getElementById('poll-modal-backdrop');
+        const modal = document.getElementById('poll-modal');
+        if (backdrop && modal) {
+            backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+            backdrop.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('scale-100', 'opacity-100');
+            modal.classList.add('scale-95', 'opacity-0');
+        }
+    }
+
+    // ========================
+    // 3) addOptionField()
+    //    – dodaje kolejne pole tekstowe do wpisania opcji.
+    // ========================
+    function addOptionField() {
+        const container = document.getElementById('poll-options-container');
+        if (!container) return;
+
+        const existingInputs = container.querySelectorAll('.poll-option-input');
+        const count = existingInputs.length;
+        if (count >= 10) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Za dużo opcji',
+                text: 'Można dodać maksymalnie 10 opcji.'
+            });
+            return;
+        }
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex gap-2';
+
+        wrapper.innerHTML = `
+    <input
+      type="text"
+      class="poll-option-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono"
+      placeholder="Opcja ${count + 1}"
+      required
+    />
+    <button type="button" onclick="removeOptionField(this)"
+            class="text-light-error dark:text-dark-error text-xl">&times;</button>
+  `;
+
+        const addBtn = document.getElementById('add-option-button');
+        if (addBtn) {
+            container.insertBefore(wrapper, addBtn);
+        }
+    }
+
+    // ========================
+    // 4) removeOptionField(btn)
+    //    – usuwa pojedyncze pole opcji (jeśli kliknięto „minus”).
+    // ========================
+    function removeOptionField(btn) {
+        const container = document.getElementById('poll-options-container');
+        if (!container) return;
+
+        const inputs = container.querySelectorAll('.poll-option-input');
+        if (inputs.length <= 2) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Za mało opcji',
+                text: 'Ankieta musi mieć co najmniej 2 opcje.'
+            });
+            return;
+        }
+
+        const wrapper = btn.closest('div');
+        if (wrapper) {
+            wrapper.remove();
+        }
+
+        // Zaktualizuj placeholder pozostałych opcji
+        const remainingInputs = container.querySelectorAll('.poll-option-input');
+        remainingInputs.forEach((inp, idx) => {
+            inp.placeholder = `Opcja ${idx + 1}`;
+        });
+    }
+
+    // ========================
+    // 5) createPoll(event)
+    //    – obsługuje zatwierdzenie formularza, waliduje i wysyła payload do serwera.
+    // ========================
+    function createPoll(event) {
+        event.preventDefault();
+
+        // Jeśli ankieta już istnieje, zablokuj tworzenie nowej
+        if (currentPoll) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Jest już aktywna ankieta',
+                text: 'Poczekaj, aż zakończy się obecna ankieta, aby utworzyć nową.'
+            });
+            return;
+        }
+
+        const question = document.getElementById('poll-question').value.trim();
+        const durationSec = parseInt(document.getElementById('poll-duration').value, 10);
+        const optionInputs = Array.from(document.querySelectorAll('.poll-option-input'));
+
+        if (!question) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Brak pytania',
+                text: 'Wpisz pytanie ankiety.'
+            });
+            return;
+        }
+
+        if (optionInputs.length < 2) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Za mało opcji',
+                text: 'Dodaj przynajmniej 2 opcje.'
+            });
+            return;
+        }
+
+        const options = optionInputs
+            .map(inp => inp.value.trim())
+            .filter(txt => txt !== '');
+
+        if (options.length < 2) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Puste opcje',
+                text: 'Usuń puste pola lub wypełnij je.'
+            });
+            return;
+        }
+
+        if (durationSec < 30 || durationSec > 120) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Niepoprawny czas',
+                text: 'Czas musi być między 30 a 120 sekund.'
+            });
+            return;
+        }
+
+        // Przygotuj payload
+        const pollPayload = {
+            id: null,                  // Serwer wygeneruje unikalne ID
+            question: question,
+            options: options,
+            duration: durationSec,     // w sekundach
+            roomId: roomId             // globalna zmienna z identyfikatorem pokoju
+        };
+
+        // Wyślij do serwera przez STOMP
+        stompClient.send(
+            `/app/poll/${roomId}`,
+            {},
+            JSON.stringify(pollPayload)
+        );
+
+        // Zamknij modal
+        closePollModal();
+    }
+
+    // ========================
+    // 6) handleIncomingPoll(payload)
+    //    – odbiera dowolną wiadomość z /topic/poll/{roomId} i rozróżnia typ:
+    /// • NEW – nowa ankieta
+    /// • UPDATE – ktoś oddał głos
+    /// • END – zakończenie ankiety
+    // ========================
+    function handleIncomingPoll(payload) {
+        switch (payload.type) {
+            case 'NEW':
+                // Payload powinien zawierać: id, question, options[], createdBy, expiresAt
+                currentPoll = {
+                    id: payload.id,
+                    question: payload.question,
+                    options: payload.options.map(text => ({ text: text, votes: 0 })),
+                    expiresAt: payload.expiresAt,
+                    createdBy: payload.createdBy
+                };
+                hasVoted = false;
+                voteSelection = null;
+
+                showPoll(currentPoll);
+                break;
+
+            case 'UPDATE':
+                // Payload: { type:"UPDATE", pollId, optionIndex, votesForOption }
+                if (!currentPoll || payload.pollId !== currentPoll.id) return;
+                currentPoll.options[payload.optionIndex].votes = payload.votesForOption;
+                updatePoll(payload);
+                break;
+
+            case 'END':
+                // payload: { type:"END", pollId, finalResults: [ { optionIndex, votes }, ... ] }
+                if (!currentPoll || payload.pollId !== currentPoll.id) return;
+                // Usuwamy widok ankiety
+                const pinned = document.getElementById('pinned-poll');
+                if (pinned) pinned.remove();
+
+                // Odblokuj przycisk ankiety
+                const pollBtn = document.getElementById('open-poll-modal');
+                if (pollBtn) pollBtn.disabled = false;
+                currentPoll = null;
+                hasVoted = false;
+                if (pollTimerHandle) {
+                    clearTimeout(pollTimerHandle);
+                    pollTimerHandle = null;
+                }
+                break;
+            default:
+                console.warn('Nieznany typ wiadomości ankiety:', payload.type);
+        }
+    }
+
+    // ========================
+    // 7) showPoll(poll)
+    //    – renderuje przypiętą ankietę nad czatem, z przyciskami i paskami procentowymi.
+    // ========================
+    function showPoll(poll) {
+        // Usuń stary blok, jeśli istniał
+        const existing = document.getElementById('pinned-poll');
+        if (existing) existing.remove();
+
+        // Kontener czatu (div wiadomości)
+        const chatContainer = document.getElementById('chat');
+        if (!chatContainer) return;
+
+        // Stworzenie kontenera ankiety
+        const pollContainer = document.createElement('div');
+        pollContainer.id = 'pinned-poll';
+        pollContainer.className = 'w-full border border-light-accent dark:border-dark-accent rounded-lg bg-light-surface dark:bg-dark-surface mb-4 p-4';
+
+        // Nagłówek (pytanie + zegar)
+        const header = document.createElement('div');
+        header.className = 'flex justify-between items-center mb-3';
+
+        const qEl = document.createElement('h3');
+        qEl.innerText = poll.question;
+        qEl.className = 'text-lg font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary';
+        header.appendChild(qEl);
+
+        const timerEl = document.createElement('span');
+        timerEl.id = 'poll-timer';
+        timerEl.className = 'text-sm font-jetbrains-mono text-light-textSecondary dark:text-dark-textSecondary';
+        header.appendChild(timerEl);
+
+        pollContainer.appendChild(header);
+
+        // Lista opcji: każda z przyciskiem, paskiem i etykietą
+        const listEl = document.createElement('div');
+        listEl.id = 'poll-options-list';
+        listEl.className = 'flex flex-col gap-3';
+
+        poll.options.forEach((opt, idx) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'flex flex-col gap-1';
+
+            // 1) Przycisk głosowania
+            const btn = document.createElement('button');
+            btn.innerText = opt.text;
+            btn.className = 'px-3 py-1 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition font-jetbrains-mono text-sm';
+            if (hasVoted) btn.disabled = true;
+            btn.onclick = () => sendVote(idx);
+            optionDiv.appendChild(btn);
+
+            // 2) Pasek procentowy
+            const barContainer = document.createElement('div');
+            barContainer.className = 'w-full bg-gray-200 dark:bg-gray-600 h-4 rounded-full overflow-hidden';
+
+            const barInner = document.createElement('div');
+            barInner.id = `poll-bar-${idx}`;
+            barInner.className = 'h-4 bg-light-accent dark:bg-dark-accent';
+            barInner.style.width = '0%'; // początkowo 0%
+            barContainer.appendChild(barInner);
+            optionDiv.appendChild(barContainer);
+
+            // 3) Etykieta procentowa + liczbowa
+            const label = document.createElement('div');
+            label.id = `poll-label-${idx}`;
+            label.className = 'text-sm font-jetbrains-mono text-light-textSecondary dark:text-dark-textSecondary';
+            label.innerText = `0% (0 głosów)`;
+            optionDiv.appendChild(label);
+
+            listEl.appendChild(optionDiv);
+        });
+
+        pollContainer.appendChild(listEl);
+
+        // Wstawienie ankiety nad czatem
+        const parent = chatContainer.parentElement;
+        parent.insertBefore(pollContainer, chatContainer);
+
+        // Zablokuj przycisk „Ankieta”
+        const pollBtn = document.getElementById('open-poll-modal');
+        if (pollBtn) pollBtn.disabled = true;
+
+        // Ustaw timer odliczający
+        startPollTimer(poll.expiresAt);
+    }
+
+    // ========================
+    // 8) startPollTimer(expiresAt)
+    //    – odlicza czas i aktualizuje element #poll-timer.
+    // ========================
+    function startPollTimer(expiresAt) {
+        const timerEl = document.getElementById('poll-timer');
+        if (!timerEl) return;
+
+        function update() {
+            const now = Date.now();
+            let diff = Math.max(0, expiresAt - now);
+            const sec = Math.floor(diff / 1000) % 60;
+            const min = Math.floor(diff / 60000);
+            timerEl.innerText = `Koniec za: ${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+            if (diff <= 0) {
+                clearInterval(intervalHandle);
+            }
+        }
+
+        update();
+        const intervalHandle = setInterval(update, 1000);
+    }
+
+    // ========================
+    // 9) sendVote(optionIndex)
+    //    – wysyła głos do serwera i blokuje dalsze głosowanie w UI.
+    // ========================
+    function sendVote(optionIndex) {
+        if (!currentPoll || hasVoted) return;
+
+        const votePayload = {
+            pollId: currentPoll.id,
+            voter: userInfo.username,
+            optionIndex: optionIndex,
+        };
+
+        stompClient.send(
+            `/app/poll/${roomId}/vote`,
+            {},
+            JSON.stringify(votePayload)
+        );
+
+        hasVoted = true;
+        // Usuń przyciski głosowania
+        // Zamień przyciski na tekst opcji
+        document.querySelectorAll('#poll-options-list button').forEach((btn, idx) => {
+            const optionDiv = btn.parentElement;
+            const optionText = currentPoll.options[idx].text;
+
+            // Usuń przycisk
+            btn.remove();
+
+            // Stwórz element z tekstem opcji
+            const textEl = document.createElement('div');
+            textEl.innerText = optionText;
+            textEl.className = 'px-3 py-1 font-jetbrains-mono text-sm text-light-textPrimary dark:text-dark-textPrimary';
+
+            // Jeśli to wybrana opcja, oznacz ją
+            if (idx === optionIndex) {
+                textEl.className += ' font-bold border-l-4 border-light-accent dark:border-dark-accent pl-2';
+            }
+
+            // Wstaw tekst na początek diva z opcją (przed paskiem)
+            optionDiv.insertBefore(textEl, optionDiv.firstChild);
+        });
+    }
+
+    // ========================
+    // 10) updatePoll(payload)
+    //     – aktualizuje paski procentowe i etykiety dla wszystkich opcji.
+    // ========================
+    function updatePoll(payload) {
+        // Payload: { type:"UPDATE", pollId, optionIndex, votesForOption }
+        if (!currentPoll || payload.pollId !== currentPoll.id) return;
+
+        // Zaktualizuj wewnętrzną strukturę
+        currentPoll.options[payload.optionIndex].votes = payload.votesForOption;
+
+        // Oblicz sumę głosów
+        let total = 0;
+        currentPoll.options.forEach(opt => total += opt.votes);
+
+        // Dla każdej opcji oblicz procent i zaktualizuj pasek + etykietę
+        currentPoll.options.forEach((opt, idx) => {
+            const votes = opt.votes;
+            const percent = total > 0 ? (votes / total) * 100 : 0;
+
+            const barDiv = document.getElementById(`poll-bar-${idx}`);
+            if (barDiv) {
+                barDiv.style.width = `${percent}%`;
+            }
+
+            const labelDiv = document.getElementById(`poll-label-${idx}`);
+            if (labelDiv) {
+                labelDiv.innerText = `${percent.toFixed(0)}% (${votes} ${pluralizeVoteDisplay(votes)})`;
+            }
+        });
+    }
+
+    // ========================
+    // 11) expirePoll(pollId, finalResults)
+    //     – usuwa widok ankiety, wysyła podsumowanie Systemem i odblokowuje przycisk.
+    // ========================
+    function expirePoll(pollId, finalResults) {
+        if (!currentPoll || currentPoll.id !== pollId) return;
+
+        // 1) Usuń widok ankiety
+        const pinned = document.getElementById('pinned-poll');
+        if (pinned) pinned.remove();
+
+        // 2) Odblokuj przycisk „Ankieta”
+        const pollBtn = document.getElementById('open-poll-modal');
+        if (pollBtn) pollBtn.disabled = false;
+
+        // 3) Wyczyść zmienne globalne
+        currentPoll = null;
+        hasVoted = false;
+        voteSelection = null;
+        if (pollTimerHandle) {
+            clearTimeout(pollTimerHandle);
+            pollTimerHandle = null;
+        }
+    }
+
+    function pluralizeVoteDisplay(count) {
+        if (count === 1) return "głos";
+        if ([2,3,4].includes(count % 10) && ![12,13,14].includes(count % 100)) return "głosy";
+        return "głosów";
+    }
+
+    window.openPollModal = openPollModal;
+    window.closePollModal = closePollModal;
+    window.addOptionField = addOptionField;
+    window.removeOptionField = removeOptionField;
+    window.createPoll = createPoll;
 </script>
 <script>
     // ==== Listener for Window Size ====
@@ -1388,6 +1965,3 @@
     }
 </script>
 <script defer src="/scripts/footer.js"></script> <!-- Footer script -->
-</body>
-
-</html>
