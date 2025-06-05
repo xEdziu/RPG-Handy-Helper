@@ -8,6 +8,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCharacterClassesDTO {
+    private Long id;
     private Short classLevel;
     private Long characterId;
     private Long classId;
