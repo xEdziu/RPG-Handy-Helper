@@ -625,8 +625,9 @@
                          bg-light-surface dark:bg-dark-surface
                          rounded-lg shadow-lg
                          p-4
-                         w-full
                          h-auto 2xl:h-[85vh]
+                         w-[100%] sm:w-[80%] md:w-[75%] xl:w-[45vw]
+                         max-w-xl
                          m-3">
                 <div id="pinned-poll-container" class="w-full"></div>
 
@@ -636,6 +637,8 @@
                     border border-gray-300 dark:border-dark-border
                     rounded-lg
                     p-4
+                    max-h-[50vh]
+                    2xl:max-h-full
                     overflow-y-auto
                     text-sm mb-4 w-full">
                     <!-- Wiadomości będą dodawane tutaj -->
