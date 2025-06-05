@@ -37,3 +37,4 @@ public interface GameUsersRepository extends JpaRepository<GameUsers, Long> {
 
     GameUsers findByUserId(Long userId);
 }
+

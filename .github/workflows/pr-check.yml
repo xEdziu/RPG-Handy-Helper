@@ -106,4 +106,3 @@ jobs:
           tail -n 50 spring_boot_run.log
           exit 1
         fi
-

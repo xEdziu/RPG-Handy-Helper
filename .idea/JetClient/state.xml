@@ -162,6 +162,22 @@
                       <option name="sortWeight" value="7000000" />
                       <option name="url" value="http://localhost:8888/logout" />
                     </requestState>
+                    <requestState>
+                      <option name="description" value="Pobierz zdjęcie po username" />
+                      <option name="id" value="dc05ba37-3be6-4154-82db-412bfc62f380" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Get User Photo" />
+                      <option name="pathVariables">
+                        <list>
+                          <pathVariableState>
+                            <option name="key" value="username" />
+                            <option name="value" value="user2" />
+                          </pathVariableState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="8000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/user/photo/username/{username}" />
+                    </requestState>
                   </list>
                 </option>
                 <option name="sortWeight" value="1000000" />
