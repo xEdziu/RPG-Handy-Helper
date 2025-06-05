@@ -137,25 +137,25 @@ public class CpRedCharacterEnemiesService {
         }
         if(cpRedCharacterEnemies.getName().isEmpty()||
                 cpRedCharacterEnemies.getName().trim().isEmpty()){
-            throw new IllegalArgumentException("Nazwa wroga nie może być pusta.");
+            throw new IllegalArgumentException("Nazwa tego wroga nie może być pusta.");
         }
         if(cpRedCharacterEnemies.getName().length()>255){
-            throw new IllegalArgumentException("Nazwa wroga nie może być dłuższa niż 255 znaków.");
+            throw new IllegalArgumentException("Nazwa tego wroga nie może być dłuższa niż 255 znaków.");
         }
         if(cpRedCharacterEnemies.getWhoIs().length()>255){
-            throw new IllegalArgumentException("Pochodzenie wroga nie może być dłuższy niż 500 znaków.");
+            throw new IllegalArgumentException("Pochodzenie tego wroga nie może być dłuższy niż 500 znaków.");
         }
         if(cpRedCharacterEnemies.getCauseOfConflict().length()>255) {
-            throw new IllegalArgumentException("Przyczyna konfliktu nie może być dłuższa niż 255 znaków.");
+            throw new IllegalArgumentException("Przyczyna konfliktu tego wroga nie może być dłuższa niż 255 znaków.");
         }
         if(cpRedCharacterEnemies.getWhatHas().length()>255) {
-            throw new IllegalArgumentException("To co posiada wróg nie może być dłuższe niż 255 znaków.");
+            throw new IllegalArgumentException("To co posiada ten wróg nie może być dłuższe niż 255 znaków.");
         }
         if(cpRedCharacterEnemies.getIntends().length()>255) {
-            throw new IllegalArgumentException("Zamiary wroga nie mogą być dłuższe niż 255 znaków.");
+            throw new IllegalArgumentException("Zamiary tego wroga nie mogą być dłuższe niż 255 znaków.");
         }
         if(cpRedCharacterEnemies.getDescription().length()>500) {
-            throw new IllegalArgumentException("Opis wroga nie może być dłuższy niż 500 znaków.");
+            throw new IllegalArgumentException("Opis tego wroga nie może być dłuższy niż 500 znaków.");
         }
         CpRedCharacterEnemies newEnemy = new CpRedCharacterEnemies(
                 null,
