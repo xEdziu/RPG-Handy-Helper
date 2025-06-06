@@ -232,7 +232,7 @@ public class CpRedCharacterEnemiesService {
 
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do modyfikacji tego wroga dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do modyfikacji wrogów dla tej postaci.");
             }
         }
 
