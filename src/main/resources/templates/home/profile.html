@@ -26,11 +26,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
-    <script>// Ustawienia Tailwind CSS
-    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -101,7 +97,7 @@
             <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
                            bg-light-accent dark:bg-dark-accent
                            shadow-md transition-all duration-300
-                           peer-checked:translate-x-[1.5rem]
+                           peer-checked:translate-x-[0.75rem]
                            peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
                            cursor-pointer hover:shadow-lg">
             </label>
@@ -422,8 +418,6 @@
                         Swal.fire({ icon: 'error', text: "Nie udało się połączyć z serwerem." });
                     }
                 });
-
-
                 container.appendChild(img);
             });
         } catch (error) {
@@ -962,12 +956,6 @@
 
 
 </script>
-<footer
-        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
-        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
-        <a href="/home/notes" 
-            class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
-    </footer>
 <script defer src="/scripts/footer.js"></script>
 </body>
 </html>

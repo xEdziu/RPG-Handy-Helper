@@ -47,5 +47,5 @@ maven-wrapper.properties
 ### Log files ###
 *.log
 logs/*
-/src/main/java/dev/goral/rpgmanager/user/UserConfig.java
-!/src/main/java/dev/goral/rpgmanager/security/WebSecurityConfig.java
+/src/main/java/dev/goral/rpghandyhelper/user/UserConfig.java
+!/src/main/java/dev/goral/rpghandyhelper/security/WebSecurityConfig.java
