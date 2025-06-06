@@ -1,7 +1,15 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterClasses;
 
+import dev.goral.rpghandyhelper.game.Game;
 import dev.goral.rpghandyhelper.game.GameRepository;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.classes.CpRedClasses;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.classes.CpRedClassesRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpghandyhelper.user.User;
@@ -13,17 +21,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
 public class CpRedCharacterClassesService {
     private final CpRedCharacterClassesRepository cpRedCharacterClassesRepository;
     private final UserRepository userRepository;
+    private final CpRedCharactersRepository cpRedCharactersRepository;
+    private final CpRedClassesRepository cpRedClassesRepository;
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
 
     public Map<String, Object> getCharacterClasses(Long characterId) {
-        List<CpRedCharacterClassesDTO> characterClasses = cpRedCharacterClassesRepository.getCharacterClassesByCharacterId(characterId).stream()
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        List<CpRedCharacterClassesDTO> characterClasses = cpRedCharacterClassesRepository.getCharacterClassesByCharacterId(character).stream()
                 .map(characterClass -> new CpRedCharacterClassesDTO(
                         characterClass.getId(),
                         characterClass.getClassLevel(),
@@ -43,28 +56,93 @@ public class CpRedCharacterClassesService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
-        // Czy użytkownik jest GM-em w grze, do której należy postać
-        // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
         // Czy podano wszystkie wymagane pola w request
+        if (addCharacterClassesRequest.getCharacterId() == null || addCharacterClassesRequest.getClassId() == null || addCharacterClassesRequest.getClassLevel() == -1) {
+            throw new ResourceNotFoundException("Nie podano wszystkich wymaganych pól.");
+        }
+
         // Czy istnieje character o podanym ID
+        CpRedCharacters character = cpRedCharactersRepository.findById(addCharacterClassesRequest.getCharacterId())
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+
         // Czy istnieje klasa o podanym ID
+        CpRedClasses characterClass = cpRedClassesRepository.findById(addCharacterClassesRequest.getClassId())
+                .orElseThrow(() -> new ResourceNotFoundException("Klasa o podanym ID nie została znaleziona."));
+
+        // Sprawdzenie, czy klasa już istnieje dla tej postaci
+        if (cpRedCharacterClassesRepository.existsByCharacterIdAndClassId(character, characterClass)) {
+            throw new ResourceNotFoundException("Klasa o podanym ID już istnieje dla tej postaci.");
+        }
+
+        Game game = gameRepository.findById(character.getGame().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra powiązana z postacią nie została znaleziona."));
+
+        // Cy użytkownik należy do gry, do której należy postać
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
+
+        // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
+            if (character.getType() != CpRedCharactersType.NPC) {
+                if (!Objects.equals(currentUser.getId(), character.getUser().getId())) {
+                    throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze lub nie jest właścicielem postaci.");
+                }
+            }
+        }
+
+
         // Czy poziom klasy jest większy niż 0 i mniejszy równy 10
+        if (addCharacterClassesRequest.getClassLevel() <= 0 || addCharacterClassesRequest.getClassLevel() > 10) {
+            throw new ResourceNotFoundException("Poziom klasy musi być większy niż 0 i mniejszy lub równy 10.");
+        }
 
+        // Tworzenie nowej klasy postaci
+        CpRedCharacterClasses newCharacterClass = new CpRedCharacterClasses(
+                null,
+                addCharacterClassesRequest.getClassLevel(),
+                character,
+                characterClass
+        );
 
+        cpRedCharacterClassesRepository.save(newCharacterClass);
         return CustomReturnables.getOkResponseMap("Klasa postaci została pomyślnie utworzona");
     }
 
-    public Map<String, Object> updateCharacterClass(Long characterClassId, AddCharacterClassesRequest addCharacterClassesRequest) {
+    public Map<String, Object> updateCharacterClass(Long characterClassId, UpdateCharacterClassesRequest updateCharacterClassesRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-        // Czy użytkownik jest GM-em w grze, do której należy postać
-        // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
-        // Czy istnieje character o podanym ID
-        // Czy istnieje klasa o podanym ID
-        // Czy poziom klasy jest większy niż 0 i mniejszy równy 10
 
+        // Czy podana klasa postaci o podanym ID istnieje
+        CpRedCharacterClasses characterClassToUpdate = cpRedCharacterClassesRepository.findById(characterClassId)
+                .orElseThrow(() -> new ResourceNotFoundException("Klasa postaci o podanym ID nie została znaleziona."));
+
+        // Czy istnieje character o podanym ID
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterClassToUpdate.getCharacterId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+
+        Game game = gameRepository.findById(character.getGame().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra powiązana z postacią nie została znaleziona."));
+
+        // Cy użytkownik należy do gry, do której należy postać
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
+
+        // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
+        if (!Objects.equals(currentUser.getId(), character.getUser().getId()) && gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze lub nie jest właścicielem postaci.");
+        }
+
+        if (updateCharacterClassesRequest.getClassLevel() != -1){
+            // Czy poziom klasy jest większy niż 0 i mniejszy równy 10
+            if (updateCharacterClassesRequest.getClassLevel() <= 0 || updateCharacterClassesRequest.getClassLevel() > 10) {
+                throw new ResourceNotFoundException("Poziom klasy musi być większy niż 0 i mniejszy lub równy 10.");
+            }
+            characterClassToUpdate.setClassLevel(updateCharacterClassesRequest.getClassLevel());
+        }
+
+        cpRedCharacterClassesRepository.save(characterClassToUpdate);
         return CustomReturnables.getOkResponseMap("Klasa postaci została pomyślnie zaktualizowana");
     }
 
@@ -73,9 +151,28 @@ public class CpRedCharacterClassesService {
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-        // Czy użytkownik jest GM-em w grze, do której należy postać
+        // Czy podana klasa postaci o podanym ID istnieje
+        CpRedCharacterClasses characterClassToUpdate = cpRedCharacterClassesRepository.findById(characterClassId)
+                .orElseThrow(() -> new ResourceNotFoundException("Klasa postaci o podanym ID nie została znaleziona."));
+
+        // Czy istnieje character o podanym ID
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterClassToUpdate.getCharacterId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+
+        Game game = gameRepository.findById(character.getGame().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra powiązana z postacią nie została znaleziona."));
+
+        // Cy użytkownik należy do gry, do której należy postać
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
+
         // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
-        // Czy istnieje klasa charactera o podanym ID (czy masz co usunąć)
+        if (!Objects.equals(currentUser.getId(), character.getUser().getId()) && gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+            throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze lub nie jest właścicielem postaci.");
+        }
+
+        // Usuwanie klasy postaci
+        cpRedCharacterClassesRepository.deleteById(characterClassId);
 
         return CustomReturnables.getOkResponseMap("Klasa postaci została pomyślnie usunięta");
     }

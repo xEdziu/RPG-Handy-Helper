@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddCharacterClassesRequest {
+public class UpdateCharacterClassesRequest {
     private short classLevel = -1;
-    private Long characterId;
-    private Long classId;
 }

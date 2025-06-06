@@ -23,8 +23,8 @@ public class CpRedCharacterClassesController {
     }
 
     @PutMapping(path = "/games/cpRed/characters/classes/update/{characterClassId}")
-    public Map<String, Object> updateCharacterClass(@PathVariable("characterClassId") Long characterClassId, @RequestBody AddCharacterClassesRequest addCharacterClassesRequest) {
-        return cpRedCharacterClassesService.updateCharacterClass(characterClassId, addCharacterClassesRequest);
+    public Map<String, Object> updateCharacterClass(@PathVariable("characterClassId") Long characterClassId, @RequestBody UpdateCharacterClassesRequest updateCharacterClassesRequest) {
+        return cpRedCharacterClassesService.updateCharacterClass(characterClassId, updateCharacterClassesRequest);
     }
 
     @DeleteMapping(path = "/games/cpRed/characters/classes/delete/{characterClassId}")
