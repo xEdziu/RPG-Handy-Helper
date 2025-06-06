@@ -28,7 +28,12 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class PollController {
 
+    private final GameRoomManager roomManager;
     private final SimpMessagingTemplate messagingTemplate;
+
+    public List<String> getCurrentUsersInRoom(String roomId) {
+        return roomManager.getConnectedUsers(roomId);
+    }
 
     /**
      * Mapa przechowująca w pamięci instancje aktywnych ankiet.
@@ -71,6 +76,7 @@ public class PollController {
         pollData.setCreatedBy(principal.getName());
         pollData.setExpiresAt(expiresAt);
         pollData.setRoomId(roomId);
+        pollData.setTotalUsersInRoom(getCurrentUsersInRoom(roomId).size());
 
         List<OptionData> optionList = new ArrayList<>();
         for (String optText : payload.getOptions()) {
@@ -118,11 +124,7 @@ public class PollController {
     ) {
         String pollId = votePayload.getPollId();
         PollData pollData = polls.get(pollId);
-        if (pollData == null) {
-            return;
-        }
-
-        if (pollData.getVotedUsers().contains(principal.getName())) {
+        if (pollData == null || pollData.getVotedUsers().contains(principal.getName())) {
             return;
         }
 
@@ -141,6 +143,11 @@ public class PollController {
         updateDto.setVotesForOption(pollData.getOptions().get(idx).getVotes());
 
         messagingTemplate.convertAndSend("/topic/poll/" + roomId, updateDto);
+
+        // Sprawdzenie, czy wszyscy oddali głos
+        if (pollData.getVotedUsers().size() >= pollData.getTotalUsersInRoom()) {
+            endPoll(pollId);
+        }
     }
 
     /**
@@ -311,6 +318,12 @@ public class PollController {
          * Zbiór nazw użytkowników, którzy już oddali głos w tej ankiecie.
          */
         private Set<String> votedUsers;
+
+        /**
+         * Liczba użytkowników aktualnie w pokoju, którzy mogą głosować.
+         * Może być używana do obliczeń lub wyświetlania stanu.
+         */
+        private int totalUsersInRoom;
     }
 
     /**

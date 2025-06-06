@@ -1275,11 +1275,11 @@
 
         const existingInputs = container.querySelectorAll('.poll-option-input');
         const count = existingInputs.length;
-        if (count >= 10) {
+        if (count >= 5) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Za dużo opcji',
-                text: 'Można dodać maksymalnie 10 opcji.'
+                text: 'Można dodać maksymalnie 5 opcji.'
             });
             return;
         }
