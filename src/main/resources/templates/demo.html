@@ -126,13 +126,13 @@
         </div>
     </nav>
     <main class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
-        <h1>Demo DiceBox</h1>
+        <section id="story-section" class="w-full max-w-xl bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg p-4 my-4">
+            <div id="story-narration" class="mb-4 text-light-textPrimary dark:text-dark-textPrimary"></div>
+            <div id="story-choices" class="flex flex-col gap-2"></div>
+<!--            <div id="story-dice-result" class="text-lg text-light-accent dark:text-dark-accent mt-2"></div>-->
+        </section>
         <div>
-            <button id="rollDice" class="px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary transition-colors text-sm">
-                Rzuć kością
-            </button>
         </div>
-        <div id="dice-result"></div>
         <div id="dice-container-throw" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
         </div>
     </main>
@@ -171,7 +171,6 @@
         await diceBox.loadTheme("default");
         let theme = "default"
 
-        const resultDiv = document.getElementById("dice-result");
 
         async function rollDice(notation) {
 
@@ -184,13 +183,225 @@
                 }
             });
             const sum = results.reduce((acc, die) => acc + die.value, 0);
-            resultDiv.textContent = `Wynik: ${sum}`;
             await new Promise(r => setTimeout(r, 1500));
             diceBox.clear();
+            return results;
         }
-
-        document.getElementById("rollDice").addEventListener("click", () => rollDice("1d20"));
+        window.rollDice = rollDice;
     });
+
+    // 1. Struktura fabuły (możesz rozbudować według własnych potrzeb)
+    const story = {
+        start: {
+            id: 'start',
+            text: `
+                  Jesteś najemnikiem w Night City, znanym z ostrego gustu w cyberwszczepach i zdolności do wyciągania informacji.
+                  Właśnie wylądowałeś przy jednym z głośniejszych barów w Watson – "Afterlife".
+                  <br><br>
+                  W którym kierunku chcesz pójść?
+                `,
+            choices: [
+                { text: "Podejdź do barmana i porozmawiaj", next: 'talk_barman' },
+                { text: "Ustaw się przy stoliku informatorów", next: 'spy_table' },
+                { text: "Zignoruj wszystko i sprawdź broń", next: 'check_gun' }
+            ],
+            requiresRoll: false
+        },
+        talk_barman: {
+            id: 'talk_barman',
+            text: `
+                  Barman spojrzał na ciebie przelotnie, sięgając po butelkę whisky.
+                  "Czego chcesz, cyborgu?" – zapytał.
+                  <br><br>
+                  Możesz spróbować wyciągnąć jakieś informacje o poszukiwanemu rozwiązaniu zlecenia. Test komunikacji wymaga rzutu 1d10 (sukces ≥6).
+                `,
+            choices: [
+                { text: "Rzuć kością, aby przekonać barmana", next: 'roll_barman' }
+            ],
+            requiresRoll: true,
+            rollConfig: { notation: '1d10', threshold: 6, successNext: 'barman_success', failNext: 'barman_fail' }
+        },
+        barman_success: {
+            id: 'barman_success',
+            text: `
+              Wynik był na twoją korzyść. Barman z uśmiechem mówi:
+              "Słyszałem, że nowy klient szuka kogoś do roboty z Arasaka. Spotykają się jutro o świcie w zeszłorocznym magazynie w Badlands."
+              <br><br>
+              **Koniec demo.**
+            `,
+            choices: []
+        },
+        barman_fail: {
+            id: 'barman_fail',
+            text: `
+              Barman roześmiał się głośno:
+              "Nie mam czasu na gadki z kimś takim jak ty."
+              <br><br>
+              **Demo zakończone porażką.**
+            `,
+            choices: []
+        },
+        spy_table: {
+            id: 'spy_table',
+            text: `
+              Siadasz przy stoliku, gdzie trzech zamaskowanych typów wymienia się szyfrogramami.
+              Jeden z nich rzuca w twoją stronę spojrzenie pełne nieufności.
+              <br><br>
+              Czy rzucisz się na nich z zaskoczenia (1d6 atak ≥4), czy spróbujesz podsłuchać potajemnie (1d6 podsłuch ≥3)?
+            `,
+            choices: [
+                { text: "Atak!" , next: 'roll_attack' },
+                { text: "Podsłuchaj", next: 'roll_listen' }
+            ],
+            requiresRoll: false
+        },
+        roll_attack: {
+            id: 'roll_attack',
+            text: `Rzucasz się naprzód, gotów do przemocy. Rzut 1d6 (sukces ≥4).`,
+            choices: [],
+            requiresRoll: true,
+            rollConfig: { notation: '1d6', threshold: 4, successNext: 'attack_success', failNext: 'attack_fail' }
+        },
+        roll_listen: {
+            id: 'roll_listen',
+            text: `Delikatnie pochylasz się, by podsłuchać – 1d6 (sukces ≥3).`,
+            choices: [],
+            requiresRoll: true,
+            rollConfig: { notation: '1d6', threshold: 3, successNext: 'listen_success', failNext: 'listen_fail' }
+        },
+        attack_success: {
+            id: 'attack_success',
+            text: `
+              Udało Ci się zaskoczyć przeciwników – szybkim ciosem wytrącasz im broń, a oni chowają się w popłochu.
+              Znajdujesz przy nich fragment wiadomości od korporacji.
+              <br><br>
+              **Koniec demo.**
+            `,
+            choices: []
+        },
+        attack_fail: {
+            id: 'attack_fail',
+            text: `
+              Jeden z nich przewidział Twój ruch i skręcił twoją rękę. Padają seriami ciosy.
+              <br><br>
+              **Porzuć gratulacje – demo zakończone przegraną.**
+            `,
+            choices: []
+        },
+        listen_success: {
+            id: 'listen_success',
+            text: `
+              Usłyszałeś fragment konspiracji – szyfrnik wspomina o spotkaniu w tajnym bunkrze w Badlands.
+              <br><br>
+              **Koniec demo.**
+            `,
+            choices: []
+        },
+        listen_fail: {
+            id: 'listen_fail',
+            text: `
+              Twój podsłuch został wykryty. Jeden z nich kopniakiem usuwa Cię spod stołu.
+              <br><br>
+              **Demo zakończone niepowodzeniem.**
+            `,
+            choices: []
+        },
+        check_gun: {
+            id: 'check_gun',
+            text: `
+              Sprawdzasz broń – magazynek pełny, wszystko działa. Nic się nie dzieje.
+              <br><br>
+              Wracasz do punktu wyjścia, bo jednak coś Ci umyka…
+            `,
+            choices: [
+                { text: "Wróć na początek", next: 'start' }
+            ],
+            requiresRoll: false
+        }
+    };
+
+    // 1. Elementy DOM:
+    const narrationEl = document.getElementById('story-narration');
+    const choicesEl = document.getElementById('story-choices');
+    // const diceResultEl = document.getElementById('story-dice-result');
+
+    // 2. Aktualny stan sceny:
+    let currentSceneId = 'start';
+    let pendingRollConfig = null;
+
+    function renderScene(sceneId) {
+        const scene = story[sceneId];
+        currentSceneId = sceneId;
+        narrationEl.innerHTML = scene.text;
+        pendingRollConfig = null;
+        choicesEl.innerHTML = '';
+
+        // Najpierw obsłuż rzut kością
+        if (scene.requiresRoll && scene.rollConfig) {
+            pendingRollConfig = scene.rollConfig;
+            const btn = document.createElement('button');
+            btn.textContent = 'Rzuć kością';
+            btn.className = 'px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary transition-colors text-sm';
+            btn.onclick = handleRoll;
+            choicesEl.appendChild(btn);
+        }
+        // Potem sprawdź, czy to scena końcowa (brak wyborów)
+        else if (!scene.choices || scene.choices.length === 0) {
+            const btnHome = document.createElement('button');
+            btnHome.textContent = 'Wróć na stronę główną';
+            btnHome.className = 'px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary transition-colors text-sm mr-2';
+            btnHome.onclick = () => window.location.href = '/';
+            choicesEl.appendChild(btnHome);
+
+            const btnRestart = document.createElement('button');
+            btnRestart.textContent = 'Zagraj jeszcze raz';
+            btnRestart.className = 'px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary transition-colors text-sm';
+            btnRestart.onclick = () => renderScene('start');
+            choicesEl.appendChild(btnRestart);
+        }
+        // W przeciwnym razie pokaż wybory
+        else if (scene.choices && scene.choices.length) {
+            scene.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.textContent = choice.text;
+                btn.className = 'px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary transition-colors text-sm';
+                btn.onclick = () => renderScene(choice.next);
+                choicesEl.appendChild(btn);
+            });
+        }
+    }
+
+    // 4. Obsługa rzutu kością:
+    async function handleRoll() {
+        if (!pendingRollConfig) return;
+        choicesEl.querySelector('button').disabled = true;
+        choicesEl.querySelector('button').hidden = true;
+        const results = await rollDice(pendingRollConfig.notation);
+        const sum = results.reduce((acc, die) => acc + die.value, 0);
+
+        // Wyświetl wynik rzutu
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'text-lg text-light-accent dark:text-dark-accent mt-2 mb-2';
+        resultDiv.textContent = `Wynik rzutu: ${sum}`;
+        choicesEl.appendChild(resultDiv);
+
+        // Przycisk "Dalej"
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Dalej';
+        nextBtn.className = 'px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary transition-colors text-sm mt-2';
+        nextBtn.onclick = () => {
+            const { threshold, successNext, failNext } = pendingRollConfig;
+            renderScene(sum >= threshold ? successNext : failNext);
+        };
+        choicesEl.appendChild(nextBtn);
+    }
+
+    // 5. Inicjalizacja:
+    window.addEventListener('DOMContentLoaded', () => {
+        renderScene(currentSceneId);
+    });
+    window.handleRoll = handleRoll;
+    window.renderScene = renderScene;
 </script>
 <script defer src="/scripts/footer.js"></script>
 </html>
