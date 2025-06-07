@@ -190,135 +190,25 @@
         window.rollDice = rollDice;
     });
 
-    // 1. Struktura fabuły (możesz rozbudować według własnych potrzeb)
-    const story = {
-        start: {
-            id: 'start',
-            text: `
-                  Jesteś najemnikiem w Night City, znanym z ostrego gustu w cyberwszczepach i zdolności do wyciągania informacji.
-                  Właśnie wylądowałeś przy jednym z głośniejszych barów w Watson – "Afterlife".
-                  <br><br>
-                  W którym kierunku chcesz pójść?
-                `,
-            choices: [
-                { text: "Podejdź do barmana i porozmawiaj", next: 'talk_barman' },
-                { text: "Ustaw się przy stoliku informatorów", next: 'spy_table' },
-                { text: "Zignoruj wszystko i sprawdź broń", next: 'check_gun' }
-            ],
-            requiresRoll: false
-        },
-        talk_barman: {
-            id: 'talk_barman',
-            text: `
-                  Barman spojrzał na ciebie przelotnie, sięgając po butelkę whisky.
-                  "Czego chcesz, cyborgu?" – zapytał.
-                  <br><br>
-                  Możesz spróbować wyciągnąć jakieś informacje o poszukiwanemu rozwiązaniu zlecenia. Test komunikacji wymaga rzutu 1d10 (sukces ≥6).
-                `,
-            choices: [
-                { text: "Rzuć kością, aby przekonać barmana", next: 'roll_barman' }
-            ],
-            requiresRoll: true,
-            rollConfig: { notation: '1d10', threshold: 6, successNext: 'barman_success', failNext: 'barman_fail' }
-        },
-        barman_success: {
-            id: 'barman_success',
-            text: `
-              Wynik był na twoją korzyść. Barman z uśmiechem mówi:
-              "Słyszałem, że nowy klient szuka kogoś do roboty z Arasaka. Spotykają się jutro o świcie w zeszłorocznym magazynie w Badlands."
-              <br><br>
-              **Koniec demo.**
-            `,
-            choices: []
-        },
-        barman_fail: {
-            id: 'barman_fail',
-            text: `
-              Barman roześmiał się głośno:
-              "Nie mam czasu na gadki z kimś takim jak ty."
-              <br><br>
-              **Demo zakończone porażką.**
-            `,
-            choices: []
-        },
-        spy_table: {
-            id: 'spy_table',
-            text: `
-              Siadasz przy stoliku, gdzie trzech zamaskowanych typów wymienia się szyfrogramami.
-              Jeden z nich rzuca w twoją stronę spojrzenie pełne nieufności.
-              <br><br>
-              Czy rzucisz się na nich z zaskoczenia (1d6 atak ≥4), czy spróbujesz podsłuchać potajemnie (1d6 podsłuch ≥3)?
-            `,
-            choices: [
-                { text: "Atak!" , next: 'roll_attack' },
-                { text: "Podsłuchaj", next: 'roll_listen' }
-            ],
-            requiresRoll: false
-        },
-        roll_attack: {
-            id: 'roll_attack',
-            text: `Rzucasz się naprzód, gotów do przemocy. Rzut 1d6 (sukces ≥4).`,
-            choices: [],
-            requiresRoll: true,
-            rollConfig: { notation: '1d6', threshold: 4, successNext: 'attack_success', failNext: 'attack_fail' }
-        },
-        roll_listen: {
-            id: 'roll_listen',
-            text: `Delikatnie pochylasz się, by podsłuchać – 1d6 (sukces ≥3).`,
-            choices: [],
-            requiresRoll: true,
-            rollConfig: { notation: '1d6', threshold: 3, successNext: 'listen_success', failNext: 'listen_fail' }
-        },
-        attack_success: {
-            id: 'attack_success',
-            text: `
-              Udało Ci się zaskoczyć przeciwników – szybkim ciosem wytrącasz im broń, a oni chowają się w popłochu.
-              Znajdujesz przy nich fragment wiadomości od korporacji.
-              <br><br>
-              **Koniec demo.**
-            `,
-            choices: []
-        },
-        attack_fail: {
-            id: 'attack_fail',
-            text: `
-              Jeden z nich przewidział Twój ruch i skręcił twoją rękę. Padają seriami ciosy.
-              <br><br>
-              **Porzuć gratulacje – demo zakończone przegraną.**
-            `,
-            choices: []
-        },
-        listen_success: {
-            id: 'listen_success',
-            text: `
-              Usłyszałeś fragment konspiracji – szyfrnik wspomina o spotkaniu w tajnym bunkrze w Badlands.
-              <br><br>
-              **Koniec demo.**
-            `,
-            choices: []
-        },
-        listen_fail: {
-            id: 'listen_fail',
-            text: `
-              Twój podsłuch został wykryty. Jeden z nich kopniakiem usuwa Cię spod stołu.
-              <br><br>
-              **Demo zakończone niepowodzeniem.**
-            `,
-            choices: []
-        },
-        check_gun: {
-            id: 'check_gun',
-            text: `
-              Sprawdzasz broń – magazynek pełny, wszystko działa. Nic się nie dzieje.
-              <br><br>
-              Wracasz do punktu wyjścia, bo jednak coś Ci umyka…
-            `,
-            choices: [
-                { text: "Wróć na początek", next: 'start' }
-            ],
-            requiresRoll: false
+    let story = {};
+    async function fetchStory() {
+        try {
+            const response = await fetch('/story.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            story = await response.json();
+            console.log('Story loaded successfully:', story);
+        } catch (error) {
+            console.error('Error loading story:', error);
+            Swal.fire({
+                title: "Błąd",
+                text: "Nie udało się załadować historii. Spróbuj ponownie później.",
+                icon: "error",
+                confirmButtonText: "OK"
+            });
         }
-    };
+    }
 
     // 1. Elementy DOM:
     const narrationEl = document.getElementById('story-narration');
@@ -398,7 +288,9 @@
 
     // 5. Inicjalizacja:
     window.addEventListener('DOMContentLoaded', () => {
-        renderScene(currentSceneId);
+        fetchStory().then(() => {
+            renderScene('start');
+        });
         Swal.fire({
             title: "Cześć!",
             text: "Gry RPG (Role-Playing Games) to wspólna opowieść, w której Mistrz Gry (DM/GM) prowadzi fabułę, opisuje świat i kontroluje postacie niezależne. Ty, jako gracz, wcielasz się w bohatera i decydujesz o jego działaniach. Wyniki trudnych akcji rozstrzygane są rzutami kością – powodzenie lub porażka zależy od losu i Twoich wyborów. Powodzenia!",
