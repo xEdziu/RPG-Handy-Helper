@@ -126,7 +126,11 @@ public class CpRedCharacterEnemiesService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+        if(character.getUser()==null){
+            if( gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów dla tej postaci.");
+            }
+        } else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
                 throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów dla tej postaci.");
             }
@@ -195,9 +199,13 @@ public class CpRedCharacterEnemiesService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+        if(character.getUser()==null){
+            if( gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów dla tej postaci.");
+            }
+        } else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do usuwania wrogów dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów dla tej postaci.");
             }
         }
         cpRedCharacterEnemiesRepository.deleteById(enemyId);
@@ -230,9 +238,13 @@ public class CpRedCharacterEnemiesService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+        if(character.getUser()==null){
+            if( gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów dla tej postaci.");
+            }
+        } else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do modyfikacji wrogów dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów dla tej postaci.");
             }
         }
 
