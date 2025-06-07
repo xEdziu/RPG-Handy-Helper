@@ -2,12 +2,14 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterStats;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-@ToString
-public class CpRedCharacterStatsDTO {
+@NoArgsConstructor
+public class AddCharacterStatsRequest {
     private Integer maxStatLevel;
     private Integer currentStatLevel;
     private Long characterId;
