@@ -38,6 +38,7 @@ public class CpRedCharacterStatsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
         List<CpRedCharacterStatsDTO> characterStats = cpRedCharacterStatsRepository.getCharacterStatsByCharacterId(character).stream()
                 .map(stats -> new CpRedCharacterStatsDTO(
+                        stats.getId(),
                         stats.getMaxStatLevel(),
                         stats.getCurrentStatLevel(),
                         stats.getCharacterId().getId(),
@@ -56,7 +57,7 @@ public class CpRedCharacterStatsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         // Czy podano wszystkie wymagane pola w request
-        if (addCharacterStatsRequest.getMaxStatLevel() == null || addCharacterStatsRequest.getCurrentStatLevel() == null ||
+        if (addCharacterStatsRequest.getCurrentStatLevel() == null ||
                 addCharacterStatsRequest.getCharacterId() == null || addCharacterStatsRequest.getStatId() == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
@@ -94,6 +95,9 @@ public class CpRedCharacterStatsService {
 
         // Czy maksymalna statystyka jest potrzebna
         if (stat.isChangeable()){
+            if (addCharacterStatsRequest.getMaxStatLevel() == null) {
+                throw new IllegalArgumentException("Maksymalny poziom statystyki musi być podany, ponieważ statystyka jest zmienna.");
+            }
             // Czy maksymalny poziom statystyki jet większy od -1 i mniejsza od 21
             if (addCharacterStatsRequest.getMaxStatLevel() < 0 || addCharacterStatsRequest.getMaxStatLevel() > 20) {
                 throw new IllegalArgumentException("Maksymalny poziom statystyki musi być z zakresu od 0 do 20.");
@@ -107,10 +111,14 @@ public class CpRedCharacterStatsService {
                 throw new IllegalArgumentException("Aktualny poziom statystyki nie może być większy niż maksymalny poziom statystyki.");
             }
         } else {
+            if (addCharacterStatsRequest.getMaxStatLevel() != null) {
+                throw new IllegalArgumentException("Ta statystyka nie jest zmienna, więc nie możesz ustawić maksymalnego poziomu statystyki");
+            }
             // Czy aktualny poziom statystyki jet większy od -1 i mniejsza od 21
             if (addCharacterStatsRequest.getCurrentStatLevel() < 0 || addCharacterStatsRequest.getCurrentStatLevel() > 20) {
                 throw new IllegalArgumentException("Aktualny poziom statystyki musi być z zakresu od 0 do 20");
             }
+            addCharacterStatsRequest.setMaxStatLevel(null);
         }
 
         // Tworzenie nowej klasy postaci
@@ -183,8 +191,10 @@ public class CpRedCharacterStatsService {
                 throw new IllegalArgumentException("Aktualny poziom statystyki musi być z zakresu od 0 do 20");
             }
             // Czy aktualny poziom statystyki jest nie większy od maksymalnego poziomu statystyki
-            if (updateCharacterStatsRequest.getCurrentStatLevel() > characterStatsToUpdate.getMaxStatLevel()) {
-                throw new IllegalArgumentException("Aktualny poziom statystyki nie może być większy niż maksymalny poziom statystyki.");
+            if (stat.isChangeable()){
+                if (updateCharacterStatsRequest.getCurrentStatLevel() > characterStatsToUpdate.getMaxStatLevel()) {
+                    throw new IllegalArgumentException("Aktualny poziom statystyki nie może być większy niż maksymalny poziom statystyki.");
+                }
             }
             characterStatsToUpdate.setCurrentStatLevel(updateCharacterStatsRequest.getCurrentStatLevel());
         }
