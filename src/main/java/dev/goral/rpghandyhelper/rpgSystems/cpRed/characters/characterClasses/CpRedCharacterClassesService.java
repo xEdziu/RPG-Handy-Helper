@@ -85,15 +85,17 @@ public class CpRedCharacterClassesService {
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
             if (character.getType() != CpRedCharactersType.NPC) {
                 if (!Objects.equals(currentUser.getId(), character.getUser().getId())) {
-                    throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze lub nie jest właścicielem postaci.");
+                    throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
+            } else {
+                throw new ResourceNotFoundException("Tylko GM może zmieniać statystyki postaci NPC.");
             }
         }
 
 
         // Czy poziom klasy jest większy niż 0 i mniejszy równy 10
         if (addCharacterClassesRequest.getClassLevel() <= 0 || addCharacterClassesRequest.getClassLevel() > 10) {
-            throw new ResourceNotFoundException("Poziom klasy musi być większy niż 0 i mniejszy lub równy 10.");
+            throw new ResourceNotFoundException("Poziom klasy musi być z zakresu od 1 do 10.");
         }
 
         // Tworzenie nowej klasy postaci
@@ -130,14 +132,20 @@ public class CpRedCharacterClassesService {
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
 
         // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
-        if (!Objects.equals(currentUser.getId(), character.getUser().getId()) && gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze lub nie jest właścicielem postaci.");
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
+            if (character.getType() != CpRedCharactersType.NPC) {
+                if (!Objects.equals(currentUser.getId(), character.getUser().getId())) {
+                    throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
+                }
+            } else {
+                throw new ResourceNotFoundException("Tylko GM może zmieniać statystyki postaci NPC.");
+            }
         }
 
         if (updateCharacterClassesRequest.getClassLevel() != -1){
             // Czy poziom klasy jest większy niż 0 i mniejszy równy 10
             if (updateCharacterClassesRequest.getClassLevel() <= 0 || updateCharacterClassesRequest.getClassLevel() > 10) {
-                throw new ResourceNotFoundException("Poziom klasy musi być większy niż 0 i mniejszy lub równy 10.");
+                throw new ResourceNotFoundException("Poziom klasy musi być z zakresu od 1 do 10.");
             }
             characterClassToUpdate.setClassLevel(updateCharacterClassesRequest.getClassLevel());
         }
@@ -167,8 +175,14 @@ public class CpRedCharacterClassesService {
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
 
         // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
-        if (!Objects.equals(currentUser.getId(), character.getUser().getId()) && gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze lub nie jest właścicielem postaci.");
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
+            if (character.getType() != CpRedCharactersType.NPC) {
+                if (!Objects.equals(currentUser.getId(), character.getUser().getId())) {
+                    throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
+                }
+            } else {
+                throw new ResourceNotFoundException("Tylko GM może zmieniać statystyki postaci NPC.");
+            }
         }
 
         // Usuwanie klasy postaci
