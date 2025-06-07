@@ -1,5 +1,6 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterTragicLoveStory;
 
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterTragicLoveStory.CpRedCharacterTragicLoveStoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
