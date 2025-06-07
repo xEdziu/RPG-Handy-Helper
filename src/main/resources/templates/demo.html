@@ -399,6 +399,13 @@
     // 5. Inicjalizacja:
     window.addEventListener('DOMContentLoaded', () => {
         renderScene(currentSceneId);
+        Swal.fire({
+            title: "Cześć!",
+            text: "Gry RPG (Role-Playing Games) to wspólna opowieść, w której Mistrz Gry (DM/GM) prowadzi fabułę, opisuje świat i kontroluje postacie niezależne. Ty, jako gracz, wcielasz się w bohatera i decydujesz o jego działaniach. Wyniki trudnych akcji rozstrzygane są rzutami kością – powodzenie lub porażka zależy od losu i Twoich wyborów. Powodzenia!",
+            icon: "info",
+            confirmButtonText: "Jedziemy!",
+            footer: '<a style="color: blue; cursor: pointer; font-weight: bold" target="_blank" rel="noopener noreferrer" href="https://help.roll20.net/hc/en-us/articles/360039223634-Introduction-to-Tabletop-RPGs">Więcej informacji o RPG!</a>'
+        });
     });
     window.handleRoll = handleRoll;
     window.renderScene = renderScene;
