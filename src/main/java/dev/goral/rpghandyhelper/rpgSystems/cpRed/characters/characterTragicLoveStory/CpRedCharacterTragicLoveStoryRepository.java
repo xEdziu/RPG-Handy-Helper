@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface CpRedCharacterTragicLoveStoryRepository extends JpaRepository<CpRedCharacterTragicLoveStory, Long> {
-    List<CpRedCharacterTragicLoveStory> findAllByCharacterId(Long characterId);
+    List<CpRedCharacterTragicLoveStory> findAllByCharacterId_Id(Long characterId);
     Boolean existsByNameAndCharacterId(String name, CpRedCharacters characterId);
 }

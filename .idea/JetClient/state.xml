@@ -1755,6 +1755,83 @@
                                   </option>
                                   <option name="sortWeight" value="2000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="3133e7f2-203d-4b94-935d-45c562f02ce9" />
+                                  <option name="name" value="TragicLoveStory" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  characterId: 2,&#10;  name: &quot;The story&quot;,&#10;  description: &quot;Description of the story&quot;,&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Tworzy wątek przypisany do konkretnej karty postaci" />
+                                        <option name="id" value="b550f1eb-3b35-4f0f-a55e-8b1e99fe763e" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz wątek" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/tragicLoveStory/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Usuwa wątek przypisany do konkretnej karty postaci" />
+                                        <option name="id" value="d120f032-d718-4c9d-80e9-7b16d4ac953b" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń wątek" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/tragicLoveStory/delete/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca każdy wątek z każdej karty postaci" />
+                                        <option name="id" value="99895ceb-8b5f-41a1-9d7d-233268f9c569" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie wątki" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/tragicLoveStory/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wątek po unikalnym id" />
+                                        <option name="id" value="acce7d0f-fe1a-4f49-8e46-37fed4e0169b" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wątek po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/tragicLoveStory/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="2b23673a-e718-4bfa-a505-280315db5dc1" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie wątki dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/tragicLoveStory/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkie wątki z konkretnej karty postaci" />
+                                        <option name="id" value="6061f998-858c-4ca7-9356-fd258d86c01c" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wątki po characterId" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/tragicLoveStory/character/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  characterId: 2,&#10;  name: &quot;The new story&quot;,&#10;  description: &quot;This is a modified story description.&quot;,&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zmień dane wątka" />
+                                        <option name="id" value="b42e0ccc-0f8b-4f72-9ccb-42e0f5dd759e" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj wątki" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/tragicLoveStory/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="3000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="8a34e9df-ba8d-4e2d-a5d3-98775455502f" />

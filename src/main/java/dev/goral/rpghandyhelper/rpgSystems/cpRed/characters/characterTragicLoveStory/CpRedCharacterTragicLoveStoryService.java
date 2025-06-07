@@ -57,7 +57,7 @@ public class CpRedCharacterTragicLoveStoryService {
     }
 
     public Map<String, Object> getTragicLoveStoryByCharacterId(Long characterId) {
-        List<CpRedCharacterTragicLoveStory> stories = CpRedCharacterTragicLoveStoryRepository.findAllByCharacterId(characterId);
+        List<CpRedCharacterTragicLoveStory> stories = CpRedCharacterTragicLoveStoryRepository.findAllByCharacterId_Id(characterId);
         if (stories.isEmpty()) {
             return CustomReturnables.getOkResponseMap("Brak wątku tragiczno-miłosnego dla postaci o id " + characterId);
         }
@@ -107,7 +107,12 @@ public class CpRedCharacterTragicLoveStoryService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+        if(character.getUser()==null){
+            if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wątków tragiczno-miłosnych w dla tej postaci.");
+            }
+        }
+        else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
                 throw new IllegalStateException("Nie masz uprawnień do dodawania wątków tragiczno-miłosnych w dla tej postaci.");
             }
@@ -160,9 +165,14 @@ public class CpRedCharacterTragicLoveStoryService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+        if(character.getUser()==null){
+            if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wątków tragiczno-miłosnych w dla tej postaci.");
+            }
+        }
+        else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do usuwania wątków tragiczno-miłosnych dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wątków tragiczno-miłosnych w dla tej postaci.");
             }
         }
         cpRedCharacterTragicLoveStoryRepository.deleteById(storyId);
@@ -195,9 +205,14 @@ public class CpRedCharacterTragicLoveStoryService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+        if(character.getUser()==null){
+            if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wątków tragiczno-miłosnych w dla tej postaci.");
+            }
+        }
+        else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do modyfikacji wątku tragiczno-miłosnego dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do dodawania wątków tragiczno-miłosnych w dla tej postaci.");
             }
         }
 
