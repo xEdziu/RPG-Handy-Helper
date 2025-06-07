@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CpRedCharacterEnemiesRepository extends JpaRepository<CpRedCharacterEnemies,Long> {
-    List<CpRedCharacterEnemies> findAllByCharacterId_Id(Long characterId);
+    List<CpRedCharacterEnemies> findAllByCharacterId(Long characterId);
     Boolean existsByNameAndCharacterId(String name, CpRedCharacters character);
 
 
