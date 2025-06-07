@@ -1,0 +1,142 @@
+{
+  "start": {
+    "id": "start",
+    "text": "Neonowe światła Night City odbijają się w Twoich cybernetycznych oczach. Jesteś znanym w półświatku najemnikiem, specjalistą od brudnej roboty i zdobywania informacji, których nikt inny nie potrafi znaleźć. Właśnie przekroczyłeś próg \"Afterlife\", legendarnego baru dla edgerunnerów, miejsca, gdzie rodzą się i umierają legendy. Gęsty dym papierosowy miesza się z zapachem taniej whiskey i desperacji. Co robisz?",
+    "choices": [
+      {"text": "Podejdź do baru, spróbuj zagadać do Claire", "next": "talk_barman"},
+      {"text": "Rozejrzyj się za stolikiem informatorów", "next": "spy_table"},
+      {"text": "Sprawdź stan swojego chromu i broni", "next": "check_gun"}
+    ],
+    "requiresRoll": false
+  },
+  "talk_barman": {
+    "id": "talk_barman",
+    "text": "Claire, barmanka o spojrzeniu twardszym niż niejeden pancerz, poleruje szklankę. Wydaje się być zajęta, ale może uda Ci się przyciągnąć jej uwagę i wydobyć jakieś informacje. Musisz ją przekonać, że warto z Tobą rozmawiać. Wymagany rzut perswazji: 1d10, próg: 6.",
+    "choices": [{"text": "Spróbuj ją przekonać", "next": "roll_barman"}],
+    "requiresRoll": true,
+    "rollConfig": {"notation": "1d10", "threshold": 6, "successNext": "barman_success", "failNext": "barman_fail"}
+  },
+  "barman_success": {
+    "id": "barman_success",
+    "text": "Twoje słowa trafiają w dziesiątkę. Claire rzuca Ci dyskretne spojrzenie i cichym głosem wspomina o szeptach na temat tajnego spotkania ludzi z Arasaki gdzieś na obrzeżach Badlands. Podobno szykują coś dużego.",
+    "choices": [{"text": "Podziękuj i zacznij planować podróż", "next": "prepare_trip"}],
+    "requiresRoll": false
+  },
+  "barman_fail": {
+    "id": "barman_fail",
+    "text": "Claire prycha pod nosem. \"Nie mam czasu na pogaduszki, choom. Zamawiasz coś, czy tylko blokujesz kolejkę?\" Wygląda na to, że dzisiaj nic od niej nie wyciągniesz.",
+    "choices": [{"text": "Odpuść i poszukaj innych źródeł", "next": "spy_table"}],
+    "requiresRoll": false
+  },
+  "spy_table": {
+    "id": "spy_table",
+    "text": "W mrocznym kącie dostrzegasz trzech typów oślizgłego wyglądu, ewidentnie wymieniających się informacjami. Ich spojrzenia są czujne i nieufne. Możesz spróbować podejść i zagadać, zaatakować ich z zaskoczenia, albo dyskretnie podsłuchać ich rozmowę.",
+    "choices": [
+      {"text": "Zaatakuj ich, licząc na element zaskoczenia", "next": "roll_attack"},
+      {"text": "Spróbuj podsłuchać ich rozmowę", "next": "roll_listen"}
+    ],
+    "requiresRoll": false
+  },
+  "roll_attack": {
+    "id": "roll_attack",
+    "text": "Decydujesz się na bezpośrednią konfrontację. Zaskoczenie jest po Twojej stronie, ale oni też nie wyglądają na amatorów. Wymagany rzut na walkę wręcz: 1d6, próg: 4.",
+    "requiresRoll": true,
+    "rollConfig": {"notation": "1d6", "threshold": 4, "successNext": "attack_success", "failNext": "attack_fail"}
+  },
+  "attack_success": {
+    "id": "attack_success",
+    "text": "Twoje szybkie i precyzyjne ciosy neutralizują opór. Jeden z nich, charcząc, upuszcza zaszyfrowany datapad. Wygląda na to, że zawiera współrzędne jakiegoś bunkra na Badlands.",
+    "choices": [{"text": "Zabierz datapad i przygotuj się do wyjazdu", "next": "prepare_trip"}],
+    "requiresRoll": false
+  },
+  "attack_fail": {
+    "id": "attack_fail",
+    "text": "Informatorzy okazują się być szybsi i lepiej przygotowani niż sądziłeś. Po krótkiej, brutalnej walce lądujesz na bruku za barem, poturbowany i bez żadnych nowych informacji. Przynajmniej niczego Ci nie ukradli.",
+    "choices": [{"text": "Otrzep się i spróbuj dojść do siebie w bocznej alejce", "next": "alley"}],
+    "requiresRoll": false
+  },
+  "roll_listen": {
+    "id": "roll_listen",
+    "text": "Postanawiasz działać subtelnie. Zbliżasz się, udając zainteresowanie automatem z napojami, i wytężasz słuch, próbując wyłowić fragmenty rozmowy. Wymagany rzut na spostrzegawczość/skradanie: 1d6, próg: 3.",
+    "requiresRoll": true,
+    "rollConfig": {"notation": "1d6", "threshold": 3, "successNext": "listen_success", "failNext": "listen_fail"}
+  },
+  "listen_success": {
+    "id": "listen_success",
+    "text": "Udało Ci się! Wśród gwaru baru wychwytujesz kluczowe słowa: \"bunkier Arasaki\", \"Badlands\", \"ważna dostawa\". Masz trop.",
+    "choices": [{"text": "To wystarczy. Czas się przygotować.", "next": "prepare_trip"}],
+    "requiresRoll": false
+  },
+  "listen_fail": {
+    "id": "listen_fail",
+    "text": "Niestety, jeden z informatorów zauważa Twoje podejrzane zainteresowanie. \"Czego tu szukasz, szczurze? Zjeżdżaj!\" Zostajesz odpędzony, zanim zdążyłeś cokolwiek usłyszeć.",
+    "choices": [{"text": "Wyjdź na zewnątrz, może w alejce znajdziesz spokój", "next": "alley"}],
+    "requiresRoll": false
+  },
+  "check_gun": {
+    "id": "check_gun",
+    "text": "Instynktownie sprawdzasz swój ulubiony pistolet i stan cyberwszczepów. Wszystko działa jak należy, jesteś gotowy na wszystko. Jednak samo stanie w miejscu nie przybliży Cię do celu.",
+    "choices": [{"text": "Wróć do baru i rozejrzyj się jeszcze raz", "next": "start"}],
+    "requiresRoll": false
+  },
+  "alley": {
+    "id": "alley",
+    "text": "W cuchnącej alejce, oświetlonej jedynie migotaniem uszkodzonego neonu, dostrzegasz postać opartą o ścianę. Wygląda na fixera. Gdy się zbliżasz, postać unosi głowę. \"Wyglądasz, jakbyś potrzebował pomocy... albo okazji. Mam coś, co może cię zainteresować. Mała przysługa dla Militechu, a w zamian dostaniesz coś ekstra na drogę.\"",
+    "choices": [{"text": "Zgódź się na układ z fixerem", "next": "secret_deal"}, {"text": "Zignoruj go i skup się na głównym celu", "next": "prepare_trip"}],
+    "requiresRoll": false
+  },
+  "secret_deal": {
+    "id": "secret_deal",
+    "text": "Fixer uśmiecha się pod nosem. \"Mądra decyzja.\" Wręcza Ci niewielki chip z danymi i dodatkowy magazynek amunicji specjalnej. \"Militech będzie wdzięczny. Pamiętaj, długi w Night City zawsze wracają.\"",
+    "choices": [{"text": "Mając nowy sprzęt, wyrusz w podróż", "next": "prepare_trip"}],
+    "requiresRoll": false
+  },
+  "prepare_trip": {
+    "id": "prepare_trip",
+    "text": "Masz cel: tajemniczy bunkier Arasaki na Badlands. Podróż przez te niebezpieczne pustkowia wymaga odpowiedniego przygotowania. Sprawdzasz mapę, ładujesz broń i wsiadasz do swojego wysłużonego pojazdu. Czas ruszać.",
+    "choices": [{"text": "Ruszaj w drogę przez Badlands", "next": "journey"}],
+    "requiresRoll": false
+  },
+  "journey": {
+    "id": "journey",
+    "text": "Pył i piach Badlands wdzierają się wszędzie. W oddali majaczą zardzewiałe wraki i opuszczone osady. Nagle, zza wzgórza wyłania się grupa nomadów na zdezelowanych motocyklach. Nie wyglądają przyjaźnie. Będziesz musiał się przebić albo ich ominąć. Wymagany rzut na przetrwanie/walkę: 1d10, próg: 5.",
+    "requiresRoll": true,
+    "rollConfig": {"notation": "1d10", "threshold": 5, "successNext": "gang_success", "failNext": "gang_fail"}
+  },
+  "gang_success": {
+    "id": "gang_success",
+    "text": "Twoje umiejętności prowadzenia pojazdu i celne strzały robią wrażenie na nomadach. Po krótkiej wymianie ognia, widząc, że nie dasz za wygraną, odpuszczają i znikają za horyzontem. Zdobyłeś ich niechętny szacunek, a droga stoi otworem.",
+    "choices": [{"text": "Kontynuuj podróż do bunkra", "next": "bunker"}],
+    "requiresRoll": false
+  },
+  "gang_fail": {
+    "id": "gang_fail",
+    "text": "Nomadzi okazują się być zbyt liczni i agresywni. Twój pojazd zostaje uszkodzony, a Ty tracisz część zapasów i amunicji, zanim udaje Ci się im uciec. Jesteś poturbowany, ale żywy. Musisz dotrzeć do bunkra, zanim coś jeszcze pójdzie nie tak.",
+    "choices": [{"text": "Docierasz resztkami sił do celu", "next": "bunker"}],
+    "requiresRoll": false
+  },
+  "bunker": {
+    "id": "bunker",
+    "text": "W końcu docierasz do celu. Ukryty wśród skał, betonowy bunkier Arasaki wygląda złowrogo. Główne wejście jest zamknięte, ale dostrzegasz szyb wentylacyjny. To Twoja szansa. W środku czeka Cię ostateczna konfrontacja i odpowiedzi na dręczące Cię pytania.",
+    "choices": [{"text": "Wkrocz do bunkra przez szyb wentylacyjny", "next": "final_roll"}],
+    "requiresRoll": false
+  },
+  "final_roll": {
+    "id": "final_roll",
+    "text": "Wślizgujesz się do środka. Korytarze są ciche, zbyt ciche. W głównym pomieszczeniu znajdujesz terminal i dane, których szukałeś. Ale to była pułapka! Alarm wyje, a drzwi blokują się. Musisz szybko zhakować system, aby uciec z danymi, zanim przybędą posiłki Arasaki. Wymagany rzut na hakowanie/technologię: 1d20, próg: 12.",
+    "requiresRoll": true,
+    "rollConfig": {"notation": "1d20", "threshold": 12, "successNext": "final_success", "failNext": "final_fail"}
+  },
+  "final_success": {
+    "id": "final_success",
+    "text": "Twoje palce tańczą po klawiaturze. Kod za kodem, łamiesz zabezpieczenia Arasaki. W ostatniej chwili system pada, drzwi stają otworem, a Ty uciekasz z cennymi danymi, zostawiając za sobą chaos. Misja zakończona sukcesem! Twoja legenda w Night City właśnie zyskała nowy rozdział.",
+    "choices": [],
+    "requiresRoll": false
+  },
+  "final_fail": {
+    "id": "final_fail",
+    "text": "Zabezpieczenia Arasaki są zbyt silne. Czas ucieka, a Ty słyszysz kroki zbliżających się strażników. Zostajesz schwytany. Może następnym razem pójdzie Ci lepiej, o ile będzie następny raz... Koniec gry.",
+    "choices": [],
+    "requiresRoll": false
+  }
+}
