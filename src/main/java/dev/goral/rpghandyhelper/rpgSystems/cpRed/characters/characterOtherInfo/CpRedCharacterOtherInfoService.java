@@ -151,36 +151,36 @@ public class CpRedCharacterOtherInfoService {
         if(cpRedCharacterOtherInfo.getNotes().length()>500){
             throw new IllegalArgumentException("Notatka nie może być dłuższa niż 500 znaków dla tej postaci.");
         }
-        if(cpRedCharacterOtherInfo.getAddictions().length()>255) {
-            throw new IllegalArgumentException("Informacja o uzależnieniu nie może być dłuższa niż 255 znaków dla tej postaci.");
+        if(cpRedCharacterOtherInfo.getAddictions().length()>500) {
+            throw new IllegalArgumentException("Informacja o uzależnieniu nie może być dłuższa niż 500 znaków dla tej postaci.");
         }
         if(cpRedCharacterOtherInfo.getReputation().isEmpty()||
                 cpRedCharacterOtherInfo.getReputation().trim().isEmpty()){
             throw new IllegalArgumentException("Informacja o reputacji nie może być pusta dla tej postaci.");
         }
-        if(cpRedCharacterOtherInfo.getReputation().length()>255) {
-            throw new IllegalArgumentException("Informacja o reputacji nie może być dłuższa niż 255 znaków dla tej postaci.");
+        if(cpRedCharacterOtherInfo.getReputation().length()>500) {
+            throw new IllegalArgumentException("Informacja o reputacji nie może być dłuższa niż 500 znaków dla tej postaci.");
         }
         if(cpRedCharacterOtherInfo.getStyle().isEmpty()||
                 cpRedCharacterOtherInfo.getStyle().trim().isEmpty()){
             throw new IllegalArgumentException("Informacja o stylu nie może być pusta dla tej postaci.");
         }
-        if(cpRedCharacterOtherInfo.getStyle().length()>255) {
-            throw new IllegalArgumentException("Informacja o stylu nie może być dłuższa niż 255 znaków dla tej postaci.");
+        if(cpRedCharacterOtherInfo.getStyle().length()>500) {
+            throw new IllegalArgumentException("Informacja o stylu nie może być dłuższa niż 500 znaków dla tej postaci.");
         }
         if(cpRedCharacterOtherInfo.getClassLifePath().isEmpty()||
                 cpRedCharacterOtherInfo.getClassLifePath().trim().isEmpty()){
             throw new IllegalArgumentException("Informacja o ścieżce życiowej nie może być pusta dla tej postaci.");
         }
-        if(cpRedCharacterOtherInfo.getClassLifePath().length()>255) {
-            throw new IllegalArgumentException("Informacja ścieżce życiowej nie może być dłuższa niż 255 znaków dla tej postaci.");
+        if(cpRedCharacterOtherInfo.getClassLifePath().length()>500) {
+            throw new IllegalArgumentException("Informacja ścieżce życiowej nie może być dłuższa niż 500 znaków dla tej postaci.");
         }
         if(cpRedCharacterOtherInfo.getAccommodation().isEmpty()||
                 cpRedCharacterOtherInfo.getAccommodation().trim().isEmpty()){
             throw new IllegalArgumentException("Informacja o zakwaterowaniu nie może być pusta dla tej postaci.");
         }
-        if(cpRedCharacterOtherInfo.getAccommodation().length()>255) {
-            throw new IllegalArgumentException("Informacja o zakwaterowaniu nie może być dłuższa niż 255 znaków dla tej postaci.");
+        if(cpRedCharacterOtherInfo.getAccommodation().length()>500) {
+            throw new IllegalArgumentException("Informacja o zakwaterowaniu nie może być dłuższa niż 500 znaków dla tej postaci.");
         }
 
         if(cpRedCharacterOtherInfo.getRental()<=0){
@@ -191,8 +191,8 @@ public class CpRedCharacterOtherInfoService {
                 cpRedCharacterOtherInfo.getLivingStandard().trim().isEmpty()){
             throw new IllegalArgumentException("Informacja o standardzie życia nie może być pusta dla tej postaci.");
         }
-        if(cpRedCharacterOtherInfo.getLivingStandard().length()>255) {
-            throw new IllegalArgumentException("Informacja o standardzie życia nie może być dłuższa niż 255 znaków dla tej postaci.");
+        if(cpRedCharacterOtherInfo.getLivingStandard().length()>500) {
+            throw new IllegalArgumentException("Informacja o standardzie życia nie może być dłuższa niż 500 znaków dla tej postaci.");
         }
 
         CpRedCharacterOtherInfo newInfo = new CpRedCharacterOtherInfo(
@@ -279,9 +279,6 @@ public class CpRedCharacterOtherInfoService {
         if (infoToUpdate.getCharacterId().getId() != cpRedCharacterOtherInfo.getCharacterId()) {
             throw new IllegalArgumentException("Nie można zmienić postaci przypisanej do tych dodatkowych informacji.");
         }
-        if (cpRedCharacterOtherInfoRepository.existsByCharacterId(character)) {
-            throw new IllegalArgumentException("Dodatkowe informacje o tej nazwie już istnieją dla tej postaci.");
-        }
         if (cpRedCharacterOtherInfo.getNotes() != null) {
             if (cpRedCharacterOtherInfo.getNotes().isEmpty() ||
                     cpRedCharacterOtherInfo.getNotes().trim().isEmpty()) {
@@ -293,8 +290,8 @@ public class CpRedCharacterOtherInfoService {
             infoToUpdate.setNotes(cpRedCharacterOtherInfo.getNotes());
         }
         if (cpRedCharacterOtherInfo.getAddictions() != null) {
-            if (cpRedCharacterOtherInfo.getAddictions().length() > 255) {
-                throw new IllegalArgumentException("Informacja o uzależnieniu nie może być dłuższa niż 255 znaków dla tej postaci.");
+            if (cpRedCharacterOtherInfo.getAddictions().length() > 500) {
+                throw new IllegalArgumentException("Informacja o uzależnieniu nie może być dłuższa niż 500 znaków dla tej postaci.");
             }
             infoToUpdate.setAddictions(cpRedCharacterOtherInfo.getAddictions());
         }
@@ -303,8 +300,8 @@ public class CpRedCharacterOtherInfoService {
                     cpRedCharacterOtherInfo.getReputation().trim().isEmpty()) {
                 throw new IllegalArgumentException("Informacja o reputacji nie może być pusta dla tej postaci.");
             }
-            if (cpRedCharacterOtherInfo.getReputation().length() > 255) {
-                throw new IllegalArgumentException("Informacja o reputacji nie może być dłuższa niż 255 znaków dla tej postaci.");
+            if (cpRedCharacterOtherInfo.getReputation().length() > 500) {
+                throw new IllegalArgumentException("Informacja o reputacji nie może być dłuższa niż 500 znaków dla tej postaci.");
             }
             infoToUpdate.setReputation(cpRedCharacterOtherInfo.getReputation());
         }
@@ -313,8 +310,8 @@ public class CpRedCharacterOtherInfoService {
                     cpRedCharacterOtherInfo.getStyle().trim().isEmpty()) {
                 throw new IllegalArgumentException("Informacja o stylu nie może być pusta dla tej postaci.");
             }
-            if (cpRedCharacterOtherInfo.getStyle().length() > 255) {
-                throw new IllegalArgumentException("Informacja o stylu nie może być dłuższa niż 255 znaków dla tej postaci.");
+            if (cpRedCharacterOtherInfo.getStyle().length() > 500) {
+                throw new IllegalArgumentException("Informacja o stylu nie może być dłuższa niż 500 znaków dla tej postaci.");
             }
             infoToUpdate.setStyle(cpRedCharacterOtherInfo.getStyle());
         }
@@ -323,8 +320,8 @@ public class CpRedCharacterOtherInfoService {
                     cpRedCharacterOtherInfo.getClassLifePath().trim().isEmpty()) {
                 throw new IllegalArgumentException("Informacja o ścieżce życiowej nie może być pusta dla tej postaci.");
             }
-            if (cpRedCharacterOtherInfo.getClassLifePath().length() > 255) {
-                throw new IllegalArgumentException("Informacja o ścieżce życiowej nie może być dłuższa niż 255 znaków dla tej postaci.");
+            if (cpRedCharacterOtherInfo.getClassLifePath().length() > 500) {
+                throw new IllegalArgumentException("Informacja o ścieżce życiowej nie może być dłuższa niż 500 znaków dla tej postaci.");
             }
             infoToUpdate.setClassLifePath(cpRedCharacterOtherInfo.getClassLifePath());
         }
@@ -333,8 +330,8 @@ public class CpRedCharacterOtherInfoService {
                     cpRedCharacterOtherInfo.getAccommodation().trim().isEmpty()) {
                 throw new IllegalArgumentException("Informacja o zakwaterowaniu nie może być pusta dla tej postaci.");
             }
-            if (cpRedCharacterOtherInfo.getAccommodation().length() > 255) {
-                throw new IllegalArgumentException("Informacja o zakwaterowaniu nie może być dłuższa niż 255 znaków dla tej postaci.");
+            if (cpRedCharacterOtherInfo.getAccommodation().length() > 500) {
+                throw new IllegalArgumentException("Informacja o zakwaterowaniu nie może być dłuższa niż 500 znaków dla tej postaci.");
             }
             infoToUpdate.setAccommodation(cpRedCharacterOtherInfo.getAccommodation());
         }
@@ -349,8 +346,8 @@ public class CpRedCharacterOtherInfoService {
                     cpRedCharacterOtherInfo.getLivingStandard().trim().isEmpty()) {
                 throw new IllegalArgumentException("Informacja o standardzie życia nie może być pusta dla tej postaci.");
             }
-            if (cpRedCharacterOtherInfo.getLivingStandard().length() > 255) {
-                throw new IllegalArgumentException("Informacja o standardzie życia nie może być dłuższa niż 255 znaków dla tej postaci.");
+            if (cpRedCharacterOtherInfo.getLivingStandard().length() > 500) {
+                throw new IllegalArgumentException("Informacja o standardzie życia nie może być dłuższa niż 500 znaków dla tej postaci.");
             }
             infoToUpdate.setLivingStandard(cpRedCharacterOtherInfo.getLivingStandard());
         }

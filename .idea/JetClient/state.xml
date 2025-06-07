@@ -1678,6 +1678,83 @@
                                   </option>
                                   <option name="sortWeight" value="1000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="89626b62-8be8-47ab-8fa6-696c19b51ad9" />
+                                  <option name="name" value="OtherInfo" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;characterId&quot;: 1,&#10;  &quot;notes&quot;: &quot;This is a test character.&quot;,&#10;  &quot;addictions&quot;: &quot;Drugs&quot;,&#10;  &quot;reputation&quot;: &quot;Hero&quot;,&#10;  &quot;style&quot;: &quot;Stealth&quot;,&#10;  &quot;classLifePath&quot;: &quot;Worrior&quot;,&#10;  &quot;accommodation&quot;: &quot;Apartment&quot;,&#10;  &quot;rental&quot;: &quot;500&quot;,&#10;  &quot;livingStandard&quot;: &quot;High&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Tworzy info przypisane do konkretnej karty postaci" />
+                                        <option name="id" value="7156c912-c1dc-41ce-aa4d-96244489f4cd" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz info" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Usuwa info przypisane do konkretnej karty postaci" />
+                                        <option name="id" value="2889f1c0-7992-46ae-aebb-2bf5119c4965" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń info" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/delete/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca każde info z każdej karty postaci" />
+                                        <option name="id" value="295b8556-564f-4020-bd14-1f4b61d0540d" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie info" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca info po unikalnym id" />
+                                        <option name="id" value="e87c6455-a946-4beb-8130-1545f9b48fae" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć info po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="139f0a9e-9b2f-4096-80b3-089465dab4c0" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie info dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/OtherInfo/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkie info z konkretnej karty postaci" />
+                                        <option name="id" value="5f6585ec-5fc6-4f6f-bb38-59734de241d4" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć info po characterId" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/character/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;characterId&quot;: 1,&#10;  &quot;notes&quot;: &quot;This is a new test character.&quot;,&#10;  &quot;addictions&quot;: &quot;Drugs and Alcohol&quot;,&#10;  &quot;reputation&quot;: &quot;Drug Dealer&quot;,&#10;  &quot;style&quot;: &quot;Fast&quot;,&#10;  &quot;classLifePath&quot;: &quot;Homeless&quot;,&#10;  &quot;accommodation&quot;: &quot;Tent&quot;,&#10;  &quot;rental&quot;: &quot;600&quot;,&#10;  &quot;livingStandard&quot;: &quot;Low&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zmień dane  w info" />
+                                        <option name="id" value="5165a1fe-56da-4a19-9215-6762d11c33c3" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj info" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="2000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="8a34e9df-ba8d-4e2d-a5d3-98775455502f" />

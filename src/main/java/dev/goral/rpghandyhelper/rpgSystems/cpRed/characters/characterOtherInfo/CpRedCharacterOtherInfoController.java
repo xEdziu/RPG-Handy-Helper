@@ -37,7 +37,7 @@ public class CpRedCharacterOtherInfoController {
         return cpRedCharacterOtherInfoService.addOtherInfo(cpRedCharacterOtherInfo);
     }
 
-    @DeleteMapping(path = "/rpgSystems/cpRed/character/OtherInfo/delete/{OtherInfoId}")
+    @DeleteMapping(path = "/rpgSystems/cpRed/character/OtherInfo/delete/{infoId}")
     public Map<String, Object> deleteOtherInfo(@PathVariable("infoId") Long infoId) {
         return cpRedCharacterOtherInfoService.deleteOtherInfo(infoId);
     }
