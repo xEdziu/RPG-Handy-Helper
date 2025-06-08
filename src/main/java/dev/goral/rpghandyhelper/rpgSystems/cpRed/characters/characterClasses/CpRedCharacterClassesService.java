@@ -2,6 +2,7 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterClasses;
 
 import dev.goral.rpghandyhelper.game.Game;
 import dev.goral.rpghandyhelper.game.GameRepository;
+import dev.goral.rpghandyhelper.game.GameStatus;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
@@ -69,11 +70,6 @@ public class CpRedCharacterClassesService {
         CpRedClasses characterClass = cpRedClassesRepository.findById(addCharacterClassesRequest.getClassId())
                 .orElseThrow(() -> new ResourceNotFoundException("Klasa o podanym ID nie została znaleziona."));
 
-        // Sprawdzenie, czy klasa już istnieje dla tej postaci
-        if (cpRedCharacterClassesRepository.existsByCharacterIdAndClassId(character, characterClass)) {
-            throw new ResourceNotFoundException("Klasa o podanym ID już istnieje dla tej postaci.");
-        }
-
         Game game = gameRepository.findById(character.getGame().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Gra powiązana z postacią nie została znaleziona."));
 
@@ -92,6 +88,15 @@ public class CpRedCharacterClassesService {
             }
         }
 
+        // Sprawdź, czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
+        }
+
+        // Sprawdzenie, czy klasa już istnieje dla tej postaci
+        if (cpRedCharacterClassesRepository.existsByCharacterIdAndClassId(character, characterClass)) {
+            throw new ResourceNotFoundException("Klasa o podanym ID już istnieje dla tej postaci.");
+        }
 
         // Czy poziom klasy jest większy niż 0 i mniejszy równy 10
         if (addCharacterClassesRequest.getClassLevel() <= 0 || addCharacterClassesRequest.getClassLevel() > 10) {
@@ -142,6 +147,11 @@ public class CpRedCharacterClassesService {
             }
         }
 
+        // Sprawdź, czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
+        }
+
         if (updateCharacterClassesRequest.getClassLevel() != -1){
             // Czy poziom klasy jest większy niż 0 i mniejszy równy 10
             if (updateCharacterClassesRequest.getClassLevel() <= 0 || updateCharacterClassesRequest.getClassLevel() > 10) {
@@ -183,6 +193,11 @@ public class CpRedCharacterClassesService {
             } else {
                 throw new ResourceNotFoundException("Tylko GM może zmieniać statystyki postaci NPC.");
             }
+        }
+
+        // Sprawdź, czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
         }
 
         // Usuwanie klasy postaci
