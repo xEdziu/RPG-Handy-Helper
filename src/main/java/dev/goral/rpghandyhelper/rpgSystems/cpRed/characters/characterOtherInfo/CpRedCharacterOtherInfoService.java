@@ -135,7 +135,7 @@ public class CpRedCharacterOtherInfoService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if(character.getUser().getId()==null){
+        if(character.getUser()==null){
             if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
                 throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji w dla tej postaci.");
             }
@@ -240,7 +240,7 @@ public class CpRedCharacterOtherInfoService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if(character.getUser().getId()==null){
+        if(character.getUser()==null){
             if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
                 throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji w dla tej postaci.");
             }
@@ -280,7 +280,7 @@ public class CpRedCharacterOtherInfoService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if(character.getUser().getId()==null){
+        if(character.getUser()==null){
             if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
                 throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji w dla tej postaci.");
             }
