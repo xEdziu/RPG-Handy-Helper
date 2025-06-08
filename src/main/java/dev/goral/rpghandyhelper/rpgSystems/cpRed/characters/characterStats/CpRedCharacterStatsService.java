@@ -2,6 +2,7 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterStats;
 
 import dev.goral.rpghandyhelper.game.Game;
 import dev.goral.rpghandyhelper.game.GameRepository;
+import dev.goral.rpghandyhelper.game.GameStatus;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
@@ -70,11 +71,6 @@ public class CpRedCharacterStatsService {
         CpRedStats stat = cpRedStatsRepository.findById(addCharacterStatsRequest.getStatId())
                 .orElseThrow(() -> new ResourceNotFoundException("Statystyka o podanym ID nie została znaleziona."));
 
-        // Sprawdzenie, czy statystyka już istnieje dla tej postaci
-        if (cpRedCharacterStatsRepository.existsByCharacterIdAndStatId(character, stat)) {
-            throw new IllegalArgumentException("Statystyka o podanym ID już istnieje dla tej postaci.");
-        }
-
         Game game = gameRepository.findById(character.getGame().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Gra powiązana z postacią nie została znaleziona."));
 
@@ -91,6 +87,16 @@ public class CpRedCharacterStatsService {
             } else {
                 throw new ResourceNotFoundException("Tylko GM może zmieniać statystyki postaci NPC.");
             }
+        }
+
+        // Czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
+        }
+
+        // Sprawdzenie, czy statystyka już istnieje dla tej postaci
+        if (cpRedCharacterStatsRepository.existsByCharacterIdAndStatId(character, stat)) {
+            throw new IllegalArgumentException("Statystyka o podanym ID już istnieje dla tej postaci.");
         }
 
         // Czy maksymalna statystyka jest potrzebna
@@ -169,6 +175,11 @@ public class CpRedCharacterStatsService {
             }
         }
 
+        // Czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
+        }
+
         // Czy statystyka jest zmienna
         if (!stat.isChangeable() && updateCharacterStatsRequest.getMaxStatLevel() != null){
             throw new IllegalArgumentException("Ta statystyka nie jest zmienna, więc nie możesz ustawić maksymalnego poziomu statystyki");
@@ -233,6 +244,11 @@ public class CpRedCharacterStatsService {
             } else {
                 throw new ResourceNotFoundException("Tylko GM może zmieniać statystyki postaci NPC.");
             }
+        }
+
+        // Czy gra jest aktywna
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
         }
 
         // Usuwanie statystyki postaci
