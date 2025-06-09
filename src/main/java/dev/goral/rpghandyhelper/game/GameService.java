@@ -3,6 +3,8 @@ package dev.goral.rpghandyhelper.game;
 import dev.goral.rpghandyhelper.chat.GameRoomManager;
 import dev.goral.rpghandyhelper.game.gameUsers.*;
 import dev.goral.rpghandyhelper.rpgSystems.RpgSystemsRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ForbiddenActionException;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
@@ -26,6 +28,7 @@ public class GameService {
     private final GameUsersRepository gameUsersRepository;
     private final RpgSystemsRepository rpgSystemsRepository;
     private final GameRoomManager gameRoomManager;
+    private final CpRedCharactersRepository cpRedCharactersRepository;
 
     public Map<String, Object> getAllGames() {
         List<Game> games = gameRepository.findAll();
@@ -220,6 +223,12 @@ public class GameService {
         GameUsers delUser = gameUsersRepository.findByGameIdAndUserId(request.getGameId(), request.getUserId());
         if(delUser == null||delUser.getRole()==GameUsersRole.GAMEMASTER) {
             throw new IllegalArgumentException("Nie można usunąć GameMastera z gry.");
+        }
+
+        CpRedCharacters character = cpRedCharactersRepository.findByUserId_IdAndGameId_Id(request.getUserId(), request.getGameId());
+
+        if(character!=null) {
+            character.setUser(null);
         }
         gameUsersRepository.delete(delUser);
         return CustomReturnables.getOkResponseMap("Użytkownik został usunięty z gry.");
