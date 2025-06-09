@@ -3,7 +3,6 @@ package dev.goral.rpghandyhelper.mobile.models;
 import dev.goral.rpghandyhelper.game.GameService;
 import dev.goral.rpghandyhelper.user.User;
 import dev.goral.rpghandyhelper.user.UserRepository;
-import dev.goral.rpghandyhelper.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,14 +18,13 @@ import java.util.Map;
 @RequestMapping("/api/mobile/v1/authorized")
 public class MobileGameController {
 
-    UserService userService;
     UserRepository userRepository;
     GameService gameService;
 
     @GetMapping(path = "/game/userGames")
     public Map<String, Object> getUserGames() {
         User currentUser = getUserFromJwt();
-        return gameService.getUserGames(currentUser);
+        return gameService.getUserGamesWithPlayers(currentUser);
     }
 
     @GetMapping(path = "/game/getSystemBy")
