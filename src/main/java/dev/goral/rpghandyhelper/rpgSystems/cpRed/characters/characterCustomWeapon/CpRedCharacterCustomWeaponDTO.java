@@ -13,7 +13,7 @@ public class CpRedCharacterCustomWeaponDTO {
     private int dmg;
     private int magazineCapacity;
     private short numberOfAttacks;
-    private String handType;
+    private Short handType;
     private boolean isHidden;
     private String quality;
     private String status;

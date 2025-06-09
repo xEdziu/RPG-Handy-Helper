@@ -2,7 +2,6 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeap
 
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeaponHandType;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customWeapons.CpRedCustomWeapons;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.items.CpRedItemsQuality;
 import jakarta.persistence.*;
@@ -45,8 +44,7 @@ public class CpRedCharacterCustomWeapon {
     private int dmg;
     private int magazineCapacity;
     private short numberOfAttacks;
-    @Enumerated(EnumType.STRING)
-    private CpRedCharacterWeaponHandType handType;
+    private Short handType;
     private boolean isHidden;
     @Enumerated(EnumType.STRING)
     private CpRedItemsQuality quality;
