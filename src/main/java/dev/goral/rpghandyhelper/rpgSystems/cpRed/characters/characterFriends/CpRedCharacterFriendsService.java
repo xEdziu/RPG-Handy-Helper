@@ -59,7 +59,7 @@ public class CpRedCharacterFriendsService {
     public Map<String, Object> getFriendsByCharacterId(Long characterId) {
         List<CpRedCharacterFriends> friends = CpRedCharacterFriendsRepository.findAllByCharacterId_Id(characterId);
         if (friends.isEmpty()) {
-            return CustomReturnables.getOkResponseMap("Brak przyjaciół dla postaci o id " + characterId + ":-(");
+            return CustomReturnables.getOkResponseMap("Brak przyjaciół dla postaci o id " + characterId + " :-(");
         }
         List<CpRedCharacterFriendsDTO> friendsDTO = friends.stream().map(friend ->
                 new CpRedCharacterFriendsDTO(
