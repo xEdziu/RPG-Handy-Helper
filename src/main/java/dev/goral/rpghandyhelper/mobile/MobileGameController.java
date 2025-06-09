@@ -15,10 +15,11 @@ import java.util.Map;
 public class MobileGameController {
 
     GameService gameService;
+    MobileAuthTools mobileAuthTools;
 
     @GetMapping(path = "/game/userGames")
     public Map<String, Object> getUserGames() {
-        User currentUser = MobileAuthTools.getUserFromJwt();
+        User currentUser = mobileAuthTools.getUserFromJwt();
         return gameService.getUserGamesWithPlayers(currentUser);
     }
 }
