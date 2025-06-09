@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -96,11 +97,43 @@ public class GameService {
                 .map(gameUser -> new UserGamesDTO(
                         gameUser.getGame().getId(),
                         gameUser.getGame().getRpgSystem().getId(),
+                        gameUser.getGame().getRpgSystem().getName(),
                         gameUser.getGame().getName(),
                         gameUser.getGame().getDescription()
                 )).toList();
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę gier użytkownika.");
         response.put("userGames", userGamesDTO);
+        return response;
+    }
+
+    public Map<String, Object> getUserGamesWithPlayers(User currentUser) {
+        List<GameUsers> gameUsers = gameUsersRepository.findAllByUserId(currentUser.getId());
+        List<FullGameInfoDTO> fullGameInfoDTOS = new ArrayList<>();
+        for (GameUsers gameUser : gameUsers) {
+            Game game = gameUser.getGame();
+            if (game.getStatus() == GameStatus.ACTIVE) {
+                List<GameUsers> players = gameUsersRepository.findGameAllUsersByGameId(game.getId());
+                List<SimpleUserInGameDTO> playerDTOs = players.stream()
+                        .map(player -> new SimpleUserInGameDTO(
+                                player.getUser().getId(),
+                                player.getUser().getUsername(),
+                                player.getUser().getFirstName(),
+                                player.getRole(),
+                                player.getUser().getUserPhotoPath()
+                        )).toList();
+
+                FullGameInfoDTO fullGameInfoDTO = new FullGameInfoDTO(
+                        game.getId(),
+                        game.getName(),
+                        game.getDescription(),
+                        game.getRpgSystem().getName(),
+                        playerDTOs
+                );
+                fullGameInfoDTOS.add(fullGameInfoDTO);
+            }
+        }
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę gier użytkownika z graczami.");
+        response.put("userGames", fullGameInfoDTOS);
         return response;
     }
 

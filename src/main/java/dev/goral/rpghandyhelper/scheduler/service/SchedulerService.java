@@ -16,6 +16,7 @@ import dev.goral.rpghandyhelper.scheduler.entity.*;
 import dev.goral.rpghandyhelper.scheduler.enums.AvailabilityType;
 import dev.goral.rpghandyhelper.scheduler.enums.SchedulerStatus;
 import dev.goral.rpghandyhelper.scheduler.repository.SchedulerRepository;
+import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpghandyhelper.user.User;
 import dev.goral.rpghandyhelper.user.UserRepository;
@@ -962,6 +963,36 @@ public class SchedulerService {
         }
         return responses;
     }
+
+public Map<String, Object> getFutureFinalDecisionsForGame(User loggedUser, Long gameId) {
+    User user = userRepository.findByUsername(loggedUser.getUsername())
+            .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
+
+    if (!gameUsersRepository.existsByGameIdAndUserId(gameId, user.getId())) {
+        throw new IllegalStateException("Nie masz dostępu do tej gry");
+    }
+
+    List<Scheduler> schedulers = schedulerRepository.findAllByGameIdAndStatus(gameId, SchedulerStatus.FINALIZED);
+
+    if (schedulers.isEmpty()) {
+        return CustomReturnables.getOkResponseMap("Nie znaleziono przyszłych decyzji harmonogramów dla tej gry.");
+    }
+
+    List<SchedulerResponse> responses = schedulers.stream()
+            .filter(scheduler -> scheduler.getFinalDecision() != null &&
+                    scheduler.getFinalDecision().getStart().isAfter(LocalDateTime.now()))
+            .map(SchedulerResponseMapper::mapToDto)
+            .toList();
+
+    List<SchedulerResponse.FinalDecisionDto> finalDecisions = responses.stream()
+            .map(SchedulerResponse::getFinalDecision)
+            .filter(Objects::nonNull)
+            .toList();
+
+    Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano przyszłe decyzje harmonogramów dla gry.");
+    response.put("futureGames", finalDecisions);
+    return response;
+}
 
     /**
      * A helper class to represent a time point on the timeline with its weight (delta).
