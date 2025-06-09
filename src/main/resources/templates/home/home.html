@@ -81,9 +81,9 @@
     </style>
 </head>
 
-<body class="h-screen overflow-hidden flex flex-col bg-light-background dark:bg-dark-background font-league-spartan text-light-textPrimary dark:text-dark-textPrimary">
+<body class="md:h-screen overflow-hidden flex flex-col bg-light-background dark:bg-dark-background font-league-spartan text-light-textPrimary dark:text-dark-textPrimary relative">
 
-<nav class="flex justify-around w-full p-4 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+<nav class="flex justify-around w-full p-4 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border z-20">
     <a href="/">
         <div class="flex items-center">
             <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
@@ -114,7 +114,12 @@
 
 
 <main class="flex flex-1 overflow-hidden">
-    <aside class="w-70 flex flex-col items-center justify-center gap-4 p-4 bg-light-surface dark:bg-dark-surface">
+    <button id="sidebarToggle" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-light-accent text-white rounded">
+        <i class="fas fa-bars"></i>
+    </button>
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 transform -translate-x-full md:translate-x-0 md:static
+           flex flex-col items-center justify-center gap-4 p-4 bg-light-surface dark:bg-dark-surface
+           transition-transform duration-300 z-10">
         <nav class="flex flex-col w-full items-center gap-8">
             <div class="w-24 h-24 bg-light-border dark:bg-dark-border rounded-full flex items-center justify-center text-3xl">
                 <i class="fa-regular fa-user"></i>
@@ -133,8 +138,8 @@
             <h2 class="text-5xl font-bold">Cześć, <span id ="username" class="text-light-accent dark:text-dark-accent">[username]</span>!</h2>
         </div>
 
-        <div class="grid grid-cols-3 grid-rows-2 gap-6 h-full">
-            <div class="col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+        <div class="col-span-1 grid grid-cols-1 md:grid-cols-3 grid-rows-1 md:grid-rows-2 gap-6 h-full">
+            <div class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
 
             <div class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
                 <h3 class="text-xl font-bold mb-4">Moje Notatki</h3>
@@ -145,17 +150,24 @@
 
             <div class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
 
-            <div class="col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+            <div class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
         </div>
     </section>
 </main>
 
-<footer class="w-full text-center pt-2 pb-1 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+<footer class="w-full text-center pt-2 pb-1 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border z-20">
     <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Z miłości do TTRPG 💙 © 2025 RPG Handy Helper</h3>
     <a href="/home/notes" class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
 </footer>
 </body>
 <script>
+
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+
+    toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+    });
 
     function getToken() {
         const csrfToken = getCookie("XSRF-TOKEN");
