@@ -135,14 +135,19 @@ public class CpRedCharacterOtherInfoService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+        if(character.getUser()==null){
+            if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+                throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji w dla tej postaci.");
+            }
+        }
+        else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych infomacji dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji dla tej postaci.");
             }
         }
 
         if( CpRedCharacterOtherInfoRepository.existsByCharacterId(character)) {
-            throw new IllegalArgumentException("Dodatkowe informacje o tej nazwie już istnieją dla tej postaci.");
+            throw new IllegalArgumentException("Dodatkowe informacje już istnieją dla tej postaci.");
         }
         if(cpRedCharacterOtherInfo.getNotes().isEmpty()||
                 cpRedCharacterOtherInfo.getNotes().trim().isEmpty()){
@@ -235,9 +240,14 @@ public class CpRedCharacterOtherInfoService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+        if(character.getUser()==null){
+            if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+                throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji w dla tej postaci.");
+            }
+        }
+        else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do usuwania dodatkowych informacji dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji dla tej postaci.");
             }
         }
         cpRedCharacterOtherInfoRepository.deleteById(infoId);
@@ -270,9 +280,14 @@ public class CpRedCharacterOtherInfoService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+        if(character.getUser()==null){
+            if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+                throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji w dla tej postaci.");
+            }
+        }
+        else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do modyfikacji dodatkowych informacji dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji dla tej postaci.");
             }
         }
 
