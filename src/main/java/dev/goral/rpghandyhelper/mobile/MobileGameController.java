@@ -1,4 +1,4 @@
-package dev.goral.rpghandyhelper.mobile.models;
+package dev.goral.rpghandyhelper.mobile;
 
 import dev.goral.rpghandyhelper.game.GameService;
 import dev.goral.rpghandyhelper.user.User;
