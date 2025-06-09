@@ -66,7 +66,7 @@ public class CpRedCharacterEnemiesService {
     }
 
     public Map<String, Object> getEnemiesByCharacterId(Long characterId) {
-        List<CpRedCharacterEnemies> enemies = CpRedCharacterEnemiesRepository.findAllByCharacterId(characterId);
+        List<CpRedCharacterEnemies> enemies = CpRedCharacterEnemiesRepository.findAllByCharacterId_Id(characterId);
         if (enemies.isEmpty()) {
             return CustomReturnables.getOkResponseMap("Brak wrogów dla postaci o id " + characterId);
         }
