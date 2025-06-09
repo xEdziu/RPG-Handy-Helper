@@ -452,7 +452,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Broń długa zmodyfikowana 2&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;  connectedStatId: 2,&#10;  category: &quot;BODY&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa zmodyfikowana 2.0&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;  connectedStatId: 1,&#10;  category: &quot;BODY&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -1759,6 +1759,7 @@
                                   </option>
                                   <option name="sortWeight" value="2000000" />
                                 </folderState>
+
                                 <folderState>
                                   <option name="id" value="709a58b8-efe6-450f-9bc4-237c1dd205da" />
                                   <option name="name" value="Classes" />
@@ -1884,6 +1885,7 @@
                               </list>
                             </option>
                             <option name="id" value="59cdc013-8808-4399-ab24-bcfef4ebec51" />
+
                             <option name="name" value="Characters" />
                             <option name="requests">
                               <list>

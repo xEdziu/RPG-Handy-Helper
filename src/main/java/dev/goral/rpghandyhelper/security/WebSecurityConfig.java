@@ -91,7 +91,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/home", "/home/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                                 .requestMatchers("/login", "/api/v1/**", "/register", "/activate").permitAll()
                                 .requestMatchers("/forgotPassword", "/resetPassword").permitAll()
-                                .requestMatchers("/", "/index.html", "/static/**", "/resources/**").permitAll() // Allow access to static resources
+                                .requestMatchers("/**", "/static/**", "/resources/**").permitAll() // Allow access to static resources
                                 .requestMatchers("/styles/**", "/scripts/**", "/img/**", "/fonts/**").permitAll() // Allow access to static resources
                                 .requestMatchers("/actuator/health").permitAll() // Allow access to health check
                                 .requestMatchers("/styles/**", "/scripts/**", "/img/**", "/fonts/**").permitAll() // Allow access to static resources

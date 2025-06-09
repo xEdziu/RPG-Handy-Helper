@@ -36,6 +36,6 @@ public class CpRedCharacterOtherInfo {
     private String style;
     private String classLifePath;
     private String accommodation;
-    private int rental;
+    private int rental=-1;
     private String livingStandard;
 }
