@@ -1629,7 +1629,7 @@
                                         <option name="method" value="DELETE" />
                                         <option name="name" value="Usuń wroga" />
                                         <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/delete/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/delete/2" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Zwraca każdego wroga z każdej karty postaci" />
@@ -1675,7 +1675,7 @@
                                         <option name="method" value="PUT" />
                                         <option name="name" value="Modyfikuj wroga" />
                                         <option name="sortWeight" value="7000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/update/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/update/2" />
                                       </requestState>
                                     </list>
                                   </option>
