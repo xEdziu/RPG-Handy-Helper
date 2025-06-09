@@ -77,7 +77,7 @@ public class CpRedCharacterWeaponService {
         }
 
         // Czy istnieje character o podanym ID
-        CpRedCharacters character = cpRedCharactersRepository.findById(addCharacterWeaponRequest.getCharacterId())
+        CpRedCharacters character = cpRedCharactersRepository.findById(addCharacterWeaponRequest.getBaseWeaponId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
 
         // Czy istnieje broń o podanym ID
@@ -98,7 +98,7 @@ public class CpRedCharacterWeaponService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może zmieniać statystyki postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może zmieniać bronie postaci NPC.");
             }
         }
         // Czy gra jest aktywna
@@ -158,7 +158,7 @@ public class CpRedCharacterWeaponService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może zmieniać statystyki postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może zmieniać bronie postaci NPC.");
             }
         }
 
@@ -260,7 +260,7 @@ public class CpRedCharacterWeaponService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może zmieniać statystyki postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może zmieniać bronie postaci NPC.");
             }
         }
 
