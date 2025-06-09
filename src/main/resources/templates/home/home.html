@@ -83,7 +83,7 @@
 
 <body class="h-screen overflow-hidden flex flex-col bg-light-background dark:bg-dark-background font-league-spartan text-light-textPrimary dark:text-dark-textPrimary">
 
-<nav class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+<nav class="flex justify-around w-full p-4 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
     <a href="/">
         <div class="flex items-center">
             <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
@@ -100,7 +100,7 @@
             <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
                        bg-light-accent dark:bg-dark-accent
                        shadow-md transition-all duration-300
-                       peer-checked:translate-x-[1.5rem]
+                       peer-checked:translate-x-[0.75rem]
                        peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
                        cursor-pointer hover:shadow-lg">
             </label>
@@ -114,23 +114,23 @@
 
 
 <main class="flex flex-1 overflow-hidden">
-    <aside class="w-80 flex flex-col items-center gap-4 p-4 bg-light-surface dark:bg-dark-surface">
-        <nav class="flex flex-col w-full gap-8 mt-64">
-            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center">MÓJ PROFIL</a>
-            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center">MOJE GRY</a>
-            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center">MOJE NOTATKI</a>
-            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center">MOJE SPOTKANIA</a>
-            <a href="#" class="border border-light-border dark:border-dark-border px-4 py-2 rounded text-center">WYLOGUJ SIĘ</a>
+    <aside class="w-70 flex flex-col items-center justify-center gap-4 p-4 bg-light-surface dark:bg-dark-surface">
+        <nav class="flex flex-col w-full items-center gap-8">
+            <div class="w-24 h-24 bg-light-border dark:bg-dark-border rounded-full flex items-center justify-center text-3xl">
+                <i class="fa-regular fa-user"></i>
+            </div>
+            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MÓJ PROFIL</a>
+            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE GRY</a>
+            <a href="/home/notes" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE NOTATKI</a>
+            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE SPOTKANIA</a>
+            <a href="#" class="border border-light-border dark:border-dark-border px-4 py-2 rounded text-center w-3/4">WYLOGUJ SIĘ</a>
         </nav>
     </aside>
 
 
     <section class="flex-1 p-6 overflow-hidden flex flex-col">
         <div class="flex items-center mb-6">
-            <div class="w-48 h-48 bg-light-border dark:bg-dark-border rounded-full flex items-center justify-center text-3xl mr-4">
-                <i class="fa-regular fa-user"></i>
-            </div>
-            <h2 class="text-7xl font-bold">Cześć, <span id ="username" class="text-light-accent dark:text-dark-accent">[username]</span>!</h2>
+            <h2 class="text-5xl font-bold">Cześć, <span id ="username" class="text-light-accent dark:text-dark-accent">[username]</span>!</h2>
         </div>
 
         <div class="grid grid-cols-3 grid-rows-2 gap-6 h-full">
@@ -150,7 +150,7 @@
     </section>
 </main>
 
-<footer class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+<footer class="w-full text-center pt-2 pb-1 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
     <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Z miłości do TTRPG 💙 © 2025 RPG Handy Helper</h3>
     <a href="/home/notes" class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
 </footer>
