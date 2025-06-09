@@ -207,12 +207,12 @@ public class CpRedCharacterTragicLoveStoryService {
 
         if(character.getUser()==null){
             if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
-                throw new IllegalStateException("Nie masz uprawnień do dodawania wątków tragiczno-miłosnych w dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do modyfikowania wątków tragiczno-miłosnych w dla tej postaci.");
             }
         }
         else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do dodawania wątków tragiczno-miłosnych w dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do modyfikowania wątków tragiczno-miłosnych w dla tej postaci.");
             }
         }
 
