@@ -3,6 +3,8 @@ package dev.goral.rpghandyhelper.game;
 import dev.goral.rpghandyhelper.chat.GameRoomManager;
 import dev.goral.rpghandyhelper.game.gameUsers.*;
 import dev.goral.rpghandyhelper.rpgSystems.RpgSystemsRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ForbiddenActionException;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
@@ -14,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +29,7 @@ public class GameService {
     private final GameUsersRepository gameUsersRepository;
     private final RpgSystemsRepository rpgSystemsRepository;
     private final GameRoomManager gameRoomManager;
+    private final CpRedCharactersRepository cpRedCharactersRepository;
 
     public Map<String, Object> getAllGames() {
         List<Game> games = gameRepository.findAll();
@@ -93,11 +97,43 @@ public class GameService {
                 .map(gameUser -> new UserGamesDTO(
                         gameUser.getGame().getId(),
                         gameUser.getGame().getRpgSystem().getId(),
+                        gameUser.getGame().getRpgSystem().getName(),
                         gameUser.getGame().getName(),
                         gameUser.getGame().getDescription()
                 )).toList();
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę gier użytkownika.");
         response.put("userGames", userGamesDTO);
+        return response;
+    }
+
+    public Map<String, Object> getUserGamesWithPlayers(User currentUser) {
+        List<GameUsers> gameUsers = gameUsersRepository.findAllByUserId(currentUser.getId());
+        List<FullGameInfoDTO> fullGameInfoDTOS = new ArrayList<>();
+        for (GameUsers gameUser : gameUsers) {
+            Game game = gameUser.getGame();
+            if (game.getStatus() == GameStatus.ACTIVE) {
+                List<GameUsers> players = gameUsersRepository.findGameAllUsersByGameId(game.getId());
+                List<SimpleUserInGameDTO> playerDTOs = players.stream()
+                        .map(player -> new SimpleUserInGameDTO(
+                                player.getUser().getId(),
+                                player.getUser().getUsername(),
+                                player.getUser().getFirstName(),
+                                player.getRole(),
+                                player.getUser().getUserPhotoPath()
+                        )).toList();
+
+                FullGameInfoDTO fullGameInfoDTO = new FullGameInfoDTO(
+                        game.getId(),
+                        game.getName(),
+                        game.getDescription(),
+                        game.getRpgSystem().getName(),
+                        playerDTOs
+                );
+                fullGameInfoDTOS.add(fullGameInfoDTO);
+            }
+        }
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę gier użytkownika z graczami.");
+        response.put("userGames", fullGameInfoDTOS);
         return response;
     }
 
@@ -220,6 +256,12 @@ public class GameService {
         GameUsers delUser = gameUsersRepository.findByGameIdAndUserId(request.getGameId(), request.getUserId());
         if(delUser == null||delUser.getRole()==GameUsersRole.GAMEMASTER) {
             throw new IllegalArgumentException("Nie można usunąć GameMastera z gry.");
+        }
+
+        CpRedCharacters character = cpRedCharactersRepository.findByUserId_IdAndGameId_Id(request.getUserId(), request.getGameId());
+
+        if(character!=null) {
+            character.setUser(null);
         }
         gameUsersRepository.delete(delUser);
         return CustomReturnables.getOkResponseMap("Użytkownik został usunięty z gry.");

@@ -1,7 +1,6 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterEnemies;
 
 import dev.goral.rpghandyhelper.game.Game;
-import dev.goral.rpghandyhelper.game.GameRepository;
 import dev.goral.rpghandyhelper.game.GameStatus;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
@@ -17,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
