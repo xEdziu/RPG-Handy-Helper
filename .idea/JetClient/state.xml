@@ -1602,13 +1602,16 @@
                             <option name="folders">
                               <list>
                                 <folderState>
+
                                   <option name="id" value="28400773-5ea7-486b-a325-1515d79aaf5a" />
                                   <option name="name" value="Enemies" />
+
                                   <option name="requests">
                                     <list>
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
+
                                             <option name="raw" value="{&#10;  characterId: 1,&#10;  name: &quot;The worst enemy&quot;,&#10;  whoIs: &quot;The worst enemy&quot;,&#10;  causeOfConflict: &quot;The worst cause of conflict&quot;,&#10;  whatHas: &quot;Nothing&quot;,&#10;  intends: &quot;To destroy everything&quot;,&#10;  description: &quot;A very bad enemy who causes a lot of trouble&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
@@ -1663,6 +1666,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
+
                                             <option name="raw" value="{&#10;  characterId: 1,&#10;  name: &quot;The enemy&quot;,&#10;  whoIs: &quot;Who knows&quot;,&#10;  causeOfConflict: &quot;I don't know&quot;,&#10;  whatHas: &quot;everything&quot;,&#10;  intends: &quot;I don't know&quot;,&#10;  description: &quot;Wierd guy, I don't know what he wants, but he is not good&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
