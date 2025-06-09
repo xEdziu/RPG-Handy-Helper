@@ -93,6 +93,7 @@ public class GameService {
                 .map(gameUser -> new UserGamesDTO(
                         gameUser.getGame().getId(),
                         gameUser.getGame().getRpgSystem().getId(),
+                        gameUser.getGame().getRpgSystem().getName(),
                         gameUser.getGame().getName(),
                         gameUser.getGame().getDescription()
                 )).toList();
