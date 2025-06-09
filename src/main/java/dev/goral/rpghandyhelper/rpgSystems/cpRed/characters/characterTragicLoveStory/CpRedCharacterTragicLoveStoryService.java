@@ -147,7 +147,7 @@ public class CpRedCharacterTragicLoveStoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         CpRedCharacterTragicLoveStory story = cpRedCharacterTragicLoveStoryRepository.findById(storyId)
-                .orElseThrow(() -> new ResourceNotFoundException("Wróg o id " + storyId + " nie został znaleziony"));
+                .orElseThrow(() -> new ResourceNotFoundException("Wątek o id " + storyId + " nie został znaleziony"));
 
         CpRedCharacters character = cpRedCharactersRepository.findById(story.getCharacterId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + story.getCharacterId().getId() + " nie została znaleziona"));
