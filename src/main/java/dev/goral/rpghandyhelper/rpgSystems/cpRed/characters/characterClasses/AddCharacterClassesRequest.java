@@ -2,14 +2,15 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterClasses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-@ToString
-public class CpRedCharacterClassesDTO {
-    private Long id;
-    private Short classLevel;
+@NoArgsConstructor
+public class AddCharacterClassesRequest {
+    private short classLevel = -1;
     private Long characterId;
     private Long classId;
 }
