@@ -452,7 +452,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  name: &quot;Broń długa zmodyfikowana 2&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;  connectedStatId: 2,&#10;  category: &quot;BODY&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  name: &quot;Broń długa zmodyfikowana 2.0&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;  connectedStatId: 1,&#10;  category: &quot;BODY&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -1602,69 +1602,166 @@
                             <option name="folders">
                               <list>
                                 <folderState>
-                                  <option name="id" value="709a58b8-efe6-450f-9bc4-237c1dd205da" />
-                                  <option name="name" value="Classes" />
+
+                                  <option name="id" value="28400773-5ea7-486b-a325-1515d79aaf5a" />
+                                  <option name="name" value="Enemies" />
+
                                   <option name="requests">
                                     <list>
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  classLevel: 1,&#10;  characterId: 1,&#10;  classId: 1&#10;}" />
+
+                                            <option name="raw" value="{&#10;  characterId: 1,&#10;  name: &quot;The worst enemy&quot;,&#10;  whoIs: &quot;The worst enemy&quot;,&#10;  causeOfConflict: &quot;The worst cause of conflict&quot;,&#10;  whatHas: &quot;Nothing&quot;,&#10;  intends: &quot;To destroy everything&quot;,&#10;  description: &quot;A very bad enemy who causes a lot of trouble&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
-                                        <option name="description" value="Dodaje powiązanie klasy z daną postacią" />
-                                        <option name="id" value="4f041235-dbd7-4cd4-8c29-cab4755cdb25" />
+                                        <option name="description" value="Tworzy wroga przypisanego do konkretnej karty postaci" />
+                                        <option name="id" value="b20421e4-10e7-4810-a94e-89c37a79ef5d" />
                                         <option name="method" value="POST" />
-                                        <option name="name" value="Dodaj klasę postaci" />
+                                        <option name="name" value="Stwórz wroga" />
                                         <option name="sortWeight" value="1000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/classes/create" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/add" />
                                       </requestState>
                                       <requestState>
-                                        <option name="description" value="Zwraca wszystkie klasy wskazanej postaci po jej ID" />
-                                        <option name="id" value="fc056619-fa0c-40a2-89dc-971708765476" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Pobierz klasy postaci po ID postaci" />
+                                        <option name="description" value="Usuwa wroga przypisanego do konkretnej karty postaci" />
+                                        <option name="id" value="6be99324-7022-482d-b4d8-880271215069" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń wroga" />
                                         <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/classes/3" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/delete/1" />
                                       </requestState>
                                       <requestState>
-                                        <option name="description" value="Zwraca listę wszysktki powiązań postaci z klasą" />
-                                        <option name="id" value="338fb3e2-b7da-4b16-adeb-05f9c49d59d2" />
+                                        <option name="description" value="Zwraca każdego wroga z każdej karty postaci" />
+                                        <option name="id" value="22d9552e-39b9-482a-a35d-fe31ca9019db" />
                                         <option name="method" value="GET" />
-                                        <option name="name" value="Pobierz wszystkie klasy postaci dla Admina" />
+                                        <option name="name" value="Zwróć wszystkich wrogów" />
                                         <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/classes/all" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wroga po unikalnym id" />
+                                        <option name="id" value="fae323dd-c4cc-4e20-b9fb-cb57430a833b" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wroga po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="c950b47d-99a7-4850-ad7e-45c0ab7705ed" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkich wrogów dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/enemies/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkich wrogów z konkretnej karty postaci" />
+                                        <option name="id" value="a7110631-5a0d-4432-8c97-de406eeb2363" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wroga po characterId" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/character/1" />
                                       </requestState>
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  classLevel: 5&#10;}" />
+
+                                            <option name="raw" value="{&#10;  characterId: 1,&#10;  name: &quot;The enemy&quot;,&#10;  whoIs: &quot;Who knows&quot;,&#10;  causeOfConflict: &quot;I don't know&quot;,&#10;  whatHas: &quot;everything&quot;,&#10;  intends: &quot;I don't know&quot;,&#10;  description: &quot;Wierd guy, I don't know what he wants, but he is not good&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
-                                        <option name="description" value="Pozwala zmienić level danej clasy postaci" />
-                                        <option name="id" value="8af763e5-f529-433d-9890-703c49055f71" />
+                                        <option name="description" value="Zmień dane wroga" />
+                                        <option name="id" value="986c3e11-4120-44f1-84a5-7ffe6944acee" />
                                         <option name="method" value="PUT" />
-                                        <option name="name" value="Modyfikuj klasę danej postaci" />
-                                        <option name="sortWeight" value="4000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/classes/update/5" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Usuwa klasę dla danej postaci" />
-                                        <option name="id" value="39fddd48-edcc-46a4-9ebc-9523cf75624c" />
-                                        <option name="method" value="DELETE" />
-                                        <option name="name" value="Usuń klasę danej postaci" />
-                                        <option name="sortWeight" value="5000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/classes/delete/6" />
+                                        <option name="name" value="Modyfikuj wroga" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/enemies/update/1" />
                                       </requestState>
                                     </list>
                                   </option>
                                   <option name="sortWeight" value="1000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="89626b62-8be8-47ab-8fa6-696c19b51ad9" />
+                                  <option name="name" value="OtherInfo" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;characterId&quot;: 1,&#10;  &quot;notes&quot;: &quot;This is a test character.&quot;,&#10;  &quot;addictions&quot;: &quot;Drugs&quot;,&#10;  &quot;reputation&quot;: &quot;Hero&quot;,&#10;  &quot;style&quot;: &quot;Stealth&quot;,&#10;  &quot;classLifePath&quot;: &quot;Worrior&quot;,&#10;  &quot;accommodation&quot;: &quot;Apartment&quot;,&#10;  &quot;rental&quot;: &quot;500&quot;,&#10;  &quot;livingStandard&quot;: &quot;High&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Tworzy info przypisane do konkretnej karty postaci" />
+                                        <option name="id" value="7156c912-c1dc-41ce-aa4d-96244489f4cd" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz info" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Usuwa info przypisane do konkretnej karty postaci" />
+                                        <option name="id" value="2889f1c0-7992-46ae-aebb-2bf5119c4965" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń info" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/delete/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca każde info z każdej karty postaci" />
+                                        <option name="id" value="295b8556-564f-4020-bd14-1f4b61d0540d" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie info" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca info po unikalnym id" />
+                                        <option name="id" value="e87c6455-a946-4beb-8130-1545f9b48fae" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć info po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="139f0a9e-9b2f-4096-80b3-089465dab4c0" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie info dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/OtherInfo/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkie info z konkretnej karty postaci" />
+                                        <option name="id" value="5f6585ec-5fc6-4f6f-bb38-59734de241d4" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć info po characterId" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/character/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;characterId&quot;: 1,&#10;  &quot;notes&quot;: &quot;This is a new test character.&quot;,&#10;  &quot;addictions&quot;: &quot;Drugs and Alcohol&quot;,&#10;  &quot;reputation&quot;: &quot;Drug Dealer&quot;,&#10;  &quot;style&quot;: &quot;Fast&quot;,&#10;  &quot;classLifePath&quot;: &quot;Homeless&quot;,&#10;  &quot;accommodation&quot;: &quot;Tent&quot;,&#10;  &quot;rental&quot;: &quot;600&quot;,&#10;  &quot;livingStandard&quot;: &quot;Low&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zmień dane  w info" />
+                                        <option name="id" value="5165a1fe-56da-4a19-9215-6762d11c33c3" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj info" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="2000000" />
+                                </folderState>
                               </list>
                             </option>
-                            <option name="id" value="59cdc013-8808-4399-ab24-bcfef4ebec51" />
+                            <option name="id" value="8a34e9df-ba8d-4e2d-a5d3-98775455502f" />
                             <option name="name" value="Characters" />
                             <option name="requests">
                               <list>

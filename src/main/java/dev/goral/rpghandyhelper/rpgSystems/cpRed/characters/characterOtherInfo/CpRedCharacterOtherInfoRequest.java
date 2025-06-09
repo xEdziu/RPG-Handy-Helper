@@ -2,12 +2,14 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterOtherInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class CpRedCharacterOtherInfoDTO {
+public class CpRedCharacterOtherInfoRequest {
     private Long characterId;
     private String notes;
     private String addictions;
