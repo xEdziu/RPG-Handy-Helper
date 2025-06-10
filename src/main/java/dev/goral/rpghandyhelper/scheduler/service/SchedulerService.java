@@ -4,6 +4,7 @@ import dev.goral.rpghandyhelper.email.EmailService;
 import dev.goral.rpghandyhelper.game.GameRepository;
 import dev.goral.rpghandyhelper.game.GameStatus;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
+import dev.goral.rpghandyhelper.scheduler.dto.common.NextSession;
 import dev.goral.rpghandyhelper.scheduler.dto.common.TimeRangeDto;
 import dev.goral.rpghandyhelper.scheduler.dto.request.CreateSchedulerRequest;
 import dev.goral.rpghandyhelper.scheduler.dto.request.EditSchedulerRequest;
@@ -938,6 +939,14 @@ public class SchedulerService {
         schedulerRepository.save(scheduler);
     }
 
+    /**
+     * Gets the availability of all players for a given scheduler.
+     *
+     * @param schedulerId The ID of the scheduler.
+     * @param currentUser   The user who is requesting the availability.
+     * @return A list of {@link PlayerAvailabilityResponse} containing the availability of each player.
+     * @throws IllegalStateException If the user does not have access to the scheduler or if the scheduler is not found.
+     */
     public List<PlayerAvailabilityResponse> getAllPlayerAvailability(Long schedulerId, User currentUser) {
         User user = userRepository.findByUsername(currentUser.getUsername())
                 .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika " + currentUser.getUsername()));
@@ -964,35 +973,101 @@ public class SchedulerService {
         return responses;
     }
 
-public Map<String, Object> getFutureFinalDecisionsForGame(User loggedUser, Long gameId) {
-    User user = userRepository.findByUsername(loggedUser.getUsername())
-            .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
+    /**
+     * Gets future final decisions for a game.
+     *
+     * @param loggedUser The user who is logged in.
+     * @param gameId The ID of the game.
+     * @return A map containing future final decisions for the game.
+     * @throws IllegalStateException If the user does not have access to the game or if the user is not found.
+     */
+    public Map<String, Object> getFutureFinalDecisionsForGame(User loggedUser, Long gameId) {
+        User user = userRepository.findByUsername(loggedUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
-    if (!gameUsersRepository.existsByGameIdAndUserId(gameId, user.getId())) {
-        throw new IllegalStateException("Nie masz dostępu do tej gry");
+        if (!gameUsersRepository.existsByGameIdAndUserId(gameId, user.getId())) {
+            throw new IllegalStateException("Nie masz dostępu do tej gry");
+        }
+
+        List<Scheduler> schedulers = schedulerRepository.findAllByGameIdAndStatus(gameId, SchedulerStatus.FINALIZED);
+
+        if (schedulers.isEmpty()) {
+            return CustomReturnables.getOkResponseMap("Nie znaleziono przyszłych decyzji harmonogramów dla tej gry.");
+        }
+
+        List<SchedulerResponse> responses = schedulers.stream()
+                .filter(scheduler -> scheduler.getFinalDecision() != null &&
+                        scheduler.getFinalDecision().getStart().isAfter(LocalDateTime.now()))
+                .map(SchedulerResponseMapper::mapToDto)
+                .toList();
+
+        List<SchedulerResponse.FinalDecisionDto> finalDecisions = responses.stream()
+                .map(SchedulerResponse::getFinalDecision)
+                .filter(Objects::nonNull)
+                .toList();
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano przyszłe decyzje harmonogramów dla gry.");
+        response.put("futureGames", finalDecisions);
+        return response;
     }
 
-    List<Scheduler> schedulers = schedulerRepository.findAllByGameIdAndStatus(gameId, SchedulerStatus.FINALIZED);
+    /**
+     * Gets all pending schedulers for the current user.
+     *
+     * @param currentUser The currently logged-in user.
+     * @return A list of {@link SchedulerResponse} containing pending schedulers.
+     * @throws IllegalStateException If the user is not found.
+     */
+    public List<SchedulerResponse> getPendingSchedulers(User currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
-    if (schedulers.isEmpty()) {
-        return CustomReturnables.getOkResponseMap("Nie znaleziono przyszłych decyzji harmonogramów dla tej gry.");
+        List<Scheduler> schedulers = schedulerRepository.findAllBySchedulerParticipantId(user.getId());
+
+        return schedulers.stream()
+                .filter(scheduler -> scheduler.getParticipants().stream()
+                        .anyMatch(participant -> participant.getPlayer().getId().equals(user.getId()) &&
+                                (participant.getAvailabilitySlots() == null || participant.getAvailabilitySlots().isEmpty())))
+                .map(SchedulerResponseMapper::mapToDto)
+                .toList();
     }
 
-    List<SchedulerResponse> responses = schedulers.stream()
-            .filter(scheduler -> scheduler.getFinalDecision() != null &&
-                    scheduler.getFinalDecision().getStart().isAfter(LocalDateTime.now()))
-            .map(SchedulerResponseMapper::mapToDto)
-            .toList();
+    /**
+     * Gets the next session for a given game.
+     *
+     * @param currentUser The currently logged-in user.
+     * @param gameId The ID of the game.
+     * @return A map containing the name and date of the next session.
+     * @throws IllegalStateException If the user does not have access to the game or if the user is not found.
+     */
+    public Map<String, Object> getNextSession(User currentUser, Long gameId) {
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika"));
 
-    List<SchedulerResponse.FinalDecisionDto> finalDecisions = responses.stream()
-            .map(SchedulerResponse::getFinalDecision)
-            .filter(Objects::nonNull)
-            .toList();
+        if (!gameUsersRepository.existsByGameIdAndUserId(gameId, user.getId())) {
+            throw new IllegalStateException("Nie masz dostępu do tej gry");
+        }
 
-    Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano przyszłe decyzje harmonogramów dla gry.");
-    response.put("futureGames", finalDecisions);
-    return response;
-}
+        List<Scheduler> schedulers = schedulerRepository.findAllByGameIdAndStatus(gameId, SchedulerStatus.FINALIZED);
+
+        Scheduler nextSession = schedulers.stream()
+                .filter(scheduler -> scheduler.getFinalDecision() != null &&
+                        scheduler.getFinalDecision().getStart().isAfter(LocalDateTime.now()))
+                .min(Comparator.comparing(s -> s.getFinalDecision().getStart()))
+                .orElse(null);
+
+        if (nextSession == null) {
+            return CustomReturnables.getOkResponseMap("Brak nadchodzących sesji.");
+        }
+
+        NextSession nextSessionDto = new NextSession();
+        nextSessionDto.setName(nextSession.getTitle());
+        nextSessionDto.setStartTime(nextSession.getFinalDecision().getStart().toLocalTime());
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano najbliższą sesję.");
+        response.put("nextSession", nextSessionDto);
+        return response;
+    }
 
     /**
      * A helper class to represent a time point on the timeline with its weight (delta).
