@@ -10,6 +10,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Data
 public class NextSession {
-    String name;
+    String sessionName;
+    String gameName;
     LocalTime startTime;
 }

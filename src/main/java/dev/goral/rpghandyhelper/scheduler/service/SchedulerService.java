@@ -1061,7 +1061,8 @@ public class SchedulerService {
         }
 
         NextSession nextSessionDto = new NextSession();
-        nextSessionDto.setName(nextSession.getTitle());
+        nextSessionDto.setSessionName(nextSession.getTitle());
+        nextSessionDto.setGameName(nextSession.getGame().getName());
         nextSessionDto.setStartTime(nextSession.getFinalDecision().getStart().toLocalTime());
 
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano najbliższą sesję.");
