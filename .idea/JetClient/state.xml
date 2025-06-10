@@ -1602,16 +1602,13 @@
                             <option name="folders">
                               <list>
                                 <folderState>
-
                                   <option name="id" value="28400773-5ea7-486b-a325-1515d79aaf5a" />
                                   <option name="name" value="Enemies" />
-
                                   <option name="requests">
                                     <list>
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-
                                             <option name="raw" value="{&#10;  characterId: 1,&#10;  name: &quot;The worst enemy&quot;,&#10;  whoIs: &quot;The worst enemy&quot;,&#10;  causeOfConflict: &quot;The worst cause of conflict&quot;,&#10;  whatHas: &quot;Nothing&quot;,&#10;  intends: &quot;To destroy everything&quot;,&#10;  description: &quot;A very bad enemy who causes a lot of trouble&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
@@ -1758,7 +1755,6 @@
                                   </option>
                                   <option name="sortWeight" value="2000000" />
                                 </folderState>
-
                                 <folderState>
                                   <option name="id" value="709a58b8-efe6-450f-9bc4-237c1dd205da" />
                                   <option name="name" value="Classes" />
@@ -1961,7 +1957,6 @@
                               </list>
                             </option>
                             <option name="id" value="59cdc013-8808-4399-ab24-bcfef4ebec51" />
-
                             <option name="name" value="Characters" />
                             <option name="requests">
                               <list>
@@ -2264,6 +2259,7 @@
                               <list>
                                 <pathVariableState>
                                   <option name="key" value="schedulerId" />
+                                  <option name="value" value="1" />
                                 </pathVariableState>
                               </list>
                             </option>
@@ -2343,7 +2339,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;schedulerId&quot;: 2,&#10;  &quot;start&quot;: &quot;2025-12-20T18:00:00&quot;,&#10;  &quot;end&quot;: &quot;2025-12-20T22:00:00&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;schedulerId&quot;: 1,&#10;  &quot;start&quot;: &quot;2025-12-20T18:00:00&quot;,&#10;  &quot;end&quot;: &quot;2025-12-20T22:00:00&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
