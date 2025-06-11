@@ -88,7 +88,7 @@
                       <option name="method" value="POST" />
                       <option name="name" value="Login Admin" />
                       <option name="sortWeight" value="3000000" />
-                      <option name="url" value="+http://localhost:8888/login" />
+                      <option name="url" value="http://localhost:8888/login" />
                     </requestState>
                     <requestState>
                       <option name="body">
@@ -1883,11 +1883,123 @@
                                       <folderState>
                                         <option name="id" value="bac4ab85-d8d7-4065-8749-e76bd971d97c" />
                                         <option name="name" value="Manual" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  baseWeaponId: 2,&#10;  characterId: 1,&#10;  status: &quot;EQUIPPED&quot; // &quot;STORED&quot;, &quot;EQUIPPED&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Dodaje wskazaną broń do postaci" />
+                                              <option name="id" value="26cd49e1-913a-4f72-9803-09cb38e0254d" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj broń do postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weapons/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę z wszystkimi broniami postaci o podanym id" />
+                                              <option name="id" value="c0e68eec-d051-4718-8a3d-fe6dbcc07799" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie bronie postaci" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weapons/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę wszystkich powiązń postaci z bronią" />
+                                              <option name="id" value="3424231a-6f39-4c25-9e61-dc035316b04f" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszysktie bronie postaci dla Admina" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/weapons/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  dmg: 10,&#10;  magazineCapacity: 100,&#10;  numberOfAttacks: 4,&#10;  handType: 3,&#10;  isHidden: true,&#10;  quality: &quot;STANDARD&quot;, // &quot;POOR&quot;, &quot;STANDARD&quot;, &quot;EXCELLENT&quot;&#10;  status: &quot;EQUIPPED&quot;, // &quot;STORED&quot;, &quot;EQUIPPED&quot;&#10;  description: &quot;Taka giwera że ja pie....&quot;,&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Pozwala modyfikować parametry broni przypisanej do użytkownika" />
+                                              <option name="id" value="9723acd5-d018-4a88-ad4e-4c453e9d74fc" />
+                                              <option name="method" value="PUT" />
+                                              <option name="name" value="Modyfikuj broń postaci" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weapons/update/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Usuwa powiązanie wybranej po ID broni z userem" />
+                                              <option name="id" value="4f6eced3-ed9a-4f81-9a9b-b9067464798b" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń powiązanie broni z postacią" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weapons/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
                                         <option name="sortWeight" value="1000000" />
                                       </folderState>
                                       <folderState>
                                         <option name="id" value="582bcc4d-1b80-4e9c-ba0b-bae39cc50708" />
                                         <option name="name" value="Custom" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  baseWeaponId: 2,&#10;  characterId: 1,&#10;  status: &quot;EQUIPPED&quot; // &quot;STORED&quot;, &quot;EQUIPPED&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Dodaje wskazaną customową broń do postaci" />
+                                              <option name="id" value="c30fb7e9-a0e3-4540-bdf8-de9d228ca320" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj customową broń do postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customWeapons/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę z wszystkimi customowymi broniami postaci o podanym id" />
+                                              <option name="id" value="450db32b-77b1-45de-b06c-bf82a244504a" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie customowe bronie postaci" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customWeapons/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę wszystkich powiązń customowych postaci z bronią" />
+                                              <option name="id" value="0fbb5c54-f7e9-43c7-8349-e8b1fa5f24b9" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszysktie customowe bronie postaci dla Admina" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/customWeapons/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  dmg: 10,&#10;  magazineCapacity: 100,&#10;  numberOfAttacks: 4,&#10;  handType: 3,&#10;  isHidden: true,&#10;  quality: &quot;STANDARD&quot;, // &quot;POOR&quot;, &quot;STANDARD&quot;, &quot;EXCELLENT&quot;&#10;  status: &quot;EQUIPPED&quot;, // &quot;STORED&quot;, &quot;EQUIPPED&quot;&#10;  description: &quot;Taka giwera że ja pie....&quot;,&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Pozwala modyfikować parametry customowej broni przypisanej do użytkownika" />
+                                              <option name="id" value="8b8fc000-241c-4da2-b6f3-73051e4438b8" />
+                                              <option name="method" value="PUT" />
+                                              <option name="name" value="Modyfikuj customową broń postaci" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customWeapons/update/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Usuwa powiązanie wybranej po ID customowej broni z userem" />
+                                              <option name="id" value="e5e1c14c-a45b-4686-9f36-f81331b4909c" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń powiązanie customowej broni z postacią" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customWeapons/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
                                         <option name="sortWeight" value="2000000" />
                                       </folderState>
                                       <folderState>
@@ -1904,62 +2016,6 @@
                                   </option>
                                   <option name="id" value="d8054db5-812a-4463-a768-f882329afd47" />
                                   <option name="name" value="Weapon" />
-                                  <option name="requests">
-                                    <list>
-                                      <requestState>
-                                        <option name="body">
-                                          <bodyState>
-                                            <option name="raw" value="{&#10;  baseWeaponId: 2,&#10;  characterId: 1,&#10;  status: &quot;EQUIPPED&quot; // &quot;STORED&quot;, &quot;EQUIPPED&quot;&#10;}" />
-                                            <option name="type" value="JSON" />
-                                          </bodyState>
-                                        </option>
-                                        <option name="description" value="Dodaje wskazanąbroń do postaci" />
-                                        <option name="id" value="e614429c-a16f-48fd-b8c7-b5f4655582bc" />
-                                        <option name="method" value="POST" />
-                                        <option name="name" value="Dodaj broń do postaci" />
-                                        <option name="sortWeight" value="1000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weapons/create" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Zwraca listę z wszystkimi broniami postaci o podanym id" />
-                                        <option name="id" value="d9fb92a4-5c2f-4919-a66e-63071a3766af" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Pobierz wszystkie bronie postaci" />
-                                        <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weapons/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Zwraca listę wszystkich powiązń postaci z bronią" />
-                                        <option name="id" value="8bb69a6e-d3a9-44ec-b174-353368430ce4" />
-                                        <option name="method" value="GET" />
-                                        <option name="name" value="Pobierz wszysktie bronie postaci dla Admina" />
-                                        <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/weapons/all" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="body">
-                                          <bodyState>
-                                            <option name="raw" value="{&#10;  dmg: 10,&#10;  magazineCapacity: 100,&#10;  numberOfAttacks: 4,&#10;  handType: 3,&#10;  isHidden: true,&#10;  quality: &quot;STANDARD&quot;, // &quot;POOR&quot;, &quot;STANDARD&quot;, &quot;EXCELLENT&quot;&#10;  status: &quot;EQUIPPED&quot;, // &quot;STORED&quot;, &quot;EQUIPPED&quot;&#10;  description: &quot;Taka giwera że ja pie....&quot;,&#10;}" />
-                                            <option name="type" value="JSON" />
-                                          </bodyState>
-                                        </option>
-                                        <option name="description" value="Pozwala modyfikować parametry broni przypisanej do użytkownika" />
-                                        <option name="id" value="c7731506-7da3-48c3-b33a-f641c31b2c64" />
-                                        <option name="method" value="PUT" />
-                                        <option name="name" value="Modyfikuj broń postaci" />
-                                        <option name="sortWeight" value="4000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weapons/update/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Usuwa powiązanie wybranej po ID broni z userem" />
-                                        <option name="id" value="a13c4591-fb07-46af-a557-ca9b6a50970d" />
-                                        <option name="method" value="DELETE" />
-                                        <option name="name" value="Usuń powiązanie broni z postacią" />
-                                        <option name="sortWeight" value="5000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weapons/delete/1" />
-                                      </requestState>
-                                    </list>
-                                  </option>
                                   <option name="sortWeight" value="3000000" />
                                 </folderState>
                                 <folderState>
