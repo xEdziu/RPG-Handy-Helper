@@ -32,21 +32,21 @@ public class CpRedCharacterWeapon {
             name = "base_weapon_id",
             referencedColumnName = "id"
     )
-    private CpRedWeapons baseWeaponId;
+    private CpRedWeapons baseWeapon;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
             referencedColumnName = "id"
     )
-    private CpRedCharacters characterId;
-    private int dmg;
-    private int magazineCapacity;
-    private short numberOfAttacks;
-    @Enumerated(EnumType.STRING)
-    private CpRedCharacterWeaponHandType handType;
-    private boolean isHidden;
+    private CpRedCharacters character;
+    private Integer dmg;
+    private Integer magazineCapacity;
+    private Short numberOfAttacks;
+    private Short handType;
+    private Boolean isHidden;
     @Enumerated(EnumType.STRING)
     private CpRedItemsQuality quality;
     private CpRedCharacterItemStatus status;
+    @Column(length = 500)
     private String description;
 }
