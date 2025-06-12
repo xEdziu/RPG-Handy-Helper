@@ -14,4 +14,5 @@ public class AddCharacterArmorRequest {
     private Long baseArmorId;
     private Long characterId;
     private CpRedCharacterItemStatus status;
+    private CpRedCharacterArmorPlace place;
 }

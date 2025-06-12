@@ -9,6 +9,7 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeapon;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.armors.CpRedArmors;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.armors.CpRedArmorsRepository;
@@ -46,6 +47,7 @@ public class CpRedCharacterArmorService {
                         armor.getBaseArmor().getId(),
                         armor.getCharacter().getId(),
                         armor.getStatus().toString(),
+                        armor.getPlace().toString(),
                         armor.getCurrentArmorPoints(),
                         armor.getDescription()))
                 .toList();
@@ -63,7 +65,8 @@ public class CpRedCharacterArmorService {
         // Czy podano wszystkie wymagane pola w request
         if (addCharacterArmorRequest.getCharacterId() == null ||
                 addCharacterArmorRequest.getBaseArmorId() == null ||
-                addCharacterArmorRequest.getStatus() == null) {
+                addCharacterArmorRequest.getStatus() == null ||
+                addCharacterArmorRequest.getPlace() == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
 
@@ -97,12 +100,24 @@ public class CpRedCharacterArmorService {
             throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
         }
 
+        // Sprawdzenie, czy postać ma już pancerz w tym miejscu
+        if (addCharacterArmorRequest.getStatus() == CpRedCharacterItemStatus.EQUIPPED){
+            List<CpRedCharacterArmor> placedArmors = cpRedCharacterArmorRepository.findAllByCharacterAndPlace(character, addCharacterArmorRequest.getPlace());
+            // Sprawdzenie miejsca pancerza
+            for (CpRedCharacterArmor placedArmor : placedArmors) {
+                if (placedArmor.getStatus() == CpRedCharacterItemStatus.EQUIPPED && placedArmor.getPlace() == addCharacterArmorRequest.getPlace()) {
+                    throw new IllegalArgumentException("Nie można mieć założonych więcej niż jednego pancerza w tym miejscu.");
+                }
+            }
+        }
+
         // Tworzenie nowej klasy postaci
         CpRedCharacterArmor newCharacterArmor = new CpRedCharacterArmor(
                 null, // ID zostanie wygenerowane automatycznie
                 armor, // Pancerz bazowy
                 character, // Postać
                 addCharacterArmorRequest.getStatus(), // Status pancerza
+                addCharacterArmorRequest.getPlace(), // Miejsce pancerza
                 armor.getArmorPoints(), // Aktualne punkty pancerza
                 armor.getDescription() // Opis pancerza
         );
@@ -166,6 +181,16 @@ public class CpRedCharacterArmorService {
 
         // Sprawdzenie statusu pancerza
         if (updateCharacterArmorRequest.getStatus() != null){
+            // Czy postać ma już pancerz w tym miejscu
+            if (updateCharacterArmorRequest.getStatus() == CpRedCharacterItemStatus.EQUIPPED){
+                List<CpRedCharacterArmor> placedArmors = cpRedCharacterArmorRepository.findAllByCharacterAndPlace(character, characterArmorToUpdate.getPlace());
+                // Sprawdzenie miejsca pancerza
+                for (CpRedCharacterArmor placedArmor : placedArmors) {
+                    if (placedArmor.getStatus() == CpRedCharacterItemStatus.EQUIPPED && placedArmor.getPlace() == characterArmorToUpdate.getPlace()) {
+                        throw new IllegalArgumentException("Nie można mieć założonych więcej niż jednego pancerza w tym miejscu.");
+                    }
+                }
+            }
             characterArmorToUpdate.setStatus(updateCharacterArmorRequest.getStatus());
         }
 

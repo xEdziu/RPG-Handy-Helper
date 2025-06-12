@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface CpRedCharacterArmorRepository extends JpaRepository<CpRedCharacterArmor, Long> {
     List<CpRedCharacterArmor> findAllByCharacter(CpRedCharacters character);
+
+    List<CpRedCharacterArmor> findAllByCharacterAndPlace(CpRedCharacters character, CpRedCharacterArmorPlace place);
 }

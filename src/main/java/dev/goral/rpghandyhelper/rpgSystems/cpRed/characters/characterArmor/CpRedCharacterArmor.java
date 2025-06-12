@@ -40,6 +40,8 @@ public class CpRedCharacterArmor {
     private CpRedCharacters character;
     @Enumerated(EnumType.STRING)
     private CpRedCharacterItemStatus status;
+    @Enumerated(EnumType.STRING)
+    private CpRedCharacterArmorPlace place;
     private Integer currentArmorPoints;
     @Column(length = 500)
     private String description;

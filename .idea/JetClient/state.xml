@@ -2137,7 +2137,7 @@
                                             <requestState>
                                               <option name="body">
                                                 <bodyState>
-                                                  <option name="raw" value="{&#10;  baseArmorId: 1,&#10;  characterId: 1,&#10;  status: &quot;EQUIPPED&quot; // &quot;EQUIPPED&quot; / &quot;STORED&quot;&#10;}" />
+                                                  <option name="raw" value="{&#10;  baseArmorId: 1,&#10;  characterId: 1,&#10;  status: &quot;EQUIPPED&quot;, // &quot;EQUIPPED&quot; / &quot;STORED&quot;&#10;  place: &quot;BODY&quot; // &quot;HEAD&quot; / &quot;BODY&quot; / &quot;SHIELD&quot;&#10;}" />
                                                   <option name="type" value="JSON" />
                                                 </bodyState>
                                               </option>
