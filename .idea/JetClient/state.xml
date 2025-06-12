@@ -2335,6 +2335,83 @@
                                   </option>
                                   <option name="sortWeight" value="3000000" />
                                 </folderState>
+                                <folderState>
+                                  <option name="id" value="5325578f-6929-45b1-8c9b-29e093699d7e" />
+                                  <option name="name" value="Friends" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  characterId: 2,&#10;  name: &quot;Papa Słoń&quot;,&#10;  description: &quot;Dla przyjaciół Mariusz&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Tworzy przyjaciela przypisanego do konkretnej karty postaci" />
+                                        <option name="id" value="536ae667-e2e4-4f6b-af18-0633ed2fd215" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz przyjaciela" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Usuwa przyjaciela przypisanego do karty postaci :-(" />
+                                        <option name="id" value="d29f7b39-d59a-4199-9eff-8e9959ed8c25" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń przyjaciela :-(" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/delete/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkich przyjaciół z każdej karty postaci" />
+                                        <option name="id" value="7cf79ef3-9f9d-4e15-b0ba-5b3e68527537" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkich przyjaciół" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca przyjaciela po unikalnym id" />
+                                        <option name="id" value="d081f8f0-5e42-4dcd-a5d5-985a97392c45" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć przyjaciela po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="80f9b28a-ba35-4c75-adbf-9d032e0d054a" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkich przyjaciół dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/friends/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkich przyjaciół z konkretnej karty postaci" />
+                                        <option name="id" value="f13e4604-bb58-42a1-af43-ff5f23c963c8" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć przyjaciół po characterId" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/character/2" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  characterId: 2,&#10;  name: &quot;Marcin&quot;,&#10;  description: &quot;Przyjaciel z dzieciństwa&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zmień dane przyjaciela" />
+                                        <option name="id" value="d5e95b8f-9c58-4462-978a-9eb85068b8c2" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj przyjaciół" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="4000000" />
+                                </folderState>
                               </list>
                             </option>
                             <option name="id" value="59cdc013-8808-4399-ab24-bcfef4ebec51" />
