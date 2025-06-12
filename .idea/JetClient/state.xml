@@ -1922,7 +1922,7 @@
                                                   <option name="type" value="JSON" />
                                                 </bodyState>
                                               </option>
-                                              <option name="description" value="Pozwala modyfikować parametry broni przypisanej do użytkownika" />
+                                              <option name="description" value="Pozwala modyfikować parametry broni przypisanej do postaci" />
                                               <option name="id" value="9723acd5-d018-4a88-ad4e-4c453e9d74fc" />
                                               <option name="method" value="PUT" />
                                               <option name="name" value="Modyfikuj broń postaci" />
@@ -1930,7 +1930,7 @@
                                               <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weapons/update/1" />
                                             </requestState>
                                             <requestState>
-                                              <option name="description" value="Usuwa powiązanie wybranej po ID broni z userem" />
+                                              <option name="description" value="Usuwa powiązanie wybranej po ID broni z postacią" />
                                               <option name="id" value="4f6eced3-ed9a-4f81-9a9b-b9067464798b" />
                                               <option name="method" value="DELETE" />
                                               <option name="name" value="Usuń powiązanie broni z postacią" />
@@ -1983,7 +1983,7 @@
                                                   <option name="type" value="JSON" />
                                                 </bodyState>
                                               </option>
-                                              <option name="description" value="Pozwala modyfikować parametry customowej broni przypisanej do użytkownika" />
+                                              <option name="description" value="Pozwala modyfikować parametry customowej broni przypisanej do postaci" />
                                               <option name="id" value="8b8fc000-241c-4da2-b6f3-73051e4438b8" />
                                               <option name="method" value="PUT" />
                                               <option name="name" value="Modyfikuj customową broń postaci" />
@@ -1991,7 +1991,7 @@
                                               <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customWeapons/update/1" />
                                             </requestState>
                                             <requestState>
-                                              <option name="description" value="Usuwa powiązanie wybranej po ID customowej broni z userem" />
+                                              <option name="description" value="Usuwa powiązanie wybranej po ID customowej broni z postacią" />
                                               <option name="id" value="e5e1c14c-a45b-4686-9f36-f81331b4909c" />
                                               <option name="method" value="DELETE" />
                                               <option name="name" value="Usuń powiązanie customowej broni z postacią" />
@@ -2207,6 +2207,62 @@
                                       <folderState>
                                         <option name="id" value="2ce7025f-566e-4197-9d82-c63682f2d794" />
                                         <option name="name" value="Manual" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  characterId: 1,&#10;  baseCyberwareId: 1&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Dodaje wskazany wszczep do postaci" />
+                                              <option name="id" value="80ec7e75-2ccb-4874-807a-3feb913500e1" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj wszczep do postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/cyberwares/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę z wszystkimi wszczepami dla postaci o podanym id" />
+                                              <option name="id" value="b99ed5ce-7726-4f5a-bfbf-3628519b8c0d" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie wszczepy postaci" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/cyberwares/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę wszystkich powiązań wszczepów z postaciami" />
+                                              <option name="id" value="3e03d955-cd1b-4b74-bf67-c151aa909dba" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie wszczepy postaci dla Admina" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/cyberwares/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  description: &quot;Wszczpe odpicowany tak jakby do Civia założyć LPG (Czyli oczywiście: Lepszy Power Gamoniu)&quot;,&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Pozwala modyfikować parametry wszczepu przypisanego do postaci" />
+                                              <option name="id" value="2f1d0a25-3457-463e-b23e-d5606d8ad390" />
+                                              <option name="method" value="PUT" />
+                                              <option name="name" value="Modyfikuj wszczeo postaci" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/cyberwares/update/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Usuwa powązanie wybranego po ID wszczepu z postacią" />
+                                              <option name="id" value="c29eb72a-3e26-470f-a31d-cd3e6fddff37" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń powiązanie wszczepu z postacią" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/cyberwares/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
                                         <option name="sortWeight" value="1000000" />
                                       </folderState>
                                       <folderState>

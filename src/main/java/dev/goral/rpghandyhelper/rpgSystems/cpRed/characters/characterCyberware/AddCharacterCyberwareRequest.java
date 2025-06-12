@@ -2,14 +2,14 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCyberware;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-@ToString
-public class CpRedCharacterCyberwareDTO {
-    private Long id;
-    private Long baseCyberwareId;
+@NoArgsConstructor
+public class AddCharacterCyberwareRequest {
     private Long characterId;
-    private String description;
+    private Long baseCyberwareId;
 }
