@@ -8,8 +8,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCharacterArmorDTO {
-    private Long armorId;
+    private Long id;
+    private Long baseArmorId;
     private Long characterId;
     private String status;
-    private int currentArmorPoints;
+    private Integer currentArmorPoints;
+    private String description;
 }

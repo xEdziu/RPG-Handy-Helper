@@ -2132,6 +2132,57 @@
                                       <folderState>
                                         <option name="id" value="8c33db39-9337-4247-9479-6fe90c481bce" />
                                         <option name="name" value="Manual" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  baseArmorId: 1,&#10;  characterId: 1,&#10;  status: &quot;EQUIPPED&quot; // &quot;EQUIPPED&quot; / &quot;STORED&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="55b3deb3-f7a9-46da-9776-ca61a6be25d9" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj pancerz do postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/armors/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="3a7aec88-e1a7-4533-995b-d8ea5ceb77e9" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie pancerze postaci" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/armors/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="1d0b0f51-990f-42c4-8d0d-28423a7d16fa" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie pancerze postaci dla Admina" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/armors/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  status: &quot;STORED&quot;, // &quot;EQUIPPED&quot; / &quot;STORED&quot;&#10;  currentArmorPoints: 2,&#10;  description: &quot;Pancerz tak twardy jak...&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="3fa198d3-de4d-4f11-b69b-60a5b116b512" />
+                                              <option name="method" value="PUT" />
+                                              <option name="name" value="Modyfikuj pancerz postaci" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/armors/update/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="9fd8b00f-fe83-44a9-99a4-503227f36cec" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń powiązanie pancerza z postacią" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/armors/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
                                         <option name="sortWeight" value="1000000" />
                                       </folderState>
                                       <folderState>
