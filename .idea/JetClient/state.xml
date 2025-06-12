@@ -1949,7 +1949,7 @@
                                             <requestState>
                                               <option name="body">
                                                 <bodyState>
-                                                  <option name="raw" value="{&#10;  baseWeaponId: 2,&#10;  characterId: 1,&#10;  status: &quot;EQUIPPED&quot; // &quot;STORED&quot;, &quot;EQUIPPED&quot;&#10;}" />
+                                                  <option name="raw" value="{&#10;  baseCustomWeaponId: 2,&#10;  characterId: 1,&#10;  status: &quot;EQUIPPED&quot; // &quot;STORED&quot;, &quot;EQUIPPED&quot;&#10;}" />
                                                   <option name="type" value="JSON" />
                                                 </bodyState>
                                               </option>

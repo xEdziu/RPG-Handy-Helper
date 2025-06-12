@@ -98,7 +98,7 @@ public class CpRedCharacterWeaponService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może zmieniać bronie postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może dodawać bronie postaci NPC.");
             }
         }
         // Czy gra jest aktywna
@@ -260,7 +260,7 @@ public class CpRedCharacterWeaponService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może zmieniać bronie postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może usuwać bronie postaci NPC.");
             }
         }
 
