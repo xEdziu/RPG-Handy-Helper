@@ -1,4 +1,4 @@
-package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon;
+package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeapon;
 
 import dev.goral.rpghandyhelper.game.Game;
 import dev.goral.rpghandyhelper.game.GameRepository;
@@ -9,10 +9,8 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.items.CpRedItemsQuality;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.stats.CpRedStats;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.weapons.CpRedWeapons;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.weapons.CpRedWeaponsRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customWeapons.CpRedCustomWeapons;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customWeapons.CpRedCustomWeaponsRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpghandyhelper.user.User;
@@ -21,8 +19,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 import java.util.List;
 import java.util.Map;
@@ -30,58 +26,58 @@ import java.util.Objects;
 
 @Service
 @AllArgsConstructor
-public class CpRedCharacterWeaponService {
-    private final CpRedCharacterWeaponRepository cpRedCharacterWeaponRepository;
+public class CpRedCharacterCustomWeaponService {
+    private final CpRedCharacterCustomWeaponRepository cpRedCharacterCustomWeaponRepository;
     private final UserRepository userRepository;
     private final CpRedCharactersRepository cpRedCharactersRepository;
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
-    private final CpRedWeaponsRepository cpRedWeaponsRepository;
+    private final CpRedCustomWeaponsRepository cpRedCustomWeaponsRepository;
 
-    public Map<String, Object> getCharacterWeapons(Long characterId) {
+    public Map<String, Object> getCharacterCustomWeapons(Long characterId){
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
-        List<CpRedCharacterWeaponDTO> characterWeapons = cpRedCharacterWeaponRepository.findAllByCharacter(character)
+        List<CpRedCharacterCustomWeaponDTO> characterCustomWeapons = cpRedCharacterCustomWeaponRepository.findAllByCharacter(character)
                 .stream()
-                .map(weapons -> new CpRedCharacterWeaponDTO(
-                        weapons.getId(),
-                        weapons.getBaseWeapon().getId(),
-                        weapons.getCharacter().getId(),
-                        weapons.getDmg(),
-                        weapons.getMagazineCapacity(),
-                        weapons.getNumberOfAttacks(),
-                        weapons.getHandType(),
-                        weapons.getIsHidden(),
-                        weapons.getQuality().toString(),
-                        weapons.getStatus().toString(),
-                        weapons.getDescription()
+                .map(weapons -> new CpRedCharacterCustomWeaponDTO(
+                                weapons.getId(),
+                                weapons.getBaseCustomWeapon().getId(),
+                                weapons.getCharacter().getId(),
+                                weapons.getDmg(),
+                                weapons.getMagazineCapacity(),
+                                weapons.getNumberOfAttacks(),
+                                weapons.getHandType(),
+                                weapons.getIsHidden(),
+                                weapons.getQuality().toString(),
+                                weapons.getStatus().toString(),
+                                weapons.getDescription()
                         )
                 )
                 .toList();
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Bronie postaci pobrane pomyślnie");
-        response.put("characterWeapons", characterWeapons);
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowe bronie postaci pobrane pomyślnie");
+        response.put("characterCustomWeapons", characterCustomWeapons);
         return response;
     }
 
-    public Map<String, Object> createCharacterWeapon(AddCharacterWeaponRequest addCharacterWeaponRequest) {
+    public Map<String, Object> createCharacterCustomWeapon(AddCharacterCustomWeaponRequest addCharacterCustomWeaponRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         // Czy podano wszystkie wymagane pola w request
-        if (addCharacterWeaponRequest.getBaseWeaponId() == null ||
-                addCharacterWeaponRequest.getCharacterId() == null ||
-                addCharacterWeaponRequest.getStatus() == null) {
+        if (addCharacterCustomWeaponRequest.getBaseCustomWeaponId() == null ||
+                addCharacterCustomWeaponRequest.getCharacterId() == null ||
+                addCharacterCustomWeaponRequest.getStatus() == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
 
         // Czy istnieje character o podanym ID
-        CpRedCharacters character = cpRedCharactersRepository.findById(addCharacterWeaponRequest.getCharacterId())
+        CpRedCharacters character = cpRedCharactersRepository.findById(addCharacterCustomWeaponRequest.getCharacterId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
 
         // Czy istnieje broń o podanym ID
-        CpRedWeapons weapon = cpRedWeaponsRepository.findById(addCharacterWeaponRequest.getBaseWeaponId())
+        CpRedCustomWeapons weapon = cpRedCustomWeaponsRepository.findById(addCharacterCustomWeaponRequest.getBaseCustomWeaponId())
                 .orElseThrow(() -> new ResourceNotFoundException("Broń o podanym ID nie została znaleziona."));
 
         Game game = gameRepository.findById(character.getGame().getId())
@@ -91,6 +87,11 @@ public class CpRedCharacterWeaponService {
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
 
+        // Czy postać należy do gry, do której jest przypisana customowa broń
+        if (!Objects.equals(character.getGame().getId(), weapon.getGameId().getId())) {
+            throw new ResourceNotFoundException("Postać nie należy do gry, do której jest przypisana customowa broń.");
+        }
+
         // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
             if (character.getType() != CpRedCharactersType.NPC) {
@@ -98,7 +99,7 @@ public class CpRedCharacterWeaponService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może dodawać bronie postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może dodawać customowe bronie postaci NPC.");
             }
         }
         // Czy gra jest aktywna
@@ -107,7 +108,7 @@ public class CpRedCharacterWeaponService {
         }
 
         // Tworzenie nowej klasy postaci
-        CpRedCharacterWeapon newCharacterWeapon = new CpRedCharacterWeapon(
+        CpRedCharacterCustomWeapon newCharacterCustomWeapon = new CpRedCharacterCustomWeapon(
                 null,
                 weapon,
                 character,
@@ -117,31 +118,32 @@ public class CpRedCharacterWeaponService {
                 weapon.getHandType(),
                 weapon.isHidden(),
                 weapon.getQuality(),
-                addCharacterWeaponRequest.getStatus(),
+                addCharacterCustomWeaponRequest.getStatus(),
                 weapon.getDescription()
         );
 
-        cpRedCharacterWeaponRepository.save(newCharacterWeapon);
-        return CustomReturnables.getOkResponseMap("Broń została dodana do postaci");
+        cpRedCharacterCustomWeaponRepository.save(newCharacterCustomWeapon);
+
+        return CustomReturnables.getOkResponseMap("Customowa broń została dodana do postaci");
     }
 
-    public Map<String, Object> updateCharacterWeapon(Long characterWeaponId,
-                                                     UpdateCharacterWeaponRequest updateCharacterWeaponRequest) {
+    public Map<String, Object> updateCharacterCustomWeapon(Long characterCustomWeaponId,
+                                                           UpdateCharacterCustomWeaponRequest updateCharacterCustomWeaponRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         // Czy istnieje broń postaci o podanym ID
-        CpRedCharacterWeapon characterWeaponToUpdate = cpRedCharacterWeaponRepository.findById(characterWeaponId)
+        CpRedCharacterCustomWeapon characterCustomWeaponToUpdate = cpRedCharacterCustomWeaponRepository.findById(characterCustomWeaponId)
                 .orElseThrow(() -> new ResourceNotFoundException("Broń postaci o podanym ID nie została znaleziona."));
 
         // Czy istnieje character o podanym ID
-        CpRedCharacters character = cpRedCharactersRepository.findById(characterWeaponToUpdate.getCharacter().getId())
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterCustomWeaponToUpdate.getCharacter().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
 
         // Czy istnieje broń o podanym ID
-        CpRedWeapons weapon = cpRedWeaponsRepository.findById(characterWeaponToUpdate.getBaseWeapon().getId())
+        CpRedCustomWeapons weapon = cpRedCustomWeaponsRepository.findById(characterCustomWeaponToUpdate.getBaseCustomWeapon().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Broń o podanym ID nie została znaleziona."));
 
         Game game = gameRepository.findById(character.getGame().getId())
@@ -151,6 +153,11 @@ public class CpRedCharacterWeaponService {
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
 
+        // Czy postać należy do gry, do której jest przypisana customowa broń
+        if (!Objects.equals(character.getGame().getId(), weapon.getGameId().getId())) {
+            throw new ResourceNotFoundException("Postać nie należy do gry, do której jest przypisana customowa broń.");
+        }
+
         // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
             if (character.getType() != CpRedCharactersType.NPC) {
@@ -158,7 +165,7 @@ public class CpRedCharacterWeaponService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może zmieniać bronie postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może zmieniać customowe bronie postaci NPC.");
             }
         }
 
@@ -168,82 +175,82 @@ public class CpRedCharacterWeaponService {
         }
 
         // Sprawdzenie dmg
-        if (updateCharacterWeaponRequest.getDmg() != null) {
-            if (updateCharacterWeaponRequest.getDmg() < 0) {
+        if (updateCharacterCustomWeaponRequest.getDmg() != null) {
+            if (updateCharacterCustomWeaponRequest.getDmg() < 0) {
                 throw new IllegalArgumentException("Wartość obrażeń nie może być mniejsza niż 0.");
             }
-            characterWeaponToUpdate.setDmg(updateCharacterWeaponRequest.getDmg());
+            characterCustomWeaponToUpdate.setDmg(updateCharacterCustomWeaponRequest.getDmg());
         }
 
         // Sprawdzenie magazineCapacity
-        if (updateCharacterWeaponRequest.getMagazineCapacity() != null) {
-            if (updateCharacterWeaponRequest.getMagazineCapacity() < 0) {
+        if (updateCharacterCustomWeaponRequest.getMagazineCapacity() != null) {
+            if (updateCharacterCustomWeaponRequest.getMagazineCapacity() < 0) {
                 throw new IllegalArgumentException("Pojemność magazynka nie może być mniejsza niż 0.");
             }
-            characterWeaponToUpdate.setMagazineCapacity(updateCharacterWeaponRequest.getMagazineCapacity());
+            characterCustomWeaponToUpdate.setMagazineCapacity(updateCharacterCustomWeaponRequest.getMagazineCapacity());
         }
 
         // Sprawdzenie numberOfAttacks
-        if (updateCharacterWeaponRequest.getNumberOfAttacks() != null) {
-            if (updateCharacterWeaponRequest.getNumberOfAttacks() < 0) {
+        if (updateCharacterCustomWeaponRequest.getNumberOfAttacks() != null) {
+            if (updateCharacterCustomWeaponRequest.getNumberOfAttacks() < 0) {
                 throw new IllegalArgumentException("Liczba ataków nie może być mniejsza niż 0.");
             }
-            characterWeaponToUpdate.setNumberOfAttacks(updateCharacterWeaponRequest.getNumberOfAttacks());
+            characterCustomWeaponToUpdate.setNumberOfAttacks(updateCharacterCustomWeaponRequest.getNumberOfAttacks());
         }
 
         // Sprawdzenie handType
-        if (updateCharacterWeaponRequest.getHandType() != null) {
-            if (updateCharacterWeaponRequest.getHandType() < 0) {
+        if (updateCharacterCustomWeaponRequest.getHandType() != null) {
+            if (updateCharacterCustomWeaponRequest.getHandType() < 0) {
                 throw new IllegalArgumentException("Typ ręki nie może być mniejszy niż 0.");
             }
-            characterWeaponToUpdate.setHandType(updateCharacterWeaponRequest.getHandType());
+            characterCustomWeaponToUpdate.setHandType(updateCharacterCustomWeaponRequest.getHandType());
         }
 
         // Sprawdzenie isHidden
-        if (updateCharacterWeaponRequest.getIsHidden() != null) {
-            characterWeaponToUpdate.setIsHidden(updateCharacterWeaponRequest.getIsHidden());
+        if (updateCharacterCustomWeaponRequest.getIsHidden() != null) {
+            characterCustomWeaponToUpdate.setIsHidden(updateCharacterCustomWeaponRequest.getIsHidden());
         }
 
         // Sprawdzenie quality
-        if (updateCharacterWeaponRequest.getQuality() != null) {
-            characterWeaponToUpdate.setQuality(updateCharacterWeaponRequest.getQuality());
+        if (updateCharacterCustomWeaponRequest.getQuality() != null) {
+            characterCustomWeaponToUpdate.setQuality(updateCharacterCustomWeaponRequest.getQuality());
         }
 
         // Sprawdzenie status
-        if (updateCharacterWeaponRequest.getStatus() != null) {
-            characterWeaponToUpdate.setStatus(updateCharacterWeaponRequest.getStatus());
+        if (updateCharacterCustomWeaponRequest.getStatus() != null) {
+            characterCustomWeaponToUpdate.setStatus(updateCharacterCustomWeaponRequest.getStatus());
         }
 
         // Sprawdzenie opisu
-        if (updateCharacterWeaponRequest.getDescription() != null) {
-            if (updateCharacterWeaponRequest.getDescription().length() > 500) {
+        if (updateCharacterCustomWeaponRequest.getDescription() != null) {
+            if (updateCharacterCustomWeaponRequest.getDescription().length() > 500) {
                 throw new IllegalArgumentException("Opis nie może być dłuższy niż 500 znaków.");
             }
-            characterWeaponToUpdate.setDescription(updateCharacterWeaponRequest.getDescription());
+            characterCustomWeaponToUpdate.setDescription(updateCharacterCustomWeaponRequest.getDescription());
         }
 
         // Zapisanie zmodyfikowanej broni postaci
-        cpRedCharacterWeaponRepository.save(characterWeaponToUpdate);
-
-        return CustomReturnables.getOkResponseMap("Broń postaci została pomyślnie zmodyfikowana");
+        cpRedCharacterCustomWeaponRepository.save(characterCustomWeaponToUpdate);
+        
+        return CustomReturnables.getOkResponseMap("Customowa broń postaci została pomyślnie zmodyfikowana");
     }
 
-    public Map<String, Object> deleteCharacterWeapon(Long characterWeaponId) {
+    public Map<String, Object> deleteCharacterCustomWeapon(Long characterCustomWeaponId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         // Czy istnieje broń postaci o podanym ID
-        CpRedCharacterWeapon characterWeapon = cpRedCharacterWeaponRepository.findById(characterWeaponId)
+        CpRedCharacterCustomWeapon characterCustomWeapon = cpRedCharacterCustomWeaponRepository.findById(characterCustomWeaponId)
                 .orElseThrow(() -> new ResourceNotFoundException("Broń postaci o podanym ID nie została znaleziona."));
 
         // Czy istnieje character o podanym ID
-        CpRedCharacters character = cpRedCharactersRepository.findById(characterWeapon.getCharacter().getId())
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterCustomWeapon.getCharacter().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
 
         // Czy istnieje broń o podanym ID
-        CpRedWeapons weapon = cpRedWeaponsRepository.findById(characterWeapon.getBaseWeapon().getId())
+        CpRedCustomWeapons weapon = cpRedCustomWeaponsRepository.findById(characterCustomWeapon.getBaseCustomWeapon().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Broń o podanym ID nie została znaleziona."));
 
         Game game = gameRepository.findById(character.getGame().getId())
@@ -260,7 +267,7 @@ public class CpRedCharacterWeaponService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może usuwać bronie postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może usuwać customowe bronie postaci NPC.");
             }
         }
 
@@ -269,15 +276,15 @@ public class CpRedCharacterWeaponService {
             throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
         }
 
-        cpRedCharacterWeaponRepository.deleteById(characterWeaponId);
-
-        return CustomReturnables.getOkResponseMap("Broń postaci została pomyślnie usunięta");
+        cpRedCharacterCustomWeaponRepository.deleteById(characterCustomWeaponId);
+        
+        return CustomReturnables.getOkResponseMap("Customowa broń postaci została pomyślnie usunięta");
     }
 
-    public Map<String, Object> getAllCharacterWeapons() {
-        List<CpRedCharacterWeapon> allCharacterWeapons = cpRedCharacterWeaponRepository.findAll();
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie bronie postaci pobrane pomyślnie");
-        response.put("allCharacterWeapons", allCharacterWeapons);
+    public Map<String, Object> getAllCharacterCustomWeapons(){
+        List<CpRedCharacterCustomWeapon> allCharacterCustomWeapons = cpRedCharacterCustomWeaponRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie customowe bronie postaci pobrane pomyślnie");
+        response.put("allCharacterCustomWeapons", allCharacterCustomWeapons);
         return response;
     }
 }

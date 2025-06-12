@@ -33,19 +33,19 @@ public class CpRedCharacterCustomWeapon {
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCustomWeapons baseWeaponId;
+    private CpRedCustomWeapons baseCustomWeapon;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCharacters characterId;
-    private int dmg;
-    private int magazineCapacity;
-    private short numberOfAttacks;
+    private CpRedCharacters character;
+    private Integer dmg;
+    private Integer magazineCapacity;
+    private Short numberOfAttacks;
     private Short handType;
-    private boolean isHidden;
+    private Boolean isHidden;
     @Enumerated(EnumType.STRING)
     private CpRedItemsQuality quality;
     @Enumerated(EnumType.STRING)
