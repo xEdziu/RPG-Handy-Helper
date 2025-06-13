@@ -11,6 +11,34 @@
 <ul>
     <li><a href="/admin/users">Użytkownicy</a></li>
     <li><a href="/home">Strona Domowa</a></li>
+    <li><a href="/logout">Wyloguj się</a></li>
 </ul>
 </body>
 </html>
+<script>
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith('XSRF-TOKEN=')) {
+                return cookie.substring('XSRF-TOKEN='.length);
+            }
+        }
+        return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('http://localhost:8888/api/v1/authorized/user', {
+            method: 'GET',
+            headers: {
+                'X-XSRF-TOKEN': getCsrfToken()
+            }
+        }).then(res => res.json())
+        .then(data => {
+            const userSection = document.getElementsByTagName('h1')[0];
+            userSection.textContent = `Panel Administratora - Witaj, ${data.username}!`;
+        }).catch(err => {
+            console.error('Błąd podczas pobierania danych użytkownika:', err);
+        });
+    });
+</script>
