@@ -1,15 +1,16 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCyberware;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-@ToString
-public class CpRedCharacterCyberwareDTO {
-    private Long id;
-    private Long baseCyberwareId;
-    private Long characterId;
+@NoArgsConstructor
+public class UpdateCharacterCyberwareRequest {
+    @Column(length = 1000)
     private String description;
 }
