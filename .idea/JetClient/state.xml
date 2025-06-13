@@ -1756,7 +1756,7 @@
                                         <option name="method" value="POST" />
                                         <option name="name" value="Stwórz info" />
                                         <option name="sortWeight" value="1000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/add" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/otherinfo/add" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Usuwa info przypisane do konkretnej karty postaci" />
@@ -1764,7 +1764,7 @@
                                         <option name="method" value="DELETE" />
                                         <option name="name" value="Usuń info" />
                                         <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/delete/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/otherinfo/delete/1" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Zwraca każde info z każdej karty postaci" />
@@ -1772,7 +1772,7 @@
                                         <option name="method" value="GET" />
                                         <option name="name" value="Zwróć wszystkie info" />
                                         <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/all" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/otherinfo/all" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Zwraca info po unikalnym id" />
@@ -1780,7 +1780,7 @@
                                         <option name="method" value="GET" />
                                         <option name="name" value="Zwróć info po id" />
                                         <option name="sortWeight" value="4000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/otherinfo/1" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Zwraca obiekty" />
@@ -1788,7 +1788,7 @@
                                         <option name="method" value="GET" />
                                         <option name="name" value="Zwróć wszystkie info dla Admina" />
                                         <option name="sortWeight" value="5000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/OtherInfo/all" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/otherinfo/all" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Zwraca wszystkie info z konkretnej karty postaci" />
@@ -1796,7 +1796,7 @@
                                         <option name="method" value="GET" />
                                         <option name="name" value="Zwróć info po characterId" />
                                         <option name="sortWeight" value="6000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/character/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/otherinfo/character/1" />
                                       </requestState>
                                       <requestState>
                                         <option name="body">
@@ -1810,7 +1810,7 @@
                                         <option name="method" value="PUT" />
                                         <option name="name" value="Modyfikuj info" />
                                         <option name="sortWeight" value="7000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/OtherInfo/update/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/otherinfo/update/1" />
                                       </requestState>
                                     </list>
                                   </option>

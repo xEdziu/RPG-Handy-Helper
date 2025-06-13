@@ -37,7 +37,7 @@ public class CpRedCharacterFriendsService {
                         friend.getDescription()
                 )).toList();
         if (friendsDTO.isEmpty()) {
-            return CustomReturnables.getOkResponseMap("Brak przyjaciół dla tej postaci :-( .");
+            return CustomReturnables.getOkResponseMap("Brak przyjaciół dla tej postaci  .");
         }
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano przyjaciół dla tej postaci.");
         response.put("friends", friendsDTO);
@@ -50,7 +50,7 @@ public class CpRedCharacterFriendsService {
                         cpRedCharacterFriends.getCharacterId().getId(),
                         cpRedCharacterFriends.getName(),
                         cpRedCharacterFriends.getDescription()
-                )).orElseThrow(() -> new ResourceNotFoundException("Przyjaciel o id " + friendsId + " nie został znaleziony :-("));
+                )).orElseThrow(() -> new ResourceNotFoundException("Przyjaciel o id " + friendsId + " nie został znaleziony"));
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano przyjaciół dla tej postaci.");
         response.put("friends", friends);
         return response;
@@ -59,7 +59,7 @@ public class CpRedCharacterFriendsService {
     public Map<String, Object> getFriendsByCharacterId(Long characterId) {
         List<CpRedCharacterFriends> friends = CpRedCharacterFriendsRepository.findAllByCharacterId_Id(characterId);
         if (friends.isEmpty()) {
-            return CustomReturnables.getOkResponseMap("Brak przyjaciół dla postaci o id " + characterId + " :-(");
+            return CustomReturnables.getOkResponseMap("Brak przyjaciół dla postaci o id " + characterId);
         }
         List<CpRedCharacterFriendsDTO> friendsDTO = friends.stream().map(friend ->
                 new CpRedCharacterFriendsDTO(
@@ -147,7 +147,7 @@ public class CpRedCharacterFriendsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         CpRedCharacterFriends friends = cpRedCharacterFriendsRepository.findById(friendsId)
-                .orElseThrow(() -> new ResourceNotFoundException("Przyjaciel o id " + friendsId + " nie został znaleziony :-("));
+                .orElseThrow(() -> new ResourceNotFoundException("Przyjaciel o id " + friendsId + " nie został znaleziony"));
 
         CpRedCharacters character = cpRedCharactersRepository.findById(friends.getCharacterId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + friends.getCharacterId().getId() + " nie została znaleziona"));
@@ -176,7 +176,7 @@ public class CpRedCharacterFriendsService {
             }
         }
         cpRedCharacterFriendsRepository.deleteById(friendsId);
-        return CustomReturnables.getOkResponseMap("Przyjaciel o id " + friendsId + " został usunięty :-( .");
+        return CustomReturnables.getOkResponseMap("Przyjaciel o id " + friendsId + " został usunięty  .");
     }
 
     public Map<String, Object> updateFriends(Long friendsId, CpRedCharacterFriendsRequest cpRedCharacterFriends) {
@@ -186,7 +186,7 @@ public class CpRedCharacterFriendsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         CpRedCharacterFriends friendsToUpdate = cpRedCharacterFriendsRepository.findById(friendsId)
-                .orElseThrow(() -> new ResourceNotFoundException("Przyjaciel o id " + friendsId + " nie został znaleziony :-("));
+                .orElseThrow(() -> new ResourceNotFoundException("Przyjaciel o id " + friendsId + " nie został znaleziony"));
 
         CpRedCharacters character = cpRedCharactersRepository.findById(friendsToUpdate.getCharacterId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + friendsToUpdate.getCharacterId().getId() + " nie została znaleziona"));
