@@ -452,20 +452,44 @@ public class GameService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o podanym ID nie istnieje."));
 
-        List<GameUsers> gameUsers = gameUsersRepository.findAllByUserId(user.getId());
-        if (gameUsers.isEmpty()) {
+        List<GameUsers> userGames = gameUsersRepository.findAllByUserId(user.getId());
+        List<Game> userOwnedGames = gameRepository.findAllByOwner(user);
+        if (userGames.isEmpty() && userOwnedGames.isEmpty()) {
             return;
         }
-
-        for (GameUsers gameUser : gameUsers) {
-            Game game = gameUser.getGame();
-            if (game.getStatus() == GameStatus.ACTIVE) {
-                CpRedCharacters character = cpRedCharactersRepository.findByUserId_IdAndGameId_Id(user.getId(), game.getId());
-                if(character!=null) {
-                    character.setUser(null);
+        if (!userGames.isEmpty()) {
+            for (GameUsers userGame : userGames) {
+                Game game = userGame.getGame();
+                if (userGame.getRole() == GameUsersRole.GAMEMASTER) {
+                    // Sprawdź, czy są inni GM'owie w grze
+                    GameUsers otherGameMaster = gameUsersRepository.findFirstByGameIdAndRole(game.getId(), GameUsersRole.GAMEMASTER);
+                    // Jeśli nie ma, to daj GM'ma innemu graczowi
+                    if (otherGameMaster == null) {
+                        GameUsers newGameMaster = gameUsersRepository.findFirstByGameIdAndRole(game.getId(), GameUsersRole.PLAYER);
+                        // Jeśli nie ma graczy, to zmień grę na DELETED
+                        if (newGameMaster == null) {
+                            game.setStatus(GameStatus.DELETED);
+                        } else {
+                            newGameMaster.setRole(GameUsersRole.GAMEMASTER);
+                            gameUsersRepository.save(newGameMaster);
+                        }
+                    }
                 }
+                if (game.getOwner() == user) {
+                    GameUsers newOwner = gameUsersRepository.findFirstByGameIdAndRole(game.getId(), GameUsersRole.GAMEMASTER);
+                    if (newOwner == null) {
+                        newOwner = gameUsersRepository.findFirstByGameIdAndRole(game.getId(), GameUsersRole.PLAYER);
+                        if (newOwner == null) {
+                            game.setStatus(GameStatus.DELETED);
+                        }
+                    }
+                    if (newOwner != null) {
+                        game.setOwner(newOwner.getUser());
+                    }
+                }
+
+                gameUsersRepository.delete(userGame);
             }
-            gameUsersRepository.delete(gameUser);
         }
     }
 }
