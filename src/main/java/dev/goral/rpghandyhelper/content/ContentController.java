@@ -102,4 +102,10 @@ public class ContentController {
         System.out.println("ContentController: getAdminUserEdit()");
         return "admin/userEdit";
     }
+
+    @GetMapping("/admin/user/myPassword")
+    public String getAdminUserMyPassword() {
+        System.out.println("ContentController: getAdminUserMyPassword()");
+        return "admin/changePasswordAdmin";
+    }
 }

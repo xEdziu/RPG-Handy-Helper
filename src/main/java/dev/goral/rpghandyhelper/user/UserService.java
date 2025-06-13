@@ -1,10 +1,7 @@
 package dev.goral.rpghandyhelper.user;
 
 import dev.goral.rpghandyhelper.game.GameService;
-import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
-import dev.goral.rpghandyhelper.notes.GameNoteRepository;
 import dev.goral.rpghandyhelper.notes.GameNoteService;
-import dev.goral.rpghandyhelper.scheduler.repository.SchedulerRepository;
 import dev.goral.rpghandyhelper.scheduler.service.SchedulerService;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
@@ -446,5 +443,20 @@ public class UserService implements UserDetailsService {
         userRepository.delete(user);
 
         return CustomReturnables.getOkResponseMap("Użytkownik został usunięty.");
+    }
+
+    public Map<String, Object> changeUserPasswordAdmin(Long id, String password) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o ID: " + id));
+
+        if (!validatePassword(password)) {
+            throw new IllegalStateException("Hasło musi zawierać co najmniej 8 znaków, jedną cyfrę, jedną małą literę, jedną dużą literę oraz jeden znak specjalny.");
+        }
+
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepository.save(user);
+
+        return CustomReturnables.getOkResponseMap("Twoje hasło zostało zmienione.");
     }
 }
