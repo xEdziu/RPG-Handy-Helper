@@ -46,7 +46,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        fetch('http://localhost:8888/api/v1/authorized/admin/user/all', {
+        fetch('/api/v1/authorized/admin/user/all', {
             method: 'GET',
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken()
@@ -96,7 +96,7 @@
                     const row = event.target.closest('tr');
                     const userId = row.querySelector('td').textContent;
                     if (confirm(`Czy na pewno chcesz usunąć użytkownika o ID ${userId}?`)) {
-                        fetch(`http://localhost:8888/api/v1/authorized/admin/user/delete/${userId}`, {
+                        fetch(`/api/v1/authorized/admin/user/delete/${userId}`, {
                             method: 'DELETE',
                             headers: {
                                 'X-XSRF-TOKEN': getCsrfToken()

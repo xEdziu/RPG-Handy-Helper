@@ -61,7 +61,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const userId = new URLSearchParams(window.location.search).get('id');
-        fetch(`http://localhost:8888/api/v1/authorized/admin/user/${userId}`, {
+        fetch(`/api/v1/authorized/admin/user/${userId}`, {
             method: 'GET',
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken()
@@ -91,7 +91,7 @@
 
         console.log('Updating user with data:', data);
 
-        fetch(`http://localhost:8888/api/v1/authorized/admin/user/update/${userId}`, {
+        fetch(`/api/v1/authorized/admin/user/update/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

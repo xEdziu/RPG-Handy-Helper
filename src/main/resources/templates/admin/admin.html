@@ -28,7 +28,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        fetch('http://localhost:8888/api/v1/authorized/user', {
+        fetch('/api/v1/authorized/user', {
             method: 'GET',
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken()
