@@ -35,7 +35,7 @@ public class Game {
     @JoinColumn(
             name = "user_id",
             referencedColumnName = "id",
-            nullable = false
+            nullable = true
     )
     private User owner;
 
