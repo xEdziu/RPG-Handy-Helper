@@ -447,4 +447,25 @@ public class GameService {
         return CustomReturnables.getOkResponseMap("Rola użytkownika gry została zaktualizowana.");
 
     }
+
+    public void deleteUserFromAllGames(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o podanym ID nie istnieje."));
+
+        List<GameUsers> gameUsers = gameUsersRepository.findAllByUserId(user.getId());
+        if (gameUsers.isEmpty()) {
+            return;
+        }
+
+        for (GameUsers gameUser : gameUsers) {
+            Game game = gameUser.getGame();
+            if (game.getStatus() == GameStatus.ACTIVE) {
+                CpRedCharacters character = cpRedCharactersRepository.findByUserId_IdAndGameId_Id(user.getId(), game.getId());
+                if(character!=null) {
+                    character.setUser(null);
+                }
+            }
+            gameUsersRepository.delete(gameUser);
+        }
+    }
 }
