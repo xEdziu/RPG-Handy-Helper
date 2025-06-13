@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edycja Użytkownika</title>
+</head>
+<body>
+    <nav>
+        <h1>Panel Admina</h1>
+        <ul>
+            <li><a href="/admin/users">Powrót</a></li>
+        </ul>
+    </nav>
+    <h2 id="username-form"></h2>
+    <form>
+        <div>
+            <label for="username">Nazwa użytkownika:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="firstName">Imię:</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+        <div>
+            <label for="surname">Nazwisko:</label>
+            <input type="text" id="surname" name="surname" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="role">Rola:</label>
+            <select id="role" name="role">
+                <option value="ROLE_USER">Użytkownik</option>
+                <option value="ROLE_ADMIN">Admin</option>
+            </select>
+        </div>
+        <div>
+            <label for="locked">Zablokowane konto:</label>
+            <input type="checkbox" id="locked" name="locked">
+        </div>
+        <div>
+            <label for="enabled">Aktywny użytkownik:</label>
+            <input type="checkbox" id="enabled" name="enabled">
+        </div>
+        <button type="submit">Zapisz zmiany</button>
+    </form>
+</body>
+<script>
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith('XSRF-TOKEN=')) {
+                return cookie.substring('XSRF-TOKEN='.length);
+            }
+        }
+        return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const userId = new URLSearchParams(window.location.search).get('id');
+        fetch(`http://localhost:8888/api/v1/authorized/admin/user/${userId}`, {
+            method: 'GET',
+            headers: {
+                'X-XSRF-TOKEN': getCsrfToken()
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('username').textContent = `Edytujesz użytkownika: ${data.user.username}`;
+            document.getElementById('username').value = data.user.username;
+            document.getElementById('firstName').value = data.user.firstName;
+            document.getElementById('surname').value = data.user.surname;
+            document.getElementById('email').value = data.user.email;
+            document.getElementById('role').value = data.user.role;
+            document.getElementById('locked').checked = data.user.locked;
+            document.getElementById('enabled').checked = data.user.enabled;
+
+        });
+    });
+
+    document.querySelector('form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const userId = new URLSearchParams(window.location.search).get('id');
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+        data.locked = formData.get('locked') === 'on';
+        data.enabled = formData.get('enabled') === 'on';
+
+        console.log('Updating user with data:', data);
+
+        fetch(`http://localhost:8888/api/v1/authorized/admin/user/update/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then((data) => {
+
+            console.log('Response from server:', data);
+
+            if (data.error !== 200) {
+                throw new Error(`Error ${data.error}: ${data.message}`);
+            }
+
+            alert('Użytkownik został zaktualizowany.');
+            window.location.href = '/admin/users';
+        })
+        .catch(error => {
+            console.error('Error updating user:', error);
+            alert('Wystąpił błąd podczas aktualizacji użytkownika: ' + error.message);
+        });
+    });
+</script>
+</html>
