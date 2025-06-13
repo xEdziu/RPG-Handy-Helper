@@ -1,5 +1,11 @@
 package dev.goral.rpghandyhelper.user;
 
+import dev.goral.rpghandyhelper.game.GameService;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
+import dev.goral.rpghandyhelper.notes.GameNoteRepository;
+import dev.goral.rpghandyhelper.notes.GameNoteService;
+import dev.goral.rpghandyhelper.scheduler.repository.SchedulerRepository;
+import dev.goral.rpghandyhelper.scheduler.service.SchedulerService;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
@@ -35,6 +41,9 @@ public class UserService implements UserDetailsService {
     private final static String USER_NOT_FOUND_MSG = "Nie znaleziono użytkownika o nicku %s";
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final GameNoteService gameNoteService;
+    private final GameService gameUserService;
+    private final SchedulerService schedulerService;
 
     /**
      * Logowanie użytkowników przez Spring Security
@@ -346,5 +355,96 @@ public class UserService implements UserDetailsService {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano ścieżkę zdjęciową do profilu użytkownika.");
         response.put("userPhotoPath", userPhotoPath);
         return response;
+    }
+
+    public Map<String, Object> updateUserAdmin(Long id, UserUpdateAdminRequest updateRequest) {
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Użytkownik zaktualizowany.");
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o ID: " + id));
+
+        if (updateRequest.getUsername() != null && !updateRequest.getUsername().isEmpty()) {
+            if (userRepository.findByUsername(updateRequest.getUsername()).isPresent()
+                    && !Objects.equals(user.getUsername(), updateRequest.getUsername())) {
+                throw new IllegalStateException("Użytkownik o podanym nicku już istnieje.");
+            }
+            if (updateRequest.getUsername().length() < 3 || updateRequest.getUsername().length() > 50) {
+                throw new IllegalStateException("Nick musi mieć od 3 do 50 znaków.");
+            }
+            user.setUsername(updateRequest.getUsername());
+            if (updateRequest.getFirstName() != null && !updateRequest.getFirstName().isEmpty()) {
+                if (updateRequest.getFirstName().length() < 3 || updateRequest.getFirstName().length() > 50) {
+                    throw new IllegalStateException("Imię musi mieć od 3 do 50 znaków.");
+                }
+                user.setFirstName(updateRequest.getFirstName());
+            }
+            if (updateRequest.getSurname() != null && !updateRequest.getSurname().isEmpty()) {
+                if (updateRequest.getSurname().length() < 3 || updateRequest.getSurname().length() > 50) {
+                    throw new IllegalStateException("Nazwisko musi mieć od 3 do 50 znaków.");
+                }
+                user.setSurname(updateRequest.getSurname());
+            }
+            if (updateRequest.getEmail() != null && !updateRequest.getEmail().isEmpty()) {
+                if (userRepository.findByEmail(updateRequest.getEmail()).isPresent()
+                        && !Objects.equals(user.getEmail(), updateRequest.getEmail())) {
+                    throw new IllegalStateException("Użytkownik o podanym emailu już istnieje.");
+                }
+                user.setEmail(updateRequest.getEmail());
+            }
+            if (updateRequest.getRole() != null) {
+                user.setRole(updateRequest.getRole());
+            }
+            if (updateRequest.getLocked() != null) {
+                user.setLocked(updateRequest.getLocked());
+            }
+            if (updateRequest.getEnabled() != null) {
+                user.setEnabled(updateRequest.getEnabled());
+            }
+            if (updateRequest.getUserPhotoPath() != null && !updateRequest.getUserPhotoPath().isEmpty()) {
+                user.setUserPhotoPath(updateRequest.getUserPhotoPath());
+            }
+            userRepository.save(user);
+        }
+        return response;
+    }
+
+    public Map<String, Object> getAdminUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o ID: " + id));
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano użytkownika.");
+        response.put("user", user);
+        return response;
+    }
+
+    @Transactional
+    public Map<String, Object> deleteUserAdmin(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o ID: " + id));
+
+        // Usuń notatki powiązane z użytkownikiem
+        gameNoteService.deleteAllByUserId(id);
+
+        // Usuń zdjęcie profilowe, jeśli nie jest domyślne
+        String userPhotoPath = user.getUserPhotoPath();
+        if (userPhotoPath != null && !userPhotoPath.startsWith("/img/profilePics/defaultProfilePic")) {
+            Path baseDir = Paths.get("src/main/resources/static/img/profilePics").normalize().toAbsolutePath();
+            Path photoFile = baseDir.resolve(Paths.get(userPhotoPath).getFileName()).normalize().toAbsolutePath();
+            try {
+                Files.deleteIfExists(photoFile);
+            } catch (IOException e) {
+                throw new IllegalStateException("Błąd przy usuwaniu zdjęcia profilowego użytkownika.");
+            }
+        }
+
+        // Usuń uczestnictwo w schedulerach
+        schedulerService.removePlayerFromAllSchedulersById(id);
+
+        // Usuń powiązania z grami
+        gameUserService.deleteUserFromAllGames(id);
+
+        // Usuń użytkownika
+        userRepository.delete(user);
+
+        return CustomReturnables.getOkResponseMap("Użytkownik został usunięty.");
     }
 }

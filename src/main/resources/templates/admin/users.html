@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Użytkownicy</title>
+</head>
+<body>
+<nav>
+    <h1>Panel Admina</h1>
+    <p>Menu po sekcjach:</p>
+    <ul>
+        <li><a href="/admin">Powrót</a></li>
+    </ul>
+</nav>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Locked</th>
+                <th>Enabled</th>
+                <th>OAuthProvider</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</body>
+</html>
+<script>
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith('XSRF-TOKEN=')) {
+                return cookie.substring('XSRF-TOKEN='.length);
+            }
+        }
+        return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('http://localhost:8888/api/v1/authorized/admin/user/all', {
+            method: 'GET',
+            headers: {
+                'X-XSRF-TOKEN': getCsrfToken()
+            }
+        }).then(res => res.json())
+        .then(data => {
+            const tbody = document.querySelector('tbody');
+            data.users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.surname}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role}</td>
+                    <td>${user.locked ? 'Yes' : 'No'}</td>
+                    <td>${user.enabled ? 'Yes' : 'No'}</td>
+                    <td>${user.oauthProvider || 'None'}</td>
+                    <td>${new Date(user.createdAt).toLocaleString()}</td>
+                    <td><button class="edit-button">Edytuj</button></td>
+                    <td><button class="delete-button">Usuń</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }).catch(error => {
+            console.error('Error fetching users:', error);
+        }).then (() => {
+            const tbody = document.querySelector('tbody');
+            if (tbody.children.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="12">Brak użytkowników</td>';
+                tbody.appendChild(row);
+            }
+            const editButtons = document.querySelectorAll('.edit-button');
+            editButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const row = event.target.closest('tr');
+                    const userId = row.querySelector('td').textContent;
+                    window.location.href = `/admin/user/edit?id=${userId}`;
+                });
+            });
+
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const row = event.target.closest('tr');
+                    const userId = row.querySelector('td').textContent;
+                    if (confirm(`Czy na pewno chcesz usunąć użytkownika o ID ${userId}?`)) {
+                        fetch(`http://localhost:8888/api/v1/authorized/admin/user/delete/${userId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-XSRF-TOKEN': getCsrfToken()
+                            }
+                        }).then(res => {
+                            if (res.ok) {
+                                row.remove();
+                                alert('Użytkownik został usunięty.');
+                            } else {
+                                alert('Błąd podczas usuwania użytkownika.');
+                            }
+                        }).catch(error => {
+                            console.error('Error deleting user:', error);
+                        });
+                    }
+                });
+            });
+        })
+    })
+</script>

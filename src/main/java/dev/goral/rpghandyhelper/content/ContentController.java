@@ -82,4 +82,24 @@ public class ContentController {
         System.out.println("ContentController: getNotes()");
         return "home/notes";
     }
+
+    // ADMIN PAGES
+
+    @GetMapping("/admin")
+    public String getAdmin() {
+        System.out.println("ContentController: getAdmin()");
+        return "admin/admin";
+    }
+
+    @GetMapping("/admin/users")
+    public String getAdminUsers() {
+        System.out.println("ContentController: getAdminUsers()");
+        return "admin/users";
+    }
+
+    @GetMapping("/admin/user/edit")
+    public String getAdminUserEdit() {
+        System.out.println("ContentController: getAdminUserEdit()");
+        return "admin/userEdit";
+    }
 }
