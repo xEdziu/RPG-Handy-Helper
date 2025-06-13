@@ -148,7 +148,13 @@
                 </ul>
             </div>
 
-            <div class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+            <div id="scheduler-info" class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 min-h-64 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-4">Twoje Spotkania</h3>
+                <div id="scheduler-content" class="space-y-2 text-sm">
+                    <p>Ładowanie danych...</p>
+                </div>
+            </div>
+
 
             <div class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
         </div>
@@ -162,7 +168,83 @@
 </body>
 <script>
 
-    const sidebar = document.getElementById('sidebar');
+        document.addEventListener("DOMContentLoaded", async () => {
+        const contentEl = document.getElementById("scheduler-content");
+
+        const renderError = (msg) => {
+        contentEl.innerHTML = `<p class="text-red-500">${msg}</p>`;
+    };
+
+        const createCard = (title, bodyHTML) => `
+        <div class="p-4 border rounded bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary space-y-1">
+            <p class="font-bold">${title}</p>
+            ${bodyHTML}
+        </div>
+    `;
+
+        try {
+        // 1. Pobierz gry użytkownika
+        const gamesRes = await fetch("http://localhost:8888/api/v1/authorized/game/userGames");
+        const gamesData = await gamesRes.json();
+
+        if (!gamesData.games || gamesData.games.length === 0) {
+        contentEl.innerHTML = `<p>Nie masz jeszcze przypisanej żadnej gry.</p>`;
+        return;
+    }
+
+        // 2. Pobierz wszystkie pending schedulery
+        const pendingRes = await fetch("http://localhost:8888/api/v1/authorized/schedulers/pendingSchedulers");
+        const pendingData = await pendingRes.json();
+        const pendingSchedulers = pendingData.pendingSchedulers || [];
+
+        // 3. Przetwórz każdą grę osobno
+        let htmlOutput = "";
+
+        for (const game of gamesData.games) {
+        const gameId = game.id;
+        const gameName = game.name || "Gra bez nazwy";
+
+        // 🔸 Filtruj schedulery do tej gry
+        const schedulers = pendingSchedulers.filter(s => s.gameId === gameId);
+
+        if (schedulers.length > 0) {
+        const schedHTML = schedulers.map(s => `
+                    <div class="text-sm">
+                        <p class="font-semibold">${s.title}</p>
+                        <p class="text-xs text-gray-500">Deadline: ${new Date(s.deadline).toLocaleDateString()}</p>
+                        <p class="text-xs text-gray-500">Brakuje odpowiedzi: ${s.missingAvailabilitiesCount}</p>
+                    </div>
+                `).join("<hr class='my-2 border-gray-300'>");
+
+        htmlOutput += createCard(`Gra: ${gameName}`, schedHTML);
+        continue;
+    }
+
+        // 🔸 Brak schedulerów → spróbuj pobrać next session
+        const nextSessionRes = await fetch(`http://localhost:8888/api/v1/authorized/schedulers/nextSession/${gameId}`);
+        const nextSessionData = await nextSessionRes.json();
+
+        if (nextSessionData.nextSession) {
+        const session = nextSessionData.nextSession;
+        const sessionHTML = `
+                    <p class="text-sm"><span class="font-semibold">Sesja:</span> ${session.sessionName}</p>
+                    <p class="text-xs text-gray-500">Godzina: ${session.startTime}</p>
+                `;
+        htmlOutput += createCard(`Gra: ${session.gameName}`, sessionHTML);
+    } else {
+        htmlOutput += createCard(`Gra: ${gameName}`, `<p class="text-sm">Umów się na następną sesję!</p>`);
+    }
+    }
+
+        contentEl.innerHTML = htmlOutput;
+
+    } catch (err) {
+        console.error("Błąd:", err);
+        renderError("Nie udało się załadować danych.");
+    }
+    });
+
+const sidebar = document.getElementById('sidebar');
     const toggle = document.getElementById('sidebarToggle');
 
     toggle.addEventListener('click', () => {
