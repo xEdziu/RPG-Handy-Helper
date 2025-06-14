@@ -376,13 +376,33 @@
             editor.classList.remove("scale-100", "opacity-100");
         }
     });
+    function closeEditor() {
+        const backdrop = document.getElementById("editor-backdrop");
+        const editor = document.getElementById("create-editor");
+        backdrop.classList.add("opacity-0", "pointer-events-none");
+        backdrop.classList.remove("opacity-100", "pointer-events-auto");
+        editor.classList.add("scale-95", "opacity-0");
+        editor.classList.remove("scale-100", "opacity-100");
+    }
+    function deleteUserFromList(userId) {
+        const userIndex = userList.findIndex(user => user.id === userId);
+        if (userIndex !== -1) {
+            userList.splice(userIndex, 1);
+            const userDiv = document.getElementById(`user-${userId}`);
+            if (userDiv) {
+                userDiv.remove();
+            }
+        }
+    }
     function addUserToList(user) {
         userList.push(user);
         const divUserList = document.getElementById("users-list");
         const userDiv = document.createElement("div");
         userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl";
+        userDiv.id = `user-${user.id}`;
         userDiv.innerHTML = userHTML(user);
         divUserList.appendChild(userDiv);
+        closeEditor()
     }
     function searchUser() {
         const username = document.getElementById("usernameInput").value.trim();
@@ -392,14 +412,25 @@
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken()
             }
-        }).then(response => {
+        })
+            .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
                 return response.json();
             })
             .then(data => {
                 const usersListSearch = document.getElementById("users-list-search");
                 usersListSearch.innerHTML = '';
-                data.users.slice(0, 5).forEach(user => {
+                const filteredUsers = data.users
+                    .filter(user => !userList.some(u => u.id === user.id))
+                    .slice(0, 5);
+                if (filteredUsers.length === 0) {
+                    usersListSearch.innerHTML = `
+                <span class="text-xl text-light-textPrimary dark:text-dark-textPrimary font-bold mt-[18vh]">
+                    Brak nowych użytkowników do dodania.
+                </span>`;
+                    return;
+                }
+                filteredUsers.forEach(user => {
                     userAddHTML(user);
                 });
             })
@@ -407,6 +438,7 @@
                 console.error('Error searching for user:', error);
             });
     }
+
 
     function addUserToListHTML() {
         document.getElementById("editor-backdrop").classList.remove("opacity-0", "pointer-events-none");
@@ -447,7 +479,7 @@
     function userHTML(user) {
         return `
         <p>
-            <i class="fa-solid fa-xmark mr-3"></i>${user.username}
+            <i class="fa-solid fa-xmark mr-3" onclick=deleteUserFromList(${user.id})></i>${user.username}
         </p>
         <select class="roleSelect w-[40%] font-bold px-4 py-2 rounded-md transition duration-200">
             <option value="PLAYER">Player</option>
