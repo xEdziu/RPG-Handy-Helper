@@ -242,12 +242,12 @@ public class CpRedCharacterOtherInfoService {
 
         if(character.getUser()==null){
             if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
-                throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji w dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do usuwania dodatkowych informacji w dla tej postaci.");
             }
         }
         else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do dodawania dodatkowych informacji dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do usuwania dodatkowych informacji dla tej postaci.");
             }
         }
         cpRedCharacterOtherInfoRepository.deleteById(infoId);
