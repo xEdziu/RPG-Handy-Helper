@@ -27,7 +27,7 @@ import java.util.Objects;
 @Service
 @AllArgsConstructor
 public class CpRedCharacterCustomWeaponService {
-    private final CpRedCharacterCustomArmorRepository cpRedCharacterCustomWeaponRepository;
+    private final CpRedCharacterCustomWeaponRepository cpRedCharacterCustomWeaponRepository;
     private final UserRepository userRepository;
     private final CpRedCharactersRepository cpRedCharactersRepository;
     private final GameRepository gameRepository;

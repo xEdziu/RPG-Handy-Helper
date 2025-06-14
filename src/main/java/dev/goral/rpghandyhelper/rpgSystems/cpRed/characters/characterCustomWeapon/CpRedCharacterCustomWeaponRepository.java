@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CpRedCharacterCustomArmorRepository extends JpaRepository<CpRedCharacterCustomWeapon, Long> {
+public interface CpRedCharacterCustomWeaponRepository extends JpaRepository<CpRedCharacterCustomWeapon, Long> {
     List<CpRedCharacterCustomWeapon> findAllByCharacter(CpRedCharacters character);
 }
