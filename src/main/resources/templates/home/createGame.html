@@ -183,7 +183,7 @@
                 userInfo = data;
                 const usersList = document.getElementById("users-list");
                 const userDiv = document.createElement("div");
-                userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl";
+                userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl text-light-textPrimary dark:text-dark-textPrimary";
                 userDiv.innerHTML = `
                 <p>
                     ${userInfo.username} (Ty)
@@ -249,7 +249,6 @@
             }).catch(error => {
                 console.error('Error creating game:', error);
             })
-
             addUsersToGame();
         }
         function addUsersToGame() {
@@ -398,7 +397,7 @@
         userList.push(user);
         const divUserList = document.getElementById("users-list");
         const userDiv = document.createElement("div");
-        userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl";
+        userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl text-light-textPrimary dark:text-dark-textPrimary";
         userDiv.id = `user-${user.id}`;
         userDiv.innerHTML = userHTML(user);
         divUserList.appendChild(userDiv);
@@ -438,8 +437,6 @@
                 console.error('Error searching for user:', error);
             });
     }
-
-
     function addUserToListHTML() {
         document.getElementById("editor-backdrop").classList.remove("opacity-0", "pointer-events-none");
         document.getElementById("editor-backdrop").classList.add("opacity-100", "pointer-events-auto");
