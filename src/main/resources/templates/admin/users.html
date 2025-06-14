@@ -136,7 +136,30 @@
     </nav>
     <main
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
-        <table class="w-[80%] text-light-textPrimary dark:text-dark-textPrimary gap-y-[1rem]">
+        <aside class="w-[80%] text-light-textPrimary dark:text-dark-textPrimary mb-6 flex flex-row justify-center items-center mb-[3rem] gap-6">
+            <button
+                class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                onclick="location.href='/admin'">Powrót </button>
+            <button
+                class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                onclick="location.href='/admin/user/myPassword'">Moje Hasło</button>
+            <button
+                class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                onclick="location.href='/home'">Strona Domowa</button>
+            <button
+                class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                onclick="location.href='/logout'">
+                Wyloguj się</button>
+        </aside>
+        <table class="mt-2 w-[80%] text-light-textPrimary dark:text-dark-textPrimary gap-y-[1rem]">
             <thead>
                 <tr
                     class="text-base md:text-xl text-bold font-jetbrains-mono border-b border-light-border dark:border-dark-border">
