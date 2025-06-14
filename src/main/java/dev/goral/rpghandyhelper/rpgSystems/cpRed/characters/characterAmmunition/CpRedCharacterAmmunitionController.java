@@ -32,7 +32,6 @@ public class CpRedCharacterAmmunitionController {
     public Map<String, Object> deleteCharacterAmmunition(@PathVariable("characterAmmunitionId") Long characterAmmunitionId) {
         return characterAmmunitionService.deleteCharacterAmmunition(characterAmmunitionId);
     }
-    //TODO: Pamiętać że jak usuwam broń to musze też wyczyścić tę tabelę
 
     // ============ Admin methods ============
     @GetMapping(path = "/admin/games/cpRed/characters/ammunition/all")
