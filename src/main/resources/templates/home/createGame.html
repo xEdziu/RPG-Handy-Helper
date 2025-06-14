@@ -41,6 +41,7 @@
                             surface: "#1E1E1E",
                             accentDark: "#00B189",
                             success: "#00EE00",
+                            successPlayer: "#02AD02",
                             error: "#D00000",
                             warning: "#FF9831",
                         },
@@ -401,8 +402,29 @@
         userDiv.id = `user-${user.id}`;
         userDiv.innerHTML = userHTML(user);
         divUserList.appendChild(userDiv);
-        closeEditor()
+        const select = userDiv.querySelector(".roleSelect");
+        if (select) updateRoleColor(select);
+        closeEditor();
     }
+    function updateRoleColor(selectElement) {
+        const role = selectElement.value;
+        const isDark = document.body.classList.contains("dark");
+        selectElement.classList.remove(
+            "bg-light-warning", "bg-light-error", "bg-light-success",
+            "bg-dark-warning", "bg-dark-error", "bg-dark-success",
+            "text-dark-textPrimary", "text-dark-textPrimary"
+        );
+        const colorClass = {
+            PLAYER: isDark ? "bg-dark-warning" : "bg-light-warning",
+            GAMEMASTER: isDark ? "bg-dark-error" : "bg-light-error",
+            SPECTATOR: isDark ? "bg-dark-successPlayer" : "bg-light-success",
+        }[role];
+        const textColor = isDark ? "text-dark-textPrimary" : "text-dark-textPrimary";
+        if (colorClass) {
+            selectElement.classList.add(colorClass, textColor);
+        }
+    }
+
     function searchUser() {
         const username = document.getElementById("usernameInput").value.trim();
         if (!username) return;
@@ -478,11 +500,17 @@
         <p>
             <i class="fa-solid fa-xmark mr-3" onclick=deleteUserFromList(${user.id})></i>${user.username}
         </p>
-        <select class="roleSelect w-[40%] font-bold px-4 py-2 rounded-md transition duration-200">
+        <select onchange="updateRoleColor(this)" class="roleSelect w-[40%] font-bold px-4 py-2 rounded-md transition duration-200">
             <option value="PLAYER">Player</option>
             <option value="SPECTATOR">Spectator</option>
             <option value="GAMEMASTER">GameMaster</option>
         </select>
         `
     }
+    const bodyObserver = new MutationObserver(() => {
+        document.querySelectorAll(".roleSelect").forEach(select => {
+            updateRoleColor(select);
+        });
+    });
+    bodyObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
 </script>
