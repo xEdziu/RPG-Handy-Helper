@@ -35,7 +35,7 @@ public class CpRedCharacterCustomArmor {
     private CpRedCustomArmors armorId;
     @ManyToOne
     @JoinColumn(
-            name = "character_id",
+            name = "character_id",armor
             referencedColumnName = "id"
     )
     private CpRedCharacters characterId;
