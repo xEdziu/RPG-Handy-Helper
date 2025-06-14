@@ -140,8 +140,9 @@
     </nav>
     <main
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
-        <h2 id="username-form"></h2>
-        <form class="w-[40%] flex flex-col items-center">
+        <h2 id="username-form"
+            class="text-2xl font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary font-bold"></h2>
+        <form class="w-[90%] md:w-[40%] flex flex-col items-center">
             <!-- <div>
                 <label for="username">Nazwa użytkownika:</label>
                 <input type="text" id="username" name="username" required>
@@ -274,7 +275,7 @@
         })
             .then(res => res.json())
             .then(data => {
-                document.getElementById('username').textContent = `Edytujesz użytkownika: ${data.user.username}`;
+                document.getElementById('username-form').textContent = `Edytujesz użytkownika: ${data.user.username}`;
                 document.getElementById('username').value = data.user.username;
                 document.getElementById('firstName').value = data.user.firstName;
                 document.getElementById('surname').value = data.user.surname;
@@ -306,19 +307,20 @@
         })
             .then(res => res.json())
             .then((data) => {
-
                 console.log('Response from server:', data);
 
                 if (data.error !== 200) {
                     throw new Error(`Error ${data.error}: ${data.message}`);
                 }
-
-                alert('Użytkownik został zaktualizowany.');
+                Swal.fire({
+                    icon: 'Success',
+                    title: 'Udało się!',
+                    text: 'Użytkownik został zaktualizowany.',
+                });
                 window.location.href = '/admin/users';
             })
             .catch(error => {
                 console.error('Error updating user:', error);
-                alert('Wystąpił błąd podczas aktualizacji użytkownika: ' + error.message);
             });
     });
 </script>

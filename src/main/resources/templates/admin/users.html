@@ -138,7 +138,8 @@
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
         <table class="w-[80%] text-light-textPrimary dark:text-dark-textPrimary gap-y-[1rem]">
             <thead>
-                <tr class="text-base md:text-xl text-bold font-jetbrains-mono border-b border-light-border dark:border-dark-border">
+                <tr
+                    class="text-base md:text-xl text-bold font-jetbrains-mono border-b border-light-border dark:border-dark-border">
                     <th>ID</th>
                     <th>Username</th>
                     <th>First Name</th>
@@ -230,23 +231,46 @@
                     button.addEventListener('click', (event) => {
                         const row = event.target.closest('tr');
                         const userId = row.querySelector('td').textContent;
-                        if (confirm(`Czy na pewno chcesz usunąć użytkownika o ID ${userId}?`)) {
-                            fetch(`/api/v1/authorized/admin/user/delete/${userId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-XSRF-TOKEN': getCsrfToken()
-                                }
-                            }).then(res => {
-                                if (res.ok) {
-                                    row.remove();
-                                    alert('Użytkownik został usunięty.');
-                                } else {
-                                    alert('Błąd podczas usuwania użytkownika.');
-                                }
-                            }).catch(error => {
-                                console.error('Error deleting user:', error);
-                            });
-                        }
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Czy na pewno?',
+                            text: `Czy na pewno chcesz usunąć użytkownika o ID ${userId}?`,
+                            showCancelButton: true,
+                            confirmButtonText: 'Tak, usuń!',
+                            cancelButtonText: 'Anuluj',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                fetch(`/api/v1/authorized/admin/user/delete/${userId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-XSRF-TOKEN': getCsrfToken()
+                                    }
+                                }).then(res => {
+                                    if (res.ok) {
+                                        row.remove();
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Udało się!',
+                                            text: 'Użytkownik został usunięty.',
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Błąd',
+                                            text: 'Nie udało się usunąć użytkownika.',
+                                        });
+                                    }
+                                }).catch(error => {
+                                    console.error('Error deleting user:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Błąd',
+                                        text: 'Wystąpił błąd podczas usuwania użytkownika.',
+                                    });
+                                });
+                            }
+                        });
                     });
                 });
             })
