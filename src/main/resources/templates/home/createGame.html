@@ -281,7 +281,7 @@
                 class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none bg-black/30 dark:bg-black/50 transition-opacity duration-300">
                 <div id="create-editor"
                     class="h-[50vh] w-[90vw] sm:w-[95vw] md:w-[70vw] lg:w-[50vw] bg-white dark:bg-dark-surface text-black dark:text-white p-6 px-10 rounded-lg shadow-xl overflow-auto flex-col justify-between transition-all duration-300 ease-in-out scale-100 opacity-100">
-                    
+
                 </div>
             </div>
         </div>
@@ -300,7 +300,22 @@
 
 </html>
 <script>
-    function addUserToList(user){
+    document.addEventListener("click", function (e) {
+        const backdrop = document.getElementById("editor-backdrop");
+        const editor = document.getElementById("create-editor");
+        if (
+            backdrop.classList.contains("opacity-100") &&
+            !editor.contains(e.target) &&
+            !e.target.closest("#add-user")
+        ) {
+            backdrop.classList.add("opacity-0", "pointer-events-none");
+            backdrop.classList.remove("opacity-100", "pointer-events-auto");
+            editor.classList.add("scale-95", "opacity-0");
+            editor.classList.remove("scale-100", "opacity-100");
+        }
+    });
+
+    function addUserToList(user) {
         userList.push(user);
         const divUserList = document.getElementById("users-list");
         const userDiv = document.createElement("div");
@@ -331,7 +346,7 @@
             </div>
         `;
     }
-    function userAddHTML(user){
+    function userAddHTML(user) {
         const usersList = document.getElementById("users-list");
         const userDiv = document.createElement("div");
         userDiv.className = "user-item w-full flex flex-row items-center justify-start p-4 text-xl bg-light-background dark:bg-dark-background rounded-md";
