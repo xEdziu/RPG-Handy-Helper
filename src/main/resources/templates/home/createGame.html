@@ -376,12 +376,34 @@
         }
     });
     function addUserToList(user) {
+        console.log(user)
         userList.push(user);
         const divUserList = document.getElementById("users-list");
         const userDiv = document.createElement("div");
         userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl";
         userDiv.innerHTML = userHTML(user);
         divUserList.appendChild(userDiv);
+    }
+    function searchUser() {
+        const username = document.getElementById("usernameInput").value;
+        fetch(`/api/v1/authorized/user/find/${username}`, {
+            method: 'GET',
+            headers: {
+                'X-XSRF-TOKEN': getCsrfToken()
+            }
+        }).then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            const usersListSearch = document.getElementById("users-list-search");
+            usersListSearch.innerHTML = '';
+            data.users.forEach(user => {
+                userAddHTML(user);
+            });
+        }).catch(error => {
+            console.error('Error searching for user:', error);
+        });
     }
     function addUserToListHTML() {
         document.getElementById("editor-backdrop").classList.remove("opacity-0", "pointer-events-none");
@@ -393,7 +415,7 @@
             <div class="w-full flex flex-col items-center justify-center">
                 <div class="h-[3rem] w-[80%] flex items-center justify-center">
                     <h1 class="text-lg font-bold mx-4">Wyszukaj</h1>
-                    <input type="text" id="usernameInput" placeholder="Nazwa użytkownika"
+                    <input type="text" id="usernameInput" placeholder="Nazwa użytkownika" onchange="searchUser()"
                         class="text-md w-[80%] p-1 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary">
                 </div>
                 <div id="users-list-search"
@@ -407,14 +429,17 @@
         `;
     }
     function userAddHTML(user) {
-        const usersList = document.getElementById("users-list");
+        const usersList = document.getElementById("users-list-search");
         const userDiv = document.createElement("div");
         userDiv.className = "user-item w-full flex flex-row items-center justify-start p-4 text-xl bg-light-background dark:bg-dark-background rounded-md";
-        userDiv.onclick = addUserToList(user);
         userDiv.innerHTML = `
-            <img src="${user}" alt="User Avatar" class="w-12 h-12 rounded-full">
-            <span class="w-[40%] font-bold px-4 py-2">${user}</span>
+            <img src="${user.userPhotoPath}" alt="User Avatar" class="w-12 h-12 rounded-full">
+            <span class="w-[40%] font-bold px-4 py-2">${user.username}</span>
         `
+        userDiv.addEventListener("click", () => {
+            addUserToList(user);
+        });
+        usersList.appendChild(userDiv);
     }
     function userHTML(user) {
         return `
