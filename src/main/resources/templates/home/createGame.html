@@ -232,7 +232,6 @@
                     id: Number(systemSelect)
                 }
             }
-            console.log(JSON.stringify(bodyJson));
             fetch('/api/v1/authorized/game/create', {
                 method: 'POST',
                 headers: {
@@ -241,19 +240,58 @@
                 },
                 body: JSON.stringify(bodyJson)
             }).then(response => {
-                console.log(response);
                 if (!response.ok) throw new Error('Network response was not ok');
                 return response.json();
             }).then(data => {
-                gameId = data.id;
-                return
+                gameId = data.gameId;
+                return gameId;
             }).catch(error => {
                 console.error('Error creating game:', error);
-            })
-            addUsersToGame();
+            }).finally(() => {
+                addUsersToGame();
+            });
         }
         function addUsersToGame() {
-
+            if( userList.length === 0) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukces',
+                    text: 'Gra została utworzona!',
+                }).then(() => {
+                    window.location.href = `/home`;
+                });
+                return;
+            }
+            var usersToAdd = [];
+            userList.forEach(user => {
+                usersToAdd.push(
+                    JSON.stringify({
+                    userId: user.id,
+                    gameId: gameId,
+                    role: document.getElementById(`roleFor${user.id}`).value
+                }));
+            });
+            console.log(`gameId: ${gameId}`);
+            console.log(usersToAdd);
+            fetch('/api/v1/authorized/game/addUserToGame', {
+                method: 'POST',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: usersToAdd
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukces',
+                    text: 'Gra została utworzona!',
+                }).then(() => {
+                    window.location.href = `/home`;
+                });
+            }).catch(error => {
+                console.error('Error adding users to game:', error);
+            });
         }
     </script>
 </head>
@@ -447,7 +485,6 @@
                         !userList.some(u => u.id === user.id)
                     )
                     .slice(0, 5);
-
                 if (filteredUsers.length === 0) {
                     usersListSearch.innerHTML = `
                 <span class="text-xl text-light-textPrimary dark:text-dark-textPrimary font-bold mt-[18vh]">
@@ -505,7 +542,7 @@
         <p>
             <i class="fa-solid fa-xmark mr-3" onclick=deleteUserFromList(${user.id})></i>${user.username}
         </p>
-        <select onchange="updateRoleColor(this)" class="roleSelect w-[40%] font-bold px-4 py-2 rounded-md transition duration-200">
+        <select id="roleFor${user.id}" onchange="updateRoleColor(this)" class="roleSelect w-[40%] font-bold px-4 py-2 rounded-md transition duration-200">
             <option value="PLAYER">Player</option>
             <option value="SPECTATOR">Spectator</option>
             <option value="GAMEMASTER">GameMaster</option>
