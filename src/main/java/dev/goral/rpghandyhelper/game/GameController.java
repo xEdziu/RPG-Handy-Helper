@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,6 +41,11 @@ public class GameController {
     @PostMapping(path = "/game/addUserToGame")
     public Map<String, Object> addUserToGame(@RequestBody AddUserToGameRequest request) {
         return gameService.addUserToGame(request);
+    }
+
+    @PostMapping(path = "/game/addUsersToGame")
+    public Map<String, Object> addUsersToGame(@RequestBody List<AddUserToGameRequest> requests) {
+        return gameService.addUsersToGame(requests);
     }
 
     @DeleteMapping(path = "/game/deleteUserFromGame")
