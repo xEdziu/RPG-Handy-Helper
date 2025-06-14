@@ -442,12 +442,16 @@
                 const usersListSearch = document.getElementById("users-list-search");
                 usersListSearch.innerHTML = '';
                 const filteredUsers = data.users
-                    .filter(user => !userList.some(u => u.id === user.id))
+                    .filter(user =>
+                        user.id !== userInfo.id &&
+                        !userList.some(u => u.id === user.id)
+                    )
                     .slice(0, 5);
+
                 if (filteredUsers.length === 0) {
                     usersListSearch.innerHTML = `
                 <span class="text-xl text-light-textPrimary dark:text-dark-textPrimary font-bold mt-[18vh]">
-                    Brak nowych użytkowników do dodania.
+                    Nie ma użytkownika o podanej nazwie.
                 </span>`;
                     return;
                 }
@@ -459,6 +463,7 @@
                 console.error('Error searching for user:', error);
             });
     }
+
     function addUserToListHTML() {
         document.getElementById("editor-backdrop").classList.remove("opacity-0", "pointer-events-none");
         document.getElementById("editor-backdrop").classList.add("opacity-100", "pointer-events-auto");
