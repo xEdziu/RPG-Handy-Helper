@@ -163,7 +163,7 @@ public class CpRedCharacterLifePathsService {
         }
 
         if (CpRedCharacterLifePathsRepository.existsByCharacterId(character)) {
-            throw new IllegalArgumentException("Dodatkowe pathrmacje już istnieją dla tej postaci.");
+            throw new IllegalArgumentException("Ścieżka życiowa już istnieje dla tej postaci.");
         }
         if (cpRedCharacterLifePaths.getCultureOfOrigin().isEmpty() ||
                 cpRedCharacterLifePaths.getCultureOfOrigin().trim().isEmpty()) {
