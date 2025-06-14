@@ -21,9 +21,9 @@ public class UserController {
         return userService.getAuthorizedUser();
     }
 
-    @GetMapping("/user/isPasswordSetForGithubUser")
-    public Map<String, Object> isPasswordSetForGithubUser(@AuthenticationPrincipal Object user) {
-        return userService.isPasswordSetForGithubUser(user);
+    @GetMapping("/user/isPasswordSetForDiscordUser")
+    public Map<String, Object> isPasswordSetForDiscordUser(@AuthenticationPrincipal Object user) {
+        return userService.isPasswordSetForDiscordUser(user);
     }
 
     @PostMapping("/setPassword")

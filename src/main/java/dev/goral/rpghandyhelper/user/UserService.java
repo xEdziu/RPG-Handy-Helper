@@ -348,7 +348,7 @@ public class UserService implements UserDetailsService {
         return response;
     }
 
-    public Map<String, Object> isPasswordSetForGithubUser(Object user) {
+    public Map<String, Object> isPasswordSetForDiscordUser(Object user) {
 
         if (user instanceof User) {
             return CustomReturnables.getOkResponseMap("Użytkownik nie jest zalogowany przez OAuth2.");
