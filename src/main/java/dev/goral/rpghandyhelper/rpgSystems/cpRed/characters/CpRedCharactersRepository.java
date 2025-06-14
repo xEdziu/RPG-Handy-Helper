@@ -13,7 +13,12 @@ public interface CpRedCharactersRepository extends JpaRepository<CpRedCharacters
     List<CpRedCharacters> findAll();
     boolean existsByGameIdAndName(Long gameId, String name);
 
+    CpRedCharacters findByUserId_IdAndGameId_Id(Long userId,Long gameId);
+
     @Query("SELECT COUNT(c) FROM CpRedCharacters c WHERE c.user.id = :userId AND c.game.id = :gameId")
     Long countByUserIdAndGameId(@Param("userId") Long userId, @Param("gameId") Long gameId);
+
+
+
 
 }

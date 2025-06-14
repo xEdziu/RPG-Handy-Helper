@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Pokój czatu</title>
-
     <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
@@ -23,7 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script> <!-- Dodanie SockJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script> <!-- Dodanie sockjs -->
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script> <!-- Dodanie STOMP -->
     <script>
         // ===== Ustawienia Tailwind CSS =====
@@ -33,7 +32,7 @@
                 extend: {
                     colors: {
                         dark: {
-                            background: "#1E1E1E",
+                            background: "#0F0F0F",
                             backgroundSecondary: "#181818",
                             backgroundTertiary: "#101010",
                             textPrimary: "#E1E1E1",
@@ -64,10 +63,39 @@
                 },
             },
         };
+        // ==== Zmienne globalne ====
+        var numOfDice = {
+            D4: 0,
+            D6: 0,
+            D8: 0,
+            D10: 0,
+            D12: 0,
+            D20: 0,
+            D100: 0
+        };
+        var userInfo = null;
+        var gameId = null;
+        var allNotesForGame = null;
+        var noteEditorMode = 'preview';
+        var gameInfo = {
+            id: null,
+            name: null,
+            system: null,
+            description: null,
+        }
+        const roomId = window.location.pathname.split("/").pop()
         // ===== DOMContentLoaded =====
         document.addEventListener("DOMContentLoaded", () => {
+            getUserInfo();
             initThemeToggle();
             applyTheme(getSavedTheme());
+            getGameInfo();
+            loadAllNotes();
+            setTimeout(() => {
+                loadNotes();
+            }, 1000);
+            getListenerSearchInput();
+
         });
         // ==== Changing the theme ====
         function initThemeToggle() {
@@ -86,7 +114,6 @@
                 updateTheme();
             });
         }
-
         function applyTheme(theme) {
             document.body.classList.toggle("dark", theme === "dark");
             localStorage.setItem("theme", theme);
@@ -97,17 +124,437 @@
                 toggle.checked = (theme === "dark");
             }
         }
-
         function updateFavicon(theme) {
             const favicon = document.getElementById("favicon");
             if (favicon) {
                 favicon.href = `/img/logo/logo-${theme}.svg`;
             }
         }
-
         function getSavedTheme() {
             return localStorage.getItem("theme") ||
                 (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        }
+        // ==== CSRF Token ====
+        function getCsrfToken() {
+            const name = "XSRF-TOKEN=";
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name)) {
+                    return decodeURIComponent(cookie.substring(name.length));
+                }
+            }
+            return null;
+        }
+        // ==== Get User Info ====
+        function getUserInfo() {
+            fetch('/api/v1/authorized/user', {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                userInfo = data;
+            }).catch(error => {
+                console.error('Error fetching user info:', error);
+            });
+        }
+        // ==== Get Game ID from URL ====
+        function getGameInfo() {
+            var roomId = window.location.pathname.split("/").pop();
+            fetch(`/api/v1/authorized/gameRoom/gameIdForRoomId/${roomId}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) throw new Error('Failed to fetch gameId');
+                return response.json();
+            }).then(data1 => {
+                gameInfo.id = data1.gameId;
+
+                return fetch(`/api/v1/authorized/game/userGames`, {
+                    method: 'GET',
+                    headers: {
+                        'X-XSRF-TOKEN': getCsrfToken()
+                    }
+                });
+            }).then(response => {
+                if (!response.ok) throw new Error('Failed to fetch userGames');
+                return response.json();
+            }).then(data2 => {
+                var game = data2.userGames.find(game => game.id == gameInfo.id);
+                if (game) {
+                    gameInfo.name = game.name;
+                    gameInfo.description = game.description;
+                    gameInfo.system = game.rpgSystemId;
+                }
+
+                return fetch(`/api/v1/authorized/rpgSystems/${gameInfo.system}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-XSRF-TOKEN': getCsrfToken()
+                    }
+                });
+            }).then(response => {
+                if (!response.ok) throw new Error('Failed to fetch rpgSystem');
+                return response.json();
+            }).then(data3 => {
+                gameInfo.system = data3.rpgSystem.name;
+            }).catch(error => {
+                console.error('Error fetching game info:', error);
+            });
+        }
+        // ==== Note Functions ====
+        function loadAllNotes() {
+            fetch('/api/v1/authorized/gameNotes', {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(data => {
+                if (data.error !== 200) {
+                    console.error('API Error:', data.error);
+                }
+                noteContent = data.gameNotes;
+            }).catch(error => {
+                console.error('Nie udało się załadować notatek:', error);
+            });
+        }
+        function loadNotes() {
+            fetch(`/api/v1/authorized/gameNotes/game/${gameInfo.id}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                allNotesForGame = data.gameNotes;
+                noteContent = [...allNotesForGame];
+                const notesContent = document.getElementById("notes-content");
+                notesContent.innerHTML = "";
+                if (allNotesForGame.length == 0) {
+                    notesContent.innerHTML = generateInfoHTML(
+                        `Nie masz jeszcze żadnych notatek!`,
+                        `Na szczęśnie masz już odblokowaną umiejętność pisania`,
+                        `Utwórz swoją pierwszą notatkę już teraz.`
+                    );
+                } else {
+                    allNotesForGame.forEach(note => {
+                        notesContent.innerHTML += generatePieceOfNoteHTML(note);
+                    });
+                }
+            }).catch(error => {
+                console.error('Error fetching notes:', error);
+            });
+        }
+        function displayNote(idNote) {
+            noteEditorMode = 'preview';
+            const note = noteContent.find(note => note.id == idNote);
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.innerHTML = '';
+            noteEditor.innerHTML = generateNoteHTML(note);
+            actualNote = note;
+            showNoteEditor();
+        }
+        function createNote() {
+            noteEditorMode = 'create';
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.innerHTML = '';
+            noteEditor.innerHTML = generateNewNoteHTML();
+            showNoteEditor();
+        }
+        function deleteNote(idNote) {
+            Swal.fire({
+                title: 'Czy na pewno chcesz usunąć tę notatkę?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Tak, usuń!',
+                cancelButtonText: 'Anuluj'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/api/v1/authorized/gameNotes/delete/${idNote}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-XSRF-TOKEN': getCsrfToken()
+                        }
+                    }).then(
+                        response => {
+                            if (!response.ok) throw new Error('Network response was not ok');
+                            return response.json();
+                        }
+                    ).then(data => {
+                        if (data.error != "200") {
+                            console.error('API Error:', data.error);
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Notatka została usunięta!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            noteContent = noteContent.filter(note => note.id !== idNote);
+                            loadNotes();
+                            hideNoteEditor();
+                        }
+                    }).catch(error => {
+                        console.error('Nie udało się usunąć notatki:', error);
+                    });
+                }
+            });
+        }
+        function saveNote(idNote) {
+            getListenerParser();
+            const noteTitle = document.getElementById('note-title').value.trim();
+            const noteText = document.getElementById('note-content').value.trim();
+            const gameId = gameInfo.id;
+            noteContent.forEach(note => {
+                if (note.title == noteTitle && note.id != idNote) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Tytuł już istnieje!',
+                        text: `Zmień tytuł notatki, aby zapisać obecną.`,
+                    });
+                    return;
+                }
+            })
+            var data = [
+                { obiekt: noteTitle, name: 'Brak tytułu!' },
+                { obiekt: noteText, name: 'Brak treści!' }
+            ]
+            data.forEach(element => {
+                if (element.obiekt == null || element.obiekt == undefined || element.obiekt == '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: `${element.name}`,
+                        text: `Uzupełnij wszystkie pola. `,
+                    });
+                    return;
+                }
+            });
+            if (!gameId || gameId == null || gameId == undefined || gameId == '') {
+                return;
+            }
+            const note = {
+                title: noteTitle,
+                content: noteText,
+                gameId: gameId,
+                userId: userInfo.id
+            };
+            fetch('/api/v1/authorized/gameNotes/add', {
+                method: 'POST',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(note)
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                if (data.error != "200") {
+                    console.error('API Error:', data.error);
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notatka została zapisana!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    loadNotes();
+                    hideNoteEditor();
+                    document.getElementById('search-input').disabled = false;
+                }
+            }).catch(error => {
+                console.error('Nie udało się zapisać notatki:', error);
+            });
+        }
+        function editNote(idNote) {
+            noteEditorMode = 'edit';
+            const note = noteContent.find(note => note.id == idNote);
+            const noteEditor = document.getElementById('note-editor');
+            noteEditor.innerHTML = '';
+            noteEditor.innerHTML = generateEditNoteHTML(note);
+            showNoteEditor();
+        }
+        function showPreviewNote(mode = '') {
+            getListenerParser();
+            const preview = document.getElementById('note-preview');
+            let noteTitleBox, noteContentBox, noteContainer, button;
+            if (mode === "create") {
+                noteTitleBox = document.getElementById('note-title');
+                noteContentBox = document.getElementById('note-content');
+                noteContainer = document.getElementById('new-note-content');
+                button = document.getElementById('create-preview-note');
+            } else {
+                noteTitleBox = document.getElementById('edit-note-title');
+                noteContentBox = document.getElementById('edit-note-content');
+                noteContainer = document.getElementById('edit-note-container');
+                button = document.getElementById('edit-preview-note');
+            }
+            if (!noteTitleBox || !noteContentBox || !preview) {
+                console.warn('Brakuje elementów do dynamicznego podglądu.');
+                return;
+            }
+            let title = noteTitleBox.value.trim() || "Notatki bez tytułu?";
+            let content = noteContentBox.value.trim() || "<p><em>*Podgląd pusty...*</em></p>";
+            preview.innerHTML = `
+                <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left py-1 pb-[1.3em]">${title}</h2>
+                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                    ${parseMarkdown(content, true)}
+                </div>
+            `;
+            const show = preview.classList.contains('hidden');
+            if (button) {
+                if (show) {
+                    button.innerText = "Zamknij podgląd";
+                } else {
+                    button.innerText = "Podgląd";
+                }
+            }
+            if (_isMobile) {
+                noteTitleBox.classList.toggle('hidden', show);
+                noteContentBox.classList.toggle('hidden', show);
+                preview.classList.toggle('hidden', !show);
+            } else {
+                preview.classList.toggle('hidden', !show);
+                preview.classList.toggle('block', show);
+                preview.classList.toggle('w-1/2', show);
+                noteContainer.classList.toggle('w-1/2', show);
+            }
+        }
+        function saveEditedNote(noteId) {
+            disableListenerParser();
+            const noteTitle = document.getElementById('edit-note-title').value.trim();
+            const newNoteContent = document.getElementById('edit-note-content').value.trim();
+            const oldNote = noteContent.find(note => note.id == noteId);
+            if (noteTitle === '' || newNoteContent === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Nie można zapisać notatki!',
+                    text: 'Tytuł i treść notatki nie mogą być puste. Uzupełnij brakujące pola przed zapisaniem.',
+                });
+                return;
+            }
+            if (noteContent.some(note => note.title === noteTitle && note.id !== noteId)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Tytuł już istnieje!',
+                    text: `Zmień tytuł notatki, aby zapisać obecną.`,
+                });
+                return;
+            }
+            const note = {
+                gameId: gameInfo.id,
+                userId: userInfo.id,
+                title: noteTitle,
+                content: newNoteContent,
+            };
+            fetch(`/api/v1/authorized/gameNotes/update/${noteId}`, {
+                method: 'PUT',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(note)
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                if (data.error != "200") {
+                    console.error('API Error:', data.error);
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notatka została zaktualizowana!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    noteContent = noteContent.map(note => {
+                        if (note.id == noteId) {
+                            return {
+                                ...note,
+                                title: noteTitle,
+                                content: newNoteContent,
+                                updatedAt: new Date().toISOString()
+                            };
+                        }
+                        return note;
+                    });
+                    loadNotes();
+                    hideNoteEditor();
+                    document.getElementById('search-input').disabled = false;
+                }
+            }).catch(error => {
+                console.error('Nie udało się zaktualizować notatki:', error);
+            });
+        }
+        // ==== Function Editor Display ====
+        function showNoteEditor() {
+            const backdrop = document.getElementById('note-editor-backdrop');
+            const editor = document.getElementById('note-editor');
+            backdrop.classList.remove('pointer-events-none', 'opacity-0');
+            backdrop.classList.add('opacity-100');
+            editor.classList.remove('scale-95', 'opacity-0');
+            editor.classList.add('scale-100', 'opacity-100');
+        }
+        function hideNoteEditor() {
+            const backdrop = document.getElementById('note-editor-backdrop');
+            const editor = document.getElementById('note-editor');
+            backdrop.classList.add('opacity-0', 'pointer-events-none');
+            backdrop.classList.remove('opacity-100');
+            editor.classList.add('scale-95', 'opacity-0');
+            editor.classList.remove('scale-100', 'opacity-100');
+        }
+        function getListenerSearchInput() {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    console.log("Wyszukiwanie notatek...");
+                    const searchTerm = this.value.toLowerCase();
+                    const notesContent = document.getElementById("notes-content");
+                    notesContent.innerHTML = "";
+                    if (searchTerm === "") {
+                        allNotesForGame.forEach(note => {
+                            notesContent.innerHTML += generatePieceOfNoteHTML(note);
+                        });
+                        return;
+                    }
+                    const filteredNotes = allNotesForGame.filter(note =>
+                        note.title.toLowerCase().includes(searchTerm) ||
+                        note.content.toLowerCase().includes(searchTerm)
+                    );
+                    if (filteredNotes.length === 0) {
+                        notesContent.innerHTML = generateInfoHTML(
+                            ``,
+                            `Brak notatek spełniających wybrane kryterium.`,
+                            ``
+                        );
+                    } else {
+                        filteredNotes.forEach(note => {
+                            notesContent.innerHTML += generatePieceOfNoteHTML(note);
+                        });
+                    }
+                });
+            }
         }
     </script>
 </head>
@@ -145,102 +592,226 @@
     </nav>
     <main
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
-        <div class="flex gap-[2%] flex-row flex-nowrap justify-center items-stretch w-[100vw] min-h-[80vh] p-4">
-            <div id="character-card"
-                class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8">
-                <a href="#"
-                    class="p-4 relative self-end -top-2 -right-6 text-light-textPrimary dark:text-dark-textPrimary z-10">
-                    <i class="fa-solid fa-arrow-up-right-from-square text-3xl" aria-hidden="true"></i>
-                </a>
-                <h1
-                    class="font-jetbrains-mono text-3xl mt-[-1.75em] text-light-textPrimary dark:text-dark-textPrimary m-3">
-                    Karta Postaci</h1>
-                <div id="character-card-info">
+        <div id="content-box" class="flex flex-col 2xl:flex-row items-center justify-center w-[100%] min-h-[80vh] p-4">
+            <section id="character-card"
+                class="flex flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[45vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-auto 2xl:h-[85vh] m-3">
+                <div id="character-card-info"
+                    class="flex flex-row items-center justify-between w-full my-4 cursor-pointer"
+                    onclick="toggleCard('character-card-content', 'character-card-buttons', 'character-card-link')">
+                    <h1 class="font-jetbrains-mono text-3xl text-light-textPrimary dark:text-dark-textPrimary">
+                        Karta Postaci
+                    </h1>
+                    <div class="flex" class="h-10">
+                        <a href="#" id="character-card-link" class="invisible 2xl:block 2xl:visible" target="_blank">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-3xl text-light-textPrimary dark:text-dark-textPrimary mr-3"
+                                aria-hidden="true"></i>
+                        </a>
+                        <div id="character-card-buttons" class="2xl:hidden">
+                            <img src="/img/assets/expand_button_light_version.svg"
+                                class="toggle-icon h-10 w-10 transition-transform duration-5000 ease-in-out dark:hidden">
+                            <img src="/img/assets/expand_button_dark_version.svg"
+                                class="toggle-icon h-10 w-10 transition-transform duration-5000 ease-in-out hidden dark:block">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="character-card-content" class="hidden 2xl:block">
                     <h1 class="font-jetbrains-mono text-3xl">#Będzie</h1>
                 </div>
-            </div>
+            </section>
 
-            <div id="chat-container"
-                class="flex flex-col grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4">
-                <div class="max-w-3xl mx-auto p-4">
+            <section id="chat-container"
+                     class="flex flex-col justify-between items-start
+                         bg-light-surface dark:bg-dark-surface
+                         rounded-lg shadow-lg
+                         p-4
+                         h-auto 2xl:h-[85vh]
+                         w-[100%] sm:w-[80%] md:w-[75%] xl:w-[45vw]
+                         max-w-xl
+                         m-3">
+                <div id="pinned-poll-container" class="w-full"></div>
 
-
-                    <h2 class="text-2xl font-bold mb-2">Pokój czatowy: <span id="room-id" class="font-mono"></span></h2>
-
-                    <div id="chat" class="bg-white border border-gray-300 rounded-md p-4 h-72 overflow-y-auto mb-4">
-                    </div>
-
-                    <form id="message-form" class="flex gap-2 mb-4">
-                        <input type="text" id="message-input" placeholder="Napisz wiadomość." autocomplete="off"
-                            required class="flex-1 px-3 py-2 border border-gray-400 rounded-md" />
-                        <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Wyślij</button>
-                    </form>
-
-                    <h4 class="text-lg font-semibold mb-1">Uczestnicy online</h4>
-                    <ul id="online-users" class="list-disc pl-5 mb-6 text-gray-700"></ul>
+                <div id="chat"
+                  class="flex-1
+                    bg-white dark:bg-dark-background
+                    border border-gray-300 dark:border-dark-border
+                    rounded-lg
+                    p-4
+                    max-h-[50vh]
+                    2xl:max-h-full
+                    overflow-y-auto
+                    text-sm mb-4 w-full">
+                    <!-- Wiadomości będą dodawane tutaj -->
                 </div>
-            </div>
-            <div id="notes-container" class="flex flex-col gap-[2%] grow w-[32vw] w-full max-w-xl">
-                <div id="notes-container"
-                    class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl p-4 px-8 h-[79%]">
-                    <a href="#"
-                        class="p-4 relative self-end -top-2 -right-6 text-light-textPrimary dark:text-dark-textPrimary z-10">
-                        <i class="fa-solid fa-arrow-up-right-from-square text-3xl" aria-hidden="true"></i>
-                    </a>
-                    <div id="notes-container-info"
-                        class="flex flex-col items-start justify-start grow w-[32vw] bg-light-surface dark:bg-dark-surface rounded-lg  w-full max-w-xl">
-                        <div id="notes-info"
-                            class="flex flex-col items-center justify-center h-[10%] w-full mt-[-1rem]">
+                <form id="message-form" class="flex gap-2 mt-2">
+                    <input type="text" id="message-input" placeholder="Wyślij wiadomość…" autocomplete="off" required
+                           class="flex-1 px-3 py-2 rounded-full border border-gray-400 text-sm dark:bg-dark-surface dark:text-white font-jetbrains-mono placeholder:text-sm" />
+                    <button type="submit"
+                            class="px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary transition-colors text-sm">
+                        Wyślij
+                    </button>
+                    <button type="button" id="open-poll-modal"
+                            class="px-5 py-2 font-bold rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary transition-colors text-sm"
+                            onclick="openPollModal()">
+                        Ankieta
+                    </button>
+                </form>
+            </section>
+            <section id="personal-info"
+                class="flex flex-col-reverse 2xl:flex-col items-start justify-start w-[100%] sm:w-[80%] md:w-[75%] xl:w-[45vw] w-full max-w-xl h-auto 2xl:h-[85vh]">
+                <article id="notes-card"
+                    class="flex flex-col items-start justify-start grow w-[100%] bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg w-full max-w-xl h-[79%] mb-3 p-4">
+                    <div id="notes-card-info"
+                        class="flex flex-row items-center justify-between w-full my-4 cursor-pointer 2xl:hidden"
+                        onclick="toggleCard('notes-card-content', 'notes-card-buttons', 'notes-card-link')">
+                        <h1 class="font-jetbrains-mono text-3xl text-light-textPrimary dark:text-dark-textPrimary">
+                            Notatki
+                        </h1>
+                        <div class="flex" class="h-10">
+                            <a href="/home/notes" id="notes-card-link" class="invisible 2xl:block 2xl:visible"
+                                target="_blank">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-3xl text-light-textPrimary dark:text-dark-textPrimary mr-3"
+                                    aria-hidden="true"></i>
+                            </a>
+                            <div id="notes-card-buttons" class="2xl:hidden">
+                                <img src="/img/assets/expand_button_light_version.svg"
+                                    class="toggle-icon h-10 w-10 transition-transform duration-5000 ease-in-out dark:hidden">
+                                <img src="/img/assets/expand_button_dark_version.svg"
+                                    class="toggle-icon h-10 w-10 transition-transform duration-5000 ease-in-out hidden dark:block">
+                            </div>
+                        </div>
+                    </div>
+<!--                    <a href="/home/notes" id="notes-card-link" class="z-5 relative -right-[94%] top-3 hidden 2xl:block"-->
+<!--                        target="_blank">-->
+<!--                        <i class="fa-solid fa-arrow-up-right-from-square text-3xl text-light-textPrimary dark:text-dark-textPrimary mr-3"-->
+<!--                            aria-hidden="true"></i>-->
+<!--                    </a>-->
+
+                    <div id="notes-card-content"
+                        class="hidden 2xl:block w-full flex flex-col items-center justify-start 2xl:mt-[3rem]">
+                        <div id="notes-info" class="flex flex-col items-center justify-center h-[10%] w-full mb-8">
                             <button id="add-note"
-                                class="text-2xl sm:text-3xl py-4 px-5 sm:px-10 mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
+                                class="text-2xl sm:text-3xl py-4 px-[1em] mb-4 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-dark-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50"
                                 onclick="createNote()">
                                 STWÓRZ NOWĄ NOTATKĘ
                             </button>
-                            <div class="sm:w-full flex items-center space-x-2">
-                                <label
-                                    class="font-semibold text-light-textPrimary dark:text-dark-textPrimary whitespace-nowrap">
-                                    Wyszukaj
-                                </label>
-                                <div class="w-full">
+                            <div class="w-full flex items-center justify-center space-x-2 mb-3">
+                                <div class="w-[80%] flex items-center justify-center">
+                                    <label class="font-semibold text-light-textPrimary dark:text-dark-textPrimary mr-4">
+                                        Wyszukaj
+                                    </label>
                                     <input type="text" placeholder="Wpisz słowo klucz" id="search-input"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0" />
+                                        class="w-[80%] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0">
                                 </div>
                             </div>
-
                         </div>
-                        <div id="notes-content" class="flex flex-col items-center justify-center w-full h-[90%]">
-                            <div class="w-12 h-12 border-4 border-light-accent dark:border-dark-accent rounded-full animate-ping"
+                        <div id="notes-content"
+                            class="w-[100%] max-h-[45vh] flex flex-col items-center justify-start p-3 overflow-y-auto">
+                            <div class="my-[10vh] w-12 h-12 border-4 border-light-accent dark:border-dark-accent rounded-full animate-ping"
                                 role="status" aria-label="Ładowanie"></div>
                         </div>
                     </div>
-
-                </div>
-                <div id="dice-container" class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg h-[19%]">
-                    <!--
-                    <div class="controls flex flex-wrap items-center gap-2 mb-4">
-                        <button data-roll="1d6"
-                            class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">1d6</button>
-                        <button data-roll="2d20"
-                            class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">2d20</button>
-                        <button data-roll="3d10"
-                            class="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600">3d10</button>
-                        <input type="text" id="dice-input" placeholder="Np. 4d10+3"
-                            class="px-3 py-2 border border-gray-400 rounded-md flex-1 min-w-[150px]" />
-                        <button id="rollCustom"
-                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Rzuć</button>
-                        <select id="dice-theme" class="px-3 py-2 border border-gray-400 rounded-md"></select>
+                </article>
+                <article id="dice-container"
+                    class="w-full bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg h-[19%] p-6 flex-col justify-center items-center gap-1 mb-3 2xl:mb-0">
+                    <div class="controls flex justify-around items-center gap-2 mb-4" id="diceContainer">
+                        <!-- Generowane kości JS-->
                     </div>
-
-                    <div id="dice-result" class="text-lg font-medium text-center mb-4"></div>
-                    <div id="dice-container" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
+                    <div class="flex items-center justify-between">
+                        <div class="relative w-max">
+                            <select id="dice-theme"
+                                class="font-jetbrains-mono appearance-none bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary border border-black dark:border-white px-4 py-2 pr-10 rounded-md shadow-sm">
+                            </select>
+                            <img src="/img/assets/expand_button_light_version.svg"
+                                class="pointer-events-none absolute right-3 z-3 mt-[-2rem] dark:hidden block w-6 h-6"
+                                alt="Expand Light" />
+                            <img src="/img/assets/expand_button_dark_version.svg"
+                                class="pointer-events-none absolute right-3 z-3 mt-[-2rem] dark:block hidden w-6 h-6"
+                                alt="Expand Dark" />
+                        </div>
+                        <div class="flex flex-col-reverse 2xl:flex-row items-center gap-2">
+                            <button id="rollReset"
+                                class="text-base font-bold font-jetbrains-mono bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap">
+                                Reset
+                            </button>
+                            <button id="rollCustom"
+                                class="text-base font-bold font-jetbrains-mono bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap">
+                                Rzuć
+                            </button>
+                        </div>
                     </div>
-                -->
-                </div>
+                    <div id="dice-container-throw" class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-50">
+                    </div>
+                </article>
+            </section>
+        </div>
+        <!-- Edytor notatki -->
+        <div id="note-editor-backdrop"
+            class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none bg-black/30 dark:bg-black/50 transition-opacity duration-300">
+            <div id="note-editor"
+                class="w-[90vw] sm:w-[95vw] md:w-[70vw] lg:w-[50vw] bg-white dark:bg-dark-surface text-black dark:text-white p-6 px-10 rounded-lg shadow-xl overflow-auto flex-col justify-between transition-all duration-300 ease-in-out scale-95 opacity-0">
             </div>
         </div>
-
     </main>
+    <!-- ===== Modal konfiguracyjny ankiety ===== -->
+    <div id="poll-modal-backdrop"
+         class="fixed inset-0 bg-black/50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 z-50">
+        <div id="poll-modal"
+             class="bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl w-[90vw] max-w-md p-6 transform scale-95 opacity-0 transition-all duration-200">
+            <h2 class="text-2xl font-semibold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary mb-4">
+                Nowa ankieta
+            </h2>
+            <form id="poll-form" class="flex flex-col gap-4" onsubmit="createPoll(event)">
+                <!-- Pytanie / nazwa ankiety -->
+                <div class="flex flex-col">
+                    <label for="poll-question" class="font-semibold text-light-textPrimary dark:text-dark-textPrimary mb-1">Pytanie ankiety</label>
+                    <input type="text" id="poll-question" maxlength="100"
+                           class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono"
+                           placeholder="Wpisz pytanie…" required />
+                </div>
+                <!-- Lista opcji odpowiedzi -->
+                <div id="poll-options-container" class="flex flex-col gap-2">
+                    <label class="font-semibold text-light-textPrimary dark:text-dark-textPrimary mb-1">Opcje odpowiedzi</label>
+                    <!-- Początkowo dwa pola, można dodać więcej -->
+                    <div class="flex gap-2">
+                        <input type="text" class="poll-option-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono" placeholder="Opcja 1" required/>
+                        <button type="button" onclick="removeOptionField(this)"
+                                class="text-light-error dark:text-dark-error text-xl">&times;</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" class="poll-option-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono" placeholder="Opcja 2" required/>
+                        <button type="button" onclick="removeOptionField(this)"
+                                class="text-light-error dark:text-dark-error text-xl">&times;</button>
+                    </div>
+                    <button type="button" id="add-option-button" onclick="addOptionField()"
+                            class="self-start px-3 py-1 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition font-semibold font-jetbrains-mono text-sm">
+                        Dodaj opcję
+                    </button>
+                </div>
+                <!-- Czas trwania ankiety -->
+                <div class="flex flex-col">
+                    <label for="poll-duration" class="font-semibold text-light-textPrimary dark:text-dark-textPrimary mb-1">
+                        Czas trwania (sekundy)
+                    </label>
+                    <input type="number" id="poll-duration" min="30" max="120" value="60"
+                           class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono"
+                           required />
+                    <small class="text-xs text-light-textSecondary dark:text-dark-textSecondary">Min: 30 s, Max: 120 s</small>
+                </div>
+                <!-- Przyciski akcji -->
+                <div class="flex justify-end space-x-2 mt-4">
+                    <button type="button" onclick="closePollModal()"
+                            class="px-4 py-2 bg-light-error dark:bg-dark-error text-white rounded hover:bg-red-600 transition font-semibold font-jetbrains-mono">
+                        Anuluj
+                    </button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition font-semibold font-jetbrains-mono">
+                        Utwórz
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
         <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
@@ -254,19 +825,29 @@
 </html>
 <script type="module">
     import DiceBox from "https://cdn.jsdelivr.net/npm/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
-
-    const roomId = window.location.pathname.split("/").pop();
-    document.getElementById("room-id").textContent = roomId;
-
     let username = null;
     let stompClient = null;
+    var usersMap = {};
+    const userColors = [
+        "text-red-500",
+        "text-blue-500",
+        "text-green-500",
+        "text-yellow-500",
+        "text-purple-500",
+        "text-pink-500",
+        "text-indigo-500",
+        "text-emerald-500",
+    ];
 
-    fetch("/api/v1/authorized/user")
-        .then(res => res.json())
-        .then(data => {
-            username = data.username;
-            initWebSocket();
-        });
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("/api/v1/authorized/user")
+            .then(res => res.json())
+            .then(data => {
+                username = data.username;
+                getUserColorAndPhoto(username);
+                initWebSocket();
+            });
+    })
 
     function initWebSocket() {
         const socket = new SockJS("/ws");
@@ -275,10 +856,12 @@
         stompClient.connect({}, () => {
             stompClient.subscribe(`/topic/chat/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
-                appendMessage(from, content);
+                appendMessage(from, content, false);
             });
-            stompClient.subscribe(`/topic/chat/${roomId}/users`, msg => {
-                updateUsers(JSON.parse(msg.body));
+            stompClient.subscribe(`/user/topic/chat/${roomId}`, msg => {
+                // tu zostawiamy prefix „Do …” w from, żeby widzieć „Do zuber”
+                const { from, content } = JSON.parse(msg.body);
+                appendMessage(from, content, true);
             });
             stompClient.subscribe(`/topic/dice/${roomId}`, msg => {
                 const { from, content } = JSON.parse(msg.body);
@@ -287,29 +870,27 @@
                     rollDice(notation, theme, from);
                 }
             });
+            stompClient.subscribe(`/topic/poll/${roomId}`, msg => {
+                const payload = JSON.parse(msg.body);
+                handleIncomingPoll(payload);
+            });
             stompClient.send(`/app/join/${roomId}`, {}, {});
         });
     }
-
-    function escapeHtml(text) { // Prevent XSS
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    function escapeHtml(text) {
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
     }
-
-    function appendMessage(from, content) {  // Append message to chat
+    function appendMessage(from, content, pv = false) {
         const chat = document.getElementById("chat");
-        const div = document.createElement("div");
-        div.classList.add("message");
-        div.innerHTML = `<strong>${escapeHtml(from)}</strong>: ${escapeHtml(content)}`;
-        chat.appendChild(div);
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = messageHTML(from, content, pv);
+        chat.appendChild(wrapper);
         chat.scrollTop = chat.scrollHeight;
     }
-
-    function updateUsers(users) {  // Update online users list
-        const ul = document.getElementById("online-users");
-        ul.innerHTML = users.map(user => `<li>${user}</li>`).join("");
-    }
-
-    document.getElementById("message-form").addEventListener("submit", e => {  // Send message
+    document.getElementById("message-form").addEventListener("submit", e => {
         e.preventDefault();
         const input = document.getElementById("message-input");
         const content = input.value.trim();
@@ -318,12 +899,12 @@
             input.value = "";
         }
     });
+    // ==== DICE OPERATIONS ====
     const themes = [
         { id: "default", label: "Domyślny" },
         { id: "gemstoneMarble", label: "Gemstone Rainbow Marble" },
         { id: "blueGreenMetal", label: "Blue Green Metal" }
     ];
-
     const themeSelect = document.getElementById("dice-theme");
     const savedTheme = localStorage.getItem("selectedDiceTheme") || "default";
     themes.forEach(({ id, label }) => {
@@ -333,11 +914,10 @@
     themeSelect.addEventListener("change", () => {
         localStorage.setItem("selectedDiceTheme", themeSelect.value);
     });
-
-    const diceBox = new DiceBox("#dice-container", {
+    const diceBox = new DiceBox("#dice-container-throw", {
         assetPath: "/assets/",
         origin: location.origin,
-        scale: window.innerWidth < 600 ? 5 : window.innerWidth < 900 ? 6 : window.innerWidth < 1200 ? 7 : 9,
+        scale: 5,
         gravity: 3,
         friction: 0.5,
         strength: 10,
@@ -345,38 +925,52 @@
         throwForce: 6,
         mass: 3
     });
-
+    const canvas = document.querySelector("#dice-container-throw canvas");
+    const scaleFactor = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * scaleFactor;
+    canvas.height = window.innerHeight * scaleFactor;
+    canvas.style.width = "100vw";
+    canvas.style.height = "100vh";
     await diceBox.init();
     await diceBox.loadTheme("default");
-
     let rolling = false;
     let rollPool = [];
-
-    document.querySelectorAll('[data-roll]').forEach(btn => {
-        btn.addEventListener("click", () => addToPool(btn.dataset.roll));
-    });
-
-    document.getElementById("rollCustom").addEventListener("click", async () => {
-        const input = document.getElementById("dice-input").value.trim().toLowerCase().replace(/k/g, "d").replace(/\s+/g, "");
-        if (!/^\d*d(4|6|8|10|12|20|100)(\+\d*d(4|6|8|10|12|20|100))*$/.test(input)) {
-            return Swal.fire({ icon: 'error', title: 'Błędna notacja', text: 'Np. 2d6+1d8' });
-        }
-
-        const segments = input.split("+").map(seg => {
-            const [_, qty = "1", sides] = seg.match(/(\d*)d(\d+)/);
-            return { qty: +qty, sides: +sides };
-        });
-
+    document.getElementById("rollReset").addEventListener("click", () => {
         if (rolling) return;
         rolling = true;
         document.querySelectorAll('button[id^="roll"]').forEach(btn => btn.disabled = true);
+        diceBox.clear();
+        rollPool = [];
+        rolling = false;
+        Object.keys(numOfDice).forEach(k => numOfDice[k] = 0);
+        var diceCont = document.getElementsByClassName('diceCount');
+        for (let i = 0; i < diceCont.length; i++) {
+            diceCont[i].innerText = "";
+        }
+    });
+    document.getElementById("rollCustom").addEventListener("click", async () => {
+        const segments = Object.entries(numOfDice)
+            .filter(([type, qty]) => qty > 0)
+            .map(([type, qty]) => ({ qty, sides: parseInt(type.slice(1)) }));
 
+        if (segments.length === 0) {
+            return Swal.fire({ icon: 'warning', title: 'Brak kości', text: 'Wybierz co najmniej jedną kość.' });
+        }
+        if (rolling) return;
+        rolling = true;
+        document.querySelectorAll('button[id^="roll"]').forEach(btn => btn.disabled = true);
         let total = 0, nat = [];
         const theme = themeSelect.value;
         if (!diceBox.themesLoadedData[theme]) await diceBox.loadTheme(theme);
-
         for (let { qty, sides } of segments) {
-            const res = await diceBox.roll(`${qty}d${sides}`, { theme });
+            const res = await diceBox.roll(`${qty}d${sides}`, {
+                theme,
+                throwStartPosition: {
+                    x: Math.random() * 2 - 1, // od -1 do 1
+                    y: Math.random() * 2 - 1, // od -1 do 1
+                    z: 0
+                }
+            });
             total += res.reduce((sum, die) => sum + die.value, 0);
             res.forEach(d => {
                 nat.push(d.sides === 20 && (d.value === 1 || d.value === 20)
@@ -386,37 +980,991 @@
             await new Promise(r => setTimeout(r, 1500));
             diceBox.clear();
         }
-
-        document.getElementById("dice-result").textContent = `Łączny wynik: ${total}`;
         stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({
-            from: "🧊 System",
-            content: `${username} wylosował ${total} (${nat.join(", ")})`
+            from: "🎲 Rzut kością",
+            content: `${username} wyrzucił ${total} (${nat.join(", ")})`,
+            privateMessage: false
         }));
-
-        rollPool = [];
-        document.getElementById("dice-input").value = "";
+        Object.keys(numOfDice).forEach(k => numOfDice[k] = 0);
+        rolling = false;
+        var visibleDiceCount = document.getElementsByClassName('diceCount');
+        for (let i = 0; i < visibleDiceCount.length; i++) {
+            visibleDiceCount[i].innerText = "";
+        }
+        Object.keys(numOfDice).forEach(k => numOfDice[k] = 0);
         document.querySelectorAll('button[id^="roll"]').forEach(btn => btn.disabled = false);
         rolling = false;
     });
 
-    function addToPool(notation) {
-        notation = notation.toLowerCase().replace(/k/g, "d");
-        const match = notation.match(/(\d+)d(\d+)/);
-        if (!match) return Swal.fire({ icon: 'error', title: 'Nieprawidłowa notacja', text: notation });
-
-        const [_, qty, sides] = match;
-        const existing = rollPool.findIndex(r => r.endsWith(`d${sides}`));
-        if (existing !== -1) {
-            const m = rollPool[existing].match(/(\d+)d(\d+)/);
-            const newQty = +m[1] + +qty;
-            if (newQty > 20) return Swal.fire({ icon: 'warning', title: 'Za dużo kości', text: `Już masz ${m[1]}d${sides}` });
-            rollPool[existing] = `${newQty}d${sides}`;
-        } else {
-            rollPool.push(`${qty}d${sides}`);
+    function getUserColorAndPhoto(username) {
+        if (!username || username === "System") {
+            return {
+                color: "text-gray-500",
+                photo: "/img/profilePics/cyberpunkDefaultProfilePic.png"
+            };
         }
-        document.getElementById("dice-input").value = rollPool.join("+");
+        if (!usersMap[username]) {
+            const index = Object.keys(usersMap).length % userColors.length;
+            const color = userColors[index];
+            usersMap[username] = {
+                color,
+                photo: "/img/profilePics/cyberpunkDefaultProfilePic.png"
+            };
+
+            // Najpierw pobierz JSON ze ścieżką
+            fetch(`/api/v1/authorized/user/photo/username/${username}`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Brak ścieżki do zdjęcia");
+                    return res.json();
+                })
+                .then(data => {
+                    // Wyciągnij nazwę pliku ze ścieżki, np. "/img/profilePics/abc.png" -> "abc.png"
+                    const path = data.userPhotoPath;
+                    const filename = path.split('/').pop();
+
+                    // Pobierz plik jako blob
+                    return fetch(`/api/v1/authorized/user/photo/${filename}`);
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error("Brak pliku zdjęcia");
+                    return res.blob();
+                })
+                .then(blob => {
+                    const objectUrl = URL.createObjectURL(blob);
+                    usersMap[username].photo = objectUrl;
+                    document.querySelectorAll(`img[data-username="${username}"]`).forEach(img => {
+                        img.src = objectUrl;
+                    });
+                })
+                .catch(err => {
+                    console.error(`Avatar ${username} error:`, err);
+                });
+        }
+        return usersMap[username];
+    }
+    function messageHTML(from, content, pv = false) {
+        const cleanFrom = from.replace(/^Do\s+/, "");
+        const isSystem = cleanFrom === "System" || cleanFrom === "🧊 System";
+        const isDiceRoll = cleanFrom.startsWith("🎲 Rzut kością");
+        // 1. Wiadomość systemowa
+        if (isSystem) {
+            return `
+            <div class="w-full text-center italic text-gray-500 text-sm py-2">
+                ${escapeHtml(content)}
+            </div>
+        `;
+        }
+        // 2. Rzut kością
+        if (isDiceRoll) {
+            var userName = content.split(" ")[0];
+            var userColor = getUserColorAndPhoto(userName).color;
+            content = content.replace(userName, `<span class="${userColor} font-semibold">${escapeHtml(userName)}</span>`);
+            return `
+            <div class="flex items-start bg-[#f5f6f8] dark:bg-gray-700 p-3 border-2 border-light-accentDark dark:border-dark-accentDark rounded-lg mb-2">
+                <div class="flex-shrink-0 w-12 h-12 mr-3">
+                    <img id="logo-light" src="/img/assets/chat-dice-icon-light-version.svg" alt="" class="h-12 w-12 dark:hidden">
+                    <img id="logo-dark" src="/img/assets/chat-dice-icon-dark-version.svg" alt="" class="h-12 w-12 hidden dark:block">
+                </div>
+                <div class="flex flex-col flex-1">
+                    <span class="font-bold">
+                        <span class="text-xs font-semibold mr-1 text-black dark:text-white">🎲 Kości Powiedziały: </span>
+                    </span>
+                    <p class="text-black dark:text-white break-words mt-1">
+                        ${content}
+                    </p>
+                </div>
+            </div>
+            `;
+        }
+        // 2.a) Wyświetlanie systemowej wiadomości z wynikami ankiety
+        const isPollSummary = cleanFrom.startsWith("📊 Wynik Ankiety");
+        if (isPollSummary) {
+            const boldedContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            return `
+                <div class="flex items-start bg-[#eef5ff] dark:bg-gray-800 p-3 border-2 border-blue-400 dark:border-blue-600 rounded-lg mb-2">
+                  <div class="flex-shrink-0 w-12 h-12 mr-3">
+                    <i class="fa-solid fa-poll text-3xl text-blue-500"></i>
+                  </div>
+                  <div class="flex flex-col flex-1">
+                    <span class="font-bold text-blue-500">
+                      ${escapeHtml(cleanFrom)}
+                    </span>
+                    <pre class="text-black dark:text-white whitespace-pre-wrap mt-1">${boldedContent}</pre>
+                  </div>
+                </div>
+              `;
+        }
+        // 3. Publiczne i prywatne wiadomości (żółty border dla prywatnych)
+        const userData = getUserColorAndPhoto(cleanFrom);
+        const pvClasses = pv
+            ? "bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-400 dark:border-yellow-600"
+            : "bg-[#f5f6f8] dark:bg-gray-700";
+
+        return `
+        <div class="flex items-start ${pvClasses} p-3 rounded-lg mb-2">
+            <div class="flex-shrink-0 w-12 h-12 mr-3">
+                <img src="${userData.photo}" data-username="${cleanFrom}" alt="${cleanFrom} Avatar" class="w-12 h-12 rounded-full"/>
+            </div>
+            <div class="flex flex-col flex-1">
+                <span class="font-bold ${userData.color}">
+                    ${pv ? `<span class="text-xs font-semibold mr-1">🔒</span>${escapeHtml(from)}` : escapeHtml(cleanFrom)}
+                </span>
+                <p class="text-black dark:text-white break-all mt-1">
+                    ${escapeHtml(content)}
+                </p>
+            </div>
+        </div>
+        `;
+    }
+
+    // ==== Load Dice Box ====
+    const dicesBox = document.getElementById("diceContainer");
+    var diceTypes = ["D4", "D6", "D8", "D10", "D12", "D20", "D100"];
+    diceTypes.forEach(type => {
+        var diceBox = document.createElement("div");
+        diceBox.className = "relative flex flex-col items-center justify-center w-10 h-10 group";
+        diceBox.innerHTML = `
+            <div id="dicePopup${type}" class="dicePopup hidden absolute -top-18 flex flex-col items-center justify-center gap-1 z-3 bg-light-surface dark:bg-dark-surface p-4 rounded-t-full shadow-[0px_-35px_50px_0px_rgba(0,_0,_0,_0.2)] dark:shadow-[0px_-35px_50px_0px_rgba(255,_255,_255,_0.2)] transition-all duration-300 ease-in-out opacity-0">
+                <button onclick="addDice('${type.toLowerCase()}')"
+                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                    +
+                </button>
+                <button onclick="removeDice('${type.toLowerCase()}')"
+                    class="h-6 w-6 rounded-full bg-light-accent dark:bg-dark-accent text-white text-sm font-bold flex items-center justify-center shadow-md hover:scale-105 transition">
+                    −
+                </button>
+            </div>
+            <div class="flex items-center justify-center w-10 h-10" onclick="showPopup('${type}')">
+                <img src="/img/assets/dice-icon-dark-version.svg" class="z-5 w-10 h-10 dark:block hidden" alt="Dice Icon">
+                <img src="/img/assets/dice-icon-light-version.svg" class="z-5 w-10 h-10 dark:hidden block" alt="Dice Icon">
+                <p class="z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-lg pointer-events-none">
+                    ${type.replace("D", "")}
+                </p>
+                <p id="diceCount${type}" class="diceCount hidden z-5 absolute inset-0 flex items-center justify-center text-light-textPrimary dark:text-dark-textPrimary font-bold text-base pointer-events-none -ml-[3.75rem]">
+                    0
+                </p>
+            </div>
+        `;
+        dicesBox.appendChild(diceBox);
+    });
+    // ==== Dice Popup ====
+    function showPopup(diceType) {
+        setTimeout(() => {
+            const dicePopups = document.querySelectorAll('.dicePopup');
+            const popupToShow = document.getElementById(`dicePopup${diceType}`);
+
+            dicePopups.forEach(popup => {
+                if (popup !== popupToShow) {
+                    popup.classList.add('hidden', 'opacity-0');
+                    popup.classList.remove('opacity-100');
+                }
+            });
+
+            if (popupToShow) {
+                popupToShow.classList.remove('hidden', 'opacity-0');
+                popupToShow.classList.add('opacity-100');
+            }
+        }, 0);
+    }
+    window.showPopup = showPopup;
+    // ==== Dice Functions ====
+    function addDice(type) {
+        if (!type || !(type.toUpperCase() in numOfDice)) return;
+        if (numOfDice[type.toUpperCase()] >= 20) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Maksymalna liczba kości osiągnięta',
+                text: 'Możesz mieć maksymalnie 20 kości tego typu.'
+            });
+            return;
+        }
+        numOfDice[type.toUpperCase()]++;
+        updateDiceCount(type);
+    }
+    window.addDice = addDice;
+    function removeDice(type) {
+        if (!type || !(type.toUpperCase() in numOfDice)) return;
+        const upperType = type.toUpperCase();
+        if (numOfDice[upperType] > 0) {
+            numOfDice[upperType]--;
+            updateDiceCount(type);
+        }
+    }
+    window.removeDice = removeDice;
+    function updateDiceCount(type) {
+        const upperType = type.toUpperCase();
+        const element = document.getElementById(`diceCount${upperType}`);
+        if (element) {
+            if (numOfDice[upperType] == 0) {
+                element.classList.add('hidden');
+            } else {
+                element.classList.remove('hidden');
+            }
+            element.innerHTML = `${numOfDice[upperType]}:`;
+        }
+    }
+    window.updateDiceCount = updateDiceCount;
+
+    function sendDiceRoll(rollText) {
+        if (!stompClient || !stompClient.connected) return;
+        stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({
+            from: "🎲 Rzut kością",
+            content: rollText,
+            privateMessage: false
+        }));
+    }
+    let currentPoll = null;       // Obiekt aktywnej ankiety
+    let hasVoted = false;         // Flaga: czy bieżący użytkownik już oddał głos
+    let voteSelection = null;     // (Opcjonalnie) indeks wybranej opcji
+    let pollTimerHandle = null;   // Uchwyt do setTimeout zamykającego ankietę
+
+    // ========================
+    // 1) openPollModal()
+    //    – otwiera modal konfiguracyjny.
+    // ========================
+    function openPollModal() {
+        // Wyczyszczenie poprzednich wartości
+        document.getElementById('poll-question').value = '';
+        document.getElementById('poll-duration').value = 60;
+
+        // Usuń wszystkie pola opcji poza dwoma pierwszymi
+        const container = document.getElementById('poll-options-container');
+        const inputs = container.querySelectorAll('.poll-option-input');
+        inputs.forEach((inp, idx) => {
+            if (idx > 1) {
+                inp.parentElement.remove();
+            } else {
+                inp.value = '';
+                inp.placeholder = `Opcja ${idx + 1}`;
+            }
+        });
+
+        // Wyświetl modal
+        const backdrop = document.getElementById('poll-modal-backdrop');
+        const modal = document.getElementById('poll-modal');
+        if (backdrop && modal) {
+            backdrop.classList.remove('opacity-0', 'pointer-events-none');
+            backdrop.classList.add('opacity-100', 'pointer-events-auto');
+            modal.classList.remove('scale-95', 'opacity-0');
+            modal.classList.add('scale-100', 'opacity-100');
+        }
+    }
+
+    // ========================
+    // 2) closePollModal()
+    //    – zamyka modal.
+    // ========================
+    function closePollModal() {
+        const backdrop = document.getElementById('poll-modal-backdrop');
+        const modal = document.getElementById('poll-modal');
+        if (backdrop && modal) {
+            backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+            backdrop.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('scale-100', 'opacity-100');
+            modal.classList.add('scale-95', 'opacity-0');
+        }
+    }
+
+    // ========================
+    // 3) addOptionField()
+    //    – dodaje kolejne pole tekstowe do wpisania opcji.
+    // ========================
+    function addOptionField() {
+        const container = document.getElementById('poll-options-container');
+        if (!container) return;
+
+        const existingInputs = container.querySelectorAll('.poll-option-input');
+        const count = existingInputs.length;
+        if (count >= 5) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Za dużo opcji',
+                text: 'Można dodać maksymalnie 5 opcji.'
+            });
+            return;
+        }
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex gap-2';
+
+        wrapper.innerHTML = `
+    <input
+      type="text"
+      class="poll-option-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 font-jetbrains-mono"
+      placeholder="Opcja ${count + 1}"
+      required
+    />
+    <button type="button" onclick="removeOptionField(this)"
+            class="text-light-error dark:text-dark-error text-xl">&times;</button>
+  `;
+
+        const addBtn = document.getElementById('add-option-button');
+        if (addBtn) {
+            container.insertBefore(wrapper, addBtn);
+        }
+    }
+
+    // ========================
+    // 4) removeOptionField(btn)
+    //    – usuwa pojedyncze pole opcji (jeśli kliknięto „minus”).
+    // ========================
+    function removeOptionField(btn) {
+        const container = document.getElementById('poll-options-container');
+        if (!container) return;
+
+        const inputs = container.querySelectorAll('.poll-option-input');
+        if (inputs.length <= 2) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Za mało opcji',
+                text: 'Ankieta musi mieć co najmniej 2 opcje.'
+            });
+            return;
+        }
+
+        const wrapper = btn.closest('div');
+        if (wrapper) {
+            wrapper.remove();
+        }
+
+        // Zaktualizuj placeholder pozostałych opcji
+        const remainingInputs = container.querySelectorAll('.poll-option-input');
+        remainingInputs.forEach((inp, idx) => {
+            inp.placeholder = `Opcja ${idx + 1}`;
+        });
+    }
+
+    // ========================
+    // 5) createPoll(event)
+    //    – obsługuje zatwierdzenie formularza, waliduje i wysyła payload do serwera.
+    // ========================
+    function createPoll(event) {
+        event.preventDefault();
+
+        // Jeśli ankieta już istnieje, zablokuj tworzenie nowej
+        if (currentPoll) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Jest już aktywna ankieta',
+                text: 'Poczekaj, aż zakończy się obecna ankieta, aby utworzyć nową.'
+            });
+            return;
+        }
+
+        const question = document.getElementById('poll-question').value.trim();
+        const durationSec = parseInt(document.getElementById('poll-duration').value, 10);
+        const optionInputs = Array.from(document.querySelectorAll('.poll-option-input'));
+
+        if (!question) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Brak pytania',
+                text: 'Wpisz pytanie ankiety.'
+            });
+            return;
+        }
+
+        if (optionInputs.length < 2) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Za mało opcji',
+                text: 'Dodaj przynajmniej 2 opcje.'
+            });
+            return;
+        }
+
+        const options = optionInputs
+            .map(inp => inp.value.trim())
+            .filter(txt => txt !== '');
+
+        if (options.length < 2) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Puste opcje',
+                text: 'Usuń puste pola lub wypełnij je.'
+            });
+            return;
+        }
+
+        if (durationSec < 30 || durationSec > 120) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Niepoprawny czas',
+                text: 'Czas musi być między 30 a 120 sekund.'
+            });
+            return;
+        }
+
+        // Przygotuj payload
+        const pollPayload = {
+            id: null,                  // Serwer wygeneruje unikalne ID
+            question: question,
+            options: options,
+            duration: durationSec,     // w sekundach
+            roomId: roomId             // globalna zmienna z identyfikatorem pokoju
+        };
+
+        // Wyślij do serwera przez STOMP
+        stompClient.send(
+            `/app/poll/${roomId}`,
+            {},
+            JSON.stringify(pollPayload)
+        );
+
+        // Zamknij modal
+        closePollModal();
+    }
+
+    // ========================
+    // 6) handleIncomingPoll(payload)
+    //    – odbiera dowolną wiadomość z /topic/poll/{roomId} i rozróżnia typ:
+    /// • NEW – nowa ankieta
+    /// • UPDATE – ktoś oddał głos
+    /// • END – zakończenie ankiety
+    // ========================
+    function handleIncomingPoll(payload) {
+        switch (payload.type) {
+            case 'NEW':
+                // Payload powinien zawierać: id, question, options[], createdBy, expiresAt
+                currentPoll = {
+                    id: payload.id,
+                    question: payload.question,
+                    options: payload.options.map(text => ({ text: text, votes: 0 })),
+                    expiresAt: payload.expiresAt,
+                    createdBy: payload.createdBy
+                };
+                hasVoted = false;
+                voteSelection = null;
+
+                showPoll(currentPoll);
+                break;
+
+            case 'UPDATE':
+                // Payload: { type:"UPDATE", pollId, optionIndex, votesForOption }
+                if (!currentPoll || payload.pollId !== currentPoll.id) return;
+                currentPoll.options[payload.optionIndex].votes = payload.votesForOption;
+                updatePoll(payload);
+                break;
+
+            case 'END':
+                // payload: { type:"END", pollId, finalResults: [ { optionIndex, votes }, ... ] }
+                if (!currentPoll || payload.pollId !== currentPoll.id) return;
+                // Usuwamy widok ankiety
+                const pinned = document.getElementById('pinned-poll');
+                if (pinned) pinned.remove();
+
+                // Odblokuj przycisk ankiety
+                const pollBtn = document.getElementById('open-poll-modal');
+                if (pollBtn) pollBtn.disabled = false;
+                currentPoll = null;
+                hasVoted = false;
+                if (pollTimerHandle) {
+                    clearTimeout(pollTimerHandle);
+                    pollTimerHandle = null;
+                }
+                break;
+            default:
+                console.warn('Nieznany typ wiadomości ankiety:', payload.type);
+        }
+    }
+
+    // ========================
+    // 7) showPoll(poll)
+    //    – renderuje przypiętą ankietę nad czatem, z przyciskami i paskami procentowymi.
+    // ========================
+    function showPoll(poll) {
+        // Usuń stary blok, jeśli istniał
+        const existing = document.getElementById('pinned-poll');
+        if (existing) existing.remove();
+
+        // Kontener czatu (div wiadomości)
+        const chatContainer = document.getElementById('chat');
+        if (!chatContainer) return;
+
+        // Stworzenie kontenera ankiety
+        const pollContainer = document.createElement('div');
+        pollContainer.id = 'pinned-poll';
+        pollContainer.className = 'w-full border border-light-accent dark:border-dark-accent rounded-lg bg-light-surface dark:bg-dark-surface mb-4 p-4';
+
+        // Nagłówek (pytanie + zegar)
+        const header = document.createElement('div');
+        header.className = 'flex justify-between items-center mb-3';
+
+        const qEl = document.createElement('h3');
+        qEl.innerText = poll.question;
+        qEl.className = 'text-lg font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary';
+        header.appendChild(qEl);
+
+        const timerEl = document.createElement('span');
+        timerEl.id = 'poll-timer';
+        timerEl.className = 'text-sm font-jetbrains-mono text-light-textSecondary dark:text-dark-textSecondary';
+        header.appendChild(timerEl);
+
+        pollContainer.appendChild(header);
+
+        // Lista opcji: każda z przyciskiem, paskiem i etykietą
+        const listEl = document.createElement('div');
+        listEl.id = 'poll-options-list';
+        listEl.className = 'flex flex-col gap-3';
+
+        poll.options.forEach((opt, idx) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'flex flex-col gap-1';
+
+            // 1) Przycisk głosowania
+            const btn = document.createElement('button');
+            btn.innerText = opt.text;
+            btn.className = 'px-3 py-1 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition font-jetbrains-mono text-sm';
+            if (hasVoted) btn.disabled = true;
+            btn.onclick = () => sendVote(idx);
+            optionDiv.appendChild(btn);
+
+            // 2) Pasek procentowy
+            const barContainer = document.createElement('div');
+            barContainer.className = 'w-full bg-gray-200 dark:bg-gray-600 h-4 rounded-full overflow-hidden';
+
+            const barInner = document.createElement('div');
+            barInner.id = `poll-bar-${idx}`;
+            barInner.className = 'h-4 bg-light-accent dark:bg-dark-accent';
+            barInner.style.width = '0%'; // początkowo 0%
+            barContainer.appendChild(barInner);
+            optionDiv.appendChild(barContainer);
+
+            // 3) Etykieta procentowa + liczbowa
+            const label = document.createElement('div');
+            label.id = `poll-label-${idx}`;
+            label.className = 'text-sm font-jetbrains-mono text-light-textSecondary dark:text-dark-textSecondary';
+            label.innerText = `0% (0 głosów)`;
+            optionDiv.appendChild(label);
+
+            listEl.appendChild(optionDiv);
+        });
+
+        pollContainer.appendChild(listEl);
+
+        // Wstawienie ankiety nad czatem
+        const parent = chatContainer.parentElement;
+        parent.insertBefore(pollContainer, chatContainer);
+
+        // Zablokuj przycisk „Ankieta”
+        const pollBtn = document.getElementById('open-poll-modal');
+        if (pollBtn) pollBtn.disabled = true;
+
+        // Ustaw timer odliczający
+        startPollTimer(poll.expiresAt);
+    }
+
+    // ========================
+    // 8) startPollTimer(expiresAt)
+    //    – odlicza czas i aktualizuje element #poll-timer.
+    // ========================
+    function startPollTimer(expiresAt) {
+        const timerEl = document.getElementById('poll-timer');
+        if (!timerEl) return;
+
+        function update() {
+            const now = Date.now();
+            let diff = Math.max(0, expiresAt - now);
+            const sec = Math.floor(diff / 1000) % 60;
+            const min = Math.floor(diff / 60000);
+            timerEl.innerText = `Koniec za: ${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+            if (diff <= 0) {
+                clearInterval(intervalHandle);
+            }
+        }
+
+        update();
+        const intervalHandle = setInterval(update, 1000);
+    }
+
+    // ========================
+    // 9) sendVote(optionIndex)
+    //    – wysyła głos do serwera i blokuje dalsze głosowanie w UI.
+    // ========================
+    function sendVote(optionIndex) {
+        if (!currentPoll || hasVoted) return;
+
+        const votePayload = {
+            pollId: currentPoll.id,
+            voter: userInfo.username,
+            optionIndex: optionIndex,
+        };
+
+        stompClient.send(
+            `/app/poll/${roomId}/vote`,
+            {},
+            JSON.stringify(votePayload)
+        );
+
+        hasVoted = true;
+        // Usuń przyciski głosowania
+        // Zamień przyciski na tekst opcji
+        document.querySelectorAll('#poll-options-list button').forEach((btn, idx) => {
+            const optionDiv = btn.parentElement;
+            const optionText = currentPoll.options[idx].text;
+
+            // Usuń przycisk
+            btn.remove();
+
+            // Stwórz element z tekstem opcji
+            const textEl = document.createElement('div');
+            textEl.innerText = optionText;
+            textEl.className = 'px-3 py-1 font-jetbrains-mono text-sm text-light-textPrimary dark:text-dark-textPrimary';
+
+            // Jeśli to wybrana opcja, oznacz ją
+            if (idx === optionIndex) {
+                textEl.className += ' font-bold border-l-4 border-light-accent dark:border-dark-accent pl-2';
+            }
+
+            // Wstaw tekst na początek diva z opcją (przed paskiem)
+            optionDiv.insertBefore(textEl, optionDiv.firstChild);
+        });
+    }
+
+    // ========================
+    // 10) updatePoll(payload)
+    //     – aktualizuje paski procentowe i etykiety dla wszystkich opcji.
+    // ========================
+    function updatePoll(payload) {
+        // Payload: { type:"UPDATE", pollId, optionIndex, votesForOption }
+        if (!currentPoll || payload.pollId !== currentPoll.id) return;
+
+        // Zaktualizuj wewnętrzną strukturę
+        currentPoll.options[payload.optionIndex].votes = payload.votesForOption;
+
+        // Oblicz sumę głosów
+        let total = 0;
+        currentPoll.options.forEach(opt => total += opt.votes);
+
+        // Dla każdej opcji oblicz procent i zaktualizuj pasek + etykietę
+        currentPoll.options.forEach((opt, idx) => {
+            const votes = opt.votes;
+            const percent = total > 0 ? (votes / total) * 100 : 0;
+
+            const barDiv = document.getElementById(`poll-bar-${idx}`);
+            if (barDiv) {
+                barDiv.style.width = `${percent}%`;
+            }
+
+            const labelDiv = document.getElementById(`poll-label-${idx}`);
+            if (labelDiv) {
+                labelDiv.innerText = `${percent.toFixed(0)}% (${votes} ${pluralizeVoteDisplay(votes)})`;
+            }
+        });
+    }
+
+    // ========================
+    // 11) expirePoll(pollId, finalResults)
+    //     – usuwa widok ankiety, wysyła podsumowanie Systemem i odblokowuje przycisk.
+    // ========================
+    function expirePoll(pollId, finalResults) {
+        if (!currentPoll || currentPoll.id !== pollId) return;
+
+        // 1) Usuń widok ankiety
+        const pinned = document.getElementById('pinned-poll');
+        if (pinned) pinned.remove();
+
+        // 2) Odblokuj przycisk „Ankieta”
+        const pollBtn = document.getElementById('open-poll-modal');
+        if (pollBtn) pollBtn.disabled = false;
+
+        // 3) Wyczyść zmienne globalne
+        currentPoll = null;
+        hasVoted = false;
+        voteSelection = null;
+        if (pollTimerHandle) {
+            clearTimeout(pollTimerHandle);
+            pollTimerHandle = null;
+        }
+    }
+
+    function pluralizeVoteDisplay(count) {
+        if (count === 1) return "głos";
+        if ([2,3,4].includes(count % 10) && ![12,13,14].includes(count % 100)) return "głosy";
+        return "głosów";
+    }
+
+    window.openPollModal = openPollModal;
+    window.closePollModal = closePollModal;
+    window.addOptionField = addOptionField;
+    window.removeOptionField = removeOptionField;
+    window.createPoll = createPoll;
+</script>
+<script>
+    // ==== Listener for Window Size ====
+    var _isMobile = false;
+    window.addEventListener('resize', function () {
+        const windowWidth = window.innerWidth
+        if (windowWidth < 1024) {
+            _isMobile = true;
+        } else {
+            _isMobile = false;
+        }
+    });
+    window.addEventListener('load', function () {
+        const windowWidth = window.innerWidth
+        if (windowWidth < 1024) {
+            _isMobile = true;
+        } else {
+            _isMobile = false;
+        }
+    });
+    // ==== Function to Parse Markdown in Real Time ====
+    let _markdownParserListeners = [];
+    function getListenerParser() {
+        const titleInput = document.getElementById('edit-note-title') || document.getElementById('note-title');
+        const contentInput = document.getElementById('edit-note-content') || document.getElementById('note-content');
+        const preview = document.getElementById('note-preview');
+        if (!titleInput || !contentInput || !preview) {
+            console.warn('Brakuje elementów do dynamicznego podglądu.');
+            return;
+        }
+        function updatePreviewLive() {
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+            const parsed = parseMarkdown(content || "", true);
+            preview.innerHTML = `
+            <h2 class="text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary text-left py-1 pb-[1.3em]">${title || "Notatki bez tytułu?"}</h2>
+            <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                ${parsed.length > 0 ? parsed : "<p><em>*Podgląd pusty...*</em></p>"}
+            </div>
+        `;
+        }
+        titleInput.addEventListener('input', updatePreviewLive);
+        contentInput.addEventListener('input', updatePreviewLive);
+        _markdownParserListeners = [
+            { el: titleInput, fn: updatePreviewLive },
+            { el: contentInput, fn: updatePreviewLive }
+        ];
+        updatePreviewLive();
+    }
+    function disableListenerParser() {
+        if (!_markdownParserListeners || _markdownParserListeners.length === 0) return;
+        _markdownParserListeners.forEach(({ el, fn }) => {
+            el.removeEventListener('input', fn);
+        });
+        _markdownParserListeners = [];
+    }
+    // ==== Parser Markdown ====
+    function parseMarkdown(markdownText, ifAllNote = false) {
+        var parsedParagraph = marked.parse(markdownText);
+        if (ifAllNote) {
+            parsedParagraph = parsedParagraph.replace(/<p>/g, '<p class="mt-[-3em]">');
+        }
+        return parsedParagraph;
+    }
+    // ==== Truncate Text ====
+    function truncateText(text, maxLength = Infinity) {
+        return text.length > maxLength
+            ? text.slice(0, maxLength) + '...'
+            : text;
+    }
+    // ==== Format Date ====
+    function formatDate(dateString) {
+        return new Date(dateString).toLocaleString("pl-PL", {
+            year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit"
+        });
+    }
+    // ==== Listener for Note ====
+    document.addEventListener('click', (e) => {
+        const dicePopups = document.querySelectorAll('.dicePopup');
+        const isPopupButton = e.target.closest('[data-popup-trigger]') !== null;
+        let clickedInsideAnyPopup = false;
+        dicePopups.forEach(popup => {
+            if (popup.contains(e.target)) {
+                clickedInsideAnyPopup = true;
+            }
+        });
+        if (!clickedInsideAnyPopup && !isPopupButton) {
+            dicePopups.forEach(popup => {
+                popup.classList.add('hidden', 'opacity-0');
+                popup.classList.remove('opacity-100');
+            });
+        }
+
+        const backdrop = document.getElementById('note-editor-backdrop');
+        const editor = document.getElementById('note-editor');
+        if (!editor || !backdrop) return;
+        const isEditorVisible = !backdrop.classList.contains('pointer-events-none');
+        const clickedBackdrop = isEditorVisible && e.target === backdrop;
+        if (!clickedBackdrop) return;
+        if (noteEditorMode === 'create') {
+            const noteTitle = document.getElementById('note-title').value.trim();
+            const noteText = document.getElementById('note-content').value.trim();
+            if (noteTitle === '' && noteText === '') {
+                noteEditorMode = 'preview';
+                hideNoteEditor();
+                return;
+            }
+        }
+        if (noteEditorMode === 'edit') {
+            const noteTitle = document.getElementById('edit-note-title').value.trim();
+            const noteText = document.getElementById('edit-note-content').value.trim();
+            if (noteTitle === actualNote.title && noteText === actualNote.content) {
+                noteEditorMode = 'preview';
+                hideNoteEditor();
+                return;
+            }
+        }
+        if (noteEditorMode === 'edit' || noteEditorMode === 'create') {
+            Swal.fire({
+                title: 'Czy na pewno chcesz wyjść?',
+                text: 'Niezapisane zmiany zostaną utracone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Tak, wyjdź',
+                cancelButtonText: 'Nie, wróć'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    noteEditorMode = 'preview';
+                    hideNoteEditor();
+                }
+            });
+        } else {
+            noteEditorMode = 'preview';
+            hideNoteEditor();
+        }
+    });
+    function toggleCard(cardContent, cardButton, linkButton) {
+        if (window.innerWidth >= 1536) {
+            return;
+        }
+        const content = document.getElementById(cardContent);
+        const button = document.getElementById(cardButton);
+        const link = document.getElementById(linkButton);
+        const isHidden = content.classList.contains("hidden");
+        content.classList.toggle("hidden");
+        link.classList.toggle("invisible");
+        const icons = button.querySelectorAll(".toggle-icon");
+        icons.forEach(icon => icon.classList.toggle("-rotate-90"));
+    }
+
+    // ==== Variable for Styling ====
+    var noteStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-backgroundTertiary dark:hover:bg-dark-backgroundTertiary mb-4";
+    var infoStyle = "w-[100%] max-w-2xl p-4 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface rounded-lg  cursor-pointer bg-light-surface dark:bg-dark-surface transition duration-300 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono";
+    // ==== Function to generate html ====
+    function generateInfoHTML(info1, info2, info3) {
+        return `
+            <div class="${infoStyle}">
+                ${info1 ? `<p class="text-light-textPrimary dark:text-dark-textPrimary m-2">${info1}</p>` : ''}
+                ${info2 ? `<p class="text-light-textPrimary dark:text-dark-textPrimary m-2">${info2}</p>` : ''}
+                ${info3 ? `<p class="text-light-textPrimary dark:text-dark-textPrimary m-2">${info3}</p>` : ''}
+            </div>
+        `;
+    }
+    function generatePieceOfNoteHTML(note) {
+        return `
+        <div class="${noteStyle}" onclick="displayNote(${note.id})">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex flex-col text-xl font-semibold mb-1 font-jetbrains-mono gap-x-4">
+                    <span class="text-light-accent dark:text-dark-accent"> ${note.gameName}</span>
+                    ${note.rpgSystemName}
+                </div>
+                <small class="hidden sm:block">${formatDate(note.updatedAt)}</small>
+            </div>
+            <h2 class= "text-2xl font-semibold mb-2 font-jetbrains-mono">${note.title}</h2>
+            <p class="ml-8 break-words whitespace-normal overflow-hidden text-ellipsis">${parseMarkdown(truncateText(note.content, 80))}</p>
+        </div>
+        `;
+    }
+    function generateNewNoteHTML() {
+        return `
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex flex-col items-start w-1/2">
+                <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${gameInfo.system}</p>
+                <p id="game-name" class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${gameInfo.name}</p>
+                <p id="game-description-new-note" class="text-xs font-bold text-light-textPrimary dark:text-dark-textPrimary">${gameInfo.description}</p>
+            </div>
+            <div class="flex flex-col lg:flex-row gap-2 items-right">
+                <button id="save-note"
+                    class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                    onclick="saveNote()">Zapisz</button>
+                <button id="create-preview-note"
+                    class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark"
+                    onclick="showPreviewNote('create')">Podgląd</button>
+            </div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
+            <div class="flex flex-col w-full" id="new-note-content">
+                <input id="note-title" type="text" placeholder="Tytuł notatki" maxlength="90"
+                    class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
+                <textarea id="note-content" rows="10" placeholder="Treść notatki"
+                    class="h-[32vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none focus:ring-0 overflow-auto font-jetbrains-mono"></textarea>
+            </div>
+            <div id="note-preview"
+                class="w-full lg:w-1/2 px-2 p-2 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left hidden">
+
+            </div>
+        </div>
+        `;
+    }
+    function generateNoteHTML(note) {
+        return `
+        <div class="flex flex-col sm:flex-row justify-end lg:flex-row gap-2 sm:gap-4 mb-4 sm:mb-0">
+            <div class="flex flex-col w-full">
+                <p class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${note.rpgSystemName}</p>
+                <p class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
+                <p id="game-description-new-note" class="text-xs font-bold text-light-textPrimary dark:text-dark-textPrimary">${gameInfo.description}</p>
+            </div>
+            <div class="flex flex-col items-start justify-start text-xs text-light-textSecondary dark:text-dark-textSecondary whitespace-nowrap">
+                <p>Ostatnia modyfikacja: ${formatDate(note.updatedAt)}</p>
+                <p>Utworzono: ${formatDate(note.createdAt)}</p>
+            </div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
+            <div class="flex flex-col w-full">
+                <div class="w-full mb-4 flex justify-between items-start gap-2">
+                  <h1 class="mt-2 text-2xl font-bold font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary leading-tight break-words whitespace-normal w-[70%]">
+                    ${note.title}
+                  </h1>
+                  <div class="flex-shrink-0 flex gap-2 xl:flex-row align-end flex-col md:flex-row">
+                    <button onclick="editNote(${note.id})"
+                      class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap">
+                      Edytuj
+                    </button>
+                    <button onclick="deleteNote(${note.id})"
+                      class="w-[80px] text-base font-bold bg-light-error dark:bg-dark-error text-white px-4 py-2 rounded hover:bg-red-600 whitespace-nowrap">
+                      Usuń
+                    </button>
+                  </div>
+                </div>
+                <div class="h-[32vh] overflow-auto font-jetbrains-mono text-left text-sm text-light-textSecondary dark:text-dark-textSecondary whitespace-pre-wrap break-words">
+                    ${parseMarkdown(note.content, true)}
+                </div>
+            </div>
+        </div>
+        `;
+    }
+    function generateEditNoteHTML(note) {
+        return `
+        <div class="flex flex-row justify-end lg:flex-row gap-4">
+            <div class="flex flex-col w-full">
+                <p id="game-system" class="text-base font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">${note.rpgSystemName}</p>
+                <p id="game-name" class="text-base font-bold text-light-accent dark:text-dark-accent mb-1">${note.gameName}</p>
+                <p id="game-description-new-note" class="text-xs font-bold text-light-textPrimary dark:text-dark-textPrimary">${gameInfo.description}</p>
+            </div>
+            <div class="flex gap-2 items-centerv flex-col md:flex-ro">
+                <button id="edit-preview-note"
+                    class="w-fit text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap"
+                    onclick="showPreviewNote('edit')">Podgląd</button>
+                <button id="save-note"
+                    class="text-base font-bold bg-light-accent dark:bg-dark-accent text-white p-2 rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark whitespace-nowrap"
+                    onclick="saveEditedNote(${note.id})">Zapisz</button>
+            </div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-4 min-h-[43vh]">
+            <div class="flex flex-col w-full" id="edit-note-container">
+                <input id="edit-note-title" type="text" value="${note.title.replace(/"/g, '&quot;')}" placeholder="Tytuł notatki"
+                    class="my-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-lg text-black dark:text-white bg-white dark:bg-dark-surface placeholder-gray-400      dark:placeholder-gray-500 focus:outline-none focus:ring-0 font-jetbrains-mono">
+                <textarea id="edit-note-content" rows="10" placeholder="Treść notatki"
+                    class="h-[33.5vh] my-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded resize-none text-sm text-black dark:text-white bg-white dark:bg-dark-surface focus:outline-none         focus:ring-0 overflow-auto font-jetbrains-mono">${note.content}</textarea>
+            </div>
+            <div id="note-preview"
+                class="w-full lg:w-1/2 px-2 p-2 rounded prose dark:prose-invert bg-white dark:bg-dark-surface hitespace-pre-wrap break-words text-left hidden">
+
+            </div>
+        </div>
+        `;
     }
 </script>
-<script defer src="/scripts/footer.js"></script>
-</body>
-</html>
+<script defer src="/scripts/footer.js"></script> <!-- Footer script -->

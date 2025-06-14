@@ -31,14 +31,18 @@ public class CpRedCharacterArmor {
         name = "armor_id",
         referencedColumnName = "id"
     )
-    private CpRedArmors armorId;
+    private CpRedArmors baseArmor;
     @ManyToOne
     @JoinColumn(
         name = "character_id",
         referencedColumnName = "id"
     )
-    private CpRedCharacters characterId;
+    private CpRedCharacters character;
     @Enumerated(EnumType.STRING)
     private CpRedCharacterItemStatus status;
-    private int currentArmorPoints;
+    @Enumerated(EnumType.STRING)
+    private CpRedCharacterArmorPlace place;
+    private Integer currentArmorPoints;
+    @Column(length = 500)
+    private String description;
 }

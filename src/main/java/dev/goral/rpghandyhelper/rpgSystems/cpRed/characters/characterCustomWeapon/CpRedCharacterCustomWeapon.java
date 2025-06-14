@@ -2,7 +2,6 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeap
 
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeaponHandType;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customWeapons.CpRedCustomWeapons;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.items.CpRedItemsQuality;
 import jakarta.persistence.*;
@@ -34,20 +33,19 @@ public class CpRedCharacterCustomWeapon {
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCustomWeapons baseWeaponId;
+    private CpRedCustomWeapons baseCustomWeapon;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCharacters characterId;
-    private int dmg;
-    private int magazineCapacity;
-    private short numberOfAttacks;
-    @Enumerated(EnumType.STRING)
-    private CpRedCharacterWeaponHandType handType;
-    private boolean isHidden;
+    private CpRedCharacters character;
+    private Integer dmg;
+    private Integer magazineCapacity;
+    private Short numberOfAttacks;
+    private Short handType;
+    private Boolean isHidden;
     @Enumerated(EnumType.STRING)
     private CpRedItemsQuality quality;
     @Enumerated(EnumType.STRING)

@@ -10,6 +10,7 @@ import lombok.ToString;
 public class UserGamesDTO {
     private Long id;
     private Long rpgSystemId;
+    private String rpgSystemName;
     private String name;
     private String description;
 }

@@ -25,8 +25,8 @@ public class CpRedCharacterStats {
     )
     private Long id;
 
-    private int maxStatLevel;
-    private int currentStatLevel;
+    private Integer maxStatLevel;
+    private Integer currentStatLevel;
 
     @ManyToOne
     @JoinColumn(

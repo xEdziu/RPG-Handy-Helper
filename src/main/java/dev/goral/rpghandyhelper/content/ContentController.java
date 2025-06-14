@@ -15,6 +15,12 @@ public class ContentController {
         return "index";
     }
 
+    @GetMapping("/demo")
+    public String getDemo() {
+        System.out.println("ContentController: getDemo()");
+        return "demo";
+    }
+
     @GetMapping("/login")
     public String getLogin() {
         Authentication authentication = getAuthentication();

@@ -1,6 +1,7 @@
 package dev.goral.rpghandyhelper.user;
 
 import dev.goral.rpghandyhelper.security.CustomReturnables;
+import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -345,6 +346,20 @@ public class UserService implements UserDetailsService {
             userDTOs.add(new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getSurname(), user.getEmail(), user.getUserPhotoPath()));
         }
         response.put("users", userDTOs);
+          return response;
+    }
+
+    public Map<String, Object> getUserPhotoByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o nicku: " + username));
+
+        String userPhotoPath = user.getUserPhotoPath();
+        if (userPhotoPath == null || userPhotoPath.isEmpty()) {
+            throw new ResourceNotFoundException("Użytkownik nie ma ustawionego zdjęcia profilowego.");
+        }
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano ścieżkę zdjęciową do profilu użytkownika.");
+        response.put("userPhotoPath", userPhotoPath);
         return response;
     }
 }

@@ -10,6 +10,7 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import dev.goral.rpghandyhelper.game.GameRepository;
 import dev.goral.rpghandyhelper.user.UserRepository;
@@ -251,5 +252,71 @@ public class GameNoteService {
         gameNoteRepository.save(gameNote.get());
 
         return CustomReturnables.getOkResponseMap("Notatka została zaktualizowana");
+    }
+
+    public Map<String, Object> getAllUsersNotes(User loggedInUser) {
+        if (!(getAuthentication().getPrincipal() instanceof Jwt))
+            throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
+
+        List<GameNote> gameNotes = gameNoteRepository.findByUserId(loggedInUser.getId());
+        List<GameNoteWithGameIdDto> gameNoteDtos = new ArrayList<>();
+
+        for (GameNote gameNote : gameNotes) {
+            GameNoteWithGameIdDto gameNoteDto = new GameNoteWithGameIdDto();
+            gameNoteDto.setId(gameNote.getId());
+            gameNoteDto.setTitle(gameNote.getTitle());
+            gameNoteDto.setContent(gameNote.getContent());
+            gameNoteDto.setCreatedAt(gameNote.getCreatedAt());
+            gameNoteDto.setUpdatedAt(gameNote.getUpdatedAt());
+            gameNoteDto.setGameId(gameNote.getGame().getId());
+            gameNoteDto.setGameName(gameNote.getGame().getName());
+            gameNoteDto.setRpgSystemName(gameNote.getGame().getRpgSystem().getName());
+            gameNoteDtos.add(gameNoteDto);
+        }
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Notatki zostały pobrane");
+        response.put("gameNotes", gameNoteDtos);
+
+        return response;
+    }
+
+    public Map<String, Object> getGameNotesForGame(User loggedInUser, Long gameId) {
+        if (!(getAuthentication().getPrincipal() instanceof Jwt))
+            throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
+
+        if (!gameRepository.existsById(gameId))
+            throw new IllegalStateException("Gra o podanym ID nie istnieje.");
+
+        // check if user has access to the game
+        boolean hasAccess = false;
+        for (GameUsers gameUser : gameUsersRepository.findGameAllUsersByGameId(gameId)) {
+            if (gameUser.getUser().getId().equals(loggedInUser.getId())) {
+                hasAccess = true;
+                break;
+            }
+        }
+        if (!hasAccess) {
+            throw new IllegalStateException("Nie masz uprawnień do pobierania notatek dla tej gry.");
+        }
+
+        List<GameNote> gameNotes = gameNoteRepository.findByGameIdAndUserId(gameId, loggedInUser.getId());
+
+        List<GameNoteViewDto> gameNoteDtos = new ArrayList<>();
+        for (GameNote gameNote : gameNotes) {
+            GameNoteViewDto gameNoteDto = new GameNoteViewDto();
+            gameNoteDto.setId(gameNote.getId());
+            gameNoteDto.setTitle(gameNote.getTitle());
+            gameNoteDto.setContent(gameNote.getContent());
+            gameNoteDto.setCreatedAt(gameNote.getCreatedAt());
+            gameNoteDto.setUpdatedAt(gameNote.getUpdatedAt());
+            gameNoteDto.setGameName(gameNote.getGame().getName());
+            gameNoteDto.setRpgSystemName(gameNote.getGame().getRpgSystem().getName());
+            gameNoteDtos.add(gameNoteDto);
+        }
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Notatki dla gry zostały pobrane");
+        response.put("gameNotes", gameNoteDtos);
+
+        return response;
     }
 }
