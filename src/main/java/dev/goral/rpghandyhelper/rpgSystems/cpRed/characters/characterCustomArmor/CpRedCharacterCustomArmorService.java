@@ -9,9 +9,9 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeapon.CpRedCharacterCustomWeaponDTO;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmors;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmorsRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customWeapons.CpRedCustomWeapons;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpghandyhelper.user.User;
@@ -34,7 +34,6 @@ public class CpRedCharacterCustomArmorService {
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
     private final CpRedCustomArmorsRepository cpRedCustomArmorsRepository;
-    private final dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeapon.CpRedCharacterCustomArmorRepository cpRedCharacterCustomArmorRepository;
 
     public Map<String, Object> getCharacterCustomArmors(Long characterId) {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
@@ -112,6 +111,66 @@ public class CpRedCharacterCustomArmorService {
         return CustomReturnables.getOkResponseMap("Customowy pancerz został dodany do postaci.");
     }
 
+public Map<String,Object> updateCharacterCustomArmor(Long characterCustomArmorId, UpdateCharacterCustomArmorRequest updateCharacterCustomArmorRequest) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String currentUsername = authentication.getName();
+    User currentUser = userRepository.findByUsername(currentUsername)
+            .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
+    CpRedCharacterCustomArmor characterCustomArmorToUpdate = cpRedCharacterCustomArmorRepository.findById(characterCustomArmorId)
+            .orElseThrow(() -> new ResourceNotFoundException("Pancerz postaci o podanym ID nie został znaleziony."));
+
+    CpRedCharacters character = cpRedCharactersRepository.findById(characterCustomArmorToUpdate.getCharacterId().getId())
+            .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+
+    CpRedCustomArmors armor = cpRedCustomArmorsRepository.findById(characterCustomArmorToUpdate.getArmorId().getId())
+            .orElseThrow(() -> new ResourceNotFoundException("Pancerz o podanym ID nie został znaleziony."));
+
+    Game game = gameRepository.findById(character.getGame().getId())
+            .orElseThrow(() -> new ResourceNotFoundException("Gra powiązana z postacią nie została znaleziona."));
+
+    GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+            .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
+
+    if (!Objects.equals(character.getGame().getId(), armor.getGameId().getId())) {
+        throw new ResourceNotFoundException("Postać nie należy do gry, do której jest przypisana customowa broń.");
+    }
+
+    if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
+        if (character.getType() != CpRedCharactersType.NPC) {
+            if (!Objects.equals(currentUser.getId(), character.getUser().getId())) {
+                throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
+            }
+        } else {
+            throw new ResourceNotFoundException("Tylko GM może zmieniać customowe pancerze postaci NPC.");
+        }
+    }
+
+    if (game.getStatus() != GameStatus.ACTIVE) {
+        throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
+    }
+
+    if (updateCharacterCustomArmorRequest.getCurrentArmorPoints() != null) {
+        if (updateCharacterCustomArmorRequest.getCurrentArmorPoints() < 0) {
+            throw new IllegalArgumentException("Wartość punktów pancerza nie może być mniejsza niż 0.");
+        }
+        characterCustomArmorToUpdate.setCurrentArmorPoints(updateCharacterCustomArmorRequest.getCurrentArmorPoints());
+    }
+
+    if (updateCharacterCustomArmorRequest.getStatus() != null) {
+        characterCustomArmorToUpdate.setStatus(updateCharacterCustomArmorRequest.getStatus());
+    }
+
+    if (updateCharacterCustomArmorRequest.getDescription() != null) {
+        if (updateCharacterCustomArmorRequest.getDescription().length() > 500) {
+            throw new IllegalArgumentException("Opis nie może być dłuższy niż 500 znaków.");
+        }
+        characterCustomArmorToUpdate.setDescription(updateCharacterCustomArmorRequest.getDescription());
+    }
+
+    cpRedCharacterCustomArmorRepository.save(characterCustomArmorToUpdate);
+
+    return CustomReturnables.getOkResponseMap("Customowy pancerz postaci został zmodyfikowany.");
+    }
 
 }
