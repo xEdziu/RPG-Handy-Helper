@@ -162,6 +162,22 @@
                       <option name="sortWeight" value="7000000" />
                       <option name="url" value="http://localhost:8888/logout" />
                     </requestState>
+                    <requestState>
+                      <option name="description" value="Pobierz użytkowników po wzorcu" />
+                      <option name="id" value="d3fddbeb-2bd5-4975-a75c-f5563c16fa00" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Get Usernames By Regex" />
+                      <option name="pathVariables">
+                        <list>
+                          <pathVariableState>
+                            <option name="key" value="regexUsername" />
+                            <option name="value" value="user" />
+                          </pathVariableState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="8000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/user/find/{regexUsername}" />
+                    </requestState>
                   </list>
                 </option>
                 <option name="sortWeight" value="1000000" />
@@ -198,6 +214,20 @@
                       <option name="name" value="Dodaj użytkownika do gry" />
                       <option name="sortWeight" value="1500000" />
                       <option name="url" value="http://localhost:8888/api/v1/authorized/game/addUserToGame" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="[&#10;  {&#10;    &quot;userId&quot;: 4,&#10;    &quot;gameId&quot;: 1,&#10;    &quot;role&quot;: &quot;PLAYER&quot;&#10;  },&#10;    {&#10;        &quot;userId&quot;: 5,&#10;        &quot;gameId&quot;: 1,&#10;        &quot;role&quot;: &quot;PLAYER&quot;&#10;    }&#10;]" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Dodaje użytkowników do gry z odpowiednią rolą" />
+                      <option name="id" value="d5229378-dbb2-482a-916a-3894e1558cc4" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Dodaj użytkowników do gry" />
+                      <option name="sortWeight" value="1750000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/addUsersToGame" />
                     </requestState>
                     <requestState>
                       <option name="description" value="Wyświatla wszystkie gry" />
