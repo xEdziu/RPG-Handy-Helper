@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddCharacterAmmunitionRequest {
+    private Long characterId;
     private Long characterWeaponId;
     private Boolean isCharacterWeaponCustom;
     private Long ammunitionId;

@@ -10,4 +10,8 @@ import java.util.List;
 @Repository
 public interface CpRedCharacterAmmunitionRepository extends JpaRepository<CpRedCharacterAmmunition, Long> {
     List<CpRedCharacterAmmunition> findAllByCharacterId(Long characterId);
+
+    boolean existsByCharacterIdAndCharacterWeaponIdAndIsCharacterWeaponCustom(Long characterId, Long characterWeaponId, Boolean isCharacterWeaponCustom);
+
+    boolean existsByCharacterIdAndCharacterWeaponIdAndIsCharacterWeaponCustomAndAmmunitionIdAndIsAmmunitionCustom(Long characterId, Long characterWeaponId, Boolean isCharacterWeaponCustom, Long ammunitionId, Boolean isAmmunitionCustom);
 }
