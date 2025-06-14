@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -211,5 +212,12 @@ public Map<String,Object> updateCharacterCustomArmor(Long characterCustomArmorId
 
         cpRedCharacterCustomArmorRepository.deleteById(characterCustomArmorId);
         return CustomReturnables.getOkResponseMap("Customowy pancerz postaci został pomyślnie usunięty.");
+    }
+
+    public Map<String, Object> getAllCharacterCustomArmors() {
+        List<CpRedCharacterCustomArmor> allCharacterCustomArmors = cpRedCharacterCustomArmorRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie customowe pancerze postaci zostały pobrane pomyślnie.");
+        response.put("characterCustomArmors", allCharacterCustomArmors);
+        return response;
     }
 }
