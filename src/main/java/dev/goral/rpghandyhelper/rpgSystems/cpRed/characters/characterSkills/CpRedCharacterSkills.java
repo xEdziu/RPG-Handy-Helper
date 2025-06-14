@@ -29,14 +29,14 @@ public class CpRedCharacterSkills {
             name = "character_id",
             referencedColumnName = "id"
     )
-    private CpRedCharacters characterId;
+    private CpRedCharacters character;
 
     @ManyToOne
     @JoinColumn(
             name = "skill_id",
             referencedColumnName = "id"
     )
-    private CpRedSkills skillId;
+    private CpRedSkills skill;
 
-    private int skillLevel=0;
+    private Integer skillLevel=0;
 }
