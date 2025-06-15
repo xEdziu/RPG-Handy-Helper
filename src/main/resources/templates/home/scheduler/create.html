@@ -229,7 +229,7 @@
                 }
             }
             scheduler.title = title;
-            scheduler.deadline = date+"T23:59:59";
+            scheduler.deadline = date + "T23:59:59";
             scheduler.minimumSessionDurationMinutes = parseInt(minTime);
             step2HTML();
         }
@@ -258,18 +258,18 @@
             const timeRangesDiv = dateRangeBox.querySelectorAll("div");
             const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
 
-            for (let i = 1; i <= count+1; i++) {
+            for (let i = 1; i <= count + 1; i++) {
                 const startTime = document.getElementById(`timeRangeStart${i}`).value;
                 const endTime = document.getElementById(`timeRangeEnd${i}`).value;
                 console.log(startTime, endTime);
                 if (startTime && endTime) {
                     timeRanges.push({
-                        startTime: startTime+":00",
-                        endTime: endTime+":00"
+                        startTime: startTime + ":00",
+                        endTime: endTime + ":00"
                     });
                 }
             }
-            if( timeRanges.length === 0) {
+            if (timeRanges.length === 0) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Błąd!',
@@ -280,6 +280,51 @@
             scheduler.timeRanges = timeRanges;
             console.log(scheduler);
             step4HTML();
+        }
+        function saveScheduler() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Zapisywanie...',
+                text: `Trwa tworzenie schedulera...`,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            fetch('/api/v1/authorized/schedulers/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': getCsrfToken()
+                },
+                body: JSON.stringify(scheduler)
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            }).then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukces!',
+                    text: `Scheduler został pomyślnie zapisany.`,
+                }).then(() => {
+                    window.location.href = `/home/games/${gameId}/schedulers`;
+                });
+            }).catch(error => {
+                console.error('Error saving scheduler:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Wystąpił błąd podczas zapisywania schedulera.`,
+                });
+            });
+        }
+        function pluralizeMinutesDisplay(count) {
+            if (count === 1) return "minuta";
+            if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) return "minuty";
+            return "minut";
         }
     </script>
 </head>
@@ -629,11 +674,32 @@
                 Podsumowanie Schedulera:
             </h1>
             <div id="summaryBox" class="flex flex-col items-center justify-center w-full">
-                <!-- Tutaj będzie podsumowanie schedulera -->
+                <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary">Tytuł: ${scheduler.title}</p>
+                <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary">Deadline: ${scheduler.deadline}</p>
+                <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary">Czas minimalny spotkania: ${scheduler.minimumSessionDurationMinutes} minut</p>
+                <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary">Liczba uczestników: ${scheduler.participantIds.length}</p>
+                <h2 class="text-lg font-bold mt-4 text-light-textPrimary dark:text-dark-textPrimary">Zakresy dat:</h2>
+                <ul class="list-disc pl-5">
+                    ${scheduler.dateRanges.map(range => `<li>${range.startDate} - ${range.endDate}</li>`).join('')}
+                </ul>
+                <h2 class="text-lg font-bold mt-4 text-light-textPrimary dark:text-dark-textPrimary">Bloki czasowe:</h2>
+                <ul class="list-disc pl-5">
+                    ${scheduler.timeRanges.map(range => `<li>${range.startTime} - ${range.endTime}</li>`).join('')}
+                </ul>
             </div>
         `;
         // Tutaj możesz dodać kod do wyświetlenia podsumowania schedulera
         document.getElementById("buttons-controler").innerHTML = "";
+        const divAddDateRange = document.createElement("div");
+        divAddDateRange.className = "flex items-center justify-center w-10 h-10 bg-light-accent dark:bg-dark-accent rounded-full cursor-pointer";
+        const addDateRangeIcon = document.createElement("i");
+        addDateRangeIcon.className = "fa-solid fa-floppy-disk text-dark-textPrimary dark:text-light-textPrimary cursor-pointer";
+        divAddDateRange.appendChild(addDateRangeIcon);
+        divAddDateRange.addEventListener("click", () => {
+            saveScheduler();
+        });
+        document.getElementById("buttons-controler").appendChild(divAddDateRange);
         addArrow("left", step3HTML);
+
     }
 </script>
