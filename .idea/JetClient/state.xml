@@ -2329,11 +2329,139 @@
                                 <folderState>
                                   <option name="id" value="a85f73b2-88dd-4094-aefb-03bad39725ba" />
                                   <option name="name" value="LifePaths" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;characterId&quot;: 2,&#10;  &quot;cultureOfOrigin&quot;: &quot;Polish&quot;,&#10;  &quot;yourCharacter&quot;: &quot;pleasant&quot;,&#10;  &quot;clothingAndStyle&quot;: &quot;punk&quot;,&#10;  &quot;hair&quot;: &quot;bald&quot;,&#10;  &quot;mostValue&quot;: &quot;money&quot;,&#10;  &quot;relationships&quot;: &quot;girlfriend&quot;,&#10;  &quot;mostImportantPerson&quot;: &quot;mother&quot;,&#10;  &quot;mostImportantItem&quot;: &quot;ring&quot;,&#10;  &quot;familyBackground&quot;: &quot;poor family&quot;,&#10;  &quot;familyEnvironment&quot;: &quot;gang&quot;,&#10;  &quot;familyCrisis&quot;: &quot; death of father&quot;,&#10;  &quot;lifeGoals&quot;: &quot;to become rich&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje ścieżkę" />
+                                        <option name="id" value="d36bdc3f-4515-4048-b044-12804270bb77" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj ścieżkę życiową" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/lifepaths/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  &quot;characterId&quot;: 2,&#10;  &quot;cultureOfOrigin&quot;: &quot;English&quot;,&#10;  &quot;yourCharacter&quot;: &quot;wierd&quot;,&#10;  &quot;clothingAndStyle&quot;: &quot;corporate&quot;,&#10;  &quot;hair&quot;: &quot;long, blonde&quot;,&#10;  &quot;mostValue&quot;: &quot;church&quot;,&#10;  &quot;relationships&quot;: &quot;friend&quot;,&#10;  &quot;mostImportantPerson&quot;: &quot;dad&quot;,&#10;  &quot;mostImportantItem&quot;: &quot;knife&quot;,&#10;  &quot;familyBackground&quot;: &quot;rich family&quot;,&#10;  &quot;familyEnvironment&quot;: &quot;wealthy&quot;,&#10;  &quot;familyCrisis&quot;: &quot; death of mother&quot;,&#10;  &quot;lifeGoals&quot;: &quot;to become doctor&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zmienia dane" />
+                                        <option name="id" value="65547ad7-a77b-429a-b50e-5fcc7c2add7b" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj ścieżkę życiową" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/lifepaths/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca po unikalnym Id" />
+                                        <option name="id" value="783a2f4a-25f8-446a-a35c-ab9dcb8b762e" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć ścieżkę po Id" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/lifepaths/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkie ścieżki wszystkich kart postaci" />
+                                        <option name="id" value="84f807a6-a6e4-42b1-a577-5b5018a69e49" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie ścieżki" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/lifepaths/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca po unikalnym characterId" />
+                                        <option name="id" value="b8ca814b-9510-486e-8236-d8f60aac69cb" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć ścieżkę po characterId" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/lifepaths/character/2" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="6c528490-7162-4916-9f96-31336ef3161a" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkie ścieżki dla admina" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/lifepaths/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Usuwa ścieżkę" />
+                                        <option name="id" value="b71d6581-b46f-47bf-ae63-cc7520345aaf" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń ścieżkę" />
+                                        <option name="sortWeight" value="8000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/lifepaths/delete/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
                                   <option name="sortWeight" value="5000000" />
                                 </folderState>
                                 <folderState>
                                   <option name="id" value="716c8773-23bd-4343-8582-9c7fda097e38" />
                                   <option name="name" value="Skills" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  skillId: 1,&#10;  characterId: 1,&#10;  skillLevel: 5&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje umiejęstość o podanym id do wybranej postaci" />
+                                        <option name="id" value="c0a2ecc6-6dfd-4651-ad94-8f679bc32867" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj umiejętność do postaci" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/skills/create" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę z wszystkimi umiejętnościami podanej postaci" />
+                                        <option name="id" value="243952cc-2b6c-47f4-a397-6deee7295792" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie umiejętności postaci" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/skills/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszstkich umiejętności wszsytkich postaci dla admina" />
+                                        <option name="id" value="877e2dfd-83a3-4dda-a2b1-42984eca9138" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie umiejętości wszystkich postaci dla Admina" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/skills/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  skillLevel: 10&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Pozwala modyfikować poziom wybranej umiejętności postaci" />
+                                        <option name="id" value="d5843d9c-bd3d-49f6-9f74-a159d15cb118" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj umiejętność postaci" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/skills/update/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Usuwa powiązanie postaci i umiejętności" />
+                                        <option name="id" value="e8a0a550-6db1-4097-99d6-b7115ad5cca7" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń powiązanie między podaną umiejętnością i postacią" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/skills/delete/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
                                   <option name="sortWeight" value="6000000" />
                                 </folderState>
                                 <folderState>
