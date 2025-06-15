@@ -187,7 +187,9 @@
             }).then(data => {
                 userInGame = data.gameUsers;
                 userInGame.forEach(user => {
-                    scheduler.participantIds.push(user.userId);
+                    if (user.role != "SPECTATOR") {
+                        scheduler.participantIds.push(user.userId);
+                    }
                 });
             }).catch(error => {
                 console.error('Error fetching game:', error);
@@ -249,9 +251,26 @@
             scheduler.dateRanges = newDateRanges;
             step3HTML();
         }
-
         function validateStep3() {
+            const timeRanges = [];
+            const startTime = document.getElementById("startTime").value;
+            const endTime = document.getElementById("endTime").value;
 
+            if (startTime && endTime) {
+                timeRanges.push({ startTime, endTime });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Musisz wypełnić godziny przed kontynuowaniem.`,
+                });
+                return;
+            }
+
+            // Zapisujemy godziny do scheduler.timeRanges
+            scheduler.timeRanges = timeRanges;
+            // Przejście do następnego kroku
+            step4HTML();
         }
     </script>
 </head>
@@ -499,12 +518,113 @@
         document.getElementById("buttons-controler").appendChild(divAddDateRange);
         addArrow("left", step3HTML);
     }
+    function addTimeRangeHTML(startTime = "", endTime = "") {
+        const dateRangeBox = document.getElementById("timeRangeBox");
+        const timeRanges = dateRangeBox.querySelectorAll("div");
+        const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
+        if(count != 0){
+            const previousTimeRangeStart = document.getElementById(`timeRangeStart${count}`);
+            const previousTimeRangeEnd = document.getElementById(`timeRangeEnd${count}`);
+            if (previousTimeRangeStart && previousTimeRangeEnd) {
+                const previousStart = previousTimeRangeStart.value;
+                const previousEnd = previousTimeRangeEnd.value;
+                if (!previousStart || !previousEnd) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Błąd!',
+                        text: `Musisz wypełnić poprzedni blok czasowy przed dodaniem nowego.`,
+                    });
+                    return;
+                }
+            }
+        }
+        if (count >= 3) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Informacja',
+                text: `Możesz dodać maksymalnie 3 bloki czasowe.`,
+            });
+            return;
+        }
+        const boxDateRange = document.createElement("div");
+        boxDateRange.className = "flex flex-row items-center justify-center w-full max-w-3xl p-4";
+        const timeRangeHTML = `
+        <div class="relative mx-5 my-2 w-full">
+            <input type="time" id="timeRangeStart${count + 1}" name="timeRangeStart${count + 1}" required
+                class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
+            <label for="timeRangeStart${count + 1}"
+                class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                Od
+            </label>
+        </div> 
+        <div class="relative mx-5 my-2 w-full">
+            <input type="time" id="timeRangeEnd${count + 1}" name="timeRangeEnd${count + 1}" required
+                class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
+            <label for="timeRangeEnd${count + 1}"
+                class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                Do
+            </label>
+        </div>
+    `;
+        boxDateRange.innerHTML = timeRangeHTML;
+        dateRangeBox.appendChild(boxDateRange);
+        const timeStart = document.getElementById(`timeRangeStart${count + 1}`);
+        const timeEnd = document.getElementById(`timeRangeEnd${count + 1}`);
+        timeStart.addEventListener('change', () => {
+            // Możesz dodać jakąś walidację dla godziny początkowej
+        });
+        timeEnd.addEventListener('change', () => {
+            if (new Date(`1970-01-01T${timeStart.value}:00`) >= new Date(`1970-01-01T${timeEnd.value}:00`)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Godzina zakończenia nie może być przed godziną rozpoczęcia.`,
+                });
+                timeEnd.value = "";
+            }
+        });
+    }
+    // Krok 3 - Dodawanie bloków czasowych
     function step3HTML() {
-        console.log(scheduler);
         const box = document.getElementById("scheduler-create-status");
-        box.innerHTML = "";
+        box.innerHTML = `
+            <h1 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                Wybierz godziny możliwych spotkań:
+            </h1>
+            <div id="timeRangeBox" class="flex flex-col items-center justify-center w-full"></div>
+        `;
+        if (scheduler.timeRanges.length > 0) {
+            scheduler.timeRanges.forEach((range, index) => {
+                addTimeRangeHTML(range.startTime, range.endTime);
+            });
+        } else {
+            addTimeRangeHTML();
+        }
         document.getElementById("buttons-controler").innerHTML = "";
         addArrow("right", validateStep3);
+        const divAddDateRange = document.createElement("div");
+        divAddDateRange.className = "flex items-center justify-center w-10 h-10 bg-light-accent dark:bg-dark-accent rounded-full cursor-pointer";
+        const addDateRangeIcon = document.createElement("i");
+        addDateRangeIcon.className = "fa-solid fa-plus text-dark-textPrimary dark:text-light-textPrimary cursor-pointer";
+        divAddDateRange.appendChild(addDateRangeIcon);
+        divAddDateRange.addEventListener("click", () => {
+            addTimeRangeHTML();
+        });
+        document.getElementById("buttons-controler").appendChild(divAddDateRange);
         addArrow("left", step2HTML);
+    }
+    function step4HTML() {
+        const box = document.getElementById("scheduler-create-status");
+        box.innerHTML = `
+            <h1 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                Podsumowanie Schedulera:
+            </h1>
+            <div id="summaryBox" class="flex flex-col items-center justify-center w-full">
+                <!-- Tutaj będzie podsumowanie schedulera -->
+            </div>
+        `;
+        // Tutaj możesz dodać kod do wyświetlenia podsumowania schedulera
+        document.getElementById("buttons-controler").innerHTML = "";
+        addArrow("left", step3HTML);
     }
 </script>
