@@ -1,5 +1,6 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomArmor;
 
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterArmor.CpRedCharacterArmorPlace;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,4 +15,5 @@ public class AddCharacterCustomArmorRequest {
     private Long armorId;
     private Long characterId;
     private CpRedCharacterItemStatus status;
+    private CpRedCharacterArmorPlace place;
 }
