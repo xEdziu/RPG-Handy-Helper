@@ -160,6 +160,7 @@
                 }
             ).then(data => {
                 userInfo = data;
+                scheduler.creatorId = userInfo.id;
             }).catch(error => {
                 console.error('Error fetching user info:', error);
             });
@@ -168,6 +169,7 @@
             const parts = window.location.pathname.split('/');
             const gameIdString = parts[parts.indexOf('games') + 1];
             gameId = parseInt(gameIdString);
+            scheduler.gameId = gameId;
         }
         function getGameFromId() {
             if (gameId === null) {
@@ -230,6 +232,25 @@
             step2HTML();
         }
         function validateStep2() {
+            const dateRangeBox = document.getElementById("dateRangeBox");
+            const dateRanges = dateRangeBox.querySelectorAll("div");
+            const count = Math.ceil(dateRanges.length / 3);
+            const newDateRanges = [];
+            for (let i = 1; i <= count; i++) {
+                const startDate = document.getElementById(`dateRangeFrom${i}`).value;
+                const endDate = document.getElementById(`dateRangeTo${i}`).value;
+                if (startDate && endDate) {
+                    newDateRanges.push({
+                        startDate: startDate,
+                        endDate: endDate
+                    });
+                }
+            }
+            scheduler.dateRanges = newDateRanges;
+            step3HTML();
+        }
+
+        function validateStep3() {
 
         }
     </script>
@@ -377,7 +398,7 @@
     function addDateRangeHTML(start, end) {
         const dateRangeBox = document.getElementById("dateRangeBox");
         const dateRanges = dateRangeBox.querySelectorAll("div");
-        const count = Math.ceil(dateRanges.length / 3)
+        const count = Math.max(Math.ceil(dateRanges.length / 3), 0);
         const previousDataRangeFrom = document.getElementById(`dateRangeFrom${count}`);
         const previousDataRangeTo = document.getElementById(`dateRangeTo${count}`);
         if (previousDataRangeFrom && previousDataRangeTo) {
@@ -422,12 +443,14 @@
                 </label>
             </div>
         `;
-        if (start && end) {
-            document.getElementById(`dateRangeFrom${count + 1}`).value = start;
-            document.getElementById(`dateRangeTo${count + 1}`).value = end;
-        }
         boxDateRange.innerHTML = dateRangeHTML;
         box.appendChild(boxDateRange);
+        const prewDateRangeFrom = document.getElementById(`dateRangeFrom${count + 1}`);
+        const prewDateRangeTo = document.getElementById(`dateRangeTo${count + 1}`);
+        if ((start && end)) {
+            prewDateRangeFrom.value = start;
+            prewDateRangeTo.value = end;
+        }
         limitDateInput(`dateRangeFrom${count + 1}`, "Today");
         const dateRangeFrom = document.getElementById(`dateRangeFrom${count + 1}`);
         const dateRangeTo = document.getElementById(`dateRangeTo${count + 1}`);
@@ -455,11 +478,13 @@
                 
             </div>
         `;
-        addDateRangeHTML();
         if (scheduler.dateRanges.length > 0) {
-            scheduler.dateRanges.forEach(range => {
-                addDateRangeHTML(range.start, range.end);
-            });
+            for (let i = 0; i < scheduler.dateRanges.length; i++) {
+                const range = scheduler.dateRanges[i];
+                addDateRangeHTML(range.startDate, range.endDate);
+            }
+        } else {
+            addDateRangeHTML();
         }
         document.getElementById("buttons-controler").innerHTML = "";
         addArrow("right", validateStep2);
@@ -472,6 +497,14 @@
             addDateRangeHTML();
         });
         document.getElementById("buttons-controler").appendChild(divAddDateRange);
-        addArrow("left", step1HTML);
+        addArrow("left", step3HTML);
+    }
+    function step3HTML() {
+        console.log(scheduler);
+        const box = document.getElementById("scheduler-create-status");
+        box.innerHTML = "";
+        document.getElementById("buttons-controler").innerHTML = "";
+        addArrow("right", validateStep3);
+        addArrow("left", step2HTML);
     }
 </script>
