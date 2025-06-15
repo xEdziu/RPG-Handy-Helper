@@ -8,6 +8,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class CpRedCharacterCustomCyberwareDTO {
+    private Long Id;
     private Long cyberwareId;
     private Long characterId;
     private String status;
