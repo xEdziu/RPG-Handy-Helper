@@ -1,0 +1,182 @@
+package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCriticalInjuries;
+
+import dev.goral.rpghandyhelper.game.Game;
+import dev.goral.rpghandyhelper.game.GameStatus;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterEnemies.CpRedCharacterEnemies;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterFriends.CpRedCharacterFriends;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterFriends.CpRedCharacterFriendsDTO;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterFriends.CpRedCharacterFriendsRequest;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.criticalInjuries.CpRedCriticalInjuries;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.criticalInjuries.CpRedCriticalInjuriesRepository;
+import dev.goral.rpghandyhelper.security.CustomReturnables;
+import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
+import dev.goral.rpghandyhelper.user.User;
+import dev.goral.rpghandyhelper.user.UserRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+@Service
+@AllArgsConstructor
+public class CpRedCharacterCriticalInjuriesService {
+    private final dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCriticalInjuries.CpRedCharacterCriticalInjuriesRepository CpRedCharacterCriticalInjuriesRepository;
+    private final UserRepository userRepository;
+    private final CpRedCharactersRepository cpRedCharactersRepository;
+    private  final GameUsersRepository gameUsersRepository;
+    private final CpRedCharacterCriticalInjuriesRepository cpRedCharacterCriticalInjuriesRepository;
+    private final CpRedCriticalInjuriesRepository cpRedCriticalInjuriesRepository;
+
+    public Map<String, Object> getAllCriticalInjuries() {
+        List<CpRedCharacterCriticalInjuries> injuries = CpRedCharacterCriticalInjuriesRepository.findAll();
+        List<CpRedCharacterCriticalInjuriesDTO> injuriesDTO = injuries.stream().map(injury ->
+                new CpRedCharacterCriticalInjuriesDTO(
+                        injury.getStatus().toString(),
+                        injury.getCharacterId().getId(),
+                        injury.getInjuriesId().getId()
+                )).toList();
+        if (injuriesDTO.isEmpty()) {
+            return CustomReturnables.getOkResponseMap("Brak krytycznych ran dla tej postaci  .");
+        }
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano rany krytyczne dla tej postaci.");
+        response.put("injuries", injuriesDTO);
+        return response;
+    }
+    public  Map<String, Object> getCriticalInjuryById(Long injuryId) {
+        CpRedCharacterCriticalInjuriesDTO injury = CpRedCharacterCriticalInjuriesRepository.findById(injuryId)
+                .map(cpRedCharacterCriticalInjuries -> new CpRedCharacterCriticalInjuriesDTO(
+                        cpRedCharacterCriticalInjuries.getStatus().toString(),
+                        cpRedCharacterCriticalInjuries.getCharacterId().getId(),
+                        cpRedCharacterCriticalInjuries.getInjuriesId().getId()
+                )).orElseThrow(() -> new ResourceNotFoundException("Rana krytyczna o id " + injuryId + " nie została znaleziona"));
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano ranę krytyczną dla tej postaci.");
+        response.put("injury", injury);
+        return response;
+    }
+
+    public Map<String, Object> getCriticalInjuriesByCharacterId(Long characterId) {
+        List<CpRedCharacterCriticalInjuries> injuries = CpRedCharacterCriticalInjuriesRepository.findAllByCharacterId_Id(characterId);
+        if (injuries.isEmpty()) {
+            return CustomReturnables.getOkResponseMap("Brak ran krytycznych dla postaci o id " + characterId);
+        }
+        List<CpRedCharacterCriticalInjuriesDTO> injuriesDTO = injuries.stream().map(injury ->
+                new CpRedCharacterCriticalInjuriesDTO(
+                        injury.getStatus().toString(),
+                        injury.getCharacterId().getId(),
+                        injury.getInjuriesId().getId()
+                )).toList();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano rany krytyczne w dla postaci o id " + characterId);
+        response.put("injuries", injuriesDTO);
+        return response;
+    }
+    public Map<String, Object> getAllCriticalInjuriesForAdmin() {
+        List<CpRedCharacterCriticalInjuries> allInjuries = CpRedCharacterCriticalInjuriesRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano rany krytyczne w dla tej postaci.");
+        response.put("injuries", allInjuries);
+        return response;
+    }
+
+    public Map<String,Object> addInjury(CpRedCharacterCriticalInjuriesRequest cpRedCharacterCriticalInjuriesRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+        if(cpRedCharacterCriticalInjuriesRequest.getCharacterId() == null ||
+                cpRedCharacterCriticalInjuriesRequest.getInjuriesId() == null||
+                cpRedCharacterCriticalInjuriesRequest.getStatus() == null) {
+            throw new IllegalArgumentException("Wszystkie pola są wymagane.");
+        }
+
+        CpRedCharacters character = cpRedCharactersRepository.findById(cpRedCharacterCriticalInjuriesRequest.getCharacterId())
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + cpRedCharacterCriticalInjuriesRequest.getCharacterId() + " nie została znaleziona"));
+
+        CpRedCriticalInjuries injuries = cpRedCriticalInjuriesRepository.findById(cpRedCharacterCriticalInjuriesRequest.getInjuriesId())
+                .orElseThrow(() -> new ResourceNotFoundException("Rana krytyczna o id " + cpRedCharacterCriticalInjuriesRequest.getInjuriesId() + " nie została znaleziona"));
+
+        Game game=character.getGame();
+        if (game == null) {
+            throw new ResourceNotFoundException("Gra dla tej postaci nie została znaleziona.");
+        }
+
+        if (game.getStatus()!= GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra nie jest aktywna.");
+        }
+
+        GameUsers gameUsers = gameUsersRepository.findByGameIdAndUserId(character.getGame().getId(), currentUser.getId());
+        if (gameUsers == null) {
+            throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
+        }
+
+        if(character.getUser()==null){
+            if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+                throw new IllegalStateException("Nie masz uprawnień do dodawania ran krytycznych dla tej postaci.");
+            }
+        }
+        else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+            if (!character.getUser().getId().equals(currentUser.getId())) {
+                throw new IllegalStateException("Nie masz uprawnień do dodawania ran krytycznych dla tej postaci.");
+            }
+        }
+
+        if( CpRedCharacterCriticalInjuriesRepository.existsByInjuriesIdAndCharacterId(cpRedCharacterCriticalInjuriesRequest.getInjuriesId(), character)) {
+            throw new IllegalArgumentException("Rana krytyczna o tym Id już istnieje dla tej postaci.");
+        }
+
+        CpRedCharacterCriticalInjuries newInjury = new CpRedCharacterCriticalInjuries(
+                null,
+                character,
+                injuries,
+                cpRedCharacterCriticalInjuriesRequest.getStatus()
+        );
+        cpRedCharacterCriticalInjuriesRepository.save(newInjury);
+        return CustomReturnables.getOkResponseMap("Rany krytyczne zostały dodane do postaci.");
+    }
+
+    public Map<String, Object> deleteEnemy(Long enemyId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        CpRedCharacterEnemies enemy = cpRedCharacterEnemiesRepository.findById(enemyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Wróg o id " + enemyId + " nie został znaleziony"));
+
+        CpRedCharacters character = cpRedCharactersRepository.findById(enemy.getCharacterId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + enemy.getCharacterId().getId() + " nie została znaleziona"));
+
+        Game game=character.getGame();
+        if (game == null) {
+            throw new ResourceNotFoundException("Gra dla tej postaci nie została znaleziona.");
+        }
+
+        if (game.getStatus()!= GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra nie jest aktywna.");
+        }
+        GameUsers gameUsers = gameUsersRepository.findByUserId(currentUser.getId());
+        if (gameUsers == null) {
+            throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
+        }
+
+        if(character.getUser()==null){
+            if( gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
+                throw new IllegalStateException("Nie masz uprawnień do usuwania wrogów dla tej postaci.");
+            }
+        } else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
+            if (!character.getUser().getId().equals(currentUser.getId())) {
+                throw new IllegalStateException("Nie masz uprawnień do usuwania wrogów dla tej postaci.");
+            }
+        }
+        cpRedCharacterEnemiesRepository.deleteById(enemyId);
+        return CustomReturnables.getOkResponseMap("Wróg o id " + enemyId + " został usunięty.");
+    }
+
+
+}
