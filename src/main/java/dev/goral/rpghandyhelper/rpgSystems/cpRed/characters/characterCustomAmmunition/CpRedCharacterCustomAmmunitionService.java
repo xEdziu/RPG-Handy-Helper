@@ -1,4 +1,4 @@
-package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterAmmunition;
+package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomAmmunition;
 
 import dev.goral.rpghandyhelper.game.Game;
 import dev.goral.rpghandyhelper.game.GameRepository;
@@ -9,12 +9,10 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeapon.CpRedCharacterCustomWeaponRepository;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeaponRepository;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.compatibility.ammunition.CpRedAmmunitionCompatibilityRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterAmmunition.CpRedCharacterAmmunition;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customAmmunition.CpRedCustomAmmunition;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customAmmunition.CpRedCustomAmmunitionRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.ammunition.CpRedAmmunition;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.ammunition.CpRedAmmunitionRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpghandyhelper.user.User;
@@ -30,52 +28,53 @@ import java.util.Objects;
 
 @Service
 @AllArgsConstructor
-public class CpRedCharacterAmmunitionService {
-    private final CpRedCharacterAmmunitionRepository characterAmmunitionRepository;
-    private final CpRedAmmunitionRepository ammunitionRepository;
+public class CpRedCharacterCustomAmmunitionService {
+    private final CpRedCharacterCustomAmmunitionRepository characterCustomAmmunitionRepository;
+    private final CpRedCustomAmmunitionRepository customAmmunitionRepository;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
     private final CpRedCharactersRepository cpRedCharactersRepository;
 
-    public Map<String, Object> getCharacterAmmunition(Long characterId) {
+    public Map<String, Object> getCharacterCustomAmmunition(Long characterId) {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
-        List<CpRedCharacterAmmunitionDTO> characterAmunutionList = characterAmmunitionRepository.findAllByCharacterId(characterId)
+        List<CpRedCharacterCustomAmmunitionDTO> characterCustomAmmunitionList = characterCustomAmmunitionRepository
+                .findAllByCharacterId(characterId)
                 .stream()
-                .map(characterAmmunition -> new CpRedCharacterAmmunitionDTO(
-                        characterAmmunition.getId(),
-                        characterAmmunition.getCharacter().getId(),
-                        characterAmmunition.getAmmunition().getId(),
-                        characterAmmunition.getStatus().toString(),
-                        characterAmmunition.getAmount()
-                ))
+                .map(characterCustomAmmunition -> new CpRedCharacterCustomAmmunitionDTO(
+                        characterCustomAmmunition.getId(),
+                        characterCustomAmmunition.getCharacter().getId(),
+                        characterCustomAmmunition.getCustomAmmunition().getId(),
+                        characterCustomAmmunition.getStatus().toString(),
+                        characterCustomAmmunition.getAmount()
+                        ))
                 .toList();
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Amunicje postaci pobrane pomyślnie");
-        response.put("characterAmmunition", characterAmunutionList);
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Customowe amunicje postaci pobrane pomyślnie");
+        response.put("characterCustomAmmunition", characterCustomAmmunitionList);
         return response;
     }
 
-    public Map<String, Object> createCharacterAmmunition(AddCharacterAmmunitionRequest addCharacterAmmunitionRequest) {
+    public Map<String, Object> createCharacterCustomAmmunition(AddCharacterCustomAmmunitionRequest addCharacterCustomAmmunitionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
-        if(addCharacterAmmunitionRequest.getCharacterId() == null ||
-                addCharacterAmmunitionRequest.getAmmunitionId() == null ||
-                addCharacterAmmunitionRequest.getStatus() == null ||
-                addCharacterAmmunitionRequest.getAmount() == null) {
+        if(addCharacterCustomAmmunitionRequest.getCharacterId() == null ||
+                addCharacterCustomAmmunitionRequest.getCustomAmmunitionId() == null ||
+                addCharacterCustomAmmunitionRequest.getStatus() == null ||
+                addCharacterCustomAmmunitionRequest.getAmount() == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
 
         // Czy istnieje character o podanym ID
-        CpRedCharacters character = cpRedCharactersRepository.findById(addCharacterAmmunitionRequest.getCharacterId())
+        CpRedCharacters character = cpRedCharactersRepository.findById(addCharacterCustomAmmunitionRequest.getCharacterId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
 
         // Czy istnieje broń o podanym ID
-        CpRedAmmunition ammunition = ammunitionRepository.findById(addCharacterAmmunitionRequest.getAmmunitionId())
-                .orElseThrow(() -> new ResourceNotFoundException("Amunicja o podanym ID nie została znaleziona."));
+        CpRedCustomAmmunition customAmmunition = customAmmunitionRepository.findById(addCharacterCustomAmmunitionRequest.getCustomAmmunitionId())
+                .orElseThrow(() -> new ResourceNotFoundException("Customowa amunicja o podanym ID nie została znaleziona."));
 
         Game game = gameRepository.findById(character.getGame().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Gra powiązana z postacią nie została znaleziona."));
@@ -91,7 +90,7 @@ public class CpRedCharacterAmmunitionService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może dodawać amunicje postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może dodawać customowe amunicje postaci NPC.");
             }
         }
         // Czy gra jest aktywna
@@ -100,40 +99,40 @@ public class CpRedCharacterAmmunitionService {
         }
 
         // Czy istnieje już taka amunicja dla tej postaci
-        if (characterAmmunitionRepository.existsByCharacterAndAmmunition(character, ammunition)) {
-            throw new IllegalArgumentException("Postać ma już przypisaną tę amunicję.");
+        if (characterCustomAmmunitionRepository.existsByCharacterAndCustomAmmunition(character, customAmmunition)) {
+            throw new IllegalArgumentException("Postać ma już przypisaną tę customową amunicję.");
         }
 
-        if (addCharacterAmmunitionRequest.getAmount() < 0) {
-            throw new IllegalArgumentException("Ilość amunicji nie może być mniejsza niż 0.");
+        if (addCharacterCustomAmmunitionRequest.getAmount() < 0) {
+            throw new IllegalArgumentException("Ilość customowej amunicji nie może być mniejsza niż 0.");
         }
 
-        CpRedCharacterAmmunition newCharacterAmmunition = new CpRedCharacterAmmunition(
+        CpRedCharacterCustomAmmunition newCharacterCustomAmmunition = new CpRedCharacterCustomAmmunition(
                 null,
                 character,
-                ammunition,
-                addCharacterAmmunitionRequest.getStatus(),
-                addCharacterAmmunitionRequest.getAmount()
+                customAmmunition,
+                addCharacterCustomAmmunitionRequest.getStatus(),
+                addCharacterCustomAmmunitionRequest.getAmount()
         );
 
-        characterAmmunitionRepository.save(newCharacterAmmunition);
+        characterCustomAmmunitionRepository.save(newCharacterCustomAmmunition);
 
-        return CustomReturnables.getOkResponseMap("Amunicja została dodana do postaci");
+        return CustomReturnables.getOkResponseMap("Customowa amunicja została dodana do postaci");
     }
 
-    public Map<String, Object> updateCharacterAmmunition(Long characterAmmunitionId,
-                                                         UpdateCharacterAmmunitionRequest updateCharacterAmmunitionRequest) {
+    public Map<String, Object> updateCharacterCustomAmmunition(Long characterCustomAmmunitionId,
+                                                               UpdateCharacterCustomAmmunitionRequest updateCharacterCustomAmmunitionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         // Czy istnieje amunicja postaci o podanym ID
-        CpRedCharacterAmmunition characterAmmunitionToUpdate = characterAmmunitionRepository.findById(characterAmmunitionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Amunicja postaci o podanym ID nie została znaleziona."));
+        CpRedCharacterCustomAmmunition characterCustomAmmunitionToUpdate = characterCustomAmmunitionRepository.findById(characterCustomAmmunitionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customowa amunicja postaci o podanym ID nie została znaleziona."));
 
         // Czy istnieje postać o podanym ID
-        CpRedCharacters character = cpRedCharactersRepository.findById(characterAmmunitionToUpdate.getCharacter().getId())
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterCustomAmmunitionToUpdate.getCharacter().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
 
         Game game = gameRepository.findById(character.getGame().getId())
@@ -150,7 +149,7 @@ public class CpRedCharacterAmmunitionService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może zmieniać amunicje postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może zmieniać customowe amunicje postaci NPC.");
             }
         }
 
@@ -159,34 +158,34 @@ public class CpRedCharacterAmmunitionService {
             throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
         }
 
-        if (updateCharacterAmmunitionRequest.getStatus() != null) {
-            characterAmmunitionToUpdate.setStatus(updateCharacterAmmunitionRequest.getStatus());
+        if (updateCharacterCustomAmmunitionRequest.getStatus() != null) {
+            characterCustomAmmunitionToUpdate.setStatus(updateCharacterCustomAmmunitionRequest.getStatus());
         }
 
-        if (updateCharacterAmmunitionRequest.getAmount() != null){
-            if (updateCharacterAmmunitionRequest.getAmount() < 0) {
-                throw new IllegalArgumentException("Ilość amunicji nie może być mniejsza niż 0.");
+        if (updateCharacterCustomAmmunitionRequest.getAmount() != null){
+            if (updateCharacterCustomAmmunitionRequest.getAmount() < 0) {
+                throw new IllegalArgumentException("Ilość customowej amunicji nie może być mniejsza niż 0.");
             }
-            characterAmmunitionToUpdate.setAmount(updateCharacterAmmunitionRequest.getAmount());
+            characterCustomAmmunitionToUpdate.setAmount(updateCharacterCustomAmmunitionRequest.getAmount());
         }
 
-        characterAmmunitionRepository.save(characterAmmunitionToUpdate);
+        characterCustomAmmunitionRepository.save(characterCustomAmmunitionToUpdate);
 
-        return CustomReturnables.getOkResponseMap("Amunicja postaci została pomyślnie zmodyfikowana");
+        return CustomReturnables.getOkResponseMap("Customowa amunicja postaci została pomyślnie zmodyfikowana");
     }
 
-    public Map<String, Object> deleteCharacterAmmunition(Long characterAmmunitionId) {
+    public Map<String, Object> deleteCharacterCustomAmmunition(Long characterCustomAmmunitionId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         // Czy istnieje amunicja postaci o podanym ID
-        CpRedCharacterAmmunition characterAmmunitionToDelete = characterAmmunitionRepository.findById(characterAmmunitionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Amunicja postaci o podanym ID nie została znaleziona."));
+        CpRedCharacterCustomAmmunition characterCustomAmmunitionToDelete = characterCustomAmmunitionRepository.findById(characterCustomAmmunitionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customowa amunicja postaci o podanym ID nie została znaleziona."));
 
         // Czy istnieje postać o podanym ID
-        CpRedCharacters character = cpRedCharactersRepository.findById(characterAmmunitionToDelete.getCharacter().getId())
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterCustomAmmunitionToDelete.getCharacter().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
 
         Game game = gameRepository.findById(character.getGame().getId())
@@ -203,7 +202,7 @@ public class CpRedCharacterAmmunitionService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może zmieniać amunicje postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może zmieniać customowe amunicje postaci NPC.");
             }
         }
 
@@ -213,15 +212,16 @@ public class CpRedCharacterAmmunitionService {
         }
 
         // Usunięcie amunicji postaci
-        characterAmmunitionRepository.deleteById(characterAmmunitionId);
+        characterCustomAmmunitionRepository.deleteById(characterCustomAmmunitionId);
 
-        return CustomReturnables.getOkResponseMap("Amunicja postaci została pomyślnie usunięta");
+        return CustomReturnables.getOkResponseMap("Customowa amunicja postaci została pomyślnie usunięta");
     }
 
-    public Map<String, Object> getAllCharacterAmmunition() {
-        List<CpRedCharacterAmmunition> allCharacterAmmunition = characterAmmunitionRepository.findAll();
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie amunicje postaci pobrane pomyślnie");
-        response.put("allCharacterAmmunition", allCharacterAmmunition);
+    // ============ Admin methods ============
+    public Map<String, Object> getAllCharacterCustomAmmunition() {
+        List<CpRedCharacterCustomAmmunition> allCharacterCustomAmmunition = characterCustomAmmunitionRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie customowe amunicje postaci pobrane pomyślnie");
+        response.put("allCharacterCustomAmmunition", allCharacterCustomAmmunition);
         return response;
     }
 }
