@@ -82,7 +82,7 @@
             ],
             participantIds: []
         }
-
+        var dataRangeNumber = 1;
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
             step1HTML();
@@ -271,7 +271,13 @@
         <section id="create-sheduler" class="w-[80%] min-h-[50%] flex flex-col items-center justify-center">
             <article id="scheduler-create-status"
                 class="w-full h-full flex flex-col items-center justify-center w-full max-w-3xl p-8 text-light-textPrimary dark:text-dark-textPrimary bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg">
+                <h1
+                    class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    Wybierz daty i godziny spotkania:
+                </h1>
+                <div class="">
 
+                </div>
             </article>
             <div id="buttons-controler"
                 class="flex flex-row-reverse justify-between items-center w-full max-w-3xl p-4 text-dark-textPrimary dark:text-light-textPrimary">
@@ -351,29 +357,121 @@
         limitDateInput("dateScheduler", "Today");
         addArrow("right", validateStep1);
     }
+    function validateDateRange(dateFromId, dateToId) {
+        const dateFrom = document.getElementById(dateFromId).value;
+        const dateTo = document.getElementById(dateToId).value;
+        if (dateFrom && dateTo) {
+            const fromDate = new Date(dateFrom);
+            const toDate = new Date(dateTo);
+            if (toDate < fromDate) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: 'Data "do" nie może być wcześniejsza niż data "od".',
+                });
+                return false;
+            }
+        }
+        return true;
+    }
+    function addDateRangeHTML(start, end) {
+        const dateRangeBox = document.getElementById("dateRangeBox");
+        const dateRanges = dateRangeBox.querySelectorAll("div");
+        const count = Math.ceil(dateRanges.length / 3)
+        const previousDataRangeFrom = document.getElementById(`dateRangeFrom${count}`);
+        const previousDataRangeTo = document.getElementById(`dateRangeTo${count}`);
+        if (previousDataRangeFrom && previousDataRangeTo) {
+            const previousStart = previousDataRangeFrom.value;
+            const previousEnd = previousDataRangeTo.value;
+            if (!previousStart || !previousEnd) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Musisz wypełnić poprzedni zakres dat przed dodaniem nowego.`,
+                });
+                return;
+            }
+            console.log(`Poprzedni zakres dat: Od ${previousStart} do ${previousEnd}`);
+        }
+        if (count + 1 > 5) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Informacja',
+                text: `Możesz dodać maksymalnie 5 zakresów dat.`,
+            });
+            return;
+        }
+        const box = document.getElementById("dateRangeBox");
+        const boxDateRange = document.createElement("div");
+        boxDateRange.className = "flex flex-row items-center justify-center w-full max-w-3xl p-4";
+        const dateRangeHTML = `
+            <div class="relative mx-5 my-2 w-full">
+                <input type="date" id="dateRangeFrom${count + 1}" name="dateRange${count + 1}" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary   bg-light-background   dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none  focus:ring-0   focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary  dark:placeholder-dark-textSecondary  text-base" />
+                <label for="dateRangeFrom${count + 1}"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90    top-4  z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent     peer-placeholder-shown:scale-100     peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4     rtl:peer-focus:translate-x-1/4   rtl:peer-focus:left-auto">
+                    Od
+                </label>
+            </div> 
+            <div class="relative mx-5 my-2 w-full">
+                <input type="date" id="dateRangeTo${count + 1}" name="dateRange${count + 1}" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary   bg-light-background   dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none  focus:ring-0   focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary  dark:placeholder-dark-textSecondary  text-base" />
+                <label for="dateRangeTo${count + 1}"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90    top-4  z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent     peer-placeholder-shown:scale-100     peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4     rtl:peer-focus:translate-x-1/4   rtl:peer-focus:left-auto">
+                    do
+                </label>
+            </div>
+        `;
+        if (start && end) {
+            document.getElementById(`dateRangeFrom${count + 1}`).value = start;
+            document.getElementById(`dateRangeTo${count + 1}`).value = end;
+        }
+        boxDateRange.innerHTML = dateRangeHTML;
+        box.appendChild(boxDateRange);
+        limitDateInput(`dateRangeFrom${count + 1}`, "Today");
+        const dateRangeFrom = document.getElementById(`dateRangeFrom${count + 1}`);
+        const dateRangeTo = document.getElementById(`dateRangeTo${count + 1}`);
+        dateRangeFrom.addEventListener('change', () => {
+            limitDateInput(`dateRangeTo${count + 1}`, dateRangeFrom.value || "Today");
+        });
+        dateRangeTo.addEventListener('change', () => {
+            if (!validateDateRange(`dateRangeFrom${count + 1}`, `dateRangeTo${count + 1}`)) {
+                dateRangeTo.value = "";
+            }
+        });
+        dateRangeFrom.addEventListener('change', () => {
+            if (!validateDateRange(`dateRangeFrom${count + 1}`, `dateRangeTo${count + 1}`)) {
+                dateRangeTo.value = "";
+            }
+        });
+    }
     function step2HTML() {
         const box = document.getElementById("scheduler-create-status");
         box.innerHTML = `
-            <h1
-                class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
-                Wybierz daty i godziny spotkania:
+            <h1 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                Wybierz daty możliwych spotkań:
             </h1>
-            <div id="date-ranges" class="w-full flex flex-col items-center justify-center">
-                <!-- Tu będą dodawane zakresy dat -->
+            <div id="dateRangeBox" class="flex flex-col items-center justify-center w-full">
+                
             </div>
-            <div id="time-ranges" class="w-full flex flex-col items-center justify-center">
-                <!-- Tu będą dodawane zakresy godzin -->
-            </div>
-            
-
-
-
-
-            
-            
         `;
+        addDateRangeHTML();
+        if (scheduler.dateRanges.length > 0) {
+            scheduler.dateRanges.forEach(range => {
+                addDateRangeHTML(range.start, range.end);
+            });
+        }
         document.getElementById("buttons-controler").innerHTML = "";
         addArrow("right", validateStep2);
+        const divAddDateRange = document.createElement("div");
+        divAddDateRange.className = "flex items-center justify-center w-10 h-10 bg-light-accent dark:bg-dark-accent rounded-full cursor-pointer";
+        const addDateRangeIcon = document.createElement("i");
+        addDateRangeIcon.className = "fa-solid fa-plus text-dark-textPrimary dark:text-light-textPrimary cursor-pointer";
+        divAddDateRange.appendChild(addDateRangeIcon);
+        divAddDateRange.addEventListener("click", () => {
+            addDateRangeHTML();
+        });
+        document.getElementById("buttons-controler").appendChild(divAddDateRange);
         addArrow("left", step1HTML);
     }
 </script>
