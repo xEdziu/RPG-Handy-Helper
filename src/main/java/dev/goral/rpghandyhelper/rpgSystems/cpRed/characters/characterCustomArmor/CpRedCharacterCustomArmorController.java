@@ -1,6 +1,5 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomArmor;
 
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeapon.CpRedCharacterCustomWeaponService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -9,7 +9,6 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterArmor.CpRedCharacterArmor;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmors;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmorsRepository;
@@ -100,7 +99,7 @@ public class CpRedCharacterCustomArmorService {
         }
 
         if (addCharacterCustomArmorRequest.getStatus() == CpRedCharacterItemStatus.EQUIPPED){
-            List<CpRedCharacterCustomArmor> placedArmors = cpRedCharacterCustomArmorRepository.findAllByCharacterAndPlace(character, addCharacterCustomArmorRequest.getPlace());
+            List<CpRedCharacterCustomArmor> placedArmors = cpRedCharacterCustomArmorRepository.findAllByCharacterIdAndPlace(character, addCharacterCustomArmorRequest.getPlace());
             // Sprawdzenie miejsca pancerza
             for (CpRedCharacterCustomArmor placedArmor : placedArmors) {
                 if (placedArmor.getStatus() == CpRedCharacterItemStatus.EQUIPPED && placedArmor.getPlace() == addCharacterCustomArmorRequest.getPlace()) {
@@ -176,7 +175,7 @@ public Map<String,Object> updateCharacterCustomArmor(Long characterCustomArmorId
 
     if (updateCharacterCustomArmorRequest.getStatus() != null){
         if (updateCharacterCustomArmorRequest.getStatus() == CpRedCharacterItemStatus.EQUIPPED){
-            List<CpRedCharacterCustomArmor> placedArmors = cpRedCharacterCustomArmorRepository.findAllByCharacterAndPlace(character, characterCustomArmorToUpdate.getPlace());
+            List<CpRedCharacterCustomArmor> placedArmors = cpRedCharacterCustomArmorRepository.findAllByCharacterIdAndPlace(character, characterCustomArmorToUpdate.getPlace());
             for (CpRedCharacterCustomArmor placedArmor : placedArmors) {
                 if (placedArmor.getStatus() == CpRedCharacterItemStatus.EQUIPPED && placedArmor.getPlace() == characterCustomArmorToUpdate.getPlace()) {
                     throw new IllegalArgumentException("Nie można mieć założonych więcej niż jednego pancerza w tym miejscu.");

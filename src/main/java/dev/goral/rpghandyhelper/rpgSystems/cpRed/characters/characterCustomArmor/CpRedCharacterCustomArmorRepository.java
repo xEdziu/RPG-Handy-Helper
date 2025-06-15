@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface CpRedCharacterCustomArmorRepository extends JpaRepository<CpRedCharacterCustomArmor, Long> {
     List<CpRedCharacterCustomArmor> findAllByCharacterId(CpRedCharacters character);
-    List<CpRedCharacterCustomArmor> findAllByCharacterAndPlace(CpRedCharacters character, CpRedCharacterArmorPlace place);
+    List<CpRedCharacterCustomArmor> findAllByCharacterIdAndPlace(CpRedCharacters character, CpRedCharacterArmorPlace place);
 
 }
