@@ -177,7 +177,7 @@ public class CpRedCharacterCustomCyberwareService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         CpRedCharacterCustomCyberware characterCustomCyberware = cpRedCharacterCustomCyberwareRepository.findById(characterCustomCyberwareId)
-                .orElseThrow(() -> new ResourceNotFoundException("Wszczep postaci o podanym ID nie została znaleziona."));
+                .orElseThrow(() -> new ResourceNotFoundException("Wszczep postaci o podanym ID nie został znaleziony."));
 
         CpRedCharacters character = cpRedCharactersRepository.findById(characterCustomCyberware.getCharacterId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
