@@ -166,7 +166,7 @@
             }).then(data => {
                 userInGame = data.gameUsers;
                 userInfo
-                if (userInGame.some(user => user.userId === userInfo.id)) {
+                if (userInGame.some(user => user.userId === userInfo.id && user.role == "GAMEMASTER")) {
                     userInfo.isGmForThisGame = true;
                     AddForGM();
                 } else {
