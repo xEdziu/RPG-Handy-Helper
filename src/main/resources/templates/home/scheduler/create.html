@@ -674,18 +674,26 @@
                 Podsumowanie Schedulera:
             </h1>
             <div id="summaryBox" class="flex flex-col items-center justify-center w-full">
-                <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary">Tytuł: ${scheduler.title}</p>
-                <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary">Deadline: ${scheduler.deadline}</p>
-                <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary">Czas minimalny spotkania: ${scheduler.minimumSessionDurationMinutes} minut</p>
-                <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary">Liczba uczestników: ${scheduler.participantIds.length}</p>
-                <h2 class="text-lg font-bold mt-4 text-light-textPrimary dark:text-dark-textPrimary">Zakresy dat:</h2>
-                <ul class="list-disc pl-5">
-                    ${scheduler.dateRanges.map(range => `<li>${range.startDate} - ${range.endDate}</li>`).join('')}
-                </ul>
-                <h2 class="text-lg font-bold mt-4 text-light-textPrimary dark:text-dark-textPrimary">Bloki czasowe:</h2>
-                <ul class="list-disc pl-5">
-                    ${scheduler.timeRanges.map(range => `<li>${range.startTime} - ${range.endTime}</li>`).join('')}
-                </ul>
+                <div class="flex flex-col items-start justify-center w-full mb-4">
+                    <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary"><span class="font-bold"> Tytuł: </span> ${scheduler.title}</p>
+                    <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary"><span class="font-bold">Deadline:</span> ${scheduler.deadline}</p>
+                    <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary"><span class="font-bold">Minimalny czas trwania:</span> ${scheduler.minimumSessionDurationMinutes} ${pluralizeMinutesDisplay(scheduler.minimumSessionDurationMinutes)}</p>
+                    <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary"><span class="font-bold">Liczba uczestników:</span> ${scheduler.participantIds.length}</p>
+                </div>
+                <div class="flex flex-row items-center justify-between w-full mb-4">
+                    <div class="w-[50%] flex flex-col items-center justify-center">
+                        <h2 class="text-lg font-bold mt-4 text-light-textPrimary dark:text-dark-textPrimary">Zakresy dat:</h2>
+                        <ul class="list-disc pl-5">
+                            ${scheduler.dateRanges.map(range => `<li>${range.startDate} - ${range.endDate}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="w-[50%] flex flex-col items-center justify-center"> 
+                        <h2 class="text-lg font-bold mt-4 text-light-textPrimary dark:text-dark-textPrimary">Bloki czasowe:</h2>
+                        <ul class="list-disc pl-5">
+                            ${scheduler.timeRanges.map(range => `<li>${range.startTime} - ${range.endTime}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
             </div>
         `;
         // Tutaj możesz dodać kod do wyświetlenia podsumowania schedulera
