@@ -64,7 +64,7 @@
         };
 
         // ===== Zmienne Globalne =====
-        var userInfo = [];
+        var userInfo = {};
         var gameId = null;
         var userInGame = [];
 
@@ -150,7 +150,7 @@
             const gameIdString = parts[parts.indexOf('games') + 1];
             gameId = parseInt(gameIdString);
         }
-        function getGameFromId(){
+        function getGameFromId() {
             if (gameId === null) {
                 console.error("Game ID is not set.");
                 return;
@@ -165,22 +165,24 @@
                 return response.json();
             }).then(data => {
                 userInGame = data.gameUsers;
-                if(!userInGame.some(user => user.userId === userInfo.id)) {
-                    toggleForGM();
+                userInfo
+                if (userInGame.some(user => user.userId === userInfo.id)) {
+                    userInfo.isGmForThisGame = true;
+                    AddForGM();
+                } else {
+                    userInfo.isGmForThisGame = false;
                 }
             }).catch(error => {
                 console.error('Error fetching game:', error);
             });
         }
-        function toggleForGM(){
+        function AddForGM() {
             const gmActions = document.getElementById("game-scheduler-actions");
-            cosnole.log("User Info:", userInfo);
-            if (userInfo.role == "GAMEMASTER") {
-                gmActions.classList.remove("hidden");
-                gmActions.classList.add("block");
-            } else {
-                gmActions.classList.add("hidden");
-            }
+            gmActions.innerHTML = `
+                <button id="add-scheduler" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accent-hover dark:hover:bg-dark-accent-hover" onclick="location.href='/home/games/${gameId}/schedulers/create'">
+                    Dodaj Harmonogram
+                </button>
+            `;
         }
         function loadSchedulersForGame() {
             if (gameId === null) {
@@ -196,15 +198,15 @@
                 if (!response.ok) throw new Error('Network response was not ok');
                 return response.json();
             }).then(data => {
-                if(data.schedulers.length === 0) {
-                    console.log("No schedulers found for this game.");
+                if (data.schedulers.length === 0) {
+                    const schedulerContainer = document.getElementById("scheduler-info");
+                    schedulerContainer.innerHTML = getEmptySchedulerHTML();
                 } else {
-                    const schedulerContainer = document.getElementById("game-scheduler");
+                    const schedulerContainer = document.getElementById("scheduler-info");
                     data.schedulers.forEach(scheduler => {
                         schedulerContainer.innerHTML += addScheduleHTML(scheduler);
                     });
                 }
-                console.log(data);
             }).catch(error => {
                 console.error('Error fetching game schedulers:', error);
             });
@@ -253,13 +255,10 @@
                 </h2>
             </div>
             <div id="game-scheduler-actions" class="flex items-center space-x-4">
-                <button id="add-scheduler-btn"
-                    class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-light-text dark:text-dark-text font-jetbrains-mono rounded hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition-colors" onclick="location.href=`/home/games/${gameId}/schedulers/create`">
-                    Dodaj Harmonogram
-                </button>
+
             </div>
         </aside>
-        <section class="w-full p-6">
+        <section id="scheduler-info" class="w-full p-6">
             <!-- TABELA HARMONOGRAMÓW -->
         </section>
     </main>
@@ -276,6 +275,25 @@
 
 </html>
 <script>
+    function getEmptySchedulerHTML() {
+        if(userInfo.isGmForThisGame) {
+            return `
+                <div class="text-center text-light-textSecondary dark:text-dark-textSecondary">
+                    <h3 class="text-2xl font-jetbrains-mono">Brak Harmonogramów</h3>
+                    <p class="mt-2">Nie masz jeszcze żadnych harmonogramów. Dodaj nowy, aby rozpocząć planowanie!</p>
+                    <button id="add-scheduler" class="mt-4 px-4 py-2 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accent-hover dark:hover:bg-dark-accent-hover" onclick="location.href='/home/games/${gameId}/schedulers/create'">
+                        Dodaj Harmonogram
+                    </button>
+                </div>
+            `;
+        }
+        return `
+            <div class="text-center text-light-textSecondary dark:text-dark-textSecondary">
+                <h3 class="text-2xl font-jetbrains-mono">Brak Harmonogramów</h3>
+                <p class="mt-2">Nie masz jeszcze żadnych harmonogramów. Poproś GM o stworzenie. </p>
+            </div>
+        `;
+    }
     function addScheduleHTML(scheduler) {
         return `
             
