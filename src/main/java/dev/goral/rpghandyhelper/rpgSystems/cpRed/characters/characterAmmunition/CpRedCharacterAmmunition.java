@@ -1,5 +1,8 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterAmmunition;
 
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.ammunition.CpRedAmmunition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +27,19 @@ public class CpRedCharacterAmmunition {
     )
     private Long id;
 
-    private Long characterId;
-    private Long characterWeaponId;
-    private Boolean isCharacterWeaponCustom;
-    private Long ammunitionId;
-    private Boolean isAmmunitionCustom;
+    @ManyToOne
+    @JoinColumn(
+            name = "character_id",
+            referencedColumnName = "id"
+    )
+    private CpRedCharacters character;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "ammunition_id",
+            referencedColumnName = "id"
+    )
+    private CpRedAmmunition ammunition;
+    private CpRedCharacterItemStatus status;
     private Integer amount;
 }

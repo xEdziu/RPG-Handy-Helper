@@ -2015,7 +2015,7 @@
                                             <requestState>
                                               <option name="body">
                                                 <bodyState>
-                                                  <option name="raw" value="{&#10;  characterId: 1,&#10;  characterWeaponId: 1,&#10;  isCharacterWeaponCustom: false, &#10;  ammunitionId: 1,&#10;  isAmmunitionCustom: false, &#10;  amount: 10&#10;}" />
+                                                  <option name="raw" value="{&#10;  characterId: 1,&#10;  ammunitionId: 1,&#10;  amount: 10,&#10;  status: &quot;EQUIPPED&quot; // &quot;EQUIPPED&quot;, &quot;STORED&quot;&#10;}" />
                                                   <option name="type" value="JSON" />
                                                 </bodyState>
                                               </option>
@@ -2045,7 +2045,7 @@
                                             <requestState>
                                               <option name="body">
                                                 <bodyState>
-                                                  <option name="raw" value="{&#10;  amount: 20&#10;}" />
+                                                  <option name="raw" value="{&#10;  status: &quot;EQUIPPED&quot;, // &quot;EQUIPPED&quot;, &quot;STORED&quot;&#10;  amount: 20&#10;}" />
                                                   <option name="type" value="JSON" />
                                                 </bodyState>
                                               </option>

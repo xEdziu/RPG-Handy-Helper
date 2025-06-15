@@ -1,5 +1,6 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterAmmunition;
 
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddCharacterAmmunitionRequest {
     private Long characterId;
-    private Long characterWeaponId;
-    private Boolean isCharacterWeaponCustom;
     private Long ammunitionId;
-    private Boolean isAmmunitionCustom;
     private Integer amount;
+    private CpRedCharacterItemStatus status;
 }
