@@ -195,6 +195,11 @@ public class CpRedCharacterCustomAmmunitionService {
         GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
 
+        // Czy postać należy do tej samej gry co customowa amunicja
+        if (!Objects.equals(character.getGame().getId(), game.getId())) {
+            throw new ResourceNotFoundException("Postać nie należy do gry, w której chcesz usunąć customową amunicję.");
+        }
+        
         // Czy ktoś chce zmieniać swoją postać lub jest GM-em w tej grze
         if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
             if (character.getType() != CpRedCharactersType.NPC) {
