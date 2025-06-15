@@ -229,7 +229,7 @@
                 }
             }
             scheduler.title = title;
-            scheduler.deadline = date;
+            scheduler.deadline = date+"T23:59:59";
             scheduler.minimumSessionDurationMinutes = parseInt(minTime);
             step2HTML();
         }
@@ -253,23 +253,32 @@
         }
         function validateStep3() {
             const timeRanges = [];
-            const startTime = document.getElementById("startTime").value;
-            const endTime = document.getElementById("endTime").value;
 
-            if (startTime && endTime) {
-                timeRanges.push({ startTime, endTime });
-            } else {
+            const dateRangeBox = document.getElementById("timeRangeBox");
+            const timeRangesDiv = dateRangeBox.querySelectorAll("div");
+            const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
+
+            for (let i = 1; i <= count+1; i++) {
+                const startTime = document.getElementById(`timeRangeStart${i}`).value;
+                const endTime = document.getElementById(`timeRangeEnd${i}`).value;
+                console.log(startTime, endTime);
+                if (startTime && endTime) {
+                    timeRanges.push({
+                        startTime: startTime+":00",
+                        endTime: endTime+":00"
+                    });
+                }
+            }
+            if( timeRanges.length === 0) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Błąd!',
-                    text: `Musisz wypełnić godziny przed kontynuowaniem.`,
+                    text: `Musisz dodać przynajmniej jeden blok czasowy.`,
                 });
                 return;
             }
-
-            // Zapisujemy godziny do scheduler.timeRanges
             scheduler.timeRanges = timeRanges;
-            // Przejście do następnego kroku
+            console.log(scheduler);
             step4HTML();
         }
     </script>
@@ -522,7 +531,7 @@
         const dateRangeBox = document.getElementById("timeRangeBox");
         const timeRanges = dateRangeBox.querySelectorAll("div");
         const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
-        if(count != 0){
+        if (count != 0) {
             const previousTimeRangeStart = document.getElementById(`timeRangeStart${count}`);
             const previousTimeRangeEnd = document.getElementById(`timeRangeEnd${count}`);
             if (previousTimeRangeStart && previousTimeRangeEnd) {
