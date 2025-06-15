@@ -65,10 +65,32 @@
 
         // ===== Zmienne Globalne =====
         var userInfo = [];
+        var gameId = null;
+        var userInGame = [];
+        var step = 0;
+        var scheduler = {
+            title: "",
+            deadline: "",
+            minimumSessionDurationMinutes: null,
+            gameId: gameId,
+            creatorId: userInfo.id,
+            dateRanges: [
+
+            ],
+            timeRanges: [
+
+            ],
+            participantIds: []
+        }
 
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
+            step1HTML();
+            getGameIdFromUrl();
             getUserInfo();
+            setTimeout(() => {
+                getGameFromId();
+            }, 100);
             initThemeToggle();
             applyTheme(getSavedTheme());
         });
@@ -142,6 +164,74 @@
                 console.error('Error fetching user info:', error);
             });
         }
+        function getGameIdFromUrl() {
+            const parts = window.location.pathname.split('/');
+            const gameIdString = parts[parts.indexOf('games') + 1];
+            gameId = parseInt(gameIdString);
+        }
+        function getGameFromId() {
+            if (gameId === null) {
+                console.error("Game ID is not set.");
+                return;
+            }
+            fetch(`/api/v1/authorized/game/allPlayers/${gameId}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            }).then(data => {
+                userInGame = data.gameUsers;
+                userInGame.forEach(user => {
+                    scheduler.participantIds.push(user.userId);
+                });
+            }).catch(error => {
+                console.error('Error fetching game:', error);
+            });
+        }
+        function limitDateInput(id, minData) {
+            const dateInput = document.getElementById(id);
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            const todayDate = `${year}-${month}-${day}`;
+            if (minData === 'Today') {
+                dateInput.setAttribute('min', todayDate);
+            } else {
+                dateInput.setAttribute('min', minData);
+            }
+        }
+        function validateStep1() {
+            const title = document.getElementById("titleScheduler").value.trim();
+            const date = document.getElementById("dateScheduler").value;
+            const minTime = document.getElementById("minTimeMeeting").value;
+            console.log(title, date, minTime);
+            const validateInputs = {
+                title: { value: title.length > 0, message: "Tytuł jest wymagany!" },
+                date: { value: date, message: "Data jest wymagana!" },
+                minTime: { value: minTime > 0, message: "Czas minimalny jest wymagany!" }
+            };
+            for (const field in validateInputs) {
+                if (!validateInputs[field].value) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Błąd!',
+                        text: validateInputs[field].message,
+                    });
+                    return;
+                }
+            }
+            scheduler.title = title;
+            scheduler.deadline = date;
+            scheduler.minimumSessionDurationMinutes = parseInt(minTime);
+            step2HTML();
+        }
+        function validateStep2() {
+
+        }
     </script>
 </head>
 
@@ -178,7 +268,16 @@
     </nav>
     <main
         class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
+        <section id="create-sheduler" class="w-[80%] min-h-[50%] flex flex-col items-center justify-center">
+            <article id="scheduler-create-status"
+                class="w-full h-full flex flex-col items-center justify-center w-full max-w-3xl p-8 text-light-textPrimary dark:text-dark-textPrimary bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg">
 
+            </article>
+            <div id="buttons-controler"
+                class="flex flex-row-reverse justify-between items-center w-full max-w-3xl p-4 text-dark-textPrimary dark:text-light-textPrimary">
+
+            </div>
+        </section>
     </main>
     <footer
         class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
@@ -190,5 +289,91 @@
     </footer>
 </body>
 <script defer src="/scripts/footer.js"></script>
+
 </html>
 <script>
+    function addArrow(direction, destination) {
+        const box = document.getElementById("buttons-controler");
+        const boxArrow = document.createElement("div");
+        boxArrow.className = "flex items-center justify-center w-10 h-10 bg-light-accent dark:bg-dark-accent rounded-full cursor-pointer";
+        const arrow = document.createElement("i");
+        arrow.className = `fa-solid fa-arrow-${direction} text-dark-textPrimary dark:text-light-textPrimary cursor-pointer`;
+        arrow.addEventListener("click", destination);
+        boxArrow.appendChild(arrow);
+        box.appendChild(boxArrow);
+    }
+    function step1HTML() {
+        const box = document.getElementById("scheduler-create-status");
+        box.innerHTML = `
+            <h1
+                class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                Stwórz swój własny Scheduler:
+            </h1>
+            <div class="relative m-5 w-full">
+                <input type="text" id="titleScheduler" aria-describedby="titleScheduler" name="titleScheduler"
+                    required autocomplete="off"
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent  placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base"
+                    placeholder=" "/>
+                <label for="titleScheduler"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5  peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0  peer-focus:scale-90 peer-focus:-translate-y-4  rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Nazwa Schedulera
+                </label>
+            </div>
+            <div class="relative m-5 w-full">
+                <input type="date" id="dateScheduler" name="dateDeadline" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
+                <label for="dateDeadline"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Deadline Schedulera
+                </label>
+            </div>
+            <div class="relative m-5 w-full">
+                <input type="number" id="minTimeMeeting" aria-describedby="minTimeMeeting" name="minTimeMeeting"
+                    required autocomplete="off"
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent  placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base"
+                    placeholder=" " />
+                <label for="minTimeMeeting"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5  peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0  peer-focus:scale-90 peer-focus:-translate-y-4  rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Czas spotkania (w minutach)
+                </label>
+            </div>
+        `
+        if (scheduler.title) {
+            document.getElementById("titleScheduler").value = scheduler.title;
+        }
+        if (scheduler.deadline) {
+            document.getElementById("dateScheduler").value = scheduler.deadline;
+        }
+        if (scheduler.minimumSessionDurationMinutes) {
+            document.getElementById("minTimeMeeting").value = scheduler.minimumSessionDurationMinutes;
+        }
+        document.getElementById("buttons-controler").innerHTML = "";
+        limitDateInput("dateScheduler", "Today");
+        addArrow("right", validateStep1);
+    }
+    function step2HTML() {
+        const box = document.getElementById("scheduler-create-status");
+        box.innerHTML = `
+            <h1
+                class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                Wybierz daty i godziny spotkania:
+            </h1>
+            <div id="date-ranges" class="w-full flex flex-col items-center justify-center">
+                <!-- Tu będą dodawane zakresy dat -->
+            </div>
+            <div id="time-ranges" class="w-full flex flex-col items-center justify-center">
+                <!-- Tu będą dodawane zakresy godzin -->
+            </div>
+            
+
+
+
+
+            
+            
+        `;
+        document.getElementById("buttons-controler").innerHTML = "";
+        addArrow("right", validateStep2);
+        addArrow("left", step1HTML);
+    }
+</script>
