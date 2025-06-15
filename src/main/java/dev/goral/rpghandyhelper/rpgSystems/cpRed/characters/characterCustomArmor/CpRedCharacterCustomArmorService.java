@@ -132,7 +132,7 @@ public Map<String,Object> updateCharacterCustomArmor(Long characterCustomArmorId
             .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
 
     if (!Objects.equals(character.getGame().getId(), armor.getGameId().getId())) {
-        throw new ResourceNotFoundException("Postać nie należy do gry, do której jest przypisana customowa broń.");
+        throw new ResourceNotFoundException("Postać nie należy do gry, do której jest przypisany customowy pancerz.");
     }
 
     if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
@@ -199,7 +199,7 @@ public Map<String,Object> updateCharacterCustomArmor(Long characterCustomArmorId
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może usuwać customowe bronie postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może usuwać customowe pancerze postaci NPC.");
             }
         }
 
