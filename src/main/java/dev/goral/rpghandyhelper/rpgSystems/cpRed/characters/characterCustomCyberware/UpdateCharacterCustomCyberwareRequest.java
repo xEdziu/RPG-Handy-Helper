@@ -2,15 +2,14 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCybe
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@ToString
+@Setter
 @AllArgsConstructor
-public class CpRedCharacterCustomCyberwareDTO {
-    private Long Id;
-    private Long cyberwareId;
-    private Long characterId;
+@NoArgsConstructor
+public class UpdateCharacterCustomCyberwareRequest {
     private String status;
     private String description;
 }
