@@ -1,5 +1,6 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCyberware;
 
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCharacterCustomCyberwareRequest {
-    private String status;
+    private CpRedCharacterItemStatus status;
     private String description;
 }
