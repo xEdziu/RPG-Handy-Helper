@@ -1,6 +1,7 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterEquipment;
 
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.items.CpRedItemsAvailability;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.equipments.CpRedEquipments;
 import jakarta.persistence.*;
@@ -32,15 +33,20 @@ public class CpRedCharacterEquipment {
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedEquipments itemId;
+    private CpRedEquipments item;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCharacters characterId;
+    private CpRedCharacters character;
+
+    private Integer quantity;
+
     @Enumerated(EnumType.STRING)
-    private CpRedItemsAvailability availability;
+    private CpRedCharacterItemStatus status;
+
+    @Column(length = 1000)
     private String description;
 }
