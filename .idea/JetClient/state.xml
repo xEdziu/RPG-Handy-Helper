@@ -178,6 +178,14 @@
                       <option name="sortWeight" value="8000000" />
                       <option name="url" value="http://localhost:8888/api/v1/authorized/user/photo/username/{username}" />
                     </requestState>
+                    <requestState>
+                      <option name="description" value="Usuwa usera o wskazanym ID" />
+                      <option name="id" value="8175a312-36d8-47aa-8adc-9a72663785bc" />
+                      <option name="method" value="DELETE" />
+                      <option name="name" value="Delete user" />
+                      <option name="sortWeight" value="9000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/admin/user/delete/2" />
+                    </requestState>
                   </list>
                 </option>
                 <option name="sortWeight" value="1000000" />
@@ -204,7 +212,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 2,&#10;//  &quot;gameId&quot;: 1,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 1,&#10;//  &quot;gameId&quot;: 2,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 3,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -229,7 +237,7 @@
                       <option name="method" value="GET" />
                       <option name="name" value="Gracze danej gry" />
                       <option name="sortWeight" value="3000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/allPlayers/1" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/allPlayers/3" />
                     </requestState>
                     <requestState>
                       <option name="body">
