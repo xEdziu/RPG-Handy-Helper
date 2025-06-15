@@ -10,10 +10,12 @@ import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCyberware.CpRedCharacterCustomCyberware;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCyberware.CpRedCharacterCustomCyberware;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCyberware.UpdateCharacterCustomCyberwareRequest;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCyberware.AddCharacterCustomCyberwareRequest;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCyberware.CpRedCharacterCustomCyberware;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCyberware.CpRedCharacterCustomCyberwareRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customCyberwares.CpRedCustomCyberwares;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customCyberwares.CpRedCustomCyberwares;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customCyberwares.CpRedCustomCyberwares;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customCyberwares.CpRedCustomCyberwaresRepository;
@@ -166,6 +168,52 @@ public class CpRedCharacterCustomCyberwareService {
         cpRedCharacterCustomCyberwareRepository.save(characterCustomCyberwareToUpdate);
 
         return CustomReturnables.getOkResponseMap("Customowy wszczep postaci został zmodyfikowany.");
+    }
+
+    public Map<String, Object> deleteCharacterCustomCyberware(Long characterCustomCyberwareId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        CpRedCharacterCustomCyberware characterCustomCyberware = cpRedCharacterCustomCyberwareRepository.findById(characterCustomCyberwareId)
+                .orElseThrow(() -> new ResourceNotFoundException("Wszczep postaci o podanym ID nie została znaleziona."));
+
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterCustomCyberware.getCharacterId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+
+        CpRedCustomCyberwares Cyberware = cpRedCustomCyberwaresRepository.findById(characterCustomCyberware.getCyberwareId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Wszczep o podanym ID nie został znaleziony."));
+
+        Game game = gameRepository.findById(character.getGame().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gra powiązana z postacią nie została znaleziona."));
+
+        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do gry powiązanej z podaną postacią."));
+
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
+            if (character.getType() != CpRedCharactersType.NPC) {
+                if (!Objects.equals(currentUser.getId(), character.getUser().getId())) {
+                    throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
+                }
+            } else {
+                throw new ResourceNotFoundException("Tylko GM może usuwać customowe wszczepy postaci NPC.");
+            }
+        }
+
+        if (game.getStatus() != GameStatus.ACTIVE) {
+            throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
+        }
+
+        cpRedCharacterCustomCyberwareRepository.deleteById(characterCustomCyberwareId);
+        return CustomReturnables.getOkResponseMap("Customowy wszczep postaci został pomyślnie usunięty.");
+    }
+
+    public Map<String, Object> getAllCharacterCustomCyberwares() {
+        List<CpRedCharacterCustomCyberware> allCharacterCustomCyberwares = cpRedCharacterCustomCyberwareRepository.findAll();
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie customowe wszczepy postaci zostały pobrane pomyślnie.");
+        response.put("characterCustomCyberwares", allCharacterCustomCyberwares);
+        return response;
     }
     
 
