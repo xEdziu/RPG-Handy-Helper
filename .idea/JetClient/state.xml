@@ -2466,6 +2466,57 @@
                                       <folderState>
                                         <option name="id" value="6df132bd-1344-4455-8adf-094ded1bbc36" />
                                         <option name="name" value="Custom" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  customItemId: 1,&#10;  characterId: 1,&#10;  quantity: 3,&#10;  status: &quot;EQUIPPED&quot; // &quot;EQUIPPED&quot; / &quot;STORED&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="4fb6d6c9-7924-41cf-8ebf-92514da06511" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj customowe wyposażenie do postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customEquipments/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="f77ccb74-3c4d-45e2-9fdf-e3abe8e5a0c5" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz customowe wyposarzenie postaci o podanym ID" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customEquipments/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="80408398-f4b5-4367-b94f-bc8838c7ab4b" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie customowe wyposażenia wszystkich postaci" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/customEquipments/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  quantity: 10,&#10;  status: &quot;STORED&quot;, // &quot;EQUIPPED&quot; / &quot;STORED&quot;&#10;  description: &quot;Piękny zmodyikowny opis...zachwycać się, to jest rozkaz&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="583e8d46-3ca2-49b5-a8be-205031f935e4" />
+                                              <option name="method" value="PUT" />
+                                              <option name="name" value="Modyfikuj customowe wyposażenie postaci" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customEquipments/update/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="4ef28b27-dc76-4081-9aa8-1e07292b43da" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń customowe wyposażenie postaci" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customEquipments/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
                                         <option name="sortWeight" value="2000000" />
                                       </folderState>
                                     </list>
