@@ -2853,6 +2853,57 @@
                                       <folderState>
                                         <option name="id" value="af9fa04f-1972-40b4-8a94-cf797ce2801f" />
                                         <option name="name" value="Manual" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  itemId: 2,&#10;  characterId: 3, &#10;  quantity: 5,&#10;  status: &quot;EQUIPPED&quot; // &quot;EQUIPPED&quot; / &quot;STORED&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="3e6ef910-ebde-4980-b0d2-c08f82009a8f" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj wyposażenie do postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/equipments/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="32f69cad-d889-493a-b843-238954f76cd9" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie przedmioty wyposażenia postaci o podanym id" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/equipments/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="46cf8f1c-3940-4064-b7fb-2e541adc8125" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie przedmioty wyposażenia wszystkich postaci dla Admina" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/equipments/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  quantity: 10,&#10;  status: &quot;STORED&quot;, // &quot;EQUIPPED&quot; / &quot;STORED&quot;&#10;  description: &quot;Opis piękny jak całka&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="a92ad1cc-d324-4a34-b3ea-ba06ba50633b" />
+                                              <option name="method" value="PUT" />
+                                              <option name="name" value="Modyfikuj przedmiot wyposażenia" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/equipments/update/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="866ec963-594b-4017-b715-eb1bf3d82a81" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń powiązane z postacią przedmioty wyposażenia" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/equipments/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
                                         <option name="sortWeight" value="1000000" />
                                       </folderState>
                                       <folderState>
