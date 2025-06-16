@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface CpRedCharacterCriticalInjuriesRepository extends JpaRepository<CpRedCharacterCriticalInjuries, Long> {
     List<CpRedCharacterCriticalInjuries> findAllByCharacterId_Id(Long characterId);
-    Boolean existsByInjuriesIdAndCharacterId(Long injuriesId, CpRedCharacters character);
+    Boolean existsByInjuriesId_IdAndCharacterId(Long injuriesId, CpRedCharacters character);
 }

@@ -124,7 +124,7 @@ public class CpRedCharacterCriticalInjuriesService {
             }
         }
 
-        if( CpRedCharacterCriticalInjuriesRepository.existsByInjuriesIdAndCharacterId(cpRedCharacterCriticalInjuriesRequest.getInjuriesId(), character)) {
+        if( CpRedCharacterCriticalInjuriesRepository.existsByInjuriesId_IdAndCharacterId(cpRedCharacterCriticalInjuriesRequest.getInjuriesId(), character)) {
             throw new IllegalArgumentException("Rana krytyczna o tym Id już istnieje dla tej postaci.");
         }
 
