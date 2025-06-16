@@ -179,14 +179,14 @@ public class CpRedCharacterCriticalInjuriesService {
         return CustomReturnables.getOkResponseMap("Rana krytyczna postaci o id " + characterInjuryId + " została usunięta.");
     }
 
-    public Map<String, Object> updateInjury(Long injuryId, CpRedCharacterCriticalInjuriesRequest cpRedCharacterCriticalInjuries) {
+    public Map<String, Object> updateInjury(Long characterInjuryId, CpRedCharacterCriticalInjuriesRequest cpRedCharacterCriticalInjuries) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
-        CpRedCharacterCriticalInjuries injuryToUpdate = cpRedCharacterCriticalInjuriesRepository.findById(injuryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Rana krytyczna o id " + injuryId + " nie została znaleziona"));
+        CpRedCharacterCriticalInjuries injuryToUpdate = cpRedCharacterCriticalInjuriesRepository.findById(characterInjuryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Rana krytyczna o id " + characterInjuryId + " nie została znaleziona"));
 
         CpRedCharacters character = cpRedCharactersRepository.findById(injuryToUpdate.getCharacterId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + injuryToUpdate.getCharacterId().getId() + " nie została znaleziona"));

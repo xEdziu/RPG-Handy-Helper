@@ -42,7 +42,7 @@ public class CpRedCharacterCriticalInjuriesController {
         return cpRedCharacterCriticalInjuriesService.deleteInjury(injuryId);
     }
 
-    @PutMapping(path = "/rpgSystems/cpRed/character/criticalInjuries/update/{injuryId}")
+    @PutMapping(path = "/rpgSystems/cpRed/character/criticalInjuries/update/{characterInjuryId}")
     public Map<String, Object> updateInjury(@PathVariable("characterInjuryId") Long characterInjuryId,
                                             @RequestBody CpRedCharacterCriticalInjuriesRequest cpRedCharacterCriticalInjuries) {
         return cpRedCharacterCriticalInjuriesService.updateInjury(characterInjuryId, cpRedCharacterCriticalInjuries);

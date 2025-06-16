@@ -2656,7 +2656,7 @@
                                               <option name="method" value="DELETE" />
                                               <option name="name" value="Usuń ranę" />
                                               <option name="sortWeight" value="2000000" />
-                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/delete/2" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/delete/1" />
                                             </requestState>
                                             <requestState>
                                               <option name="description" value="Zwraca wszystkie rany z każdej karty postaci" />
@@ -2702,7 +2702,7 @@
                                               <option name="method" value="PUT" />
                                               <option name="name" value="Modyfikuj ranę" />
                                               <option name="sortWeight" value="7000000" />
-                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/update/2" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/update/1" />
                                             </requestState>
                                           </list>
                                         </option>
