@@ -2007,11 +2007,6 @@
                                         <option name="name" value="Mod" />
                                         <option name="sortWeight" value="3000000" />
                                       </folderState>
-                                      <folderState>
-                                        <option name="id" value="d993b66d-2411-466c-85c9-18f533101df5" />
-                                        <option name="name" value="Ammunition" />
-                                        <option name="sortWeight" value="4000000" />
-                                      </folderState>
                                     </list>
                                   </option>
                                   <option name="id" value="d8054db5-812a-4463-a768-f882329afd47" />
@@ -2401,6 +2396,137 @@
                                       </requestState>
                                     </list>
                                   </option>
+                                  <option name="sortWeight" value="5000000" />
+                                </folderState>
+                                <folderState>
+                                  <option name="folders">
+                                    <list>
+                                      <folderState>
+                                        <option name="id" value="1a38fcbf-33fb-4845-a9bd-a40462ecf202" />
+                                        <option name="name" value="Manual" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  characterId: 1,&#10;  ammunitionId: 1,&#10;  amount: 10,&#10;  status: &quot;EQUIPPED&quot; // &quot;EQUIPPED&quot;, &quot;STORED&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Dodaje powiązanie między postacią i amunicją" />
+                                              <option name="id" value="164c968c-c8c9-4333-9d38-accd80290574" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj amunicje do postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/ammunition/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę amunicji dla postaci o podanym id" />
+                                              <option name="id" value="b87ec480-817e-4c16-89ea-a5deba949749" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie amunicje dla postaci o podanym id" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/ammunition/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę wszystkich powiązań między postacią i amunicją dla Admina" />
+                                              <option name="id" value="afe29b37-27c7-41d1-9985-d5b4933ff912" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie amunicje postaci dla Admina" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/ammunition/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  status: &quot;EQUIPPED&quot;, // &quot;EQUIPPED&quot;, &quot;STORED&quot;&#10;  amount: 20&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Pozwala zmieniać ilość amunicji posiadanej przez postać" />
+                                              <option name="id" value="813a712a-fda9-4075-a1e3-78e1eb804ebf" />
+                                              <option name="method" value="PUT" />
+                                              <option name="name" value="Modyfikuj amunicje postaci" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/ammunition/update/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Usuwa podane po ID powiązanie postaci z amunicją" />
+                                              <option name="id" value="783d9772-fc06-4942-9d81-4f1e9ae5d416" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń amunicje postaci" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/ammunition/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
+                                        <option name="sortWeight" value="1000000" />
+                                      </folderState>
+                                      <folderState>
+                                        <option name="id" value="95cafd14-53c2-4988-aa8f-d292384a9bc6" />
+                                        <option name="name" value="Custom" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  characterId: 1,&#10;  customAmmunitionId: 2,&#10;  amount: 20,&#10;  status: &quot;EQUIPPED&quot; // &quot;EQUIPPED&quot;, &quot;STORED&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Dodaje powiązanie między postacią i customową amunicją" />
+                                              <option name="id" value="63d3bc3a-a981-43f1-bedc-fb878f26354e" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj customową amunicje do postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customAmmunition/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę customowych amunicji dla postaci o podanym id" />
+                                              <option name="id" value="e54edb3a-1e0f-4d21-8487-20f4d43c24b4" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie customowe amunicje dla postaci o podanym id" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customAmmunition/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca listę wszystkich powiązań między postacią i customową amunicją dla Admina" />
+                                              <option name="id" value="34e9fc3c-bc78-44cd-99d4-8ab7fd4a4a22" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie customowe amunicje wszystkich postaci" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/customAmmunition/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  status: &quot;STORED&quot;, // &quot;EQUIPPED&quot;, &quot;STORED&quot;&#10;  amount: 20&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Pozwala zmieniać ilość customowej amunicji posiadanej przez postać" />
+                                              <option name="id" value="90f2127f-e98d-4a37-a7bc-1bd42cbaa953" />
+                                              <option name="method" value="PUT" />
+                                              <option name="name" value="Modyfikuj customową amunicje postaci" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customAmmunition/update/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Usuwa podane po ID powiązanie postaci z customową amunicją" />
+                                              <option name="id" value="1c5f2345-ba81-4bf6-96c2-9e43bec7da9a" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń customową amunicje postaci" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/customAmmunition/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
+                                        <option name="sortWeight" value="2000000" />
+                                      </folderState>
+                                    </list>
+                                  </option>
+                                  <option name="id" value="d993b66d-2411-466c-85c9-18f533101df5" />
+                                  <option name="name" value="Ammunition" />
                                   <option name="sortWeight" value="5000000" />
                                 </folderState>
                                 <folderState>
