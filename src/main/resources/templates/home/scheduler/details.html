@@ -312,13 +312,13 @@
                 const endDateTime = new Date(`${todayDate}T${endTime}`);
                 if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
                     console.error('Invalid time(s) encountered:', startTime, endTime);
-                    return; 
+                    return;
                 }
                 const timeDiff = endDateTime - startDateTime;
                 const hoursDiff = Math.ceil(timeDiff / (1000 * 3600));
-                for (let i = 0; i <= hoursDiff * 4; i++) { 
+                for (let i = 0; i <= hoursDiff * 2; i++) {
                     const currentTime = new Date(startDateTime);
-                    currentTime.setMinutes(currentTime.getMinutes() + i * 15);
+                    currentTime.setMinutes(currentTime.getMinutes() + i * 30);
                     const timeString = currentTime.toISOString().split('T')[1].split('.')[0];
                     uniqueTimes.add(timeString);
                 }
@@ -333,31 +333,38 @@
         const blocks = [];
         let currentStartTime = uniqueTimes[0];
         let currentEndTime = "";
+        let blockNumber = 1;
+        let previousEndTime = null; 
         for (let i = 0; i < uniqueTimes.length; i++) {
             const currentTime = uniqueTimes[i];
-            if (new Date(`1970-01-01T${currentTime}`).getMinutes() === 0) {
-                if (currentEndTime) {
-                    blocks.push({ start: currentStartTime, end: currentEndTime });
+            if (new Date(`1970-01-01T${currentTime}`).getMinutes() === 0 || new Date(`1970-01-01T${currentTime}`).getMinutes() === 30) {
+                if (previousEndTime && currentTime !== previousEndTime) {
+                    blockNumber++; 
                 }
+                blocks.push({ start: currentStartTime, end: currentEndTime, blockNumber });
                 currentStartTime = currentTime;
             }
             if (i === uniqueTimes.length - 1) {
-                blocks.push({ start: currentStartTime, end: currentTime });
+                blocks.push({ start: currentStartTime, end: currentTime, blockNumber });
             }
             currentEndTime = uniqueTimes[i + 1] || currentTime;
+            previousEndTime = currentEndTime;
         }
         return blocks;
     }
-    function generateDayBockHTML(date, hourlyBlocks){
+
+
+
+    function generateDayBockHTML(date, hourlyBlocks) {
         const dateObj = new Date(date);
-        const dayName = dateObj.toLocaleDateString('pl-PL', { weekday: 'long' });
+        const dayName = dateObj.toLocaleDateString('pl-PL', { weekday: 'short' });
         const dayNumber = dateObj.getDate();
-        const monthName = dateObj.toLocaleDateString('pl-PL', { month: 'long' });
-        
+        const monthName = dateObj.toLocaleDateString('pl-PL', { month: 'short' });
+
         let html = `<div class="day-block">
                         <h3 class="day-title">${dayName} ${dayNumber} ${monthName}</h3>
                         <div class="hourly-blocks">`;
-        
+
         hourlyBlocks.forEach(block => {
             html += `<div class="hourly-block">
                         <span class="start-time">${block.start}</span>
@@ -370,13 +377,22 @@
     function generateSchedulerDetailsHTML(scheduler) {
         const uniqueDates = getUniqueDates(scheduler.dateRanges);
         const uniqueTimes = getUniqueTimes(scheduler.timeRanges);
+        console.log("uniqueTimes: ", uniqueTimes);
         const hourlyBlocks = generateHourlyBlocks(uniqueTimes);
+        console.log("hourlyBlocks: ", hourlyBlocks);
         const schedulerDetailsContainer = document.createElement('div');
         schedulerDetailsContainer.className = 'scheduler-details-container';
-        uniqueDates.forEach(date => {
-            const dayBlockHTML = generateDayBockHTML(date, hourlyBlocks);
-            schedulerDetailsContainer.innerHTML += dayBlockHTML;
-        });
+        schedulerDetailsContainer.innerHTML = `
+            <div class="scheduler-dates">
+                <h3 class="text-xl font-semibold mb-4">Dostępne Terminy</h3>
+                <div class="dates-container">
+                    ${uniqueDates.map(date => generateDayBockHTML(date, hourlyBlocks)).join('')}
+                </div>
+            </div>
+        `;
+
+        const dayBlockHTML = generateDayBockHTML(uniqueDates[0], hourlyBlocks);
+        schedulerDetailsContainer.querySelector('.dates-container').innerHTML = dayBlockHTML;
         const mainContent = document.querySelector('main');
         mainContent.innerHTML = ''; // Clear existing content
         mainContent.appendChild(schedulerDetailsContainer);
