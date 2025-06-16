@@ -5,6 +5,7 @@ import dev.goral.rpghandyhelper.game.gameUsers.*;
 import dev.goral.rpghandyhelper.rpgSystems.RpgSystemsRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ForbiddenActionException;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
@@ -262,6 +263,7 @@ public class GameService {
 
         if(character!=null) {
             character.setUser(null);
+            character.setType(CpRedCharactersType.NPC);
         }
         gameUsersRepository.delete(delUser);
         return CustomReturnables.getOkResponseMap("Użytkownik został usunięty z gry.");
