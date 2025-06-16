@@ -9,6 +9,9 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeaponMod.CpRedCharacterWeaponMod;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeaponMod.CpRedCharacterWeaponModDTO;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeaponMod.CpRedCharacterWeaponModRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.items.CpRedItemsQuality;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.stats.CpRedStats;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.weapons.CpRedWeapons;
@@ -37,6 +40,7 @@ public class CpRedCharacterWeaponService {
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
     private final CpRedWeaponsRepository cpRedWeaponsRepository;
+    private final CpRedCharacterWeaponModRepository cpRedCharacterWeaponModRepository;
 
     public Map<String, Object> getCharacterWeapons(Long characterId) {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
@@ -53,6 +57,7 @@ public class CpRedCharacterWeaponService {
                         weapons.getHandType(),
                         weapons.getIsHidden(),
                         weapons.getQuality().toString(),
+                        weapons.getFreeModSlots(),
                         weapons.getStatus().toString(),
                         weapons.getDescription()
                         )
@@ -117,6 +122,7 @@ public class CpRedCharacterWeaponService {
                 weapon.getHandType(),
                 weapon.getIsHidden(),
                 weapon.getQuality(),
+                weapon.getModSlots(),
                 addCharacterWeaponRequest.getStatus(),
                 weapon.getDescription()
         );
@@ -267,6 +273,18 @@ public class CpRedCharacterWeaponService {
         // Czy gra jest aktywna
         if (game.getStatus() != GameStatus.ACTIVE) {
             throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
+        }
+
+        // Sprawdzenie, czy broń ma jakieś modyfikacje
+        List<CpRedCharacterWeaponMod> characterWeaponMods =
+                cpRedCharacterWeaponModRepository.findAllByCharacterWeaponIdAndIsCharacterWeaponCustom(
+                        characterWeaponId,
+                        false
+                );
+        if (!characterWeaponMods.isEmpty()) {
+            for( CpRedCharacterWeaponMod mod : characterWeaponMods) {
+                cpRedCharacterWeaponModRepository.delete(mod);
+            }
         }
 
         cpRedCharacterWeaponRepository.deleteById(characterWeaponId);

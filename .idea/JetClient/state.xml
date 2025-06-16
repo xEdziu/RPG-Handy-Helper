@@ -1973,6 +1973,57 @@
                                       <folderState>
                                         <option name="id" value="1a18411c-3da4-4900-a4d3-b3a45d01b1b4" />
                                         <option name="name" value="Mod" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  characterId: 1,&#10;  characterWeaponId: 1,&#10;  isCharacterWeaponCustom: false,&#10;  weaponModId: 1,&#10;  isWeaponModCustom: false&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="55d48fac-41a8-4b4a-9892-f6350805037d" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj modyfikacje do broni postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weaponMods/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="804490e9-af5a-411c-8219-8a3390d97fb9" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie modyfikacje danej po id postaci" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weaponMods/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  characterWeaponId: 1,&#10;  isCharacterWeaponCustom: false&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="ebf70799-eef4-4e14-b0a0-132dfa507859" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie modyfikacje danej po id broni postaci" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weaponMods/forWeapon" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="29f3352b-13b3-450f-91f6-cb089a54bf21" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie powiązania broni postaci i modyfikacji" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/weaponMods/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="a95b6902-4a3c-4f6b-86df-dd5bb2cca050" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń poadną po id modyfikacje broni postaci" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weaponMods/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
                                         <option name="sortWeight" value="3000000" />
                                       </folderState>
                                       <folderState>

@@ -11,12 +11,13 @@ public class CpRedCharacterCustomWeaponDTO {
     private Long id;
     private Long baseCustomWeaponId;
     private Long characterId;
-    private int dmg;
-    private int magazineCapacity;
-    private short numberOfAttacks;
+    private Integer dmg;
+    private Integer magazineCapacity;
+    private Short numberOfAttacks;
     private Short handType;
-    private boolean isHidden;
+    private Boolean isHidden;
     private String quality;
+    private Short freeModSlots;
     private String status;
     private String description;
 }

@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateCharacterWeaponModRequest {
-    private Integer sizeTaken;
+public class GetModsForWeaponRequest {
+    private Long characterWeaponId;
+    private Boolean isCharacterWeaponCustom;
 }
