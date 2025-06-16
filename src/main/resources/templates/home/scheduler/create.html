@@ -253,15 +253,13 @@
         }
         function validateStep3() {
             const timeRanges = [];
-
             const dateRangeBox = document.getElementById("timeRangeBox");
             const timeRangesDiv = dateRangeBox.querySelectorAll("div");
             const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
-
-            for (let i = 1; i <= count + 1; i++) {
+            for (let i = 1; i <= count + 2; i++) {
                 const startTime = document.getElementById(`timeRangeStart${i}`).value;
                 const endTime = document.getElementById(`timeRangeEnd${i}`).value;
-                console.log(startTime, endTime);
+                console.log(`Sprawdzanie bloku czasowego ${i}: ${startTime} - ${endTime}`);
                 if (startTime && endTime) {
                     timeRanges.push({
                         startTime: startTime + ":00",
@@ -572,11 +570,22 @@
         document.getElementById("buttons-controler").appendChild(divAddDateRange);
         addArrow("left", step3HTML);
     }
+    function roundingTime(time) {
+        const [hours, minutes] = time.split(':').map(Number);
+        if (hours === 23 && minutes >= 53) {
+            return "23:45";
+        }
+        const totalMinutes = hours * 60 + minutes;
+        const roundedMinutes = Math.round(totalMinutes / 15) * 15;
+        const newHours = Math.floor(roundedMinutes / 60) % 24;
+        const newMinutes = roundedMinutes % 60;
+        return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
+    }
     function addTimeRangeHTML(startTime = "", endTime = "") {
         const dateRangeBox = document.getElementById("timeRangeBox");
         const timeRanges = dateRangeBox.querySelectorAll("div");
         const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
-        if (count != 0) {
+        if (count !== 0) {
             const previousTimeRangeStart = document.getElementById(`timeRangeStart${count}`);
             const previousTimeRangeEnd = document.getElementById(`timeRangeEnd${count}`);
             if (previousTimeRangeStart && previousTimeRangeEnd) {
@@ -603,32 +612,39 @@
         const boxDateRange = document.createElement("div");
         boxDateRange.className = "flex flex-row items-center justify-center w-full max-w-3xl p-4";
         const timeRangeHTML = `
-        <div class="relative mx-5 my-2 w-full">
-            <input type="time" id="timeRangeStart${count + 1}" name="timeRangeStart${count + 1}" required
-                class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
-            <label for="timeRangeStart${count + 1}"
-                class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
-                Od
-            </label>
-        </div> 
-        <div class="relative mx-5 my-2 w-full">
-            <input type="time" id="timeRangeEnd${count + 1}" name="timeRangeEnd${count + 1}" required
-                class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
-            <label for="timeRangeEnd${count + 1}"
-                class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
-                Do
-            </label>
-        </div>
-    `;
+            <div class="relative mx-5 my-2 w-full">
+                <input type="time" id="timeRangeStart${count + 1}" name="timeRangeStart${count + 1}" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
+                <label for="timeRangeStart${count + 1}"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Od
+                </label>
+            </div> 
+            <div class="relative mx-5 my-2 w-full">
+                <input type="time" id="timeRangeEnd${count + 1}" name="timeRangeEnd${count + 1}" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
+                <label for="timeRangeEnd${count + 1}"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Do
+                </label>
+            </div>
+        `;
         boxDateRange.innerHTML = timeRangeHTML;
         dateRangeBox.appendChild(boxDateRange);
         const timeStart = document.getElementById(`timeRangeStart${count + 1}`);
         const timeEnd = document.getElementById(`timeRangeEnd${count + 1}`);
+        if (startTime && endTime) {
+            timeStart.value = roundingTime(startTime);
+            timeEnd.value = roundingTime(endTime);
+        }
         timeStart.addEventListener('change', () => {
-            // Możesz dodać jakąś walidację dla godziny początkowej
+            timeStart.value = roundingTime(timeStart.value);
         });
         timeEnd.addEventListener('change', () => {
-            if (new Date(`1970-01-01T${timeStart.value}:00`) >= new Date(`1970-01-01T${timeEnd.value}:00`)) {
+            timeEnd.value = roundingTime(timeEnd.value);
+            const startVal = timeStart.value;
+            const endVal = timeEnd.value;
+            if (startVal && endVal && new Date(`1970-01-01T${startVal}:00`) >= new Date(`1970-01-01T${endVal}:00`)) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Błąd!',
@@ -645,13 +661,17 @@
             <h1 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
                 Wybierz godziny możliwych spotkań:
             </h1>
-            <div id="timeRangeBox" class="flex flex-col items-center justify-center w-full"></div>
+            <div id="timeRangeBox" class="flex flex-col items-center justify-center w-full"> 
+                
+            </div>
         `;
         if (scheduler.timeRanges.length > 0) {
             scheduler.timeRanges.forEach((range, index) => {
+                console.log(`Dodawanie bloku czasowego ${index + 1}: ${range.startTime} - ${range.endTime}`);
                 addTimeRangeHTML(range.startTime, range.endTime);
             });
         } else {
+            console.log("Brak bloków czasowych, dodawanie domyślnego bloku.");
             addTimeRangeHTML();
         }
         document.getElementById("buttons-controler").innerHTML = "";
@@ -708,6 +728,5 @@
         });
         document.getElementById("buttons-controler").appendChild(divAddDateRange);
         addArrow("left", step3HTML);
-
     }
 </script>
