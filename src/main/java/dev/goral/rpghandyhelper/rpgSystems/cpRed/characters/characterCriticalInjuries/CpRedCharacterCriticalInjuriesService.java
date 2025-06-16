@@ -64,7 +64,7 @@ public class CpRedCharacterCriticalInjuriesService {
     public Map<String, Object> getCriticalInjuriesByCharacterId(Long characterId) {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
-        List<CpRedCharacterCriticalInjuriesDTO> injuriesDTO = cpRedCharacterCriticalInjuriesRepository.findAllByCharacter(character).stream().map(injury ->
+        List<CpRedCharacterCriticalInjuriesDTO> injuriesDTO = cpRedCharacterCriticalInjuriesRepository.findAllByCharacterId(character).stream().map(injury ->
                 new CpRedCharacterCriticalInjuriesDTO(
                         injury.getId(),
                         injury.getStatus().toString(),
