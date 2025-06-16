@@ -36,11 +36,12 @@ public class CpRedWeaponsService {
                         cpRedWeapons.getStandardAmmunitionId().getId(),
                         cpRedWeapons.getNumberOfAttacks(),
                         cpRedWeapons.getHandType(),
-                        cpRedWeapons.isHidden(),
+                        cpRedWeapons.getIsHidden(),
                         cpRedWeapons.getQuality().toString(),
                         cpRedWeapons.getPrice(),
                         cpRedWeapons.getAvailability().toString(),
-                        cpRedWeapons.isModifiable(),
+                        cpRedWeapons.getIsModifiable(),
+                        cpRedWeapons.getModSlots(),
                         cpRedWeapons.getDescription()
                 )).toList();
 
@@ -60,11 +61,12 @@ public class CpRedWeaponsService {
                         cpRedWeapons.getStandardAmmunitionId().getId(),
                         cpRedWeapons.getNumberOfAttacks(),
                         cpRedWeapons.getHandType(),
-                        cpRedWeapons.isHidden(),
+                        cpRedWeapons.getIsHidden(),
                         cpRedWeapons.getQuality().toString(),
                         cpRedWeapons.getPrice(),
                         cpRedWeapons.getAvailability().toString(),
-                        cpRedWeapons.isModifiable(),
+                        cpRedWeapons.getIsModifiable(),
+                        cpRedWeapons.getModSlots(),
                         cpRedWeapons.getDescription()
                 )).orElseThrow(() -> new ResourceNotFoundException("Broń o id " + weaponId + " nie istnieje"));
 
@@ -96,10 +98,11 @@ public class CpRedWeaponsService {
 
         // Sprawdź, czy wszystkie wymagane pola są wypełnione
         if (cpRedWeapons.getRequiredSkillId() == null || cpRedWeapons.getName() == null ||
-                cpRedWeapons.getDamage() == -1 || cpRedWeapons.getMagazineCapacity() == -1 ||
-                cpRedWeapons.getStandardAmmunitionId() == null || cpRedWeapons.getNumberOfAttacks() == -1 ||
-                cpRedWeapons.getHandType() == -1 || cpRedWeapons.getQuality() == null ||
-                cpRedWeapons.getPrice() == -1 || cpRedWeapons.getAvailability() == null ||
+                cpRedWeapons.getDamage() == null || cpRedWeapons.getMagazineCapacity() == null ||
+                cpRedWeapons.getStandardAmmunitionId() == null || cpRedWeapons.getNumberOfAttacks() == null ||
+                cpRedWeapons.getHandType() == null || cpRedWeapons.getIsHidden() == null ||cpRedWeapons.getQuality() == null ||
+                cpRedWeapons.getPrice() == null || cpRedWeapons.getAvailability() == null ||
+                cpRedWeapons.getIsModifiable() == null || cpRedWeapons.getModSlots() == null ||
                 cpRedWeapons.getDescription() == null) {
             throw new IllegalStateException("Nie wszystkie pola zostały wypełnione.");
         }
@@ -142,6 +145,15 @@ public class CpRedWeaponsService {
         if (cpRedWeapons.getPrice() < 0) {
             throw new IllegalStateException("Cena nie może być ujemna.");
         }
+        // Sprawdzenie ilości modyfikacji
+        if (!cpRedWeapons.getIsModifiable()){
+            cpRedWeapons.setModSlots((short)0);
+        } else {
+            if (cpRedWeapons.getModSlots() == null || cpRedWeapons.getModSlots() < 0) {
+                throw new IllegalStateException("Ilość modyfikacji musi być większa lub równa 0.");
+            }
+        }
+
         // Sprawdź, czy opis nie jest pusty lub składa się tylko z białych znaków
         if (cpRedWeapons.getDescription().isEmpty() || cpRedWeapons.getDescription().trim().isEmpty()) {
             throw new IllegalStateException("Opis broni nie może być pusty.");
@@ -161,11 +173,12 @@ public class CpRedWeaponsService {
                 standardAmmunition,
                 cpRedWeapons.getNumberOfAttacks(),
                 cpRedWeapons.getHandType(),
-                cpRedWeapons.isHidden(),
+                cpRedWeapons.getIsHidden(),
                 cpRedWeapons.getQuality(),
                 cpRedWeapons.getPrice(),
                 cpRedWeapons.getAvailability(),
-                cpRedWeapons.isModifiable(),
+                cpRedWeapons.getIsModifiable(),
+                cpRedWeapons.getModSlots(),
                 cpRedWeapons.getDescription()
         );
 
@@ -215,7 +228,7 @@ public class CpRedWeaponsService {
         }
 
         // Sprawdzenie obrażeń
-        if(cpRedWeapons.getDamage() != -1) {
+        if(cpRedWeapons.getDamage() != null) {
             // Sprawdź, czy dmg nie jest ujemne
             if (cpRedWeapons.getDamage() < 0) {
                 throw new IllegalStateException("Dmg nie może być ujemne.");
@@ -224,7 +237,7 @@ public class CpRedWeaponsService {
         }
 
         // Sprawdzenie pojemności magazynka
-        if(cpRedWeapons.getMagazineCapacity() != -1) {
+        if(cpRedWeapons.getMagazineCapacity() != null) {
             // Sprawdź, czy pojemność magazynka nie jest ujemna
             if (cpRedWeapons.getMagazineCapacity() < 0) {
                 throw new IllegalStateException("Pojemność magazynka nie może być ujemna.");
@@ -241,7 +254,7 @@ public class CpRedWeaponsService {
         }
 
         // Sprawdzenie liczby ataków
-        if(cpRedWeapons.getNumberOfAttacks() != -1) {
+        if(cpRedWeapons.getNumberOfAttacks() != null) {
             // Sprawdź, czy liczba ataków jest większa od 0
             if (cpRedWeapons.getNumberOfAttacks() <= 0) {
                 throw new IllegalStateException("Liczba ataków musi być większa od 0.");
@@ -250,12 +263,17 @@ public class CpRedWeaponsService {
         }
 
         // Sprawdzenie typu ręki
-        if(cpRedWeapons.getHandType() != -1) {
+        if(cpRedWeapons.getHandType() != null) {
             // Sprawdź, czy typ ręki jest większy od 0
             if (cpRedWeapons.getHandType() <= 0) {
                 throw new IllegalStateException("Typ ręki musi być większy od 0.");
             }
             weaponToUpdate.setHandType(cpRedWeapons.getHandType());
+        }
+
+        // Sprawdzenie, czy broń jest ukryta
+        if(cpRedWeapons.getIsHidden() != null) {
+            weaponToUpdate.setIsHidden(cpRedWeapons.getIsHidden());
         }
 
         // Sprawdzenie jakości
@@ -264,7 +282,7 @@ public class CpRedWeaponsService {
         }
 
         // Sprawdzenie ceny
-        if(cpRedWeapons.getPrice() != -1) {
+        if(cpRedWeapons.getPrice() != null) {
             // Sprawdź, czy cena nie jest ujemna
             if (cpRedWeapons.getPrice() < 0) {
                 throw new IllegalStateException("Cena nie może być ujemna.");
@@ -275,6 +293,23 @@ public class CpRedWeaponsService {
         // Sprawdzenie dostępności
         if(cpRedWeapons.getAvailability() != null) {
             weaponToUpdate.setAvailability(cpRedWeapons.getAvailability());
+        }
+
+        // Sprawdzenie modyfikowalności
+        if(cpRedWeapons.getIsModifiable() != null) {
+            weaponToUpdate.setIsModifiable(cpRedWeapons.getIsModifiable());
+        }
+
+        // Sprawdzenie ilości modyfikacji
+        if(cpRedWeapons.getModSlots() != null) {
+            if (!weaponToUpdate.getIsModifiable()){
+                cpRedWeapons.setModSlots((short)0);
+            } else {
+                if (cpRedWeapons.getModSlots() < 0) {
+                    throw new IllegalStateException("Ilość modyfikacji musi być większa lub równa 0.");
+                }
+            }
+            weaponToUpdate.setModSlots(cpRedWeapons.getModSlots());
         }
 
         // Sprawdzenie opisu
@@ -296,49 +331,4 @@ public class CpRedWeaponsService {
         return CustomReturnables.getOkResponseMap("Broń została zmodyfikowana.");
     }
 
-    // Zmienić ukrywalność broni
-    public Map<String, Object> hideWeapon(Long weaponId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-
-        // Sprawdź, czy użytkownik ma rolę ADMIN
-        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do modyfikacji broni.");
-        }
-
-        // Sprawdź, czy broń o podanym id istnieje
-        CpRedWeapons weaponToUpdate = cpRedWeaponsRepository.findById(weaponId)
-                .orElseThrow(() -> new ResourceNotFoundException("Broń o id " + weaponId + " nie istnieje"));
-
-        // Zmiana ukrywalności broni
-        weaponToUpdate.setHidden(!weaponToUpdate.isHidden());
-        cpRedWeaponsRepository.save(weaponToUpdate);
-
-        return CustomReturnables.getOkResponseMap("Ukrywalność broni została zmieniona.");
-    }
-
-    // Zmienić modyfikowalność broni
-    public Map<String, Object> modifiableWeapon(Long weaponId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-
-        // Sprawdź, czy użytkownik ma rolę ADMIN
-        if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
-            throw new IllegalStateException("Nie masz uprawnień do modyfikacji broni.");
-        }
-
-        // Sprawdź, czy broń o podanym id istnieje
-        CpRedWeapons weaponToUpdate = cpRedWeaponsRepository.findById(weaponId)
-                .orElseThrow(() -> new ResourceNotFoundException("Broń o id " + weaponId + " nie istnieje"));
-
-        // Zmiana modyfikowalności broni
-        weaponToUpdate.setModifiable(!weaponToUpdate.isModifiable());
-        cpRedWeaponsRepository.save(weaponToUpdate);
-
-        return CustomReturnables.getOkResponseMap("Modyfikowalność broni została zmieniona.");
-    }
 }

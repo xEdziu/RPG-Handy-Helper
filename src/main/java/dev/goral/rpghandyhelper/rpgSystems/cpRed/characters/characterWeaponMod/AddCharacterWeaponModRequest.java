@@ -2,16 +2,17 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeaponMod;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
-@ToString
-public class CpRedCharacterWeaponModDTO {
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class AddCharacterWeaponModRequest {
     private Long characterId;
     private Long characterWeaponId;
     private Boolean isCharacterWeaponCustom;
     private Long weaponModId;
     private Boolean isWeaponModCustom;
-    private Integer sizeTaken;
 }
