@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widok Gry</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
+    <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="min-h-screen flex flex-col">
+<nav class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+    <a href="/">
+        <div class="flex items-center">
+            <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+            <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+            <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                RPG Handy Helper
+            </h1>
+        </div>
+    </a>
+    <div class="flex items-center justify-center">
+        <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+        <div class="relative inline-block w-12 h-6">
+            <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+            <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-light-accent dark:bg-dark-accent shadow-md transition-all duration-300 peer-checked:translate-x-[0.75rem] peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent cursor-pointer hover:shadow-lg"></label>
+            <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary"></div>
+        </div>
+        <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+    </div>
+</nav>
+
+<main class="flex-grow">
+    <div id="gameContainer" class="p-4 max-w-5xl mx-auto"></div>
+</main>
+
+<footer class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+    <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+    <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank" class="text-light-accent dark:text-dark-accent">
+        <i class="fa-brands fa-github"></i>
+    </a>
+</footer>
+
+<script defer src="/scripts/footer.js"></script>
+<script defer>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = window.location.pathname.split("/").pop();
+
+        const [userRes, gameRes, playersRes] = await Promise.all([
+            fetch("/api/v1/authorized/user"),
+            fetch(`/api/v1/authorized/game/${gameId}`),
+            fetch(`/api/v1/authorized/game/allPlayers/${gameId}`)
+        ]);
+
+        const user = await userRes.json();
+        const game = (await gameRes.json()).game;
+        const players = (await playersRes.json()).gameUsers;
+
+        const currentUserRole = players.find(p => p.userId === user.id)?.role || "";
+
+        const playerList = players.map(p => {
+            const label = p.userId === user.id ? `${p.userId} (Ty)` : `user${p.userId}`;
+            const roleClass = p.role === "GameMaster" ? "bg-purple-500" : p.role === "Player" ? "bg-orange-500" : "bg-teal-600";
+            return `<div class="flex items-center gap-2 mb-1">
+                        <div class="bg-gray-200 dark:bg-gray-700 rounded px-2 py-1">${label}</div>
+                        <div class="text-white px-2 py-1 rounded ${roleClass} dark:${roleClass}">${p.role}</div>
+                    </div>`;
+        }).join("");
+
+        const buttons = [
+            `<button class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">POKOJE GRY</button>`,
+            `<button class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">SPOTKANIA</button>`,
+            `<button class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">PRZEDMIOTY</button>`
+        ];
+
+        if (currentUserRole === "Player" || currentUserRole === "GameMaster") {
+            buttons.push(`<button class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">KARTA POSTACI</button>`);
+        }
+
+        const container = document.getElementById("gameContainer");
+        container.innerHTML = `
+            <div class="bg-white dark:bg-dark-surface p-6 rounded shadow">
+                <div class="flex flex-col md:flex-row justify-between">
+                    <div class="mb-4 md:mb-0">
+                        <p class="text-red-600 font-semibold">Dungeons and Dragons</p>
+                        <h2 class="text-2xl font-bold text-black dark:text-white">${game.name}</h2>
+                        <p class="text-gray-700 dark:text-gray-300">${game.description}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-black dark:text-white">Gracze:</h3>
+                        ${playerList}
+                    </div>
+                </div>
+                <div class="mt-6 flex flex-wrap gap-2">
+                    ${buttons.join("")}
+                </div>
+            </div>
+        `;
+    });
+</script>
+</body>
+</html>

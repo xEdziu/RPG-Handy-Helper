@@ -1,10 +1,12 @@
 package dev.goral.rpghandyhelper.content;
 
+import org.springframework.ui.Model;
 import dev.goral.rpghandyhelper.user.UserRole;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class ContentController {
@@ -82,4 +84,11 @@ public class ContentController {
         System.out.println("ContentController: getNotes()");
         return "home/notes";
     }
+    @GetMapping("/home/gameSite/{gameId}")
+    public String getGameSitePage(@PathVariable Long gameId, Model model) {
+        model.addAttribute("gameId", gameId);
+        return "home/gameSite"; // BEZ .html – framework doda sam
+    }
+
+
 }
