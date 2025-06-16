@@ -196,8 +196,24 @@
             );
 
             if (filteredGames.length === 0) {
-                const message = query ? "Brak gier o podanej nazwie." :
-                    "Nie należysz jeszcze do żadnych gier!<br>Utwórz swoją pierwszą grę już teraz.";
+                const skibidiTexts = [
+                    "Wyrusz na szlak, gdzie magia i miecz rozstrzygają o losie świata.",
+                    "Gobliny się nudzą, smoki ziewają — potrzebują nowej rozróby.",
+                    "Głosy z innego świata wzywają... czy odważysz się im odpowiedzieć?",
+                    "Każdy świat potrzebuje Mistrza Gry… może właśnie Ciebie?",
+                    "Wkrocz w nieznane uniwersum, gdzie granice wyznacza jedynie twoja wyobraźnia.",
+                    "Z chaosu pomysłów wykreuj przygodę, którą inni zapamiętają na zawsze.",
+                    "Zainicjuj przygodę, która zmieni zwykły wieczór w noc pełną emocji.",
+                    "Otwórz księgę przygody — nie czekaj, zanim zrobi to ktoś inny.",
+                    "Ktoś musi uratować świat… albo przynajmniej dobrze się bawić próbując.",
+                    "Tylko jedno kliknięcie dzieli cię od świata, w którym wszystko może się wydarzyć."
+                ];
+                const randomIndex = Math.floor(Math.random() * skibidiTexts.length);
+                const message = query
+                    ? "Brak gier o podanej nazwie."
+                    : `Nie należysz jeszcze do żadnych gier!<br><em>${skibidiTexts[randomIndex]}</em><br>Utwórz swoją pierwszą grę już teraz.`;
+
+                "Nie należysz jeszcze do żadnych gier!<br>Utwórz swoją pierwszą grę już teraz.";
                 gamesContainer.innerHTML = `<div class="bg-white dark:bg-dark-surface p-4 rounded shadow text-light-textPrimary dark:text-dark-textPrimary">${message}</div>`;
                 return;
             }
