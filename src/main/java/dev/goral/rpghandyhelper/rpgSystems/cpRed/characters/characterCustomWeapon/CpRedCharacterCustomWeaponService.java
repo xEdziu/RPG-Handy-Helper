@@ -116,7 +116,7 @@ public class CpRedCharacterCustomWeaponService {
                 weapon.getMagazineCapacity(),
                 weapon.getNumberOfAttacks(),
                 weapon.getHandType(),
-                weapon.isHidden(),
+                weapon.getIsHidden(),
                 weapon.getQuality(),
                 addCharacterCustomWeaponRequest.getStatus(),
                 weapon.getDescription()

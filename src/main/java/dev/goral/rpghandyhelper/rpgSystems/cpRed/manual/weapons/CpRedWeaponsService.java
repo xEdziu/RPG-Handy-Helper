@@ -149,7 +149,7 @@ public class CpRedWeaponsService {
         if (!cpRedWeapons.getIsModifiable()){
             cpRedWeapons.setModSlots((short)0);
         } else {
-            if (cpRedWeapons.getModSlots() == null || cpRedWeapons.getModSlots() < 0) {
+                if (cpRedWeapons.getModSlots() == null || cpRedWeapons.getModSlots() < 0) {
                 throw new IllegalStateException("Ilość modyfikacji musi być większa lub równa 0.");
             }
         }
