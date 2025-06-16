@@ -179,7 +179,7 @@
         function AddForGM() {
             const gmActions = document.getElementById("game-scheduler-actions");
             gmActions.innerHTML = `
-                <button id="add-scheduler" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accent-hover dark:hover:bg-dark-accent-hover" onclick="location.href='/home/games/${gameId}/schedulers/create'">
+                <button id="add-scheduler" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded hover:bg-light-accent-hover dark:hover:bg-dark-accent-hover" onclick="location.href='/home/games/${gameId}/schedulers/create'">
                     Dodaj Harmonogram
                 </button>
             `;
@@ -258,7 +258,7 @@
 
             </div>
         </aside>
-        <section id="scheduler-info" class="w-full p-6">
+        <section id="scheduler-info" class="w-[80%] p-6">
             <!-- TABELA HARMONOGRAMÓW -->
         </section>
     </main>
@@ -276,7 +276,7 @@
 </html>
 <script>
     function getEmptySchedulerHTML() {
-        if(userInfo.isGmForThisGame) {
+        if (userInfo.isGmForThisGame) {
             return `
                 <div class="text-center text-light-textSecondary dark:text-dark-textSecondary">
                     <h3 class="text-2xl font-jetbrains-mono">Brak Harmonogramów</h3>
@@ -294,9 +294,38 @@
             </div>
         `;
     }
-    function addScheduleHTML(scheduler) {
-        return `
-            
-        `
+    function parseStatus(status) {
+        switch (status) {
+            case "AWAITING_AVAILABILITY":
+                return "Oczekiwanie na odpowiedzi";
+            case "READY_TO_DECIDE":
+                return "Gotowy do podjęcia decyzji";
+            case "FINALIZED":
+                return "Zakończony";
+            default:
+                return "Nieznany status";
+        }
     }
+    function addScheduleHTML(scheduler) {
+        console.log(scheduler);
+        return `
+        <a href="/home/games/${gameId}/schedulers/${scheduler.id}" class="no-underline">
+            <div class="flex flex-row bg-light-surface justify-between items-center dark:bg-dark-surface p-4 mb-4 rounded-lg shadow-md cursor-pointer   hover:bg-light-backgroundSecondary dark:hover:bg-dark-backgroundTertiary transition-colors duration-300">
+                <div> 
+                    <h3 class="text-xl font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${scheduler.title}</h3>
+                    <p class="text-light-textPrimary dark:text-dark-textPrimary">Deadline: ${scheduler.deadline.substring(0, scheduler.deadline.indexOf("T"))}  </p>
+                </div>
+                <div class="flex flex-col items-end">
+                    <p class="text-light-textSecondary dark:text-dark-textSecondary">
+                        Ile osób nie odpowiedziało: ${scheduler.missingAvailabilitiesCount}
+                    </p>
+                </div>
+                <div id="scheduler-status" class="flex flex-row items-end">
+                    <p class="text-light-textSecondary dark:text-dark-textSecondary">Status: ${parseStatus(scheduler.status)}</p>
+                </div>
+            </div>
+        </a>
+    `;
+    }
+
 </script>
