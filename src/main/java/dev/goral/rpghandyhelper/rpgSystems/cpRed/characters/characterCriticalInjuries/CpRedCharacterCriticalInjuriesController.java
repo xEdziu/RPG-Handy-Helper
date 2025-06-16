@@ -17,9 +17,9 @@ public class CpRedCharacterCriticalInjuriesController {
         return cpRedCharacterCriticalInjuriesService.getAllCriticalInjuries();
     }
 
-    @GetMapping(path = "/rpgSystems/cpRed/character/criticalInjuries/{injuryId}")
-    public Map<String, Object> getInjuryById(@PathVariable("injuryId") Long injuryId) {
-        return cpRedCharacterCriticalInjuriesService.getCriticalInjuryById(injuryId);
+    @GetMapping(path = "/rpgSystems/cpRed/character/criticalInjuries/{characterInjuryId}")
+    public Map<String, Object> getInjuryById(@PathVariable("characterInjuryId") Long characterInjuryId) {
+        return cpRedCharacterCriticalInjuriesService.getCriticalInjuryById(characterInjuryId);
     }
 
     @GetMapping(path = "/rpgSystems/cpRed/character/criticalInjuries/character/{characterId}")
@@ -37,15 +37,15 @@ public class CpRedCharacterCriticalInjuriesController {
         return cpRedCharacterCriticalInjuriesService.addInjury(cpRedCharacterCriticalInjuries);
     }
 
-    @DeleteMapping(path = "/rpgSystems/cpRed/character/criticalInjuries/delete/{injuryId}")
-    public Map<String, Object> deleteInjury(@PathVariable("injuryId") Long injuryId) {
+    @DeleteMapping(path = "/rpgSystems/cpRed/character/criticalInjuries/delete/{characterInjuryId}")
+    public Map<String, Object> deleteInjury(@PathVariable("characterInjuryId") Long injuryId) {
         return cpRedCharacterCriticalInjuriesService.deleteInjury(injuryId);
     }
 
     @PutMapping(path = "/rpgSystems/cpRed/character/criticalInjuries/update/{injuryId}")
-    public Map<String, Object> updateInjury(@PathVariable("injuryId") Long injuryId,
+    public Map<String, Object> updateInjury(@PathVariable("characterInjuryId") Long characterInjuryId,
                                             @RequestBody CpRedCharacterCriticalInjuriesRequest cpRedCharacterCriticalInjuries) {
-        return cpRedCharacterCriticalInjuriesService.updateInjury(injuryId, cpRedCharacterCriticalInjuries);
+        return cpRedCharacterCriticalInjuriesService.updateInjury(characterInjuryId, cpRedCharacterCriticalInjuries);
     }
     
 

@@ -7,6 +7,7 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCriticalInjuries.CpRedCharacterCriticalInjuries;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCriticalInjuries.CpRedCharacterCriticalInjuriesRequest;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.criticalInjuries.CpRedCriticalInjuries;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -41,31 +43,26 @@ public class CpRedCharacterCriticalInjuriesService {
                         injury.getCharacterId().getId(),
                         injury.getInjuriesId().getId()
                 )).toList();
-        if (injuriesDTO.isEmpty()) {
-            return CustomReturnables.getOkResponseMap("Brak krytycznych ran dla tej postaci  .");
-        }
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano rany krytyczne dla tej postaci.");
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano rany krytyczne dla postaci.");
         response.put("injuries", injuriesDTO);
         return response;
     }
-    public  Map<String, Object> getCriticalInjuryById(Long injuryId) {
-        CpRedCharacterCriticalInjuriesDTO injury = CpRedCharacterCriticalInjuriesRepository.findById(injuryId)
+    public  Map<String, Object> getCriticalInjuryById(Long characterInjuryId) {
+        CpRedCharacterCriticalInjuriesDTO injury = CpRedCharacterCriticalInjuriesRepository.findById(characterInjuryId)
                 .map(cpRedCharacterCriticalInjuries -> new CpRedCharacterCriticalInjuriesDTO(
                         cpRedCharacterCriticalInjuries.getStatus().toString(),
                         cpRedCharacterCriticalInjuries.getCharacterId().getId(),
                         cpRedCharacterCriticalInjuries.getInjuriesId().getId()
-                )).orElseThrow(() -> new ResourceNotFoundException("Rana krytyczna o id " + injuryId + " nie została znaleziona"));
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano ranę krytyczną dla tej postaci.");
+                )).orElseThrow(() -> new ResourceNotFoundException("Rana krytyczna o id " + characterInjuryId + " nie została znaleziona"));
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano ranę krytyczną dla postaci.");
         response.put("injury", injury);
         return response;
     }
 
     public Map<String, Object> getCriticalInjuriesByCharacterId(Long characterId) {
-        List<CpRedCharacterCriticalInjuries> injuries = CpRedCharacterCriticalInjuriesRepository.findAllByCharacterId_Id(characterId);
-        if (injuries.isEmpty()) {
-            return CustomReturnables.getOkResponseMap("Brak ran krytycznych dla postaci o id " + characterId);
-        }
-        List<CpRedCharacterCriticalInjuriesDTO> injuriesDTO = injuries.stream().map(injury ->
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        List<CpRedCharacterCriticalInjuriesDTO> injuriesDTO = cpRedCharacterCriticalInjuriesRepository.findAllByCharacter(character).stream().map(injury ->
                 new CpRedCharacterCriticalInjuriesDTO(
                         injury.getStatus().toString(),
                         injury.getCharacterId().getId(),
@@ -138,17 +135,20 @@ public class CpRedCharacterCriticalInjuriesService {
         return CustomReturnables.getOkResponseMap("Rany krytyczne zostały dodane do postaci.");
     }
 
-    public Map<String, Object> deleteInjury(Long injuryId) {
+    public Map<String, Object> deleteInjury(Long characterInjuryId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
-        CpRedCharacterCriticalInjuries injury = cpRedCharacterCriticalInjuriesRepository.findById(injuryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Rana krytyczna o id " + injuryId + " nie została znaleziona"));
+        CpRedCharacterCriticalInjuries characterCriticalInjury = cpRedCharacterCriticalInjuriesRepository.findById(characterInjuryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Rana krytyczna postaci o id " + characterInjuryId + " nie została znaleziona"));
 
-        CpRedCharacters character = cpRedCharactersRepository.findById(injury.getCharacterId().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + injury.getCharacterId().getId() + " nie została znaleziona"));
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterCriticalInjury.getCharacterId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o id " + characterCriticalInjury.getCharacterId().getId() + " nie została znaleziona"));
+
+        CpRedCriticalInjuries injury = cpRedCriticalInjuriesRepository.findById(characterCriticalInjury.getInjuriesId().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Rana krytyczna o id " + characterCriticalInjury.getInjuriesId().getId() + " nie została znaleziona"));
 
         Game game=character.getGame();
         if (game == null) {
@@ -163,17 +163,17 @@ public class CpRedCharacterCriticalInjuriesService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if(character.getUser()==null){
-            if( gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-                throw new IllegalStateException("Nie masz uprawnień do usuwania ran krytycznych dla tej postaci.");
-            }
-        } else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
-            if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do usuwania ran krytycznych dla tej postaci.");
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
+            if (character.getType() != CpRedCharactersType.NPC) {
+                if (!Objects.equals(currentUser.getId(), character.getUser().getId())) {
+                    throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
+                }
+            } else {
+                throw new ResourceNotFoundException("Tylko GM może usunąć pancerz postaci NPC.");
             }
         }
-        cpRedCharacterCriticalInjuriesRepository.deleteById(injuryId);
-        return CustomReturnables.getOkResponseMap("Rana krytyczna o id " + injuryId + " została usunięta.");
+        cpRedCharacterCriticalInjuriesRepository.delete(characterCriticalInjury);
+        return CustomReturnables.getOkResponseMap("Rana krytyczna postaci o id " + characterInjuryId + " została usunięta.");
     }
 
     public Map<String, Object> updateInjury(Long injuryId, CpRedCharacterCriticalInjuriesRequest cpRedCharacterCriticalInjuries) {

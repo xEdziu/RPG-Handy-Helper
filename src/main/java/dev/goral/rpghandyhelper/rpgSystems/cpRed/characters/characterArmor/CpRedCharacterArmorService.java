@@ -222,7 +222,6 @@ public class CpRedCharacterArmorService {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterArmor.getCharacter().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
 
-        // Czy istnieje broń o podanym ID
         CpRedArmors armor = cpRedArmorsRepository.findById(characterArmor.getBaseArmor().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pancerz o podanym ID nie został znaleziony."));
 
