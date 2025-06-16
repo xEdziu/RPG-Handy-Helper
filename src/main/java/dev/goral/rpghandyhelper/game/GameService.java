@@ -80,6 +80,7 @@ public class GameService {
                 .map(gameUser -> new GameUsersDTO(
                         gameUser.getId(),
                         gameUser.getUser().getId(),
+                        gameUser.getUser().getUsername(),
                         gameUser.getGame().getId(),
                         gameUser.getRole().toString()
                 ))
