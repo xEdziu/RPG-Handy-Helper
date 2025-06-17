@@ -16,40 +16,6 @@
         .font-jetbrains-mono {
             font-family: 'JetBrains Mono', monospace;
         }
-
-        /* DARK gradienty – tryb ciemny */
-        .accent-dark-100 {
-            background-color: #12e1b9;
-        }
-
-        .accent-dark-80 {
-            background-color: #44e7c4;
-        }
-
-        .accent-dark-60 {
-            background-color: #76edd0;
-        }
-
-        .accent-dark-40 {
-            background-color: #a8f3db;
-        }
-
-        /* LIGHT gradienty – tryb jasny */
-        .accent-light-100 {
-            background-color: #ED1E46;
-        }
-
-        .accent-light-80 {
-            background-color: #f24e6c;
-        }
-
-        .accent-light-60 {
-            background-color: #f77e91;
-        }
-
-        .accent-light-40 {
-            background-color: #fbaec7;
-        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
     <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
@@ -104,7 +70,7 @@
         var schedulerId = null;
         var schedulerInfo = null;
         var playersInfo = [];
-        var allPlayerAvailable = null
+        var allPlayerAvailable = [];
         const accentShades = {
             dark: {
                 0: "dark:accent-dark-40",
@@ -125,6 +91,8 @@
             getSchedulerIdFromUrl();
             getGameIdFromUrl();
             getUserInfo();
+            getAllPlayerAvailableSchedulers();
+            getPlayerForGame()
             initThemeToggle();
             applyTheme(getSavedTheme());
             setTimeout(() => {
@@ -266,12 +234,10 @@
                 return response.json();
             }).then(data => {
                 data.availability.forEach(PlayerAvailability => {
-                    if (PlayerAvailability.availability.length > 0) {
-                        allPlayerAvailable.push({
-                            playerId: PlayerAvailability.playerId,
-                            availability: PlayerAvailability.availability
-                        });
-                    }
+                    allPlayerAvailable.push({
+                        playerId: PlayerAvailability.playerId,
+                        availability: PlayerAvailability.availability
+                    });
                 });
             }).catch(error => {
                 console.error('Error fetching game schedulers:', error);
@@ -312,7 +278,7 @@
         </div>
     </nav>
     <main
-        class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
+        class="min-h-[86.75vh] flex-grow flex flex-row items-center justify-center bg-light-background dark:bg-dark-background w-full">
         <div class="flex justify-center items-center h-32">
             <div class="w-12 h-12 border-4 border-light-accent dark:border-dark-accent rounded-full animate-ping"
                 role="status" aria-label="Ładowanie"></div>
@@ -416,43 +382,81 @@
         }
         return finalBlocks;
     }
-    function generateHourlyBlocksHTML(hourlyBlocks) {
-
-
-    }
-    function generateDayBockHTML(date, hourlyBlocks) {
-        const dateObj = new Date(date);
-        const dayName = dateObj.toLocaleDateString('pl-PL', { weekday: 'short' });
-        const dayNumber = dateObj.getDate();
-        const monthName = dateObj.toLocaleDateString('pl-PL', { month: 'short' });
-        let html = `
-        <div class="day-block">
-            <h3 class="day-title">${dayName} ${dayNumber} ${monthName}</h3>
-            <div class="hourly-blocks">
-                
-            </div>
-        </div>`;
-        return html;
-    }
     function generateSchedulerDetailsHTML(scheduler) {
-        const uniqueDates = getUniqueDates(scheduler.dateRanges);
-        const uniqueTimes = getUniqueTimes(scheduler.timeRanges);
-        const hourlyBlocks = generateHourlyBlocks(uniqueTimes);
-        const schedulerDetailsContainer = document.createElement('div');
-        schedulerDetailsContainer.className = 'scheduler-details-container';
-        schedulerDetailsContainer.innerHTML = `
-            <div class="scheduler-dates">
-                <h3 class="text-xl font-semibold mb-4">Dostępne Terminy</h3>
-                <div class="dates-container">
-                    ${uniqueDates.map(date => generateDayBockHTML(date, hourlyBlocks)).join('')}
-                </div>
-            </div>
-        `;
+        if (!scheduler) {
+            console.error("Scheduler data is not available.");
+            return;
+        }
+        console.log(allPlayerAvailable);
+        const mainContainer = document.getElementsByTagName("main")[0];
+        const hasAnyoneVotedYet = allPlayerAvailable.some(player => player.availability && player.availability.length > 0);
+        if (!hasAnyoneVotedYet) {
+            const boxMain = document.createElement("div");
+            boxMain.className = "w-auto flex flex-col justify-between items-center max-w-4xl p-6 bg-light-surface dark:bg-dark-surface rounded-lg shadow-md";
+            mainContainer.innerHTML = ""
+            boxMain.innerHTML = `
+                <h2 class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary">
+                    Nikt jeszcze nie dodał swojej dostępności. </br>
+                    Zacznij pierwszy i daj znać, kiedy Ci pasuje!
+                </h2>
+                <button onclick="generateYourAvailabilityHTML()"
+                        class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold">
+                        Dodaj dostępność</button>
+                </article>
+            `;
+            mainContainer.appendChild(boxMain);
+            return;
+        } else {
+            mainContainer.innerHTML = `
+                <article id="player-availability" class="flex flex-row items-center justify-center">
+                
+                </article>
+            `
+            allPlayerAvailable.forEach(player => {
+                if (!player.availability || player.availability.length === 0) {
+                    console.warn(`Player ${player.playerId} has no availability data.`);
+                    return;
+                } else {
+                    generateListOfAvailabityOtherPlayers(player);
+                }
 
-        const dayBlockHTML = generateDayBockHTML(uniqueDates[0], hourlyBlocks);
-        schedulerDetailsContainer.querySelector('.dates-container').innerHTML = dayBlockHTML;
-        const mainContent = document.querySelector('main');
-        mainContent.innerHTML = ''; // Clear existing content
-        mainContent.appendChild(schedulerDetailsContainer);
+            });
+        }
+    }
+    function generateListOfAvailabityOtherPlayers(player) {
+        console.log(playersInfo)
+        const mainContainer = document.getElementById("player-availability");
+        const boxMain = document.createElement("div");
+        boxMain.className = "w-auto flex flex-col justify-between items-center max-w-4xl p-6 bg-light-surface dark:bg-dark-surface rounded-lg shadow-md";
+        const availabilityItems = player.availability.map(avail => {
+            const start = new Date(avail.startDateTime);
+            const end = new Date(avail.endDateTime);
+            const dateStart = start.toLocaleDateString('pl-PL');
+            const dateEnd = end.toLocaleDateString('pl-PL');
+            const startTime = start.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+            const endTime = end.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+            const statusIcons = {
+                YES: "✅",
+                MAYBE: "❓",
+                NO: "❌"
+            };
+            if( dateStart !== dateEnd) {
+                return `<li><strong>${dateStart} – ${dateEnd}</strong>, ${startTime} – ${endTime} ${statusIcons[avail.availabilityType] || ""}</li>`;
+            }
+            return `<li><strong>${dateEnd}</strong>, ${startTime} – ${endTime} ${statusIcons[avail.availabilityType] || ""}</li>`;
+        }).join('');
+        const username = playersInfo.find(p => p.userId === player.playerId)?.username
+        boxMain.innerHTML = `
+            <h2 class="text-2xl font-bold m-4 text-light-textPrimary dark:text-dark-textPrimary">
+                Dostępność gracza: ${username}
+            </h2>
+            <ul class="list-disc list-inside text-light-textSecondary dark:text-dark-textSecondary">
+                ${availabilityItems}
+            </ul>
+        `;
+        mainContainer.appendChild(boxMain);
+    }
+    function generateYourAvailabilityHTML() {
+        
     }
 </script>
