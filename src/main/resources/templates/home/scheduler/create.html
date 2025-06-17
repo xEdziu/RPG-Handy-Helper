@@ -212,7 +212,6 @@
             const title = document.getElementById("titleScheduler").value.trim();
             const date = document.getElementById("dateScheduler").value;
             const minTime = document.getElementById("minTimeMeeting").value;
-            console.log(title, date, minTime);
             const validateInputs = {
                 title: { value: title.length > 0, message: "Tytuł jest wymagany!" },
                 date: { value: date, message: "Data jest wymagana!" },
@@ -256,9 +255,9 @@
             const dateRangeBox = document.getElementById("timeRangeBox");
             const timeRangesDiv = dateRangeBox.querySelectorAll("div");
             const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
-            for (let i = 0; i <= count+1; i++) {
-                const startTime = document.getElementById(`timeRangeStart${i+1}`).value;
-                const endTime = document.getElementById(`timeRangeEnd${i+1}`).value;
+            for (let i = 1; i <= count+1; i++) {
+                const startTime = document.getElementById(`timeRangeStart${i}`).value;
+                const endTime = document.getElementById(`timeRangeEnd${i}`).value;
                 if (startTime && endTime) {
                     timeRanges.push({
                         startTime: startTime + ":00",
@@ -275,7 +274,6 @@
                 return;
             }
             scheduler.timeRanges = timeRanges;
-            console.log(scheduler);
             step4HTML();
         }
         function saveScheduler() {
@@ -482,7 +480,6 @@
                 });
                 return;
             }
-            console.log(`Poprzedni zakres dat: Od ${previousStart} do ${previousEnd}`);
         }
         if (count + 1 > 5) {
             Swal.fire({
@@ -666,11 +663,9 @@
         `;
         if (scheduler.timeRanges.length > 0) {
             scheduler.timeRanges.forEach((range, index) => {
-                console.log(`Dodawanie bloku czasowego ${index + 1}: ${range.startTime} - ${range.endTime}`);
                 addTimeRangeHTML(range.startTime, range.endTime);
             });
         } else {
-            console.log("Brak bloków czasowych, dodawanie domyślnego bloku.");
             addTimeRangeHTML();
         }
         document.getElementById("buttons-controler").innerHTML = "";
