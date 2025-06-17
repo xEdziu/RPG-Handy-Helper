@@ -256,10 +256,9 @@
             const dateRangeBox = document.getElementById("timeRangeBox");
             const timeRangesDiv = dateRangeBox.querySelectorAll("div");
             const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
-            for (let i = 1; i <= count + 2; i++) {
-                const startTime = document.getElementById(`timeRangeStart${i}`).value;
-                const endTime = document.getElementById(`timeRangeEnd${i}`).value;
-                console.log(`Sprawdzanie bloku czasowego ${i}: ${startTime} - ${endTime}`);
+            for (let i = 0; i <= count+1; i++) {
+                const startTime = document.getElementById(`timeRangeStart${i+1}`).value;
+                const endTime = document.getElementById(`timeRangeEnd${i+1}`).value;
                 if (startTime && endTime) {
                     timeRanges.push({
                         startTime: startTime + ":00",
