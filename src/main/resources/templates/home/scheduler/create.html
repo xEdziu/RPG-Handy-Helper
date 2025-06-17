@@ -247,17 +247,29 @@
                     });
                 }
             }
+            if (newDateRanges.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Musisz dodać przynajmniej jeden zakres dat.`,
+                });
+                return;
+            }
             scheduler.dateRanges = newDateRanges;
             step3HTML();
         }
         function validateStep3() {
             const timeRanges = [];
-            const dateRangeBox = document.getElementById("timeRangeBox");
-            const timeRangesDiv = dateRangeBox.querySelectorAll("div");
-            const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
-            for (let i = 0; i <= count+1; i++) {
-                const startTime = document.getElementById(`timeRangeStart${i+1}`).value;
-                const endTime = document.getElementById(`timeRangeEnd${i+1}`).value;
+            const timeRangeBox = document.getElementById("timeRangeBox");
+            const timeRangesDiv = timeRangeBox.querySelectorAll("div");
+            const count = timeRangesDiv.length;
+            for (let i = 1; i <= count; i++) {
+                const startInput = document.getElementById(`timeRangeStart${i}`);
+                const endInput = document.getElementById(`timeRangeEnd${i}`);
+                if (!startInput || !endInput) continue;
+                const startTime = startInput.value;
+                const endTime = endInput.value;
+
                 if (startTime && endTime) {
                     timeRanges.push({
                         startTime: startTime + ":00",
@@ -276,6 +288,7 @@
             scheduler.timeRanges = timeRanges;
             step4HTML();
         }
+
         function saveScheduler() {
             Swal.fire({
                 icon: 'info',
@@ -564,7 +577,7 @@
             addDateRangeHTML();
         });
         document.getElementById("buttons-controler").appendChild(divAddDateRange);
-        addArrow("left", step3HTML);
+        addArrow("left", step1HTML);
     }
     function roundingTime(time) {
         const [hours, minutes] = time.split(':').map(Number);
