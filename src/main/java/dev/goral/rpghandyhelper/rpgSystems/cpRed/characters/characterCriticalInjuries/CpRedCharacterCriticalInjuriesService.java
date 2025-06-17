@@ -119,7 +119,7 @@ public class CpRedCharacterCriticalInjuriesService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może dodawać pancerz postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może dodawać rany krytyczne postaci NPC.");
             }
         }
 
@@ -204,13 +204,13 @@ public class CpRedCharacterCriticalInjuriesService {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika w grze.");
         }
 
-        if(character.getUser()==null){
-            if( gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-                throw new IllegalStateException("Nie masz uprawnień do modyfikowania ran krytycznych dla tej postaci.");
-            }
-        } else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
-            if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do modyfikowania ran krytycznych dla tej postaci.");
+        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER){
+            if (character.getType() != CpRedCharactersType.NPC) {
+                if (!Objects.equals(currentUser.getId(), character.getUser().getId())) {
+                    throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
+                }
+            } else {
+                throw new ResourceNotFoundException("Tylko GM może dodawać rany krytyczne postaci NPC.");
             }
         }
 
