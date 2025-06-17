@@ -1,5 +1,6 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customWeapons;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,14 +14,16 @@ public class CpRedCustomWeaponsDTO {
     private String name;
     private Long requiredSkillId;
     private String type;
-    private int damage;
-    private int magazineCapacity;
-    private short numberOfAttacks;
-    private short handType;
-    private boolean isHidden;
+    private Integer damage;
+    private Integer magazineCapacity;
+    private Short numberOfAttacks;
+    private Short handType;
+    private Boolean isHidden;
     private String quality;
-    private int price;
+    private Integer price;
     private String availability;
-    private boolean isModifiable;
+    private Boolean isModifiable;
+    private Short modSlots;
+    @Column(length = 500)
     private String description;
 }
