@@ -224,9 +224,14 @@
                 const players = playersData.gameUsers || [];
 
                 const yourEntry = players.find(p => p.userId === userId);
-                const role = yourEntry?.role || "Brak";
-                const roleColor = role === "Player" ? "bg-orange-500" : role === "GameMaster" ? "bg-purple-400" : "bg-gray-400";
-                const roleText = role || "Nieznana";
+                const role = (yourEntry?.role || "").toLowerCase();
+                const roleColor =
+                    role === "player" ? "bg-orange-500" :
+                        role === "gamemaster" ? "bg-purple-400" :
+                            "bg-gray-400";
+
+                const roleText = yourEntry?.role || "Nieznana";
+
 
                 gamesContainer.innerHTML += `
                     <a href="/game/${game.id}" class="block hover:shadow-lg transition-shadow duration-200">
