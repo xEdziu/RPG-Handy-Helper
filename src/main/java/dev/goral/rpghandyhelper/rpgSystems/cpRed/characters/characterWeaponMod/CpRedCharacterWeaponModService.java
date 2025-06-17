@@ -244,25 +244,27 @@ public class CpRedCharacterWeaponModService {
         }
 
         // Sprawdzenie zajętego miejsca przez modyfikację
+        CpRedCustomWeaponMods customWeaponMod;
+        CpRedWeaponMods weaponMod;
         int sizeTaken = 0;
         if (isWeaponModCustom) {
-            CpRedCustomWeaponMods customWeaponMod = cpRedCustomWeaponModsRepository.findById(addCharacterWeaponModRequest.getWeaponModId())
+            customWeaponMod = cpRedCustomWeaponModsRepository.findById(addCharacterWeaponModRequest.getWeaponModId())
                     .orElseThrow(() -> new ResourceNotFoundException("Customowa modyfikacja broni o podanym ID nie została znaleziona."));
             sizeTaken = customWeaponMod.getSize();
         } else {
-            CpRedWeaponMods weaponMod = cpRedWeaponModsRepository.findById(addCharacterWeaponModRequest.getWeaponModId())
+            weaponMod = cpRedWeaponModsRepository.findById(addCharacterWeaponModRequest.getWeaponModId())
                     .orElseThrow(() -> new ResourceNotFoundException("Modyfikacja broni o podanym ID nie została znaleziona."));
             sizeTaken = weaponMod.getSize();
         }
         // Sprawdzenie, czy broń ma wystarczająco miejsca na modyfikację
         if (isCharacterWeaponCustom) {
-            if (characterCustomWeapon.getFreeModSlots() > sizeTaken) {
+            if (characterCustomWeapon.getFreeModSlots() >= sizeTaken) {
                 characterCustomWeapon.setFreeModSlots((short) (characterCustomWeapon.getFreeModSlots() - sizeTaken));
             } else {
                 throw new IllegalArgumentException("Customowa broń nie ma wystarczająco miejsca na tę modyfikację.");
             }
         } else {
-            if (characterWeapon.getFreeModSlots() > sizeTaken) {
+            if (characterWeapon.getFreeModSlots() >= sizeTaken) {
                 characterWeapon.setFreeModSlots((short) (characterWeapon.getFreeModSlots() - sizeTaken));
             } else {
                 throw new IllegalArgumentException("Broń nie ma wystarczająco miejsca na tę modyfikację.");
