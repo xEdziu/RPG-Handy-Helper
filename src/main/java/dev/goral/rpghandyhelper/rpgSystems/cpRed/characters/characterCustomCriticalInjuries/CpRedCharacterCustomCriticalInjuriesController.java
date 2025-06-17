@@ -1,6 +1,5 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCriticalInjuries;
 
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCriticalInjuries.UpdateCharacterCustomCriticalInjuriesRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +13,7 @@ public class CpRedCharacterCustomCriticalInjuriesController {
     private final CpRedCharacterCustomCriticalInjuriesService characterCustomCriticalInjuriesService;
     
     @GetMapping(path = "/games/cpRed/characters/customCriticalInjuries/{characterId}")
-    public Map<String, Object> getCharacterCustomCriticalInjuries(Long characterId) {
+    public Map<String, Object> getCharacterCustomCriticalInjuries(@PathVariable("characterId") Long characterId) {
         return characterCustomCriticalInjuriesService.getCharacterCustomCriticalInjuries(characterId);
     }
 
