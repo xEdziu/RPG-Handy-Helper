@@ -16,6 +16,40 @@
         .font-jetbrains-mono {
             font-family: 'JetBrains Mono', monospace;
         }
+
+        /* DARK gradienty – tryb ciemny */
+        .accent-dark-100 {
+            background-color: #12e1b9;
+        }
+
+        .accent-dark-80 {
+            background-color: #44e7c4;
+        }
+
+        .accent-dark-60 {
+            background-color: #76edd0;
+        }
+
+        .accent-dark-40 {
+            background-color: #a8f3db;
+        }
+
+        /* LIGHT gradienty – tryb jasny */
+        .accent-light-100 {
+            background-color: #ED1E46;
+        }
+
+        .accent-light-80 {
+            background-color: #f24e6c;
+        }
+
+        .accent-light-60 {
+            background-color: #f77e91;
+        }
+
+        .accent-light-40 {
+            background-color: #fbaec7;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
     <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
@@ -71,6 +105,20 @@
         var schedulerInfo = null;
         var playersInfo = [];
         var allPlayerAvailable = null
+        const accentShades = {
+            dark: {
+                0: "dark:accent-dark-40",
+                1: "dark:accent-dark-60",
+                2: "dark:accent-dark-80",
+                3: "dark:accent-dark-100"
+            },
+            light: {
+                0: "accent-light-40",
+                1: "accent-light-60",
+                2: "accent-light-80",
+                3: "accent-light-100"
+            }
+        };
 
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
@@ -300,13 +348,11 @@
         }
         return Array.from(uniqueDates); // Return as an array of unique dates
     }
-
     function getUniqueTimes(schedulerData) {
         const uniqueTimes = new Set();
         if (schedulerData && schedulerData.length > 0) {
             schedulerData.forEach(dateRange => {
-                const startTime = dateRange.startTime;
-                const endTime = dateRange.endTime;
+                const { startTime, endTime } = dateRange;
                 const todayDate = new Date().toISOString().split('T')[0];
                 const startDateTime = new Date(`${todayDate}T${startTime}`);
                 const endDateTime = new Date(`${todayDate}T${endTime}`);
@@ -314,72 +360,84 @@
                     console.error('Invalid time(s) encountered:', startTime, endTime);
                     return;
                 }
-                const timeDiff = endDateTime - startDateTime;
-                const hoursDiff = Math.ceil(timeDiff / (1000 * 3600));
-                for (let i = 0; i <= hoursDiff * 2; i++) {
-                    const currentTime = new Date(startDateTime);
-                    currentTime.setMinutes(currentTime.getMinutes() + i * 30);
-                    const timeString = currentTime.toISOString().split('T')[1].split('.')[0];
+                let currentTime = new Date(startDateTime);
+                while (currentTime <= endDateTime) {
+                    const timeString = currentTime.toTimeString().slice(0, 8); // "HH:MM:SS"
                     uniqueTimes.add(timeString);
+                    currentTime = new Date(currentTime.getTime() + 30 * 60 * 1000); // +30 min
                 }
             });
         } else {
             console.log("No scheduler data available.");
         }
-        return Array.from(uniqueTimes);
+        return Array.from(uniqueTimes).sort();
     }
     function generateHourlyBlocks(uniqueTimesSet) {
         const uniqueTimes = Array.from(uniqueTimesSet).sort();
-        const blocks = [];
+        const logicalBlocks = [];
+        if (uniqueTimes.length === 0) return [];
         let currentStartTime = uniqueTimes[0];
-        let currentEndTime = "";
+        let previousTime = uniqueTimes[0];
         let blockNumber = 1;
-        let previousEndTime = null; 
-        for (let i = 0; i < uniqueTimes.length; i++) {
-            const currentTime = uniqueTimes[i];
-            if (new Date(`1970-01-01T${currentTime}`).getMinutes() === 0 || new Date(`1970-01-01T${currentTime}`).getMinutes() === 30) {
-                if (previousEndTime && currentTime !== previousEndTime) {
-                    blockNumber++; 
-                }
-                blocks.push({ start: currentStartTime, end: currentEndTime, blockNumber });
-                currentStartTime = currentTime;
+        for (let i = 1; i < uniqueTimes.length; i++) {
+            const prev = new Date(`1970-01-01T${previousTime}`);
+            const curr = new Date(`1970-01-01T${uniqueTimes[i]}`);
+            const diffMinutes = (curr - prev) / 60000;
+            if (diffMinutes > 30) {
+                logicalBlocks.push({
+                    start: currentStartTime,
+                    end: previousTime,
+                    blockNumber
+                });
+                blockNumber++;
+                currentStartTime = uniqueTimes[i];
             }
-            if (i === uniqueTimes.length - 1) {
-                blocks.push({ start: currentStartTime, end: currentTime, blockNumber });
-            }
-            currentEndTime = uniqueTimes[i + 1] || currentTime;
-            previousEndTime = currentEndTime;
+            previousTime = uniqueTimes[i];
         }
-        return blocks;
+        logicalBlocks.push({
+            start: currentStartTime,
+            end: uniqueTimes[uniqueTimes.length - 1],
+            blockNumber
+        });
+        const finalBlocks = [];
+        for (const block of logicalBlocks) {
+            const start = new Date(`1970-01-01T${block.start}`);
+            const end = new Date(`1970-01-01T${block.end}`);
+            let segmentStart = new Date(start);
+            while (segmentStart < end) {
+                const segmentEnd = new Date(segmentStart.getTime() + 30 * 60000); // +30 min
+                finalBlocks.push({
+                    start: segmentStart.toTimeString().slice(0, 8),
+                    end: segmentEnd > end ? block.end : segmentEnd.toTimeString().slice(0, 8),
+                    blockNumber: block.blockNumber
+                });
+                segmentStart = segmentEnd;
+            }
+        }
+        return finalBlocks;
     }
+    function generateHourlyBlocksHTML(hourlyBlocks) {
 
 
-
+    }
     function generateDayBockHTML(date, hourlyBlocks) {
         const dateObj = new Date(date);
         const dayName = dateObj.toLocaleDateString('pl-PL', { weekday: 'short' });
         const dayNumber = dateObj.getDate();
         const monthName = dateObj.toLocaleDateString('pl-PL', { month: 'short' });
-
-        let html = `<div class="day-block">
-                        <h3 class="day-title">${dayName} ${dayNumber} ${monthName}</h3>
-                        <div class="hourly-blocks">`;
-
-        hourlyBlocks.forEach(block => {
-            html += `<div class="hourly-block">
-                        <span class="start-time">${block.start}</span>
-                        <span class="end-time">${block.end}</span>
-                    </div>`;
-        });
-        html += `</div></div>`;
+        let html = `
+        <div class="day-block">
+            <h3 class="day-title">${dayName} ${dayNumber} ${monthName}</h3>
+            <div class="hourly-blocks">
+                
+            </div>
+        </div>`;
         return html;
     }
     function generateSchedulerDetailsHTML(scheduler) {
         const uniqueDates = getUniqueDates(scheduler.dateRanges);
         const uniqueTimes = getUniqueTimes(scheduler.timeRanges);
-        console.log("uniqueTimes: ", uniqueTimes);
         const hourlyBlocks = generateHourlyBlocks(uniqueTimes);
-        console.log("hourlyBlocks: ", hourlyBlocks);
         const schedulerDetailsContainer = document.createElement('div');
         schedulerDetailsContainer.className = 'scheduler-details-container';
         schedulerDetailsContainer.innerHTML = `
