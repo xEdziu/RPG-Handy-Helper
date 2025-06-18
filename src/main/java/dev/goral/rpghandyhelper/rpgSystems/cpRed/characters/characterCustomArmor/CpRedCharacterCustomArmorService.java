@@ -9,6 +9,7 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmors;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmorsRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
@@ -44,6 +45,7 @@ public class CpRedCharacterCustomArmorService {
                                 armors.getArmorId().getId(),
                                 armors.getCharacterId().getId(),
                                 armors.getStatus().toString(),
+                                armors.getPlace().toString(),
                                 armors.getCurrentArmorPoints(),
                                 armors.getDescription()
                         )
@@ -96,11 +98,23 @@ public class CpRedCharacterCustomArmorService {
             throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
         }
 
+        if (addCharacterCustomArmorRequest.getStatus() == CpRedCharacterItemStatus.EQUIPPED){
+            List<CpRedCharacterCustomArmor> placedArmors = cpRedCharacterCustomArmorRepository.findAllByCharacterIdAndPlace(character, addCharacterCustomArmorRequest.getPlace());
+            // Sprawdzenie miejsca pancerza
+            for (CpRedCharacterCustomArmor placedArmor : placedArmors) {
+                if (placedArmor.getStatus() == CpRedCharacterItemStatus.EQUIPPED && placedArmor.getPlace() == addCharacterCustomArmorRequest.getPlace()) {
+                    throw new IllegalArgumentException("Nie można mieć założonych więcej niż jednego pancerza w tym miejscu.");
+                }
+            }
+        }
+
+
         CpRedCharacterCustomArmor newCharacterCustomArmor = new CpRedCharacterCustomArmor(
                 null,
                 armor,
                 character,
                 addCharacterCustomArmorRequest.getStatus(),
+                addCharacterCustomArmorRequest.getPlace(),
                 armor.getArmorPoints(),
                 armor.getDescription()
         );
@@ -149,14 +163,25 @@ public Map<String,Object> updateCharacterCustomArmor(Long characterCustomArmorId
         throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
     }
 
-    if (updateCharacterCustomArmorRequest.getCurrentArmorPoints() != null) {
+    if (updateCharacterCustomArmorRequest.getCurrentArmorPoints() != null){
         if (updateCharacterCustomArmorRequest.getCurrentArmorPoints() < 0) {
-            throw new IllegalArgumentException("Wartość punktów pancerza nie może być mniejsza niż 0.");
+            throw new IllegalArgumentException("Aktualne punkty pancerza nie mogą być mniejsze niż 0.");
+        }
+        if (updateCharacterCustomArmorRequest.getCurrentArmorPoints() > armor.getArmorPoints()) {
+            throw new IllegalArgumentException("Aktualne punkty pancerza nie mogą być większe niż maksymalne punkty pancerza.");
         }
         characterCustomArmorToUpdate.setCurrentArmorPoints(updateCharacterCustomArmorRequest.getCurrentArmorPoints());
     }
 
-    if (updateCharacterCustomArmorRequest.getStatus() != null) {
+    if (updateCharacterCustomArmorRequest.getStatus() != null){
+        if (updateCharacterCustomArmorRequest.getStatus() == CpRedCharacterItemStatus.EQUIPPED){
+            List<CpRedCharacterCustomArmor> placedArmors = cpRedCharacterCustomArmorRepository.findAllByCharacterIdAndPlace(character, characterCustomArmorToUpdate.getPlace());
+            for (CpRedCharacterCustomArmor placedArmor : placedArmors) {
+                if (placedArmor.getStatus() == CpRedCharacterItemStatus.EQUIPPED && placedArmor.getPlace() == characterCustomArmorToUpdate.getPlace()) {
+                    throw new IllegalArgumentException("Nie można mieć założonych więcej niż jednego pancerza w tym miejscu.");
+                }
+            }
+        }
         characterCustomArmorToUpdate.setStatus(updateCharacterCustomArmorRequest.getStatus());
     }
 
@@ -179,7 +204,7 @@ public Map<String,Object> updateCharacterCustomArmor(Long characterCustomArmorId
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         CpRedCharacterCustomArmor characterCustomArmor = cpRedCharacterCustomArmorRepository.findById(characterCustomArmorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Pancerz postaci o podanym ID nie została znaleziona."));
+                .orElseThrow(() -> new ResourceNotFoundException("Pancerz postaci o podanym ID nie został znaleziony."));
 
         CpRedCharacters character = cpRedCharactersRepository.findById(characterCustomArmor.getCharacterId().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
