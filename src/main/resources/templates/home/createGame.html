@@ -199,7 +199,7 @@
         // ==== Create Game ====
         function createGame() {
             var systemSelect = document.getElementById("systemSelect").value;
-            var gameName = document.getElementById("titleInput").value;
+            var gameName = document.getElementById("titleInput").value.trim();
             var gameDescription = document.getElementById("descriptionInput").value;
             if (!Number(systemSelect)) {
                 Swal.fire({
@@ -343,7 +343,7 @@
                         </select>
 
                         <input id="titleInput" type="text" placeholder="Nazwa gry"
-                            class="text-2xl w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary" />
+                            class="text-2xl w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary"  maxlength="75"/>
 
                         <textarea id="descriptionInput" placeholder="Opis gry"
                             class="text-2xl h-[20vh] lg:h-full w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary resize-none"></textarea>
