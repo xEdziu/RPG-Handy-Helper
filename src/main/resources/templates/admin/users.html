@@ -161,17 +161,17 @@
         <table class="mt-2 w-[80%] text-light-textPrimary dark:text-dark-textPrimary gap-y-[1rem]">
             <thead>
                 <tr
-                    class="text-base md:text-xl text-bold font-jetbrains-mono border-b border-light-border dark:border-dark-border">
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>First Name</th>
-                    <th>Surname</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Locked</th>
-                    <th>Enabled</th>
-                    <th>OAuthProvider</th>
-                    <th>Created At</th>
+                    class="text-base text-bold font-jetbrains-mono border-b border-light-border dark:border-dark-border">
+                    <th><p class="mx-1">ID</p></th>
+                    <th><p class="mx-1">Username</p></th>
+                    <th><p class="mx-1">First Name</p></th>
+                    <th><p class="mx-1">Surname</p></th>
+                    <th><p class="mx-1">Email</p></th>
+                    <th><p class="mx-1">Role</p></th>
+                    <th><p class="mx-1">Locked</p></th>
+                    <th><p class="mx-1">Enabled</p></th>
+                    <th><p class="mx-1">OAuthProvider</p></th>
+                    <th><p class="mx-1">Created At</p></th>
                 </tr>
             </thead>
             <tbody>
@@ -216,16 +216,16 @@
                     const row = document.createElement('tr');
                     row.classList.add("border-b", "border-light-border", "dark:border-dark-border", "py-5");
                     row.innerHTML = `
-                    <td class="py-2 md:py-5">${user.id}</td>
-                    <td class="py-2 md:py-5">${user.username}</td>
-                    <td class="py-2 md:py-5">${user.firstName}</td>
-                    <td class="py-2 md:py-5">${user.surname}</td>
-                    <td class="py-2 md:py-5">${user.email}</td>
-                    <td class="py-2 md:py-5">${user.role}</td>
-                    <td class="text-center py-2 md:py-5">${user.locked ? 'Yes' : 'No'}</td>
-                    <td class="text-center py-2 md:py-5">${user.enabled ? 'Yes' : 'No'}</td>
-                    <td class="text-center py-2 md:py-5">${user.oauthProvider || 'None'}</td>
-                    <td class="text-center py-2 md:py-5">${new Date(user.createdAt).toLocaleString()}</td>
+                    <td class=""><p class="py-2 md:py-5">${user.id}</p></td>
+                    <td class=""><p class="py-2 md:py-5">${user.username}</p></td>
+                    <td class=""><p class="py-2 md:py-5">${user.firstName}</p></td>
+                    <td class=""><p class="py-2 md:py-5">${user.surname}</p></td>
+                    <td class=""><p class="py-2 md:py-5">${user.email}</p></td>
+                    <td class=""><p class="py-2 md:py-5">${user.role}</p></td>
+                    <td class="text-center"><p class="py-2 md:py-5">${user.locked ? 'Yes' : 'No'}</p></td>
+                    <td class="text-center"><p class="py-2 md:py-5">${user.enabled ? 'Yes' : 'No'}</p></td>
+                    <td class="text-center"><p class="py-2 md:py-5">${user.oauthProvider || 'None'}</p></td>
+                    <td class="text-center"><p class="py-2 md:py-5">${new Date(user.createdAt).toLocaleString()}</td>
                     <td class="py-2 md:py-5"><button class="edit-button px-3 py-2  bg-light-warning dark:bg-dark-warning rounded-md text-bold">Edytuj</button></td>
                     <td class="py-2 md:py-5"><button class="delete-button px-3 py-2  bg-light-error dark:bg-dark-error rounded-md text-bold">Usuń</button></td>
                 `;
