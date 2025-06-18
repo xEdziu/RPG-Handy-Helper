@@ -184,12 +184,12 @@
                 userInfo = data;
                 const usersList = document.getElementById("users-list");
                 const userDiv = document.createElement("div");
-                userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl text-light-textPrimary dark:text-dark-textPrimary";
+                userDiv.className = "w-full flex flex-row items-center justify-between p-3 text-base md:text-xl text-light-textPrimary dark:text-dark-textPrimary";
                 userDiv.innerHTML = `
                 <p>
                     ${userInfo.username} (Ty)
                 </p>
-                <span class="w-[40%] font-bold px-4 py-2"> GameMaster</span>
+                <span class="font-bold px-4 py-1"> GameMaster</span>
                 `;
                 usersList.appendChild(userDiv);
             }).catch(error => {
@@ -338,15 +338,15 @@
                     <article id="create-game-info"
                         class="w-[45%] h-[100%] flex flex-col items-center justify-center w-full gap-4">
                         <select id="systemSelect"
-                            class="text-2xl w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary">
+                            class="text-base md:text-2xl w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary">
                             <option disabled selected>System gry</option>
                         </select>
 
                         <input id="titleInput" type="text" placeholder="Nazwa gry"
-                            class="text-2xl w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary"  maxlength="75"/>
+                            class="text-base md:text-2xl w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary"  maxlength="75"/>
 
                         <textarea id="descriptionInput" placeholder="Opis gry"
-                            class="text-2xl h-[20vh] lg:h-full w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary resize-none"></textarea>
+                            class="text-base md:text-2xl h-[20vh] lg:h-full w-full p-3 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary resize-none"></textarea>
                     </article>
                     <article id="user-box"
                         class="w-[45%] h-[40vh] lg:h-full flex flex-col items-center justify-center w-full rounded-md border border-light-border dark:border-dark-border">
@@ -357,9 +357,9 @@
                         <!-- Add user button -->
                         <div class="w-full flex items-end justify-end p-4">
                             <div id="add-user"
-                                class="w-20 h-20 rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary hover:bg-light-accentDark dark:hover:bg-dark-accentDark transitionduration-300 cursor-pointer flex items-center justify-center"
+                                class="w-10 h-10 md:w-20 md:h-20 rounded-full bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary hover:bg-light-accentDark dark:hover:bg-dark-accentDark transitionduration-300 cursor-pointer flex items-center justify-center"
                                 onclick="addUserToListHTML()">
-                                <i class="fa-solid fa-plus text-5xl"></i>
+                                <i class="fa-solid fa-plus text-3xl md:text-5xl"></i>
                             </div>
                         </div>
                     </article>
@@ -371,7 +371,7 @@
                         UTWÓRZ GRĘ
                     </button>
                     <button
-                        class="text-2xl sm:text-3xl py-4 px-5 sm:px-10 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50">
+                        class="text-2xl sm:text-3xl py-4 px-5 sm:px-10 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 whitespace-nowrap font-bold font-jetbrains-mono disabled:dark:bg-dark-accentDark disabled:cursor-not-allowed disabled:bg-light-accentDark disabled:opacity-50" href="location.href='/home/games'">
                         ANULUJ
                     </button>
                 </div>
@@ -436,7 +436,7 @@
         userList.push(user);
         const divUserList = document.getElementById("users-list");
         const userDiv = document.createElement("div");
-        userDiv.className = "w-full flex flex-row items-center justify-between p-4 text-xl text-light-textPrimary dark:text-dark-textPrimary";
+        userDiv.className = "w-full flex flex-row items-center justify-between p-1 text-xl text-light-textPrimary dark:text-dark-textPrimary";
         userDiv.id = `user-${user.id}`;
         userDiv.innerHTML = userHTML(user);
         divUserList.appendChild(userDiv);
@@ -509,14 +509,14 @@
         const editor = document.getElementById("create-editor");
         editor.innerHTML = `
             <div class="w-full flex flex-col items-center justify-center">
-                <div class="h-[3rem] w-[80%] flex items-center justify-center">
-                    <h1 class="text-lg font-bold mx-4">Wyszukaj</h1>
-                    <input type="text" id="usernameInput" placeholder="Nazwa użytkownika" onchange="searchUser()"
+                <div class="h-[2rem] w-[80%] flex items-center justify-center">
+                    <h1 class="text-base md:text-xl font-bold mx-4">Wyszukaj</h1>
+                    <input type="text" id="usernameInput" placeholder="Nazwa użytkownika" oninput="searchUser()"
                         class="text-md w-[80%] p-1 rounded-md border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-textPrimary dark:text-dark-textPrimary">
                 </div>
                 <div id="users-list-search"
-                    class="w-full flex flex-col items-center justify-start gap-4 overflow-y-auto">
-                    <span class="text-xl text-light-textPrimary dark:text-dark-textPrimary font-bold mt-[18vh]">
+                    class="w-full flex flex-col items-center justify-start gap-1 overflow-y-auto">
+                    <span class="text-base md:text-xl text-light-textPrimary dark:text-dark-textPrimary font-bold mt-[18vh]">
                         Wpisz nazwę użytkownika,<br>
                         aby móc dodać go do gry.
                     </span>
@@ -540,9 +540,9 @@
     function userHTML(user) {
         return `
         <p>
-            <i class="fa-solid fa-xmark mr-3" onclick=deleteUserFromList(${user.id})></i>${user.username}
+            <i class="fa-solid fa-xmark mx-3" onclick=deleteUserFromList(${user.id})></i>${user.username}
         </p>
-        <select id="roleFor${user.id}" onchange="updateRoleColor(this)" class="roleSelect w-[40%] font-bold px-4 py-2 rounded-md transition duration-200">
+        <select id="roleFor${user.id}" onchange="updateRoleColor(this)" class="roleSelect w-[40%] font-bold mr-3 px-4 py-2 rounded-md transition duration-200">
             <option value="PLAYER">Player</option>
             <option value="SPECTATOR">Spectator</option>
             <option value="GAMEMASTER">GameMaster</option>
