@@ -1,19 +1,19 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomArmor;
 
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterArmor.CpRedCharacterArmorPlace;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-@ToString
-public class CpRedCharacterCustomArmorDTO {
-    private Long id;
+@NoArgsConstructor
+public class AddCharacterCustomArmorRequest {
     private Long armorId;
     private Long characterId;
-    private String status;
-    private String place;
-    private int currentArmorPoints;
-    private String description;
+    private CpRedCharacterItemStatus status;
+    private CpRedCharacterArmorPlace place;
 }

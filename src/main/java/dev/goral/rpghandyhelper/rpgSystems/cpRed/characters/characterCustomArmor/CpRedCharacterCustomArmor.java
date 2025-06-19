@@ -1,6 +1,7 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomArmor;
 
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterArmor.CpRedCharacterArmorPlace;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customArmors.CpRedCustomArmors;
 import jakarta.persistence.*;
@@ -41,6 +42,8 @@ public class CpRedCharacterCustomArmor {
     private CpRedCharacters characterId;
     @Enumerated(EnumType.STRING)
     private CpRedCharacterItemStatus status;
+    @Enumerated(EnumType.STRING)
+    private CpRedCharacterArmorPlace place;
     private int currentArmorPoints;
     private String description;
 }
