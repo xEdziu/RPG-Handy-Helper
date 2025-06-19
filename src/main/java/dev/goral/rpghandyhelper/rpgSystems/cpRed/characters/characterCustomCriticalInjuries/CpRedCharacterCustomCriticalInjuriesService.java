@@ -103,7 +103,7 @@ public class CpRedCharacterCustomCriticalInjuriesService {
         }
 
         if (characterCustomCriticalInjuriesRepository.existsByCharacterAndCustomInjuries(character, customCriticalInjuries)) {
-            throw new IllegalArgumentException("Postać ma już przypisaną tę customowe rany krytyczne.");
+            throw new IllegalArgumentException("Postać ma już przypisane te customowe rany krytyczne.");
         }
 
         CpRedCharacterCustomCriticalInjuries newCharacterCustomCriticalInjuries = new CpRedCharacterCustomCriticalInjuries(
@@ -115,7 +115,7 @@ public class CpRedCharacterCustomCriticalInjuriesService {
 
         characterCustomCriticalInjuriesRepository.save(newCharacterCustomCriticalInjuries);
 
-        return CustomReturnables.getOkResponseMap("Customowe rany krytyczne została dodana do postaci");
+        return CustomReturnables.getOkResponseMap("Customowe rany krytyczne zostały dodane do postaci");
     }
 
     public Map<String, Object> updateCharacterCustomCriticalInjuries(Long characterCustomCriticalInjuriesId,
@@ -157,7 +157,7 @@ public class CpRedCharacterCustomCriticalInjuriesService {
         
         characterCustomCriticalInjuriesRepository.save(characterCustomCriticalInjuriesToUpdate);
 
-        return CustomReturnables.getOkResponseMap("Customowe rany krytyczne postaci została pomyślnie zmodyfikowana");
+        return CustomReturnables.getOkResponseMap("Customowe rany krytyczne postaci zostały pomyślnie zmodyfikowane");
     }
 
     public Map<String, Object> deleteCharacterCustomCriticalInjuries(Long characterCustomCriticalInjuriesId) {
@@ -167,7 +167,7 @@ public class CpRedCharacterCustomCriticalInjuriesService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
         
         CpRedCharacterCustomCriticalInjuries characterCustomCriticalInjuriesToDelete = characterCustomCriticalInjuriesRepository.findById(characterCustomCriticalInjuriesId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customowe rany krytyczne postaci o podanym ID nie została znaleziona."));
+                .orElseThrow(() -> new ResourceNotFoundException("Customowe rany krytyczne postaci o podanym ID nie zostały znalezione."));
         
         CpRedCharacters character = cpRedCharactersRepository.findById(characterCustomCriticalInjuriesToDelete.getCharacter().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
