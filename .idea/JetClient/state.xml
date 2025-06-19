@@ -499,7 +499,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  requiredSkillId: 1,&#10;  name: &quot;Średni pistolet 2&quot;,&#10;  damage: 3,&#10;  magazineCapacity: 8,&#10;  standardAmmunitionId: 1,&#10;  numberOfAttacks: 2,&#10;  handType: 1,&#10;  hidden: true,&#10;  quality: &quot;STANDARD&quot;,&#10;  price: 300,&#10;  availability: &quot;EVERYDAY&quot;,&#10;  modifiable: true,&#10;  description: &quot;Mała lekka broń palna, która nie wymaga dużej siły do użycia. Idealna do walki w bliskim zasięgu.&quot;,&#10;}" />
+                                            <option name="raw" value="{&#10;  requiredSkillId: 1,&#10;  name: &quot;Średni pistolet 2&quot;,&#10;  damage: 3,&#10;  magazineCapacity: 8,&#10;  standardAmmunitionId: 1,&#10;  numberOfAttacks: 2,&#10;  handType: 1,&#10;  isHidden: true,&#10;  quality: &quot;STANDARD&quot;,&#10;  price: 300,&#10;  availability: &quot;EVERYDAY&quot;,&#10;  isModifiable: true,&#10;  modSlots: 3,&#10;  description: &quot;Mała lekka broń palna, która nie wymaga dużej siły do użycia. Idealna do walki w bliskim zasięgu.&quot;,&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -513,7 +513,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  requiredSkillId: 2,&#10;  name: &quot;Średni pistolet zmodyfikowany&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 16,&#10;  standardAmmunitionId: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 2,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 4000,&#10;  availability: &quot;LUXURY&quot;,&#10;  description: &quot;Inny opis&quot;,&#10;}" />
+                                            <option name="raw" value="{&#10;  requiredSkillId: 2,&#10;  name: &quot;Średni pistolet zmodyfikowany&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 16,&#10;  standardAmmunitionId: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 2,&#10;  isHidden: false,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 4000,&#10;  availability: &quot;LUXURY&quot;,&#10;  isModifiable: false,&#10;  modSlots: 3,&#10;  description: &quot;Inny opis&quot;,&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -522,23 +522,7 @@
                                         <option name="method" value="PUT" />
                                         <option name="name" value="Modyfikuj broń" />
                                         <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/update/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Zmienia parametry ukrywalności" />
-                                        <option name="id" value="e5c69d47-73ed-4725-a9d6-e71c6721aee0" />
-                                        <option name="method" value="PUT" />
-                                        <option name="name" value="Zmień ukrywalność broni" />
-                                        <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/update/hide/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Zmienia parametr odpowiedzialny za ukrywanie broni" />
-                                        <option name="id" value="59d2ed1b-8001-46cc-8e02-f4249216d6e4" />
-                                        <option name="method" value="PUT" />
-                                        <option name="name" value="Zmień modyfikowalność broni" />
-                                        <option name="sortWeight" value="4000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/update/modifiable/2" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/weapons/update/3" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Pobiera liste wszystkich broni" />
@@ -554,7 +538,7 @@
                                         <option name="method" value="GET" />
                                         <option name="name" value="Pobierz broń po id" />
                                         <option name="sortWeight" value="6000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/weapons/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/weapons/3" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Pobiera listę wszystkich broni dla admina" />
@@ -1068,7 +1052,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  requiredSkillId: 1,&#10;  name: &quot;test weapon&quot;,&#10;  type: &quot;SNIPER_RIFLE&quot;,&#10;  damage: 2,&#10;  magazineCapacity: 10,&#10;  numberOfAttacks: 2,&#10;  handType: 2,&#10;  hidden: true,&#10;  quality: &quot;STANDARD&quot;,&#10;  price: 1000,&#10;  availability: &quot;VERY_EXPENSIVE&quot;,&#10;  modifiable: true,&#10;  description: &quot;Jakiś piękny opis&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  requiredSkillId: 1,&#10;  name: &quot;test weapon&quot;,&#10;  type: &quot;SNIPER_RIFLE&quot;,&#10;  damage: 2,&#10;  magazineCapacity: 10,&#10;  numberOfAttacks: 2,&#10;  handType: 2,&#10;  isHidden: true,&#10;  quality: &quot;STANDARD&quot;,&#10;  price: 1000,&#10;  availability: &quot;VERY_EXPENSIVE&quot;,&#10;  isModifiable: true,&#10;  modSlots: 3,&#10;  description: &quot;Jakiś piękny opis&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -1082,7 +1066,7 @@
                                       <requestState>
                                         <option name="body">
                                           <bodyState>
-                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  requiredSkillId: 2,&#10;  name: &quot;zmodyfikoany test weapon&quot;,&#10;  type: &quot;ROCKET_LAUNCHER&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 3,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 20000,&#10;  availability: &quot;SUPER_LUXURY&quot;,&#10;  description: &quot;Jakiś jeszcze piękniejszy opis&quot;&#10;}" />
+                                            <option name="raw" value="{&#10;  gameId: 1,&#10;  requiredSkillId: 2,&#10;  name: &quot;zmodyfikoany test weapon&quot;,&#10;  type: &quot;ROCKET_LAUNCHER&quot;,&#10;  damage: 4,&#10;  magazineCapacity: 2,&#10;  numberOfAttacks: 1,&#10;  handType: 3,&#10;  isHidden: false,&#10;  quality: &quot;EXCELLENT&quot;,&#10;  price: 20000,&#10;  availability: &quot;SUPER_LUXURY&quot;,&#10;  isModifiable: false,&#10;  modSlots: 3,&#10;  description: &quot;Jakiś jeszcze piękniejszy opis&quot;&#10;}" />
                                             <option name="type" value="JSON" />
                                           </bodyState>
                                         </option>
@@ -1091,23 +1075,7 @@
                                         <option name="method" value="PUT" />
                                         <option name="name" value="Modyfikuj customową broń" />
                                         <option name="sortWeight" value="2000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/update/1" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Zmienia na zasadzie switch parametr ukrywalności" />
-                                        <option name="id" value="184e04d2-6c90-49e3-81f9-e2dc4d3dfe75" />
-                                        <option name="method" value="PUT" />
-                                        <option name="name" value="Zmień ukrywalność" />
-                                        <option name="sortWeight" value="3000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/changeHide/2" />
-                                      </requestState>
-                                      <requestState>
-                                        <option name="description" value="Zmienia na zasadzie switch parametr modyfikowalności" />
-                                        <option name="id" value="3ed436c4-8dbd-4c25-bb06-ba623bbdcbc8" />
-                                        <option name="method" value="PUT" />
-                                        <option name="name" value="Zmień modyfikowalność" />
-                                        <option name="sortWeight" value="4000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/changeModifiable/1" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/update/3" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Zwraca listę wszystkich customowych broni" />
@@ -1123,7 +1091,7 @@
                                         <option name="method" value="GET" />
                                         <option name="name" value="Pobierz customową broń po id" />
                                         <option name="sortWeight" value="6000000" />
-                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/2" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/customWeapons/3" />
                                       </requestState>
                                       <requestState>
                                         <option name="description" value="Pobiera listę wszystkich customowych broni dla admina" />
@@ -2326,6 +2294,57 @@
                                       <folderState>
                                         <option name="id" value="1a18411c-3da4-4900-a4d3-b3a45d01b1b4" />
                                         <option name="name" value="Mod" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  characterId: 1,&#10;  characterWeaponId: 1,&#10;  isCharacterWeaponCustom: false,&#10;  weaponModId: 1,&#10;  isWeaponModCustom: false&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="55d48fac-41a8-4b4a-9892-f6350805037d" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Dodaj modyfikacje do broni postaci" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weaponMods/create" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="804490e9-af5a-411c-8219-8a3390d97fb9" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie modyfikacje danej po id postaci" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weaponMods/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  characterWeaponId: 1,&#10;  isCharacterWeaponCustom: false&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="id" value="ebf70799-eef4-4e14-b0a0-132dfa507859" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie modyfikacje danej po id broni postaci" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weaponMods/forWeapon" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="29f3352b-13b3-450f-91f6-cb089a54bf21" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Pobierz wszystkie powiązania broni postaci i modyfikacji" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/weaponMods/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="id" value="a95b6902-4a3c-4f6b-86df-dd5bb2cca050" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń poadną po id modyfikacje broni postaci" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/weaponMods/delete/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
                                         <option name="sortWeight" value="3000000" />
                                       </folderState>
                                       <folderState>
