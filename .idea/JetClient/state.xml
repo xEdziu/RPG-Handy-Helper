@@ -2667,6 +2667,83 @@
                                   <option name="sortWeight" value="4000000" />
                                 </folderState>
                                 <folderState>
+                                  <option name="id" value="5325578f-6929-45b1-8c9b-29e093699d7e" />
+                                  <option name="name" value="Friends" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  characterId: 2,&#10;  name: &quot;Papa Słoń&quot;,&#10;  description: &quot;Dla przyjaciół Mariusz&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Tworzy przyjaciela przypisanego do konkretnej karty postaci" />
+                                        <option name="id" value="536ae667-e2e4-4f6b-af18-0633ed2fd215" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Stwórz przyjaciela" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/add" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Usuwa przyjaciela przypisanego do karty postaci :-(" />
+                                        <option name="id" value="d29f7b39-d59a-4199-9eff-8e9959ed8c25" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń przyjaciela :-(" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/delete/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkich przyjaciół z każdej karty postaci" />
+                                        <option name="id" value="7cf79ef3-9f9d-4e15-b0ba-5b3e68527537" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkich przyjaciół" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca przyjaciela po unikalnym id" />
+                                        <option name="id" value="d081f8f0-5e42-4dcd-a5d5-985a97392c45" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć przyjaciela po id" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/1" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca obiekty" />
+                                        <option name="id" value="80f9b28a-ba35-4c75-adbf-9d032e0d054a" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć wszystkich przyjaciół dla Admina" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/friends/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkich przyjaciół z konkretnej karty postaci" />
+                                        <option name="id" value="f13e4604-bb58-42a1-af43-ff5f23c963c8" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Zwróć przyjaciół po characterId" />
+                                        <option name="sortWeight" value="6000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/character/2" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  characterId: 2,&#10;  name: &quot;Marcin&quot;,&#10;  description: &quot;Przyjaciel z dzieciństwa&quot;&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Zmień dane przyjaciela" />
+                                        <option name="id" value="d5e95b8f-9c58-4462-978a-9eb85068b8c2" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj przyjaciół" />
+                                        <option name="sortWeight" value="7000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/friends/update/1" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="4000000" />
+                                </folderState>
+                                <folderState>
                                   <option name="id" value="a85f73b2-88dd-4094-aefb-03bad39725ba" />
                                   <option name="name" value="LifePaths" />
                                   <option name="sortWeight" value="5000000" />
@@ -2902,6 +2979,78 @@
                                       <folderState>
                                         <option name="id" value="cda846f9-05e3-449a-85e3-bd72ec61d51c" />
                                         <option name="name" value="Manual" />
+                                        <option name="requests">
+                                          <list>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  characterId: 2,&#10;  injuriesId: 1,&#10;  status: &quot;ACTIVE&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Tworzy ranę przypisaną do konkretnej karty postaci" />
+                                              <option name="id" value="787f6edc-13e2-4ce0-86b8-d4a2876a176e" />
+                                              <option name="method" value="POST" />
+                                              <option name="name" value="Stwórz ranę" />
+                                              <option name="sortWeight" value="1000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/add" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Usuwa ranę przypisaną do karty postaci" />
+                                              <option name="id" value="10fe70cf-7963-4652-bef9-1ee8030c555f" />
+                                              <option name="method" value="DELETE" />
+                                              <option name="name" value="Usuń ranę" />
+                                              <option name="sortWeight" value="2000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/delete/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca wszystkie rany z każdej karty postaci" />
+                                              <option name="id" value="d1186c3a-731a-482a-859f-d13f4d6bf95e" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Zwróć wszystkie rany" />
+                                              <option name="sortWeight" value="3000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca ranę po unikalnym id" />
+                                              <option name="id" value="4bd51ead-d718-4ea5-ad1d-8730730c3246" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Zwróć ranę po id" />
+                                              <option name="sortWeight" value="4000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/1" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca obiekty" />
+                                              <option name="id" value="b2cc9d2c-46a9-403a-b45d-86f4ecea6f8f" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Zwróć wszystkie rany dla Admina" />
+                                              <option name="sortWeight" value="5000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/admin/rpgSystems/cpRed/character/criticalInjuries/all" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="description" value="Zwraca wszystkie rany z konkretnej karty postaci" />
+                                              <option name="id" value="77859b6a-8073-4b7f-8745-f834f568b11f" />
+                                              <option name="method" value="GET" />
+                                              <option name="name" value="Zwróć rany po characterId" />
+                                              <option name="sortWeight" value="6000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/character/2" />
+                                            </requestState>
+                                            <requestState>
+                                              <option name="body">
+                                                <bodyState>
+                                                  <option name="raw" value="{&#10;  characterId: 2,&#10;  injuriesId: 2,&#10;  status:&quot;CURED&quot;&#10;}" />
+                                                  <option name="type" value="JSON" />
+                                                </bodyState>
+                                              </option>
+                                              <option name="description" value="Zmień dane rany" />
+                                              <option name="id" value="a23633c1-8e5b-44b4-8f82-e635e67dc60c" />
+                                              <option name="method" value="PUT" />
+                                              <option name="name" value="Modyfikuj ranę" />
+                                              <option name="sortWeight" value="7000000" />
+                                              <option name="url" value="http://localhost:8888/api/v1/authorized/rpgSystems/cpRed/character/criticalInjuries/update/1" />
+                                            </requestState>
+                                          </list>
+                                        </option>
                                         <option name="sortWeight" value="1000000" />
                                       </folderState>
                                       <folderState>
