@@ -171,7 +171,7 @@ public class CpRedCharacterCriticalInjuriesService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może usunąć pancerz postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może usunąć rany krytyczne postaci NPC.");
             }
         }
         cpRedCharacterCriticalInjuriesRepository.delete(characterCriticalInjury);
