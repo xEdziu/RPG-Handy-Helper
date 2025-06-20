@@ -12,7 +12,7 @@ public class CpRedCharacterCustomArmorController {
     private final CpRedCharacterCustomArmorService cpRedCharacterCustomArmorService;
 
     @GetMapping(path = "/games/cpRed/characters/customArmors/{characterId}")
-    public Map<String, Object> getCharacterCustomArmors(@PathVariable("characterId") Long characterId) {
+    public Map<String, Object> getCharacterCustomArmors(Long characterId) {
         return cpRedCharacterCustomArmorService.getCharacterCustomArmors(characterId);
     }
 

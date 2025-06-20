@@ -207,7 +207,7 @@ public class CpRedCharacterCustomAmmunitionService {
                     throw new ResourceNotFoundException("Zalogowany użytkownik nie jest GM-em w tej grze ani nie jest właścicielem postaci.");
                 }
             } else {
-                throw new ResourceNotFoundException("Tylko GM może zmieniać customowe amunicje postaci NPC.");
+                throw new ResourceNotFoundException("Tylko GM może zmieniać customową amunicje postaci NPC.");
             }
         }
 
