@@ -11,6 +11,5 @@ public class CpRedCharacterCustomCyberwareDTO {
     private Long Id;
     private Long cyberwareId;
     private Long characterId;
-    private String status;
     private String description;
 }

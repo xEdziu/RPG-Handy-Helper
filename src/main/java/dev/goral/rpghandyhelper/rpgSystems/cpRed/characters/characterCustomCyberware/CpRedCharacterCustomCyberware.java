@@ -40,8 +40,5 @@ public class CpRedCharacterCustomCyberware {
             referencedColumnName = "id"
     )
     private CpRedCharacters characterId;
-
-    @Enumerated(EnumType.STRING)
-    private CpRedCharacterItemStatus status;
     private String description;
 }
