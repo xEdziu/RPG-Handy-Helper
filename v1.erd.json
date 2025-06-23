@@ -4,8 +4,8 @@
   "settings": {
     "width": 8000,
     "height": 8000,
-    "scrollTop": -1380.2755,
-    "scrollLeft": -3106.5717,
+    "scrollTop": -1064.2755,
+    "scrollLeft": -5475.5717,
     "zoomLevel": 0.88,
     "show": 431,
     "database": 4,
@@ -8195,20 +8195,20 @@
       "FedduTU9j0Q4C-GKmkwH-": {
         "id": "FedduTU9j0Q4C-GKmkwH-",
         "tableId": "g_gWBWwLpqruyLpM-PV1l",
-        "name": "price_for_bullet",
+        "name": "price_per_bullet",
         "comment": "cena jednego pocisku",
         "dataType": "INT",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 83,
+          "widthName": 85,
           "widthComment": 117,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1743772707865,
+          "updateAt": 1750671460055,
           "createAt": 1743543172879
         }
       },
@@ -11139,7 +11139,7 @@
         "comment": "id from CP_RED_CHARACTERS",
         "dataType": "INT",
         "default": "",
-        "options": 0,
+        "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 66,
@@ -11148,7 +11148,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1750535052714,
+          "updateAt": 1750671429984,
           "createAt": 1750534744203
         }
       },
@@ -11159,7 +11159,7 @@
         "comment": "id from CP_RED_CHARACTER_WEAPON/CUSTOM_WEAPON",
         "dataType": "INT",
         "default": "",
-        "options": 0,
+        "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 113,
@@ -11168,7 +11168,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1750535100908,
+          "updateAt": 1750671430644,
           "createAt": 1750534755808
         }
       },
@@ -11179,7 +11179,7 @@
         "comment": "czy broń jest custommowa czy zwykła",
         "dataType": "BOOL",
         "default": "",
-        "options": 0,
+        "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 155,
@@ -11188,7 +11188,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1750535171247,
+          "updateAt": 1750671431463,
           "createAt": 1750534767564
         }
       },
@@ -11199,7 +11199,7 @@
         "comment": "id from CP_RED_WEAPON_MOD/CUSTOM_WEAPON_MOD",
         "dataType": "INT",
         "default": "",
-        "options": 0,
+        "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 93,
@@ -11208,7 +11208,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1750535135273,
+          "updateAt": 1750671432154,
           "createAt": 1750534785909
         }
       },
@@ -11219,7 +11219,7 @@
         "comment": "czy mod jest cusotomowy czy zwykły",
         "dataType": "BOOL",
         "default": "",
-        "options": 0,
+        "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 130,
@@ -11228,7 +11228,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1750535185191,
+          "updateAt": 1750671433945,
           "createAt": 1750534805647
         }
       },
@@ -11239,7 +11239,7 @@
         "comment": "",
         "dataType": "INT",
         "default": "",
-        "options": 0,
+        "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 60,
@@ -11248,7 +11248,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1750534873995,
+          "updateAt": 1750671435627,
           "createAt": 1750534841698
         }
       },
