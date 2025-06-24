@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moje Notatki</title>
+    <title>Harmonogramy</title>
     <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
@@ -399,23 +399,35 @@
                     Nikt jeszcze nie dodał swojej dostępności. </br>
                     Zacznij pierwszy i daj znać, kiedy Ci pasuje!
                 </h2>
-                <button onclick="generateYourAvailabilityHTML()"
+                <button onclick="generateYourAvailabilityHTML(scheduler)"
                         class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold">
                         Dodaj dostępność</button>
                 </article>
             `;
             mainContainer.appendChild(boxMain);
-            return;
         } else {
+            const youAreVoted = allPlayerAvailable.some(player => (player.playerId === userInfo.id &&  player.availability.length > 0));
             mainContainer.innerHTML = `
-                <article id="player-availability" class="flex flex-row items-center justify-center">
-                
+                <article id="player-availability-box" class="flex flex-row-reverse items-center justify-center">
+                    <div class="flex flex-col m-4 w-[30%]">
+                    ${!youAreVoted ? `
+                        <h2 class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary">
+                            Dodaj swoją dostępność, aby inni mogli zobaczyć, kiedy jesteś dostępny.
+                        </h2>
+                        <button onclick="generateYourAvailabilityHTML(scheduler)" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold"> Dodaj dostępność</button>
+                    ` : `
+                        <button onclick="generateEditYourAvailabilityHTML(scheduler)" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold"> Edytuj swoją dostępność</button>
+                    `}
+
+                    </div>
+                    <div id="player-availability" class="w-auto flex flex-col justify-between items-center max-w-4xl p-6 bg-light-surface dark:bg-dark-surface rounded-lg shadow-md">
+
+                    </div>
                 </article>
             `
             allPlayerAvailable.forEach(player => {
                 if (!player.availability || player.availability.length === 0) {
                     console.warn(`Player ${player.playerId} has no availability data.`);
-                    return;
                 } else {
                     generateListOfAvailabityOtherPlayers(player);
                 }
@@ -447,7 +459,7 @@
         }).join('');
         const username = playersInfo.find(p => p.userId === player.playerId)?.username
         boxMain.innerHTML = `
-            <h2 class="text-2xl font-bold m-4 text-light-textPrimary dark:text-dark-textPrimary">
+            <h2 class="m-5 text-2xl font-bold m-4 text-light-textPrimary dark:text-dark-textPrimary">
                 Dostępność gracza: ${username}
             </h2>
             <ul class="list-disc list-inside text-light-textSecondary dark:text-dark-textSecondary">
@@ -456,7 +468,10 @@
         `;
         mainContainer.appendChild(boxMain);
     }
-    function generateYourAvailabilityHTML() {
+    function generateYourAvailabilityHTML(scheduler) {
         
+    }
+    function generateEditYourAvailabilityHTML(scheduler){
+
     }
 </script>

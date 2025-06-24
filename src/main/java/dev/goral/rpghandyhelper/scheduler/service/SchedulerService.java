@@ -3,7 +3,9 @@ package dev.goral.rpghandyhelper.scheduler.service;
 import dev.goral.rpghandyhelper.email.EmailService;
 import dev.goral.rpghandyhelper.game.GameRepository;
 import dev.goral.rpghandyhelper.game.GameStatus;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.scheduler.dto.common.TimeRangeDto;
 import dev.goral.rpghandyhelper.scheduler.dto.request.CreateSchedulerRequest;
 import dev.goral.rpghandyhelper.scheduler.dto.request.EditSchedulerRequest;
@@ -58,10 +60,6 @@ public class SchedulerService {
         User creator = userRepository.findByUsername(currentUser.getUsername())
                 .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika: " + currentUser.getUsername()));
 
-        // Sprawdź, czy użytkownik jest twórcą gry
-        if (!creator.getId().equals(request.getCreatorId())) {
-            throw new IllegalStateException("Użytkownik nie jest twórcą gry");
-        }
 
         // Sprawdź, czy użytkownik jest uczestnikiem gry
         if (!gameUsersRepository.existsByGameIdAndUserId(request.getGameId(), creator.getId())) {
@@ -73,11 +71,13 @@ public class SchedulerService {
             throw new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId());
         }
 
-        // Sprawdź, czy twórca harmonogramu to GameMaster
-        if (!gameRepository.findById(request.getGameId())
-                .orElseThrow(() -> new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId()))
-                .getOwner().getId().equals(creator.getId())) {
-            throw new IllegalStateException("Tylko GameMaster może stworzyć harmonogram");
+        List<GameUsers> gameMasters = gameUsersRepository.findByGameIdAndRole(request.getGameId(), GameUsersRole.GAMEMASTER);
+
+        // Sprawdź, czy użytkownik jest GameMaster
+
+        if (gameMasters.stream()
+                .noneMatch(gu -> gu.getUser().getId().equals(currentUser.getId()))) {
+            throw new IllegalStateException("Tylko GameMaster może tworzyć harmonogramy dla gry");
         }
 
         // Sprawdź, czy gra ma status ACTIVE
