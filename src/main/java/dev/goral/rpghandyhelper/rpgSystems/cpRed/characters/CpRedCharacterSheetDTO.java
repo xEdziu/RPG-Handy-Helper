@@ -3,6 +3,7 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterClasses.CpRedCharacterClassesSheetDTO;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterSkills.CpRedCharacterSkillsSheetDTO;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterStats.CpRedCharacterStatsSheetDTO;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeaponSheetDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -30,7 +31,7 @@ public class CpRedCharacterSheetDTO {
     private List<CpRedCharacterStatsSheetDTO> stats; // Cechy, lista cech z CP_RED_CHARACTERS_STATS
     // ===== Umiejętności =====
     private List<List<CpRedCharacterSkillsSheetDTO>> skills; // Umiejętności, podzielone na podkategorie (każda podkategoria to osobna lista) z CP_RED_CHARACTER_SKILLS
-    private List<> weapons; // Lista broni i customowych broni z CP_RED_CHARACTER_WEAPON i z CP_RED_CHARACTER_CUSTOM_WEAPON
+    private List<CpRedCharacterWeaponSheetDTO> weapons; // Lista broni i customowych broni z CP_RED_CHARACTER_WEAPON i z CP_RED_CHARACTER_CUSTOM_WEAPON
     private List<> armor; // Lista założonych pancerzy z CP_RED_CHARACTER_ARMOR i z CP_RED_CHARACTER_CUSTOM_ARMOR
-
+    // ===== Wyposażenie =====
 }

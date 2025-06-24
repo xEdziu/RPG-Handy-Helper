@@ -9,6 +9,8 @@ import lombok.ToString;
 @ToString
 public class CpRedCharacterAmmunitionSheetDTO {
     private Long characterAmmunitionId;
+    private Long ammunitionId;
+    private Boolean isAmmunitionCustom;
     private String ammunitionName;
     private Integer amount;
 }

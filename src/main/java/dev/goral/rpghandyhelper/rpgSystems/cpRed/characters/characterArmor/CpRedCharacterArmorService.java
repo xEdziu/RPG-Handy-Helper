@@ -9,6 +9,7 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomArmor.CpRedCharacterCustomArmorRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeapon;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.armors.CpRedArmors;
@@ -36,6 +37,7 @@ public class CpRedCharacterArmorService {
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
     private final CpRedArmorsRepository cpRedArmorsRepository;
+    private final CpRedCharacterCustomArmorRepository cpRedCharacterCustomArmorRepository;
 
     public Map<String, Object> getCharacterArmor(Long characterId){
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
@@ -258,5 +260,12 @@ public class CpRedCharacterArmorService {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie pancerze postaci pobrane pomyślnie");
         response.put("characterArmors", allCharacterArmors);
         return response;
+    }
+
+    public List<CpRedCharacterArmorSheetDTO> getCharacterArmorForSheet(Long characterId, CpRedCharacterItemStatus status){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        List<CpRedCharacterArmor> characterMabualArmorList = cpRedCharacterArmorRepository.findAllByCharacterAndStatus(character, status);
+        List<CpRedCharacterArmor> characterMabualArmorList = cpRedCharacterCustomArmorRepository.findAllByCharacterAndStatus(character, status);
     }
 }
