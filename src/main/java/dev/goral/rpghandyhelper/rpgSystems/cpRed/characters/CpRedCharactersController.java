@@ -22,6 +22,11 @@ public class CpRedCharactersController {
         return cpRedCharactersService.getCharacter(characterId);
     }
 
+    @GetMapping(path = "/games/cpRed/characters/sheet/{characterId}")
+    public Map<String, Object> getCharacterSheet(@PathVariable("characterId") Long characterId) {
+        return cpRedCharactersService.getCharacterSheet(characterId);
+    }
+
     @PostMapping(path = "/games/cpRed/characters/create")
     public Map<String, Object> createCharacter(@RequestBody CpRedCharacters character) {
         return cpRedCharactersService.createCharacter(character);

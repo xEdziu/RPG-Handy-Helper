@@ -10,6 +10,7 @@ import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.skills.CpRedSkills;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.skills.CpRedSkillsCategory;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.skills.CpRedSkillsRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
@@ -219,6 +220,20 @@ public class CpRedCharacterSkillsService {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie umiejętności każdej postaci pobrane pomyślnie");
         response.put("characterSkills", allCharacterSkills);
         return response;
+    }
+
+    public List<CpRedCharacterSkillsSheetDTO> getCharacterSkills(Long characterId, CpRedSkillsCategory category) {
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        return cpRedCharacterSkillsRepository.getCharacterSkillsByCharacterAndCategory(character, category)
+                .stream()
+                .map(skill -> new CpRedCharacterSkillsSheetDTO(
+                        skill.getId(),
+                        skill.getSkill().getId(),
+                        skill.getSkill().getName() + " (" + skill.getSkill().getConnectedStat().getTag() + ")",
+                        skill.getSkillLevel(),
+                        skill.getSkill().getCategory().toString()))
+                .toList();
     }
 
 }

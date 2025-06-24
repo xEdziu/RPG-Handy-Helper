@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Map;
@@ -389,5 +390,9 @@ public class CpRedCharactersService {
         cpRedCharactersRepository.save(cpRedCharacter);
 
         return CustomReturnables.getOkResponseMap("Zmieniono status postaci " + cpRedCharacter.getName() + " na " + cpRedCharacter.isAlive());
+    }
+
+    public Map<String, Object> getCharacterSheet(Long characterId) {
+
     }
 }

@@ -224,4 +224,19 @@ public class CpRedCharacterAmmunitionService {
         response.put("allCharacterAmmunition", allCharacterAmmunition);
         return response;
     }
+
+    public List<CpRedCharacterAmmunitionSheetDTO> getCharacterAmmunitionForSheet (Long characterId, Long characterWeaponId){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        return characterAmmunitionRepository.findAllByCharacterId(characterId)
+                .stream()
+                .map(characterAmmunition -> new CpRedCharacterAmmunitionSheetDTO(
+                        characterAmmunition.getId(),
+                        characterAmmunition.getCharacter().getId(),
+                        characterAmmunition.getAmmunition().getId(),
+                        characterAmmunition.getStatus().toString(),
+                        characterAmmunition.getAmount()
+                ))
+                .toList();
+    }
 }

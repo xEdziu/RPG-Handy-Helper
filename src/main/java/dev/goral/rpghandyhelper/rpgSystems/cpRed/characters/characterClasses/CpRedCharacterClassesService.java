@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -211,5 +212,18 @@ public class CpRedCharacterClassesService {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie klasy każdej postaci pobrane pomyślnie");
         response.put("characterClass", allCharacterClasses);
         return response;
+    }
+
+    public List<CpRedCharacterClassesSheetDTO> getCharacterClassesForSheet (Long characterId) {
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        return cpRedCharacterClassesRepository.getCharacterClassesByCharacterId(character)
+                .stream()
+                .map(characterClass -> new CpRedCharacterClassesSheetDTO(
+                        characterClass.getClassId().getId(),
+                        characterClass.getClassId().getName(),
+                        characterClass.getClassId().getSpecialAbility(),
+                        characterClass.getClassLevel()))
+                .toList();
     }
 }
