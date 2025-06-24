@@ -51,7 +51,6 @@ public class CpRedCharacterCustomCyberwareService {
                         cyberwares.getId(),
                         cyberwares.getCyberwareId().getId(),
                         cyberwares.getCharacterId().getId(),
-                        cyberwares.getStatus().toString(),
                         cyberwares.getDescription()
                     )
                 ).toList();
@@ -67,8 +66,7 @@ public class CpRedCharacterCustomCyberwareService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         if (addCharacterCustomCyberwareRequest.getCyberwareId() == null ||
-                addCharacterCustomCyberwareRequest.getCharacterId() == null ||
-                addCharacterCustomCyberwareRequest.getStatus()==null) {
+                addCharacterCustomCyberwareRequest.getCharacterId() == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
 
@@ -106,7 +104,6 @@ public class CpRedCharacterCustomCyberwareService {
                 null,
                 cyberware,
                 character,
-                addCharacterCustomCyberwareRequest.getStatus(),
                 cyberware.getDescription()
         );
 
@@ -152,10 +149,6 @@ public class CpRedCharacterCustomCyberwareService {
 
         if (game.getStatus() != GameStatus.ACTIVE) {
             throw new IllegalStateException("Gra do której należy postać nie jest aktywna.");
-        }
-
-        if (updateCharacterCustomCyberwareRequest.getStatus() != null) {
-            characterCustomCyberwareToUpdate.setStatus(updateCharacterCustomCyberwareRequest.getStatus());
         }
 
         if (updateCharacterCustomCyberwareRequest.getDescription() != null) {
