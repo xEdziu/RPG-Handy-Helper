@@ -11,6 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCharacterCustomCyberwareRequest {
-    private CpRedCharacterItemStatus status;
     private String description;
 }

@@ -12,5 +12,4 @@ import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedC
 public class AddCharacterCustomCyberwareRequest {
     private Long cyberwareId;
     private Long characterId;
-    private CpRedCharacterItemStatus status;
 }
