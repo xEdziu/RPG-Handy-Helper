@@ -71,6 +71,7 @@
         var schedulerInfo = null;
         var playersInfo = [];
         var allPlayerAvailable = [];
+        var isAovnerOfScheduler = false;
         const accentShades = {
             dark: {
                 0: "dark:accent-dark-40",
@@ -88,9 +89,9 @@
 
         // ==== DOMContentLoaded ====
         document.addEventListener("DOMContentLoaded", () => {
+            getUserInfo();
             getSchedulerIdFromUrl();
             getGameIdFromUrl();
-            getUserInfo();
             getAllPlayerAvailableSchedulers();
             getPlayerForGame()
             initThemeToggle();
@@ -194,7 +195,11 @@
                 return response.json();
             }).then(data => {
                 schedulerInfo = data.scheduler;
-                console.log("Feach: ", schedulerInfo);
+                console.log("User Info: ", userInfo.id);
+                console.log("Sheduler creator ID: ", schedulerInfo.creatorId);
+                if(schedulerInfo.creatorId == userInfo.id) {
+                    isAovnerOfScheduler = true;
+                }
                 generateSchedulerDetailsHTML(schedulerInfo);
             }).catch(error => {
                 console.error('Error fetching game schedulers:', error);
@@ -334,7 +339,7 @@
                 }
             });
         } else {
-            console.log("No scheduler data available.");
+            console.warn("No scheduler data available.");
         }
         return Array.from(uniqueTimes).sort();
     }
@@ -387,7 +392,6 @@
             console.error("Scheduler data is not available.");
             return;
         }
-        console.log(allPlayerAvailable);
         const mainContainer = document.getElementsByTagName("main")[0];
         const hasAnyoneVotedYet = allPlayerAvailable.some(player => player.availability && player.availability.length > 0);
         if (!hasAnyoneVotedYet) {
@@ -417,6 +421,9 @@
                         <button onclick="generateYourAvailabilityHTML(scheduler)" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold"> Dodaj dostępność</button>
                     ` : `
                         <button onclick="generateEditYourAvailabilityHTML(scheduler)" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold"> Edytuj swoją dostępność</button>
+                        ${isAovnerOfScheduler ? `
+                            <button onclick="" class="mt-3 px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold">Zakończ głosowanie</button>
+                        ` : ``}
                     `}
 
                     </div>
@@ -436,7 +443,6 @@
         }
     }
     function generateListOfAvailabityOtherPlayers(player) {
-        console.log(playersInfo)
         const mainContainer = document.getElementById("player-availability");
         const boxMain = document.createElement("div");
         boxMain.className = "w-auto flex flex-col justify-between items-center max-w-4xl p-6 bg-light-surface dark:bg-dark-surface rounded-lg shadow-md";
