@@ -75,13 +75,23 @@
 <main class="flex-grow bg-light-background dark:bg-dark-background">
     <div id="gameContainer" class="p-4 max-w-5xl mx-auto"></div>
 </main>
-
+<section id="editPanel" class="hidden bg-white dark:bg-dark-surface p-6 rounded shadow max-w-5xl mx-auto my-4">
+    <h2 class="text-xl font-bold mb-4">Edytuj grę</h2>
+    <input id="editName" class="w-full p-2 mb-2 border rounded" placeholder="Nazwa gry" />
+    <textarea id="editDescription" class="w-full p-2 mb-4 border rounded" rows="4" placeholder="Opis gry"></textarea>
+    <div class="flex justify-end gap-2">
+        <button onclick="closeEditPanel()" class="px-4 py-2 bg-gray-400 text-white rounded">Anuluj</button>
+        <button onclick="submitEdit()" class="px-4 py-2 bg-blue-600 text-white rounded">Zapisz</button>
+    </div>
+</section>
 <footer class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
     <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
     <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank" class="text-light-accent dark:text-dark-accent">
         <i class="fa-brands fa-github"></i>
     </a>
 </footer>
+
+
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
@@ -106,59 +116,102 @@
             Spectator: "bg-teal-500"
         };
 
-        const playerList = players.map(p => {
-            const label = p.userId === user.id ? `${p.userId} (Ty)` : `user${p.userId}`;
+        const seen = new Set();
+        const uniquePlayers = players.filter(p => {
+            if (seen.has(p.userId)) return false;
+            seen.add(p.userId);
+            return true;
+        });
+
+        const playerList = uniquePlayers.map(p => {
+            const isCurrentUser = p.userId === user.id;
+            const label = `user${p.userId}`;
             const roleColor = roleColorMap[p.role] || "bg-gray-500";
+
+            const isGM = currentUserRole.toLowerCase() === 'gamemaster';
+            const canRemove = isGM && !isCurrentUser && p.role !== 'GameMaster';
+
+            const removeBtn = canRemove
+                ? `<button class="remove-btn hidden ml-2 text-sm text-red-500 hover:underline" onclick="removePlayer(${p.userId})">Usuń</button>`
+                : "";
+
             return `<div class="flex items-center gap-2 mb-1">
-                  <div class="bg-gray-200 dark:bg-gray-700 rounded px-2 py-1">${label}</div>
-                  <div class="text-white px-2 py-1 rounded ${roleColor}">${p.role}</div>
+                  <div class="bg-gray-200 dark:bg-gray-700 rounded px-2 py-1 text-black dark:text-white">${label}</div>
+                  <div class="px-2 py-1 rounded ${roleColor} text-white">${p.role}</div>
+                  ${removeBtn}
                 </div>`;
         }).join("");
 
+        const gameIdPath = game.id;
         const buttons = [
-            `<button class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">POKOJE GRY</button>`,
-            `<button class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">SPOTKANIA</button>`,
-            `<button class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">PRZEDMIOTY</button>`
+            `<a href="home/game/${gameIdPath}/rooms" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">POKOJE GRY</a>`,
+            `<a href="/home/games/${gameIdPath}/schedulers" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">SPOTKANIA</a>`,
+            `<a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded opacity-50 cursor-not-allowed" title="Wkrótce">PRZEDMIOTY</a>`
         ];
 
         if (["player", "gamemaster"].includes(currentUserRole.toLowerCase())) {
-            buttons.push(`<button class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">KARTA POSTACI</button>`);
+            buttons.push(`<a href="/home/games/${gameIdPath}/characters" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded">KARTA POSTACI</a>`);
         }
 
         const container = document.getElementById("gameContainer");
         container.innerHTML = `
-        <div class="bg-white dark:bg-dark-surface p-6 rounded shadow">
-          <div class="flex flex-col md:flex-row justify-between">
-            <div class="mb-4 md:mb-0">
-              <p class="text-red-600 font-semibold">${game.rpgSystemName || "Nieznany system RPG"}</p>
-              <h2 class="text-2xl font-bold text-black dark:text-white">${game.name}</h2>
-              <p class="text-gray-700 dark:text-gray-300">${game.description}</p>
-            </div>
-            <div>
-              <h3 class="font-bold text-lg text-black dark:text-white">Gracze:</h3>
-              ${playerList}
-            </div>
-          </div>
-          <div class="mt-6 flex flex-wrap gap-2">
-            ${buttons.join("")}
-          </div>
+    <div class="bg-white dark:bg-dark-surface p-6 rounded shadow">
+      <div class="flex flex-col md:flex-row justify-between">
+        <div class="mb-4 md:mb-0">
+          <p class="text-red-600 font-semibold">${game.rpgSystemName || "Nieznany system RPG"}</p>
+          <h2 class="text-2xl font-bold text-black dark:text-white">${game.name}</h2>
+          <p class="text-gray-700 dark:text-gray-300">${game.description}</p>
         </div>
-      `;
+        <div>
+          <h3 class="font-bold text-lg text-black dark:text-white">Gracze:</h3>
+          ${playerList}
+        </div>
+      </div>
+      <div class="mt-6 flex flex-wrap gap-2">
+        ${buttons.join("")}
+      </div>
+    </div>`;
 
         if (["gamemaster"].includes(currentUserRole.toLowerCase()) || game.ownerId === user.id) {
             const tools = document.createElement("div");
             tools.className = "mt-4 flex gap-2 justify-end";
-
             tools.innerHTML = `
-          <button onclick="editGame()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Edytuj grę</button>
+          <button onclick="openEditModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Edytuj grę</button>
           <button onclick="deleteGame()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Usuń grę</button>
         `;
-
             container.appendChild(tools);
         }
 
-        window.editGame = () => {
-            alert("Tu będzie formularz edycji gry.");
+        window.openEditModal = () => {
+            document.getElementById("editPanel").classList.remove("hidden");
+            document.getElementById("editName").value = game.name;
+            document.getElementById("editDescription").value = game.description;
+
+            document.querySelectorAll(".remove-btn").forEach(btn => btn.classList.remove("hidden"));
+        };
+        window.closeEditPanel = () => {
+            document.getElementById("editPanel").classList.add("hidden");
+            document.querySelectorAll(".remove-btn").forEach(btn => btn.classList.add("hidden"));
+        };
+
+
+        window.submitEdit = async () => {
+            const updatedName = document.getElementById("editName").value;
+            const updatedDesc = document.getElementById("editDescription").value;
+
+            const res = await fetch(`/api/v1/authorized/game/updateGame/${game.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: updatedName, description: updatedDesc })
+            });
+
+            if (res.ok) {
+                closeEditPanel();
+                document.querySelectorAll(".remove-btn").forEach(btn => btn.classList.add("hidden"));
+                location.reload();
+            } else {
+                alert("Nie udało się zaktualizować gry.");
+            }
         };
 
         window.deleteGame = async () => {
@@ -175,11 +228,34 @@
                 alert("Gra została oznaczona jako DELETED.");
                 window.location.href = "/home/games";
             } else {
-                const err = await res.json();
-                alert("Błąd: " + (err.message || "Nie udało się zmienić statusu gry."));
+                alert("Błąd podczas usuwania gry.");
+            }
+        };
+
+        window.removePlayer = async (userIdToRemove) => {
+            const confirmed = confirm("Czy na pewno chcesz usunąć tego gracza z gry?");
+            if (!confirmed) return;
+
+            const res = await fetch("/api/v1/authorized/game/deleteUserFromGame", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: userIdToRemove,
+                    gameId: game.id
+                })
+            });
+
+            if (res.ok) {
+                alert("Gracz został usunięty.");
+                location.reload();
+            } else {
+                const err = await res.json().catch(() => ({}));
+                alert("Błąd: " + (err.message || "Nie udało się usunąć gracza."));
             }
         };
     });
+
+
     document.addEventListener("DOMContentLoaded", function () {
         const toggleSwitch = document.getElementById("switch-component");
         const body = document.body;
@@ -215,6 +291,7 @@
         }
     });
 </script>
-</body>
 
+
+</body>
 </html>
