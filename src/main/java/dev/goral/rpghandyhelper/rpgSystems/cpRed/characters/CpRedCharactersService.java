@@ -603,7 +603,7 @@ public class CpRedCharactersService {
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie należy do wskazanej gry"));
 
         if(gameUser.getRole() == GameUsersRole.GAMEMASTER){
-            List<CpRedGmCharacterListDTO> characterList = cpRedCharactersRepository.findAllUser_IdAndGame_Id(currentUser.getId(), game.getId())
+            List<CpRedGmCharacterListDTO> characterList = cpRedCharactersRepository.findAllByUser_IdAndGame_Id(currentUser.getId(), game.getId())
                     .stream()
                     .map(character -> new CpRedGmCharacterListDTO(
                             character.getId(),

@@ -375,6 +375,7 @@ public class CpRedCharacterWeaponModService {
                     mod.getIsWeaponModCustom(),
                     weaponModName
             );
+            characterWeaponModsDTO.add(dto);
         }
 
         return characterWeaponModsDTO;

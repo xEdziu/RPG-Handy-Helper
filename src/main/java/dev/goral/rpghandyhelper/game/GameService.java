@@ -259,7 +259,7 @@ public class GameService {
             throw new IllegalArgumentException("Nie można usunąć GameMastera z gry.");
         }
 
-        CpRedCharacters character = cpRedCharactersRepository.findByUserId_IdAndGameId_Id(request.getUserId(), request.getGameId());
+        CpRedCharacters character = cpRedCharactersRepository.findByUser_IdAndGame_Id(request.getUserId(), request.getGameId());
 
         if(character!=null) {
             character.setUser(null);

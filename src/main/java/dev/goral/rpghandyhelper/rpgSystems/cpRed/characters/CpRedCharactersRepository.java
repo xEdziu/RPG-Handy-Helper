@@ -20,5 +20,5 @@ public interface CpRedCharactersRepository extends JpaRepository<CpRedCharacters
     Long countByUserIdAndGameId(@Param("userId") Long userId, @Param("gameId") Long gameId);
 
 
-    List<CpRedCharacters> findAllUser_IdAndGame_Id(Long id, Long id1);
+    List<CpRedCharacters> findAllByUser_IdAndGame_Id(Long id, Long id1);
 }
