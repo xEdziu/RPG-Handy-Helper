@@ -5,6 +5,7 @@ import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.ammunition.CpRedAmmuniti
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -12,4 +13,7 @@ public interface CpRedCharacterAmmunitionRepository extends JpaRepository<CpRedC
     List<CpRedCharacterAmmunition> findAllByCharacterId(Long characterId);
 
     boolean existsByCharacterAndAmmunition(CpRedCharacters character, CpRedAmmunition ammunition);
+
+
+    List<CpRedCharacterAmmunition> findAllByCharacter(CpRedCharacters characterId);
 }

@@ -10,6 +10,7 @@ import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.skills.CpRedSkills;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.skills.CpRedSkillsCategory;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.skills.CpRedSkillsRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -221,4 +223,26 @@ public class CpRedCharacterSkillsService {
         return response;
     }
 
+    public List<CpRedCharacterSkillsSheetDTO> getCharacterSkillsForSheet(Long characterId, CpRedSkillsCategory category) {
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+
+        List<CpRedCharacterSkills> characterSkillsList = cpRedCharacterSkillsRepository.getCharacterSkillsByCharacter(character);
+        List<CpRedCharacterSkillsSheetDTO> charakterCategorySkillListDTO = new ArrayList<>();
+
+        for(CpRedCharacterSkills skill : characterSkillsList) {
+            if(category == skill.getSkill().getCategory()) {
+                CpRedCharacterSkillsSheetDTO dto = new CpRedCharacterSkillsSheetDTO(
+                        skill.getId(),
+                        skill.getSkill().getId(),
+                        skill.getSkill().getName() + " (" + skill.getSkill().getConnectedStat().getTag() + ")",
+                        skill.getSkillLevel(),
+                        skill.getSkill().getCategory().toString()
+                );
+                charakterCategorySkillListDTO.add(dto);
+            }
+        }
+
+        return charakterCategorySkillListDTO;
+    }
 }

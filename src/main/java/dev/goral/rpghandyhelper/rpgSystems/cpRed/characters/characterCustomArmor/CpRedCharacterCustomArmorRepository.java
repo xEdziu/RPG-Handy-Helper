@@ -3,6 +3,7 @@ package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomArmo
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterArmor.CpRedCharacterArmor;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterArmor.CpRedCharacterArmorPlace;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +14,5 @@ public interface CpRedCharacterCustomArmorRepository extends JpaRepository<CpRed
     List<CpRedCharacterCustomArmor> findAllByCharacterId(CpRedCharacters character);
     List<CpRedCharacterCustomArmor> findAllByCharacterIdAndPlace(CpRedCharacters character, CpRedCharacterArmorPlace place);
 
+    List<CpRedCharacterCustomArmor> findAllByCharacterIdAndStatus(CpRedCharacters character, CpRedCharacterItemStatus status);
 }

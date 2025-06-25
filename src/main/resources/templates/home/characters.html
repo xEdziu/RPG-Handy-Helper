@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karta Postaci</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas-pro@1.5.11/dist/html2canvas-pro.min.js"></script>
+</head>
+<body class="bg-gray-100 p-6">
+<div class="max-w-4xl mx-auto mb-4 flex justify-end">
+    <button id="export-pdf"
+            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow">
+        Eksportuj PDF
+    </button>
+</div>
+<div id="character-sheet" class="max-w-4xl mx-auto space-y-6"></div>
+
+<script>
+
+    let gameId;
+    let characterName = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const characterId = 1; // lub dynamicznie z URL
+        gameId = window.location.pathname.split('/')[3];
+        fetch(`/api/v1/authorized/games/cpRed/characters/sheet/${characterId}`)
+            .then(res => res.json())
+            .then(({ characterSheet }) => renderCharacterSheet(characterSheet))
+            .catch(err => console.error(err));
+    });
+
+    function renderCharacterSheet(cs) {
+        const container = document.getElementById('character-sheet');
+        characterName = cs.name || 'Nieznany';
+        // Nagłówek
+        const header = document.createElement('div');
+        header.className = 'bg-white p-4 rounded shadow flex items-center space-x-4';
+        header.innerHTML = `
+        <div class="text-2xl font-bold">${cs.name}</div>
+        <div class="px-2 py-1 bg-blue-200 text-blue-800 rounded-full text-sm">${cs.characterType}</div>
+      `;
+        container.appendChild(header);
+
+        // Podstawowe informacje
+        const basics = document.createElement('div');
+        basics.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+        basics.innerHTML = `
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="font-semibold mb-2">Życie</h3>
+          <p>${cs.currentHp} / ${cs.maxHp} HP</p>
+          <p>Poważnie ranny: ${cs.seriouslyWounded}</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="font-semibold mb-2">Humanity</h3>
+          <p>${cs.currentHumanity} / ${cs.maxHumanity}</p>
+        </div>
+        `;
+        container.appendChild(basics);
+
+        if (cs.characterClasses && cs.characterClasses.length) {
+            const classesSection = document.createElement('div');
+            classesSection.className = 'bg-white p-4 rounded shadow';
+            classesSection.innerHTML = `
+              <h3 class="font-semibold mb-2">Klasa</h3>
+              <ul>
+                ${cs.characterClasses.map(c => `
+                  <li class="border p-2 rounded mb-2">
+                    <div class="font-medium">${c.className}</div>
+                    <div>Poziom: ${c.classLevel}</div>
+                    <div class="text-sm">${c.specialAbility || ''}</div>
+                  </li>
+                `).join('')}
+              </ul>
+            `;
+            container.appendChild(classesSection);
+        }
+
+        // Statystyki
+        const statsSection = document.createElement('div');
+        statsSection.className = 'bg-white p-4 rounded shadow';
+        statsSection.innerHTML = `
+        <h3 class="font-semibold mb-2">Statystyki</h3>
+        <div class="flex flex-wrap gap-4">
+          ${cs.stats.map(s => `
+            <div class="flex flex-col items-center border p-2 rounded w-20">
+              <span class="font-medium">${s.tag}</span>
+              <span>${s.currentStatLevel}${s.maxStatLevel ? ` / ${s.maxStatLevel}` : ''}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+        container.appendChild(statsSection);
+
+        // Umiejętności
+        const skillsSection = document.createElement('div');
+        skillsSection.className = 'bg-white p-4 rounded shadow';
+        skillsSection.innerHTML = `
+        <h3 class="font-semibold mb-2">Umiejętności</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          ${cs.skills.flat().map(sk => `
+            <div class="border p-2 rounded">
+              <div class="font-medium">${sk.nameAndTag}</div>
+              <div>Poziom: ${sk.skillLevel}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+        container.appendChild(skillsSection);
+
+        // Broń
+        if (cs.weapons.length) {
+            const weaponsSection = document.createElement('div');
+            weaponsSection.className = 'bg-white p-4 rounded shadow';
+            weaponsSection.innerHTML = `
+          <h3 class="font-semibold mb-2">Broń</h3>
+          <ul class="space-y-2">
+            ${cs.weapons.map(w => `
+              <li class="border p-2 rounded">
+                <div class="font-medium">${w.weaponName}</div>
+                <div>Dmg: ${w.weaponDmg}, Mag: ${w.magazineCapacity}</div>
+                <div class="text-sm text-gray-600">${w.description}</div>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+            container.appendChild(weaponsSection);
+        }
+
+        // Notatka
+        if (cs.note) {
+            const noteSection = document.createElement('div');
+            noteSection.className = 'bg-white p-4 rounded shadow';
+            noteSection.innerHTML = `
+          <h3 class="font-semibold mb-2">Notatka</h3>
+          <p>${cs.note}</p>
+        `;
+            container.appendChild(noteSection);
+        }
+
+        // Przyjaciele
+        if (cs.friends && cs.friends.length) {
+            const friendsSection = document.createElement('div');
+            friendsSection.className = 'bg-white p-4 rounded shadow';
+            friendsSection.innerHTML = `
+      <h3 class="font-semibold mb-2">Przyjaciele</h3>
+      <ul>
+        ${cs.friends.map(f => `
+          <li class="border p-2 rounded mb-2">
+            <div class="font-medium">${f.friendName}</div>
+            <div class="text-sm">${f.friendDescription}</div>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+            container.appendChild(friendsSection);
+        }
+
+        // Wrogowie
+        if (cs.enemies && cs.enemies.length) {
+            const enemiesSection = document.createElement('div');
+            enemiesSection.className = 'bg-white p-4 rounded shadow';
+            enemiesSection.innerHTML = `
+      <h3 class="font-semibold mb-2">Wrogowie</h3>
+      <ul>
+        ${cs.enemies.map(e => `
+          <li class="border p-2 rounded mb-2">
+            <div class="font-medium">${e.enemiesName}</div>
+            <p>Powód konfliktu: ${e.causeOfConflict}</p>
+            <p>${e.enemiesDescription}</p>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+            container.appendChild(enemiesSection);
+        }
+
+        // Miłosna historia
+        if (cs.loveStory && cs.loveStory.length) {
+            const loveSection = document.createElement('div');
+            loveSection.className = 'bg-white p-4 rounded shadow';
+            loveSection.innerHTML = `
+      <h3 class="font-semibold mb-2">Historie miłosne</h3>
+      <ul>
+        ${cs.loveStory.map(l => `
+          <li class="border p-2 rounded mb-2">
+            <div class="font-medium">${l.loveName}</div>
+            <p class="text-sm">${l.loveDescription}</p>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+            container.appendChild(loveSection);
+        }
+
+        // Inne pola
+        const extraSection = document.createElement('div');
+        extraSection.className = 'bg-white p-4 rounded shadow';
+        extraSection.innerHTML = `
+            <h3 class="font-semibold mb-2">Dodatkowe info</h3>
+            <p><strong>Kultura:</strong> ${cs.cultureOfOrigin || ''}</p>
+            <p><strong>Osobowość:</strong> ${cs.yourCharacter || ''}</p>
+            <p><strong>Styl ubioru:</strong> ${cs.clothingAndStyle || ''}, ${cs.style || ''}</p>
+            <p><strong>Rodzina:</strong> ${cs.familyBackground || ''}, ${cs.familyEnvironment || ''}</p>
+            <p><strong>Kryzys rodzinny:</strong> ${cs.familyCrisis || ''}</p>
+            <p><strong>Cel życiowy:</strong> ${cs.lifeGoals || ''}</p>
+            <p><strong>Klasa &\#x2013; ścieżka życiowa:</strong> ${cs.classLifePath || ''}</p>
+            <p><strong>Standard życia:</strong> ${cs.livingStandard || ''}, wynajem: ${cs.rental || ''}</p>
+            <p><strong>Reputacja:</strong> ${cs.reputation || ''}</p>
+            <p><strong>Dostępne PD:</strong> ${cs.availableExp || ''} / ${cs.allExp || ''}</p>
+          `;
+        container.appendChild(extraSection);
+    }
+    document.getElementById('export-pdf').addEventListener('click', () => {
+        const {jsPDF} = window.jspdf;                  // pobieramy klasę
+        const doc = new jsPDF({
+            unit: 'px',
+            format: 'a4'
+        });
+
+        // element do renderowania do PDF
+        const element = document.getElementById('character-sheet');
+
+        // opcje: marginesy, callback do zapisu
+        doc.html(element, {
+            x: 20,
+            y: 20,
+            html2canvas: {scale: 0.5},
+            callback: pdf => pdf.save(`character-sheet-${characterName}.pdf`)
+        })
+    });
+</script>
+</body>
+</html>

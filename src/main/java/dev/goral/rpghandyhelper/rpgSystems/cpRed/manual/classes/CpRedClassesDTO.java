@@ -9,5 +9,6 @@ import lombok.ToString;
 public class CpRedClassesDTO
 {
     private String name;
+    private String specialAbility;
     private String description;
 }

@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface CpRedCharacterCyberwareRepository extends JpaRepository<CpRedCharacterCyberware, Long> {
     List<CpRedCharacterCyberware> findByCharacter(CpRedCharacters character);
+
+    List<CpRedCharacterCyberware> findAllByCharacter(CpRedCharacters character);
 }

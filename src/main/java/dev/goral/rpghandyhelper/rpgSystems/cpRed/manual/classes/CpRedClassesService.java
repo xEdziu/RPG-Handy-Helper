@@ -25,6 +25,7 @@ public class CpRedClassesService {
        List<CpRedClassesDTO> classesDTO = classes.stream()
                .map(cpRedClasses -> new CpRedClassesDTO(
                        cpRedClasses.getName(),
+                       cpRedClasses.getSpecialAbility(),
                        cpRedClasses.getDescription()
                )).toList();
         if(classesDTO.isEmpty()){
@@ -39,6 +40,7 @@ public class CpRedClassesService {
         CpRedClassesDTO classes = cpRedClassesRepository.findById(classId)
                 .map(cpRedClasses -> new CpRedClassesDTO(
                         cpRedClasses.getName(),
+                        cpRedClasses.getSpecialAbility(),
                         cpRedClasses.getDescription()
                 )).orElseThrow(() -> new ResourceNotFoundException("Klasa o id " + classId + " nie istnieje"));
         Map<String,Object> response = CustomReturnables.getOkResponseMap("Pobrano klasę");
@@ -78,6 +80,17 @@ public class CpRedClassesService {
         if (name.length() > 255) {
             throw new IllegalArgumentException("Nazwa klasy nie może mieć więcej niż 255 znaków.");
         }
+
+        String specialAbility = cpRedClasses.getSpecialAbility().trim();
+
+        if (specialAbility.isEmpty()) {
+            throw new IllegalArgumentException("Specjalna zdolność jest wymagana");
+        }
+
+        if (specialAbility.length() > 255) {
+            throw new IllegalArgumentException("Specjalna zdolność nie może mieć więcej niż 255 znaków.");
+        }
+
         String description = cpRedClasses.getDescription().trim();
 
         if (description.isEmpty()) {
@@ -120,6 +133,17 @@ public class CpRedClassesService {
                 throw new IllegalStateException("Nazwa klasy nie może być dłuższa niż 255 znaków.");
             }
             classToUpdate.setName(cpRedClasses.getName());
+        }
+
+        if (cpRedClasses.getSpecialAbility() != null) {
+            if (cpRedClasses.getSpecialAbility().isEmpty() || cpRedClasses.getSpecialAbility().trim().isEmpty()) {
+                throw new IllegalArgumentException("Specjalna zdolność jest wymagana");
+            }
+
+            if (cpRedClasses.getSpecialAbility().length() > 255) {
+                throw new IllegalArgumentException("Specjalna zdolność nie może mieć więcej niż 255 znaków.");
+            }
+            classToUpdate.setSpecialAbility(cpRedClasses.getSpecialAbility());
         }
 
         if (cpRedClasses.getDescription() != null) {

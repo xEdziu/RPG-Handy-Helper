@@ -295,4 +295,20 @@ public class CpRedCharacterEnemiesService {
         cpRedCharacterEnemiesRepository.save(enemyToUpdate);
         return CustomReturnables.getOkResponseMap("Wróg został zaktualizowany.");
     }
+
+    public List<CpRedCharacterEnemiesSheetDTO> getCharacterEnemiesForSheet(Long characterId){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        return cpRedCharacterEnemiesRepository.findAllByCharacterId(character)
+                .stream()
+                .map( enemy -> new CpRedCharacterEnemiesSheetDTO(
+                        enemy.getId(),
+                        enemy.getName(),
+                        enemy.getWhoIs(),
+                        enemy.getCauseOfConflict(),
+                        enemy.getWhatHas(),
+                        enemy.getIntends(),
+                        enemy.getDescription()
+                )).toList();
+    }
 }

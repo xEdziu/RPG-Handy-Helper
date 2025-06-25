@@ -24,8 +24,7 @@ public class CpRedArmors {
         generator = "cpRedArmors_sequence"
     )
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private CpRedArmorsType type;
+    private String name;
     private int armorPoints=-1;
     private int penalty=-1;
     private int price=-1;

@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class ContentController {
@@ -83,6 +84,12 @@ public class ContentController {
         return "home/notes";
     }
 
+
+    @GetMapping("/home/games/{gameId}/characters")
+    public String getCharacters(@PathVariable String gameId) {
+        System.out.println("ContentController: getCharacters()");
+        return "home/characters";
+
     @GetMapping("/home/games/{gameId}/schedulers")
     public String getSchedulers() {
         System.out.println("ContentController: getSchedulers()");
@@ -135,5 +142,6 @@ public class ContentController {
     public String getgames() {
         System.out.println("ContentController: getgames()");
         return "home/games";
+
     }
 }

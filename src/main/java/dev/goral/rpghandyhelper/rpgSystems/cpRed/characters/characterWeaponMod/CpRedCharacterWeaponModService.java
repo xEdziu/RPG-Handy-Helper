@@ -28,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -348,5 +349,35 @@ public class CpRedCharacterWeaponModService {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie modyfikacje broni postaci pobrane pomyślnie");
         response.put("allCharacterWeaponMods", allCharacterWeaponMods);
         return response;
+    }
+
+    public List<CpRedCharacterWeaponModSheetDTO> getCharacterWeaponModForSheet(Long characterId,
+                                                                               Long characterWeaponId,
+                                                                               Boolean isCharacterWeaponCustom){
+        List<CpRedCharacterWeaponMod> characterWeaponMods = cpRedCharacterWeaponModRepository.findAllByCharacterWeaponIdAndIsCharacterWeaponCustom(
+                characterWeaponId,
+                isCharacterWeaponCustom);
+        List<CpRedCharacterWeaponModSheetDTO> characterWeaponModsDTO = new ArrayList<>();
+        for(CpRedCharacterWeaponMod mod : characterWeaponMods){
+            String weaponModName = "";
+            if(mod.getIsWeaponModCustom()){
+                CpRedCustomWeaponMods customMod = cpRedCustomWeaponModsRepository.findById(mod.getWeaponModId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Broń nie ma customowych modyfikacji"));
+                weaponModName = customMod.getName();
+            } else {
+                CpRedWeaponMods manualMod = cpRedWeaponModsRepository.findById(mod.getWeaponModId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Broń nie ma modyfikacji"));
+                weaponModName = manualMod.getName();
+            }
+            CpRedCharacterWeaponModSheetDTO dto = new CpRedCharacterWeaponModSheetDTO(
+                    mod.getId(),
+                    mod.getWeaponModId(),
+                    mod.getIsWeaponModCustom(),
+                    weaponModName
+            );
+            characterWeaponModsDTO.add(dto);
+        }
+
+        return characterWeaponModsDTO;
     }
 }

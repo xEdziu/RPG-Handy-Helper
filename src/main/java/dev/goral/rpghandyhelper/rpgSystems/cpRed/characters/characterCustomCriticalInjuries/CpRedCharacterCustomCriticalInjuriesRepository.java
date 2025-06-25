@@ -9,7 +9,9 @@ import java.util.List;
 
 @Repository
 public interface CpRedCharacterCustomCriticalInjuriesRepository extends JpaRepository<CpRedCharacterCustomCriticalInjuries, Long> {
-    List<CpRedCharacterCustomCriticalInjuries> findAllByCharacterId_Id(Long characterId);
+    List<CpRedCharacterCustomCriticalInjuries> findAllByCharacterId(Long characterId);
 
     boolean existsByCharacterAndCustomInjuries(CpRedCharacters character, CpRedCustomCriticalInjuries customInjuries);
+
+    List<CpRedCharacterCustomCriticalInjuries> findAllByCharacter(CpRedCharacters character);
 }

@@ -242,4 +242,17 @@ public class CpRedCharacterTragicLoveStoryService {
         cpRedCharacterTragicLoveStoryRepository.save(storyToUpdate);
         return CustomReturnables.getOkResponseMap("Wątek tragiczno-miłosny został zaktualizowany.");
     }
+
+    public List<CpRedCharacterTragicLoveStorySheetDTO> getCharacterTragicLoveStoryForSheet(Long characterId){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        return cpRedCharacterTragicLoveStoryRepository.findAllByCharacterId(character)
+                .stream()
+                .map(love -> new CpRedCharacterTragicLoveStorySheetDTO(
+                        love.getId(),
+                        love.getName(),
+                        love.getDescription()
+                ))
+                .toList();
+    }
 }
