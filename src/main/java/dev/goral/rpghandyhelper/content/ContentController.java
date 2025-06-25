@@ -83,6 +83,11 @@ public class ContentController {
         return "home/notes";
     }
 
+    @GetMapping("/home/create-game")
+    public String getCreateGame() {
+        System.out.println("ContentController: getCreateGame()");
+        return "home/createGame";
+    }
    // ADMIN PAGES
 
     @GetMapping("/admin")

@@ -21,6 +21,11 @@ public class UserController {
         return userService.getAuthorizedUser();
     }
 
+    @GetMapping("/user/find/{regexUsername}")
+    public Map<String, Object> findUsersByRegexUsername(@PathVariable String regexUsername) {
+        return userService.findUsersByRegexUsername(regexUsername);
+    }
+
     @GetMapping("/user/isPasswordSetForDiscordUser")
     public Map<String, Object> isPasswordSetForDiscordUser(@AuthenticationPrincipal Object user) {
         return userService.isPasswordSetForDiscordUser(user);
