@@ -322,7 +322,7 @@ public class CpRedCharacterWeaponService {
                   weapon.getBaseWeapon().getName(),
                   weapon.getDmg().toString() + "k6",
                   weapon.getMagazineCapacity(),
-                  cpRedCharacterAmmunitionService.getCharacterAmmunitionForWeaponForSheet(characterId, weapon.getId(), false),
+                  cpRedCharacterAmmunitionService.getCharacterAmmunitionForWeaponForSheet(characterId, weapon.getBaseWeapon().getId(), false),
                   weapon.getNumberOfAttacks(),
                   cpRedCharacterWeaponModService.getCharacterWeaponModForSheet(characterId, weapon.getId(), false),
                   weapon.getDescription()
@@ -337,7 +337,7 @@ public class CpRedCharacterWeaponService {
                     customWeapon.getBaseCustomWeapon().getName(),
                     customWeapon.getDmg().toString() + "k6",
                     customWeapon.getMagazineCapacity(),
-                    cpRedCharacterAmmunitionService.getCharacterAmmunitionForWeaponForSheet(characterId, customWeapon.getId(), true),
+                    cpRedCharacterAmmunitionService.getCharacterAmmunitionForWeaponForSheet(characterId, customWeapon.getBaseCustomWeapon().getId(), true),
                     customWeapon.getNumberOfAttacks(),
                     cpRedCharacterWeaponModService.getCharacterWeaponModForSheet(characterId, customWeapon.getId(), true),
                     customWeapon.getDescription()
