@@ -1,5 +1,6 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters;
 
+import dev.goral.rpghandyhelper.security.CustomReturnables;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,14 @@ public class CpRedCharactersController {
 
     @GetMapping(path = "/games/cpRed/characters/sheet/{characterId}")
     public Map<String, Object> getCharacterSheet(@PathVariable("characterId") Long characterId) {
-        return cpRedCharactersService.getCharacterSheet(characterId);
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Karta postaci pobrana pomyślnie");
+        response.put("characterSheet", cpRedCharactersService.getCharacterSheet(characterId));
+        return response;
+    }
+
+    @GetMapping(path = "/games/cpRed/characters/{gameId}")
+    public Map<String, Object> getGameCharacters(@PathVariable("gameId") Long gameId) {
+        return cpRedCharactersService.getGameCharacters(gameId);
     }
 
     @PostMapping(path = "/games/cpRed/characters/create")
@@ -48,6 +56,6 @@ public class CpRedCharactersController {
     }
 
 
-    //TODO: Dodać opcje kopiowania postaci razem ze statami
+
 
 }

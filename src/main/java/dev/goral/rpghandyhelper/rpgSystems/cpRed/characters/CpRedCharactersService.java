@@ -33,6 +33,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 
@@ -502,7 +503,7 @@ public class CpRedCharactersService {
         return CustomReturnables.getOkResponseMap("Zmieniono status postaci " + cpRedCharacter.getName() + " na " + cpRedCharacter.isAlive());
     }
 
-    public Map<String, Object> getCharacterSheet(Long characterId) {
+    public CpRedCharacterSheetDTO getCharacterSheet(Long characterId) {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
         CpRedCharacterOtherInfo characterOtherInfo = cpRedCharacterOtherInfoRepository.findFirstByCharacterId(character);
@@ -584,8 +585,51 @@ public class CpRedCharactersService {
                 character.getExpAll(),
                 characterOtherInfo.getReputation()
         );
-        Map<String, Object> response = CustomReturnables.getOkResponseMap("Karta postaci pobrana pomyślnie");
-        response.put("characterSheet", characterSheet);
+        return characterSheet;
+    }
+
+    public Map<String, Object> getGameCharacters(Long gameId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
+
+        String message = "";
+        Object responseObject = null;
+        Game game = gameRepository.findGameById(gameId)
+                .orElseThrow(() -> new ResourceNotFoundException("Podana gra nie istnieje"));
+
+        GameUsers gameUser= gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), game.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie należy do wskazanej gry"));
+
+        if(gameUser.getRole() == GameUsersRole.GAMEMASTER){
+            List<CpRedGmCharacterListDTO> characterList = cpRedCharactersRepository.findAllUser_IdAndGame_Id(currentUser.getId(), game.getId())
+                    .stream()
+                    .map(character -> new CpRedGmCharacterListDTO(
+                            character.getId(),
+                            character.getName(),
+                            character.getType().toString(),
+                            character.getUser().getId()
+                    )).toList();
+
+            message = "multiple";
+            responseObject = characterList;
+
+        } else if(gameUser.getRole() == GameUsersRole.PLAYER){
+            CpRedCharacters character = cpRedCharactersRepository.findByUser_IdAndGame_Id(currentUser.getId(), game.getId());
+            message = "single";
+            responseObject = getCharacterSheet(character.getId());
+        } else if(gameUser.getRole() == GameUsersRole.SPECTATOR){
+            message = "none";
+        } else {
+            throw new IllegalStateException("Niewłaściwa rola postaci");
+        }
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Udało się pobrać karty użytkownika.");
+        response.put("type",message);
+        response.put("characterSheet", responseObject);
         return response;
     }
 }
+
+
