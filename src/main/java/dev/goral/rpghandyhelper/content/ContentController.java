@@ -82,4 +82,9 @@ public class ContentController {
         System.out.println("ContentController: getNotes()");
         return "home/notes";
     }
+    @GetMapping("/home/games")
+    public String getgames() {
+        System.out.println("ContentController: getgames()");
+        return "home/games";
+    }
 }
