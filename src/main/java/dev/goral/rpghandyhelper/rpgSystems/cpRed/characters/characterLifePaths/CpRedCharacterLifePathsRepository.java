@@ -10,4 +10,6 @@ import java.util.List;
 public interface CpRedCharacterLifePathsRepository extends JpaRepository<CpRedCharacterLifePaths, Long> {
     List<CpRedCharacterLifePaths> findAllByCharacterId_Id(Long characterId);
     Boolean existsByCharacterId(CpRedCharacters character);
+
+    CpRedCharacterLifePaths findFirstByCharacterId(CpRedCharacters character);
 }

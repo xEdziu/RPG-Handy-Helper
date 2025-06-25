@@ -11,6 +11,7 @@ public class CpRedCharacterArmorSheetDTO {
     private Long characterArmorId;
     private Long baseArmorId;
     private Boolean isBaseArmorCustom;
+    private String armorName;
     private String place;
     private Integer currentArmorPoints;
     private Integer penalty;

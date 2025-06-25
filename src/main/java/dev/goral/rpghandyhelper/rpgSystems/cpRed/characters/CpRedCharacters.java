@@ -47,6 +47,12 @@ public class CpRedCharacters {
     @Enumerated(EnumType.STRING)
     private CpRedCharactersType type;
 
+    private Integer currentHp;
+    private Integer maxHp;
+    private Integer currentHumanity;
+    private Integer maxHumanity;
+    private Integer seriouslyWounded;
+    private Integer survivability;
     private Integer expAll;
     private Integer expAvailable;
     private Integer cash;

@@ -5,6 +5,26 @@ import dev.goral.rpghandyhelper.game.GameRepository;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterArmor.CpRedCharacterArmorService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterClasses.CpRedCharacterClassesService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCriticalInjuries.CpRedCharacterCriticalInjuriesService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCyberware.CpRedCharacterCyberwareService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCyberware.CpRedCharacterCyberwareSheetDTO;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterEnemies.CpRedCharacterEnemiesService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterEquipment.CpRedCharacterEquipmentService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterFriends.CpRedCharacterFriendsService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterLifePaths.CpRedCharacterLifePaths;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterLifePaths.CpRedCharacterLifePathsRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterOtherInfo.CpRedCharacterOtherInfo;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterOtherInfo.CpRedCharacterOtherInfoRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterSkills.CpRedCharacterSkillsService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterSkills.CpRedCharacterSkillsSheetDTO;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterStats.CpRedCharacterStatsService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterTragicLoveStory.CpRedCharacterTragicLoveStoryService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeaponService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.cyberwares.CpRedCyberwaresMountPlace;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.skills.CpRedSkillsCategory;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpghandyhelper.user.User;
@@ -13,11 +33,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +44,21 @@ public class CpRedCharactersService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
+    private final CpRedCharacterOtherInfoRepository cpRedCharacterOtherInfoRepository;
+    private final CpRedCharacterLifePathsRepository cpRedCharacterLifePathsRepository;
+
+
+    private final CpRedCharacterClassesService cpRedCharacterClassesService;
+    private final CpRedCharacterCriticalInjuriesService cpRedCharacterCriticalInjuriesService;
+    private final CpRedCharacterStatsService cpRedCharacterStatsService;
+    private final CpRedCharacterSkillsService cpRedCharacterSkillsService;
+    private final CpRedCharacterWeaponService cpRedCharacterWeaponService;
+    private final CpRedCharacterArmorService cpRedCharacterArmorService;
+    private final CpRedCharacterEquipmentService cpRedCharacterEquipmentService;
+    private final CpRedCharacterCyberwareService cpRedCharacterCyberwareService;
+    private final CpRedCharacterFriendsService cpRedCharacterFriendsService;
+    private final CpRedCharacterTragicLoveStoryService cpRedCharacterTragicLoveStoryService;
+    private final CpRedCharacterEnemiesService cpRedCharacterEnemiesService;
 
     public Map<String, Object> getAllCharacters() {
         List<CpRedCharacters> characters = cpRedCharactersRepository.findAll();
@@ -39,6 +71,12 @@ public class CpRedCharactersService {
                         character.getName(),
                         character.getNickname(),
                         character.getType().name(),
+                        character.getCurrentHp(),
+                        character.getMaxHp(),
+                        character.getCurrentHumanity(),
+                        character.getMaxHumanity(),
+                        character.getSeriouslyWounded(),
+                        character.getSurvivability(),
                         character.getExpAll(),
                         character.getExpAvailable(),
                         character.getCash(),
@@ -63,6 +101,12 @@ public class CpRedCharactersService {
                     cpRedCharacter.getName(),
                     cpRedCharacter.getNickname(),
                     cpRedCharacter.getType().name(),
+                    cpRedCharacter.getCurrentHp(),
+                    cpRedCharacter.getMaxHp(),
+                    cpRedCharacter.getCurrentHumanity(),
+                    cpRedCharacter.getMaxHumanity(),
+                    cpRedCharacter.getSeriouslyWounded(),
+                    cpRedCharacter.getSurvivability(),
                     cpRedCharacter.getExpAll(),
                     cpRedCharacter.getExpAvailable(),
                     cpRedCharacter.getCash(),
@@ -86,6 +130,12 @@ public class CpRedCharactersService {
         if(character.getName() == null ||
                 character.getNickname() == null ||
                 character.getType() == null ||
+                character.getCurrentHp() == null ||
+                character.getMaxHp() == null ||
+                character.getCurrentHumanity() == null ||
+                character.getMaxHumanity() == null ||
+                character.getSeriouslyWounded() == null ||
+                character.getSurvivability() == null ||
                 character.getExpAll() == null ||
                 character.getExpAvailable() == null ||
                 character.getCash() == null ||
@@ -134,6 +184,26 @@ public class CpRedCharactersService {
         }
         if (characterNickname.length() > 255) {
             throw new IllegalStateException("Pseudonim postaci nie może mieć więcej niż 255 znaków.");
+        }
+
+        if(character.getCurrentHumanity() < character.getMaxHumanity()){
+            throw new IllegalStateException("Aktualne człowieczeństwo postaci nie może być większe niż maksymalne");
+        }
+
+        if(character.getMaxHumanity() < 0){
+            throw new IllegalStateException("Maksymalne człowieczeństwo postaci nie może być mniejsze niż 0");
+        }
+
+        if(character.getCurrentHp() < character.getMaxHp()){
+            throw new IllegalStateException("Aktualne punkty wytrzymałości postaci nie mogą być większe niż maksymalne");
+        }
+
+        if(character.getMaxHp() < 0){
+            throw new IllegalStateException("Maksymalny poziom punktów wytrzymałości nie może być mniejszy niż 0");
+        }
+
+        if(character.getSeriouslyWounded() < 0){
+            throw new IllegalStateException("Próg poważnych ran nie może być mniejszy od 0");
         }
 
         if(character.getExpAll() < 0) {
@@ -224,6 +294,12 @@ public class CpRedCharactersService {
         if(character.getName() == null &&
                 character.getNickname() == null &&
                 character.getType() == null &&
+                character.getCurrentHp() == null &&
+                character.getMaxHp() == null &&
+                character.getCurrentHumanity() == null &&
+                character.getMaxHumanity() == null &&
+                character.getSeriouslyWounded() == null &&
+                character.getSurvivability() == null &&
                 character.getExpAll() == null &&
                 character.getExpAvailable() == null &&
                 character.getCash() == null &&
@@ -268,6 +344,40 @@ public class CpRedCharactersService {
                 throw new IllegalStateException("Typ postaci nie może być pusty");
             }
             cpRedCharacterToUpdate.setType(character.getType());
+        }
+
+        if(character.getCurrentHumanity() != null){
+            if(character.getCurrentHumanity() < character.getMaxHumanity()){
+                throw new IllegalStateException("Aktualne człowieczeństwo postaci nie może być większe niż maksymalne");
+            }
+            cpRedCharacterToUpdate.setCurrentHumanity(character.getCurrentHumanity());
+        }
+
+        if(character.getMaxHumanity() != null){
+            if(character.getMaxHumanity() < 0){
+                throw new IllegalStateException("Maksymalne człowieczeństwo postaci nie może być mniejsze niż 0");
+            }
+            cpRedCharacterToUpdate.setMaxHumanity(character.getMaxHumanity());
+        }
+
+        if(character.getCurrentHp() != null){
+            if(character.getCurrentHp() < character.getMaxHp()){
+                throw new IllegalStateException("Aktualne punkty wytrzymałości postaci nie mogą być większe niż maksymalne");
+            }
+            cpRedCharacterToUpdate.setCurrentHp(character.getCurrentHp());
+        }
+
+        if(character.getMaxHp() != null){
+            if(character.getMaxHp() < 0){
+                throw new IllegalStateException("Maksymalny poziom punktów wytrzymałości nie może być mniejszy niż 0");
+            }
+        }
+
+        if(character.getSeriouslyWounded() != null){
+            if(character.getSeriouslyWounded() < 0){
+                throw new IllegalStateException("Próg poważnych ran nie może być mniejszy od 0");
+            }
+            cpRedCharacterToUpdate.setSeriouslyWounded(character.getSeriouslyWounded());
         }
 
         if(character.getExpAll() != null) {
@@ -393,6 +503,89 @@ public class CpRedCharactersService {
     }
 
     public Map<String, Object> getCharacterSheet(Long characterId) {
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        CpRedCharacterOtherInfo characterOtherInfo = cpRedCharacterOtherInfoRepository.findFirstByCharacterId(character);
+        CpRedCharacterLifePaths characterLifePaths = cpRedCharacterLifePathsRepository.findFirstByCharacterId(character);
 
+
+        List<List<CpRedCharacterSkillsSheetDTO>> skills = new ArrayList<>();
+        for (CpRedSkillsCategory category : CpRedSkillsCategory.values()) {
+            List<CpRedCharacterSkillsSheetDTO> categorySkills =
+                    cpRedCharacterSkillsService.getCharacterSkillsForSheet(characterId, category);
+            skills.add(categorySkills);
+        }
+
+        List<List<CpRedCharacterCyberwareSheetDTO>> cyberware = new ArrayList<>();
+        for(CpRedCyberwaresMountPlace mountPlace : CpRedCyberwaresMountPlace.values()) {
+            List<CpRedCharacterCyberwareSheetDTO> mountPlaceCyberware =
+                    cpRedCharacterCyberwareService.getCharacterCyberwareForSheet(characterId, mountPlace);
+            cyberware.add(mountPlaceCyberware);
+        }
+
+        Map<Integer, Integer> map = new HashMap<>();
+
+        CpRedCharacterSheetDTO characterSheet = new CpRedCharacterSheetDTO(
+                characterId,
+                character.getType().toString(),
+                // ===== Podstawowe informacje =====
+                character.getCharacterPhotoPath(),
+                character.getName(),
+                cpRedCharacterClassesService.getCharacterClassesForSheet(characterId),
+                characterOtherInfo.getNotes(),
+                character.isAlive(),
+                // ===== Podstawowe statystyki =====
+                character.getCurrentHumanity(),
+                character.getMaxHumanity(),
+                character.getCurrentHp(),
+                character.getMaxHp(),
+                character.getSeriouslyWounded(),
+                character.getSurvivability(),
+                cpRedCharacterCriticalInjuriesService.getCharacterCriticalInjuriesForSheet(characterId),
+                characterOtherInfo.getAddictions(),
+                cpRedCharacterStatsService.getCharacterStatsForSheet(characterId),
+                // ===== Umiejętności =====
+                skills,
+                // ===== Broń i pancerz =====
+                cpRedCharacterWeaponService.getCharacterWeaponsForSheet(characterId),
+                cpRedCharacterArmorService.getCharacterArmorForSheet(characterId, CpRedCharacterItemStatus.STORED),
+                // ===== Wyposażenie =====
+                cpRedCharacterEquipmentService.getCharacterEquipmentsForSheet(characterId),
+                character.getCash(),
+                // ===== Wszczepy =====
+                cyberware,
+                // ===== Ścieżka życia =====
+                characterLifePaths.getCultureOfOrigin(),
+                characterLifePaths.getYourCharacter(),
+                characterLifePaths.getClothingAndStyle(),
+                characterLifePaths.getHair(),
+                characterLifePaths.getMostValue(),
+                characterLifePaths.getRelationships(),
+                characterLifePaths.getMostImportantPerson(),
+                characterLifePaths.getMostImportantItem(),
+                characterLifePaths.getFamilyBackground(),
+                characterLifePaths.getFamilyEnvironment(),
+                characterLifePaths.getFamilyCrisis(),
+                characterLifePaths.getLifeGoals(),
+                // Przyjaciele
+                cpRedCharacterFriendsService.getCharacterFriendsForSheet(characterId),
+                // Tragiczna historia miłosna
+                cpRedCharacterTragicLoveStoryService.getCharacterTragicLoveStoryForSheet(characterId),
+                // Wrogowie
+                cpRedCharacterEnemiesService.getCharacterEnemiesForSheet(characterId),
+                // Ścieżka życia postaci
+                characterOtherInfo.getClassLifePath(),
+                // ===== Pozostałe informacje =====
+                characterOtherInfo.getStyle(),
+                characterOtherInfo.getAccommodation(),
+                characterOtherInfo.getRental(),
+                characterOtherInfo.getLivingStandard(),
+                character.getExpAvailable(),
+                character.getExpAll(),
+                characterOtherInfo.getReputation()
+        );
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Karta postaci pobrana pomyślnie");
+        response.put("characterSheet", characterSheet);
+        return response;
     }
 }

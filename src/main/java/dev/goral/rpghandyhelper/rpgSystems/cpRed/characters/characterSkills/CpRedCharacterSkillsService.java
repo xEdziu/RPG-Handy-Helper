@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -222,18 +223,26 @@ public class CpRedCharacterSkillsService {
         return response;
     }
 
-    public List<CpRedCharacterSkillsSheetDTO> getCharacterSkills(Long characterId, CpRedSkillsCategory category) {
+    public List<CpRedCharacterSkillsSheetDTO> getCharacterSkillsForSheet(Long characterId, CpRedSkillsCategory category) {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
-        return cpRedCharacterSkillsRepository.getCharacterSkillsByCharacterAndCategory(character, category)
-                .stream()
-                .map(skill -> new CpRedCharacterSkillsSheetDTO(
+
+        List<CpRedCharacterSkills> characterSkillsList = cpRedCharacterSkillsRepository.getCharacterSkillsByCharacter(character);
+        List<CpRedCharacterSkillsSheetDTO> charakterCategorySkillListDTO = new ArrayList<>();
+
+        for(CpRedCharacterSkills skill : characterSkillsList) {
+            if(category == skill.getSkill().getCategory()) {
+                CpRedCharacterSkillsSheetDTO dto = new CpRedCharacterSkillsSheetDTO(
                         skill.getId(),
                         skill.getSkill().getId(),
                         skill.getSkill().getName() + " (" + skill.getSkill().getConnectedStat().getTag() + ")",
                         skill.getSkillLevel(),
-                        skill.getSkill().getCategory().toString()))
-                .toList();
-    }
+                        skill.getSkill().getCategory().toString()
+                );
+                charakterCategorySkillListDTO.add(dto);
+            }
+        }
 
+        return charakterCategorySkillListDTO;
+    }
 }

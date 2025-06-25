@@ -46,7 +46,7 @@ public class CpRedCharacterCustomCriticalInjuriesService {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
         List<CpRedCharacterCustomCriticalInjuriesDTO> characterCustomCriticalInjuriesList = characterCustomCriticalInjuriesRepository
-                .findAllByCharacterId_Id(characterId)
+                .findAllByCharacterId(characterId)
                 .stream()
                 .map(characterCustomCriticalInjuries -> new CpRedCharacterCustomCriticalInjuriesDTO(
                         characterCustomCriticalInjuries.getId(),

@@ -10,4 +10,6 @@ import java.util.List;
 public interface CpRedCharacterOtherInfoRepository extends JpaRepository<CpRedCharacterOtherInfo, Long> {
     List<CpRedCharacterOtherInfo> findAllByCharacterId_Id(Long characterId);
     Boolean existsByCharacterId(CpRedCharacters character);
+
+    CpRedCharacterOtherInfo findFirstByCharacterId(CpRedCharacters character);
 }

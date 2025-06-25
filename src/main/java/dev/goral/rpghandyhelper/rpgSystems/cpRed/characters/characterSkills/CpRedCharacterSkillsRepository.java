@@ -14,6 +14,4 @@ public interface CpRedCharacterSkillsRepository extends JpaRepository<CpRedChara
     List<CpRedCharacterSkills> getCharacterSkillsByCharacter(CpRedCharacters character);
 
     boolean existsByCharacterAndSkill(CpRedCharacters character, CpRedSkills skill);
-
-    List<CpRedCharacterSkills> getCharacterSkillsByCharacterAndCategory(CpRedCharacters character, CpRedSkillsCategory category);
 }
