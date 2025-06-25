@@ -43,11 +43,12 @@ public class CpRedCustomWeaponsService {
                         cpRedCustomWeapons.getMagazineCapacity(),
                         cpRedCustomWeapons.getNumberOfAttacks(),
                         cpRedCustomWeapons.getHandType(),
-                        cpRedCustomWeapons.isHidden(),
+                        cpRedCustomWeapons.getIsHidden(),
                         cpRedCustomWeapons.getQuality().name(),
                         cpRedCustomWeapons.getPrice(),
                         cpRedCustomWeapons.getAvailability().name(),
-                        cpRedCustomWeapons.isModifiable(),
+                        cpRedCustomWeapons.getIsModifiable(),
+                        cpRedCustomWeapons.getModSlots(),
                         cpRedCustomWeapons.getDescription()
                 )).toList();
 
@@ -86,11 +87,12 @@ public class CpRedCustomWeaponsService {
                         cpRedCustomWeapons.getMagazineCapacity(),
                         cpRedCustomWeapons.getNumberOfAttacks(),
                         cpRedCustomWeapons.getHandType(),
-                        cpRedCustomWeapons.isHidden(),
+                        cpRedCustomWeapons.getIsHidden(),
                         cpRedCustomWeapons.getQuality().name(),
                         cpRedCustomWeapons.getPrice(),
                         cpRedCustomWeapons.getAvailability().name(),
-                        cpRedCustomWeapons.isModifiable(),
+                        cpRedCustomWeapons.getIsModifiable(),
+                        cpRedCustomWeapons.getModSlots(),
                         cpRedCustomWeapons.getDescription()
                 )).orElseThrow(() -> new RuntimeException("Customowa broń o id " + customWeaponId + " nie istnieje"));
 
@@ -126,11 +128,12 @@ public class CpRedCustomWeaponsService {
                         cpRedCustomWeapons.getMagazineCapacity(),
                         cpRedCustomWeapons.getNumberOfAttacks(),
                         cpRedCustomWeapons.getHandType(),
-                        cpRedCustomWeapons.isHidden(),
+                        cpRedCustomWeapons.getIsHidden(),
                         cpRedCustomWeapons.getQuality().name(),
                         cpRedCustomWeapons.getPrice(),
                         cpRedCustomWeapons.getAvailability().name(),
-                        cpRedCustomWeapons.isModifiable(),
+                        cpRedCustomWeapons.getIsModifiable(),
+                        cpRedCustomWeapons.getModSlots(),
                         cpRedCustomWeapons.getDescription()
                 )).toList();
 
@@ -147,17 +150,20 @@ public class CpRedCustomWeaponsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
 
         // Sprawdź, czy wszystkie wymagane pola są wypełnione
-        if (addCustomWeaponRequest.getGameId() == -1L ||
-                addCustomWeaponRequest.getRequiredSkillId() == -1L ||
+        if (addCustomWeaponRequest.getGameId() == null ||
+                addCustomWeaponRequest.getRequiredSkillId() == null ||
                 addCustomWeaponRequest.getName() == null ||
                 addCustomWeaponRequest.getType() == null ||
-                addCustomWeaponRequest.getDamage() == -1 ||
-                addCustomWeaponRequest.getMagazineCapacity() == -1 ||
-                addCustomWeaponRequest.getNumberOfAttacks() == -1 ||
-                addCustomWeaponRequest.getHandType() == -1 ||
+                addCustomWeaponRequest.getDamage() == null ||
+                addCustomWeaponRequest.getMagazineCapacity() == null ||
+                addCustomWeaponRequest.getNumberOfAttacks() == null ||
+                addCustomWeaponRequest.getHandType() == null ||
+                addCustomWeaponRequest.getIsHidden() == null ||
                 addCustomWeaponRequest.getQuality() == null ||
-                addCustomWeaponRequest.getPrice() == -1 ||
+                addCustomWeaponRequest.getPrice() == null ||
                 addCustomWeaponRequest.getAvailability() == null ||
+                addCustomWeaponRequest.getIsModifiable() == null ||
+                addCustomWeaponRequest.getModSlots() == null ||
                 addCustomWeaponRequest.getDescription() == null) {
             throw new IllegalStateException("Nie wszystkie pola zostały wypełnione.");
         }
@@ -224,6 +230,16 @@ public class CpRedCustomWeaponsService {
             throw new IllegalStateException("Cena nie może być ujemna.");
         }
 
+        // Sprawdź ilość modyfikacji
+        if (!addCustomWeaponRequest.getIsModifiable()){
+            addCustomWeaponRequest.setModSlots((short)0);
+        } else {
+            // Sprawdź, czy ilość modyfikacji nie jest ujemna
+            if (addCustomWeaponRequest.getModSlots() == null || addCustomWeaponRequest.getModSlots() < 0) {
+                throw new IllegalStateException("Ilość modyfikacji nie może być ujemna.");
+            }
+        }
+
         // Sprawdź, czy opis nie jest pusty lub składa się tylko z białych znaków
         if (addCustomWeaponRequest.getDescription().trim().isEmpty() || addCustomWeaponRequest.getDescription().isEmpty()) {
             throw new IllegalStateException("Opis customowej broni nie może być pusty.");
@@ -245,11 +261,12 @@ public class CpRedCustomWeaponsService {
                 addCustomWeaponRequest.getMagazineCapacity(),
                 addCustomWeaponRequest.getNumberOfAttacks(),
                 addCustomWeaponRequest.getHandType(),
-                addCustomWeaponRequest.isHidden(),
+                addCustomWeaponRequest.getIsHidden(),
                 addCustomWeaponRequest.getQuality(),
                 addCustomWeaponRequest.getPrice(),
                 addCustomWeaponRequest.getAvailability(),
-                addCustomWeaponRequest.isModifiable(),
+                addCustomWeaponRequest.getIsModifiable(),
+                addCustomWeaponRequest.getModSlots(),
                 addCustomWeaponRequest.getDescription()
         );
 
@@ -291,7 +308,7 @@ public class CpRedCustomWeaponsService {
         }
 
         // Sprawdź przypisaną statystykę
-        if (cpRedCustomWeapon.getRequiredSkillId() != -1) {
+        if (cpRedCustomWeapon.getRequiredSkillId() != null) {
             CpRedSkills requiredSkill = cpRedSkillsRepository.findById(cpRedCustomWeapon.getRequiredSkillId())
                     .orElseThrow(() -> new ResourceNotFoundException("Umiejętność o id " + cpRedCustomWeapon.getRequiredSkillId() + " nie istnieje"));
             weaponToUpdate.setRequiredSkillId(requiredSkill);
@@ -323,7 +340,7 @@ public class CpRedCustomWeaponsService {
         }
 
         // Sprawdź dmg
-        if (cpRedCustomWeapon.getDamage() != -1) {
+        if (cpRedCustomWeapon.getDamage() != null) {
             // Sprawdź, czy dmg nie jest ujemne
             if (cpRedCustomWeapon.getDamage() < 0) {
                 throw new IllegalStateException("Dmg nie mogą być ujemne.");
@@ -332,7 +349,7 @@ public class CpRedCustomWeaponsService {
         }
 
         // Sprawdź pojemność magazynka
-        if (cpRedCustomWeapon.getMagazineCapacity() != -1) {
+        if (cpRedCustomWeapon.getMagazineCapacity() != null) {
             // Sprawdź, czy pojemność magazynka nie jest ujemna
             if (cpRedCustomWeapon.getMagazineCapacity() < 0) {
                 throw new IllegalStateException("Pojemność magazynka nie może być ujemna.");
@@ -341,7 +358,7 @@ public class CpRedCustomWeaponsService {
         }
 
         // Sprawdź ilość ataków
-        if (cpRedCustomWeapon.getNumberOfAttacks() != -1) {
+        if (cpRedCustomWeapon.getNumberOfAttacks() != null) {
             // Sprawdź, czy liczba ataków jest większa od 0
             if (cpRedCustomWeapon.getNumberOfAttacks() < 0) {
                 throw new IllegalStateException("Liczba ataków nie może być ujemna.");
@@ -350,7 +367,7 @@ public class CpRedCustomWeaponsService {
         }
 
         // Sprawdź ilość rąk
-        if (cpRedCustomWeapon.getHandType() != -1) {
+        if (cpRedCustomWeapon.getHandType() != null) {
             // Sprawdź, czy typ ręki jest większy od 0
             if (cpRedCustomWeapon.getHandType() < 0) {
                 throw new IllegalStateException("Typ ręki nie może być ujemny.");
@@ -358,8 +375,12 @@ public class CpRedCustomWeaponsService {
             weaponToUpdate.setHandType(cpRedCustomWeapon.getHandType());
         }
 
+        if (cpRedCustomWeapon.getIsHidden() != null) {
+            weaponToUpdate.setIsHidden(cpRedCustomWeapon.getIsHidden());
+        }
+
         // Sprawdź cenę
-        if (cpRedCustomWeapon.getPrice() != -1) {
+        if (cpRedCustomWeapon.getPrice() != null) {
             // Sprawdź, czy cena nie jest ujemna
             if (cpRedCustomWeapon.getPrice() < 0) {
                 throw new IllegalStateException("Cena nie może być ujemna.");
@@ -375,6 +396,24 @@ public class CpRedCustomWeaponsService {
         // Sprawdź dostępność
         if (cpRedCustomWeapon.getAvailability() != null) {
             weaponToUpdate.setAvailability(cpRedCustomWeapon.getAvailability());
+        }
+
+        // Sprawdź, czy broń jest modyfikowalna
+        if (cpRedCustomWeapon.getIsModifiable() != null) {
+            weaponToUpdate.setIsModifiable(cpRedCustomWeapon.getIsModifiable());
+        }
+
+        // Sprawdź ilość modyfikacji
+        if (cpRedCustomWeapon.getModSlots() != null) {
+            if (!weaponToUpdate.getIsModifiable()) {
+                cpRedCustomWeapon.setModSlots((short) 0);
+            } else {
+                // Sprawdź, czy ilość modyfikacji nie jest ujemna
+                if (cpRedCustomWeapon.getModSlots() < 0) {
+                    throw new IllegalStateException("Ilość modyfikacji nie może być ujemna.");
+                }
+            }
+            weaponToUpdate.setModSlots(cpRedCustomWeapon.getModSlots());
         }
 
         // Sprawdź opis
@@ -395,74 +434,6 @@ public class CpRedCustomWeaponsService {
         cpRedCustomWeaponsRepository.save(weaponToUpdate);
 
         return CustomReturnables.getOkResponseMap("Customowa amunicja została zmodyfikowana.");
-    }
-
-    // Modyfikuj ukrywalność broni
-    public Map<String, Object> changeHide(Long customWeaponId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-
-        CpRedCustomWeapons weaponToUpdate = cpRedCustomWeaponsRepository.findById(customWeaponId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customowa broń o id " + customWeaponId + " nie istnieje"));
-
-        // Sprawdź, czy gra istnieje
-        Game game = gameRepository.findById(weaponToUpdate.getGameId().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + weaponToUpdate.getGameId().getId() + " nie istnieje."));
-
-        // Sprawdź, czy gra jest aktywna
-        if (game.getStatus() != GameStatus.ACTIVE) {
-            throw new IllegalStateException("Gra o id " + weaponToUpdate.getGameId().getId() + " nie jest aktywna.");
-        }
-
-        // Sprawdź, czy użytkownik należy do gry
-        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), weaponToUpdate.getGameId().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
-
-        // Sprawdź, czy użytkownik jest GM
-        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może modyfikować customową broń.");
-        }
-
-        weaponToUpdate.setHidden(!weaponToUpdate.isHidden());
-        cpRedCustomWeaponsRepository.save(weaponToUpdate);
-
-        return CustomReturnables.getOkResponseMap("Ukrywalność customowej broni została zmieniona.");
-    }
-
-    // Modyfikuj modyfikowalność broni
-    public Map<String, Object> changeModifiable(Long customWeaponId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new ResourceNotFoundException("Zalogowany użytkownik nie został znaleziony."));
-
-        CpRedCustomWeapons weaponToUpdate = cpRedCustomWeaponsRepository.findById(customWeaponId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customowa broń o id " + customWeaponId + " nie istnieje"));
-
-        // Sprawdź, czy gra istnieje
-        Game game = gameRepository.findById(weaponToUpdate.getGameId().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Gra o id " + weaponToUpdate.getGameId().getId() + " nie istnieje."));
-
-        // Sprawdź, czy gra jest aktywna
-        if (game.getStatus() != GameStatus.ACTIVE) {
-            throw new IllegalStateException("Gra o id " + weaponToUpdate.getGameId().getId() + " nie jest aktywna.");
-        }
-
-        // Sprawdź, czy użytkownik należy do gry
-        GameUsers gameUsers = gameUsersRepository.findGameUsersByUserIdAndGameId(currentUser.getId(), weaponToUpdate.getGameId().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Nie należysz do podanej gry."));
-
-        // Sprawdź, czy użytkownik jest GM
-        if (gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-            throw new IllegalStateException("Tylko GM może modyfikować customową broń.");
-        }
-
-        weaponToUpdate.setModifiable(!weaponToUpdate.isModifiable());
-        cpRedCustomWeaponsRepository.save(weaponToUpdate);
-
-        return CustomReturnables.getOkResponseMap("Modyfikowalność customowej broni została zmieniona.");
     }
 
     // Pobierz wszystkie customowe bronie dla admina

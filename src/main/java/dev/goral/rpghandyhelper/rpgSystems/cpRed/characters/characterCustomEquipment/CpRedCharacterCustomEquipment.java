@@ -28,19 +28,21 @@ public class CpRedCharacterCustomEquipment {
     private Long id;
     @ManyToOne
     @JoinColumn(
-            name = "equipment_id",
+            name = "customItem_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCustomEquipments equipmentId;
+    private CpRedCustomEquipments customItem;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCharacters characterId;
+    private CpRedCharacters character;
+    private Integer quantity;
     @Enumerated(EnumType.STRING)
     private CpRedCharacterItemStatus status;
+    @Column(length = 1000)
     private String description;
 }

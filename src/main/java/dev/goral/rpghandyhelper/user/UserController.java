@@ -26,6 +26,11 @@ public class UserController {
         return userService.findUsersByRegexUsername(regexUsername);
     }
 
+    @GetMapping("/user/isPasswordSetForDiscordUser")
+    public Map<String, Object> isPasswordSetForDiscordUser(@AuthenticationPrincipal Object user) {
+        return userService.isPasswordSetForDiscordUser(user);
+    }
+
     @PostMapping("/setPassword")
     public Map<String, Object> setPassword(@RequestBody PasswordRequest passwordRequest) {
         return userService.setPassword(passwordRequest.getPassword());
@@ -52,13 +57,20 @@ public class UserController {
     }
 
     @GetMapping("/user/photo/username/{username}")
-    public Map<String, Object> getUserPhotoByUsername(@PathVariable String username) throws IOException {
+    public Map<String, Object> getUserPhotoByUsername(@PathVariable String username) {
         return userService.getUserPhotoByUsername(username);
     }
   
     @GetMapping("/user/photo/defaults")
     public Map<String, Object> getDefaultUserPhotos() {
         return userService.getDefaultProfilePics();
+    }
+
+    // Admin endpoints
+
+    @GetMapping("/admin/user/{id}")
+    public Map<String, Object> getUserById(@PathVariable Long id) {
+        return userService.getAdminUserById(id);
     }
 
     @GetMapping("/admin/user/all")
@@ -71,5 +83,19 @@ public class UserController {
         return userService.createUserAdmin(user);
     }
 
+    @PutMapping("/admin/user/update/{id}")
+    public Map<String, Object> updateUserAdmin(@PathVariable Long id, @RequestBody UserUpdateAdminRequest updateRequest) {
+        return userService.updateUserAdmin(id, updateRequest);
+    }
+
+    @PutMapping("/admin/user/changePassword/{id}")
+    public Map<String, Object> changeUserPasswordAdmin(@PathVariable Long id, @RequestBody PasswordRequest passwordRequest) {
+        return userService.changeUserPasswordAdmin(id, passwordRequest.getPassword());
+    }
+
+    @DeleteMapping("/admin/user/delete/{id}")
+    public Map<String, Object> deleteUserAdmin(@PathVariable Long id) {
+        return userService.deleteUserAdmin(id);
+    }
 
 }
