@@ -84,10 +84,10 @@ public class ContentController {
         System.out.println("ContentController: getNotes()");
         return "home/notes";
     }
-    @GetMapping("/home/gameSite/{gameId}")
-    public String getGameSitePage(@PathVariable Long gameId, Model model) {
+    @GetMapping("/home/game/{gameId}")
+    public String getGamePage(@PathVariable Long gameId, Model model) {
         model.addAttribute("gameId", gameId);
-        return "home/gameSite"; // BEZ .html – framework doda sam
+        return "home/game"; // BEZ .html – framework doda sam
     }
 
 
