@@ -89,6 +89,7 @@ public class ContentController {
     public String getCharacters(@PathVariable String gameId) {
         System.out.println("ContentController: getCharacters()");
         return "home/characters";
+    }
 
     @GetMapping("/home/games/{gameId}/schedulers")
     public String getSchedulers() {
