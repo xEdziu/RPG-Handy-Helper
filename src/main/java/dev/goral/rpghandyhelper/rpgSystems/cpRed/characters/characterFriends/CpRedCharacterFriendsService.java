@@ -242,4 +242,17 @@ public class CpRedCharacterFriendsService {
         cpRedCharacterFriendsRepository.save(friendsToUpdate);
         return CustomReturnables.getOkResponseMap("Przyjaciel został zaktualizowany.");
     }
+
+    public List<CpRedCharacterFriendsSheetDTO> getCharacterFriendsForSheet(Long characterId){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        return cpRedCharacterFriendsRepository.findAllByCharacterId(character)
+                .stream()
+                .map(friend -> new CpRedCharacterFriendsSheetDTO(
+                        friend.getId(),
+                        friend.getName(),
+                        friend.getDescription()
+                ))
+                .toList();
+    }
 }

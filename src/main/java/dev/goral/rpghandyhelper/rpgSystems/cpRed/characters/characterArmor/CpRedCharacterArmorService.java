@@ -9,6 +9,8 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomArmor.CpRedCharacterCustomArmor;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomArmor.CpRedCharacterCustomArmorRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeapon;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.armors.CpRedArmors;
@@ -23,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,6 +39,7 @@ public class CpRedCharacterArmorService {
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
     private final CpRedArmorsRepository cpRedArmorsRepository;
+    private final CpRedCharacterCustomArmorRepository cpRedCharacterCustomArmorRepository;
 
     public Map<String, Object> getCharacterArmor(Long characterId){
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
@@ -258,5 +262,38 @@ public class CpRedCharacterArmorService {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie pancerze postaci pobrane pomyślnie");
         response.put("characterArmors", allCharacterArmors);
         return response;
+    }
+
+    public List<CpRedCharacterArmorSheetDTO> getCharacterArmorForSheet(Long characterId, CpRedCharacterItemStatus status){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        List<CpRedCharacterArmor> characterManualArmorList = cpRedCharacterArmorRepository.findAllByCharacterAndStatus(character, status);
+        List<CpRedCharacterCustomArmor> characterCustomArmorList = cpRedCharacterCustomArmorRepository.findAllByCharacterIdAndStatus(character, status);
+        List<CpRedCharacterArmorSheetDTO> characterArmorsDTO = new ArrayList<>();
+        for(CpRedCharacterArmor armor : characterManualArmorList){
+            CpRedCharacterArmorSheetDTO dto = new CpRedCharacterArmorSheetDTO(
+                    armor.getId(),
+                    armor.getBaseArmor().getId(),
+                    false,
+                    armor.getBaseArmor().getName(),
+                    armor.getPlace().toString(),
+                    armor.getCurrentArmorPoints(),
+                    armor.getBaseArmor().getPenalty()
+            );
+            characterArmorsDTO.add(dto);
+        }
+        for(CpRedCharacterCustomArmor customArmor : characterCustomArmorList){
+            CpRedCharacterArmorSheetDTO dto = new CpRedCharacterArmorSheetDTO(
+                    customArmor.getId(),
+                    customArmor.getArmorId().getId(),
+                    true,
+                    customArmor.getArmorId().getName(),
+                    customArmor.getPlace().toString(),
+                    customArmor.getCurrentArmorPoints(),
+                    customArmor.getArmorId().getPenalty()
+            );
+            characterArmorsDTO.add(dto);
+        }
+        return characterArmorsDTO;
     }
 }

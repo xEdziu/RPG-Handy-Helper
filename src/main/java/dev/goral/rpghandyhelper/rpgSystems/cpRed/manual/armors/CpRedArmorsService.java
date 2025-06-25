@@ -24,7 +24,7 @@ public class CpRedArmorsService {
         List<CpRedArmors> armors= cpRedArmorsRepository.findAll();
         List<CpRedArmorsDTO> armorsDTO = armors.stream().map(armor ->
                 new CpRedArmorsDTO(
-                        armor.getType().toString(),
+                        armor.getName(),
                         armor.getArmorPoints(),
                         armor.getPenalty(),
                         armor.getPrice(),
@@ -42,7 +42,7 @@ public class CpRedArmorsService {
     public Map<String,Object> getArmorById(Long armorId) {
         CpRedArmorsDTO armor=cpRedArmorsRepository.findById(armorId).
                 map(cpRedArmors -> new CpRedArmorsDTO(
-                        cpRedArmors.getType().toString(),
+                        cpRedArmors.getName(),
                         cpRedArmors.getArmorPoints(),
                         cpRedArmors.getPenalty(),
                         cpRedArmors.getPrice(),
@@ -69,7 +69,7 @@ public class CpRedArmorsService {
         if (!currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
             throw new IllegalStateException("Nie masz uprawnień do przeglądania tej sekcji.");
         }
-        if(armor.getType() == null ||
+        if(armor.getName() == null ||
                 armor.getArmorPoints() == -1 ||
                 armor.getPrice() == -1 ||
                 armor.getPenalty() == -1 ||
@@ -82,12 +82,19 @@ public class CpRedArmorsService {
                 armor.getPrice() < 0) {
             throw new IllegalStateException("Parametry nie mogą być ujemne");
         }
+        String name = armor.getName();
+        if(cpRedArmorsRepository.existsByName(name)){
+            throw new IllegalStateException("Nie może być dwóch pancerzy o takiej samej nazwie");
+        }
+        if(name.length() > 255) {
+            throw new IllegalStateException("Nazwa nie może być dłuższa niż 255 znaków");
+        }
         String description = armor.getDescription();
         if(description.length() > 1000) {
             throw new IllegalStateException("Opis nie może być dłuższy niż 1000 znaków");
         }
         CpRedArmors newArmor = new CpRedArmors();
-        newArmor.setType(armor.getType());
+        newArmor.setName(armor.getName());
         newArmor.setArmorPoints(armor.getArmorPoints());
         newArmor.setPenalty(armor.getPenalty());
         newArmor.setPrice(armor.getPrice());
@@ -109,8 +116,15 @@ public class CpRedArmorsService {
         CpRedArmors armorToUpdate = cpRedArmorsRepository.findById(armorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pancerz o id " + armorId + " nie istnieje"));
 
-        if(armor.getType() != null) {
-            armorToUpdate.setType(armor.getType());
+        if(armor.getName() != null) {
+            String name = armor.getName();
+            if(cpRedArmorsRepository.existsByName(name)){
+                throw new IllegalStateException("Nie może być dwóch pancerzy o takiej samej nazwie");
+            }
+            if(name.length() > 255) {
+                throw new IllegalStateException("Nazwa nie może być dłuższa niż 255 znaków");
+            }
+            armorToUpdate.setName(armor.getName());
         }
 
         if(armor.getArmorPoints()!=-1) {

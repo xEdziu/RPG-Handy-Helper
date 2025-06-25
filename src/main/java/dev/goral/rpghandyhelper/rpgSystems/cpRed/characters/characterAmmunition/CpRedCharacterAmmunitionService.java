@@ -9,12 +9,20 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomAmmunition.CpRedCharacterCustomAmmunition;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomAmmunition.CpRedCharacterCustomAmmunitionRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeapon.CpRedCharacterCustomWeapon;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeapon.CpRedCharacterCustomWeaponRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeapon;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeaponRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.compatibility.ammunition.CpRedAmmunitionCompatibilityRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customAmmunition.CpRedCustomAmmunitionRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customWeapons.CpRedCustomWeapons;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.custom.customWeapons.CpRedCustomWeaponsRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.ammunition.CpRedAmmunition;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.ammunition.CpRedAmmunitionRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.weapons.CpRedWeapons;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.weapons.CpRedWeaponsRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpghandyhelper.user.User;
@@ -24,6 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,6 +46,12 @@ public class CpRedCharacterAmmunitionService {
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
     private final CpRedCharactersRepository cpRedCharactersRepository;
+    private final CpRedCharacterWeaponRepository cpRedCharacterWeaponRepository;
+    private final CpRedCharacterCustomWeaponRepository cpRedCharacterCustomWeaponRepository;
+    private final CpRedWeaponsRepository cpRedWeaponsRepository;
+    private final CpRedCustomWeaponsRepository cpRedCustomWeaponsRepository;
+    private final CpRedCharacterCustomAmmunitionRepository cpRedCharacterCustomAmmunitionRepository;
+    private final CpRedAmmunitionCompatibilityRepository cpRedAmmunitionCompatibilityRepository;
 
     public Map<String, Object> getCharacterAmmunition(Long characterId) {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
@@ -223,5 +238,52 @@ public class CpRedCharacterAmmunitionService {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie amunicje postaci pobrane pomyślnie");
         response.put("allCharacterAmmunition", allCharacterAmmunition);
         return response;
+    }
+
+    public List<CpRedCharacterAmmunitionSheetDTO> getCharacterAmmunitionForWeaponForSheet (Long characterId, Long characterWeaponId, Boolean isWeaponCustom){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+
+        List<CpRedCharacterAmmunition> characterAmmunition = characterAmmunitionRepository.findAllByCharacter(character);
+        List<CpRedCharacterCustomAmmunition> characterCustomAmmunition = cpRedCharacterCustomAmmunitionRepository.findAllByCharacter(character);
+        List<CpRedCharacterAmmunitionSheetDTO> characterWeaponAmmunitionList = new ArrayList<>();
+
+        for(CpRedCharacterAmmunition ammo : characterAmmunition){
+            if(cpRedAmmunitionCompatibilityRepository.existsByWeaponIdAndAmmunitionIdAndIsWeaponCustomAndIsAmmunitionCustom(
+                    characterWeaponId,
+                    ammo.getAmmunition().getId(),
+                    isWeaponCustom,
+                    false
+            )){
+                CpRedCharacterAmmunitionSheetDTO dto = new CpRedCharacterAmmunitionSheetDTO(
+                        ammo.getId(),
+                        ammo.getAmmunition().getId(),
+                        false,
+                        ammo.getAmmunition().getName(),
+                        ammo.getAmount()
+                );
+                characterWeaponAmmunitionList.add(dto);
+            }
+        }
+
+        for(CpRedCharacterCustomAmmunition customAmmo : characterCustomAmmunition){
+            if(cpRedAmmunitionCompatibilityRepository.existsByWeaponIdAndAmmunitionIdAndIsWeaponCustomAndIsAmmunitionCustom(
+                    characterWeaponId,
+                    customAmmo.getCustomAmmunition().getId(),
+                    isWeaponCustom,
+                    true
+            )){
+                CpRedCharacterAmmunitionSheetDTO dto = new CpRedCharacterAmmunitionSheetDTO(
+                        customAmmo.getId(),
+                        customAmmo.getCustomAmmunition().getId(),
+                        true,
+                        customAmmo.getCustomAmmunition().getName(),
+                        customAmmo.getAmount()
+                );
+                characterWeaponAmmunitionList.add(dto);
+            }
+        }
+
+        return characterWeaponAmmunitionList;
     }
 }

@@ -13,4 +13,6 @@ public interface CpRedCharacterCustomAmmunitionRepository extends JpaRepository<
     List<CpRedCharacterCustomAmmunition> findAllByCharacterId(Long characterId);
 
     boolean existsByCharacterAndCustomAmmunition(CpRedCharacters character, CpRedCustomAmmunition customAmmunition);
+
+    List<CpRedCharacterCustomAmmunition> findAllByCharacter(CpRedCharacters character);
 }

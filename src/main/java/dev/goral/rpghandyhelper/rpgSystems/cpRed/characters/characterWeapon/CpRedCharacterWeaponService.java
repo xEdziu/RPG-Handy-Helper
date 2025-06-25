@@ -9,9 +9,13 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterAmmunition.CpRedCharacterAmmunitionService;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeapon.CpRedCharacterCustomWeapon;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomWeapon.CpRedCharacterCustomWeaponRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeaponMod.CpRedCharacterWeaponMod;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeaponMod.CpRedCharacterWeaponModDTO;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeaponMod.CpRedCharacterWeaponModRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeaponMod.CpRedCharacterWeaponModService;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.items.CpRedItemsQuality;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.stats.CpRedStats;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.weapons.CpRedWeapons;
@@ -27,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,6 +46,10 @@ public class CpRedCharacterWeaponService {
     private final GameUsersRepository gameUsersRepository;
     private final CpRedWeaponsRepository cpRedWeaponsRepository;
     private final CpRedCharacterWeaponModRepository cpRedCharacterWeaponModRepository;
+    private final CpRedCharacterCustomWeaponRepository cpRedCharacterCustomWeaponRepository;
+
+    private final CpRedCharacterAmmunitionService cpRedCharacterAmmunitionService;
+    private final CpRedCharacterWeaponModService cpRedCharacterWeaponModService;
 
     public Map<String, Object> getCharacterWeapons(Long characterId) {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
@@ -297,5 +306,45 @@ public class CpRedCharacterWeaponService {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Wszystkie bronie postaci pobrane pomyślnie");
         response.put("allCharacterWeapons", allCharacterWeapons);
         return response;
+    }
+
+    public List<CpRedCharacterWeaponSheetDTO> getCharacterWeaponsForSheet(Long characterId){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        List<CpRedCharacterWeapon> characterManualWeaponList = cpRedCharacterWeaponRepository.findAllByCharacter(character);
+        List<CpRedCharacterCustomWeapon> characterCustomWeaponList = cpRedCharacterCustomWeaponRepository.findAllByCharacter(character);
+        List<CpRedCharacterWeaponSheetDTO> characterWeaponsDTO = new ArrayList<>();
+        for(CpRedCharacterWeapon weapon : characterManualWeaponList){
+            CpRedCharacterWeaponSheetDTO dto = new CpRedCharacterWeaponSheetDTO(
+                  weapon.getId(),
+                  weapon.getBaseWeapon().getId(),
+                  false,
+                  weapon.getBaseWeapon().getName(),
+                  weapon.getDmg().toString() + "k6",
+                  weapon.getMagazineCapacity(),
+                  cpRedCharacterAmmunitionService.getCharacterAmmunitionForWeaponForSheet(characterId, weapon.getBaseWeapon().getId(), false),
+                  weapon.getNumberOfAttacks(),
+                  cpRedCharacterWeaponModService.getCharacterWeaponModForSheet(characterId, weapon.getId(), false),
+                  weapon.getDescription()
+            );
+            characterWeaponsDTO.add(dto);
+        }
+        for(CpRedCharacterCustomWeapon customWeapon : characterCustomWeaponList){
+            CpRedCharacterWeaponSheetDTO dto = new CpRedCharacterWeaponSheetDTO(
+                    customWeapon.getId(),
+                    customWeapon.getBaseCustomWeapon().getId(),
+                    true,
+                    customWeapon.getBaseCustomWeapon().getName(),
+                    customWeapon.getDmg().toString() + "k6",
+                    customWeapon.getMagazineCapacity(),
+                    cpRedCharacterAmmunitionService.getCharacterAmmunitionForWeaponForSheet(characterId, customWeapon.getBaseCustomWeapon().getId(), true),
+                    customWeapon.getNumberOfAttacks(),
+                    cpRedCharacterWeaponModService.getCharacterWeaponModForSheet(characterId, customWeapon.getId(), true),
+                    customWeapon.getDescription()
+            );
+            characterWeaponsDTO.add(dto);
+        }
+
+        return characterWeaponsDTO;
     }
 }

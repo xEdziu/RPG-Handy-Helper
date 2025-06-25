@@ -3,7 +3,9 @@ package dev.goral.rpghandyhelper.scheduler.service;
 import dev.goral.rpghandyhelper.email.EmailService;
 import dev.goral.rpghandyhelper.game.GameRepository;
 import dev.goral.rpghandyhelper.game.GameStatus;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsers;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
+import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.scheduler.dto.common.NextSession;
 import dev.goral.rpghandyhelper.scheduler.dto.common.TimeRangeDto;
 import dev.goral.rpghandyhelper.scheduler.dto.request.CreateSchedulerRequest;
@@ -59,10 +61,6 @@ public class SchedulerService {
         User creator = userRepository.findByUsername(currentUser.getUsername())
                 .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika: " + currentUser.getUsername()));
 
-        // Sprawdź, czy użytkownik jest twórcą gry
-        if (!creator.getId().equals(request.getCreatorId())) {
-            throw new IllegalStateException("Użytkownik nie jest twórcą gry");
-        }
 
         // Sprawdź, czy użytkownik jest uczestnikiem gry
         if (!gameUsersRepository.existsByGameIdAndUserId(request.getGameId(), creator.getId())) {
@@ -74,11 +72,13 @@ public class SchedulerService {
             throw new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId());
         }
 
-        // Sprawdź, czy twórca harmonogramu to GameMaster
-        if (!gameRepository.findById(request.getGameId())
-                .orElseThrow(() -> new IllegalStateException("Nie znaleziono gry o id: " + request.getGameId()))
-                .getOwner().getId().equals(creator.getId())) {
-            throw new IllegalStateException("Tylko GameMaster może stworzyć harmonogram");
+        List<GameUsers> gameMasters = gameUsersRepository.findByGameIdAndRole(request.getGameId(), GameUsersRole.GAMEMASTER);
+
+        // Sprawdź, czy użytkownik jest GameMaster
+
+        if (gameMasters.stream()
+                .noneMatch(gu -> gu.getUser().getId().equals(currentUser.getId()))) {
+            throw new IllegalStateException("Tylko GameMaster może tworzyć harmonogramy dla gry");
         }
 
         // Sprawdź, czy gra ma status ACTIVE
@@ -1068,6 +1068,28 @@ public class SchedulerService {
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano najbliższą sesję.");
         response.put("nextSession", nextSessionDto);
         return response;
+    }
+
+
+    public void removePlayerFromAllSchedulersById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika o id: " + id));
+
+        List<Scheduler> schedulers = schedulerRepository.findAllByParticipants_Player_Id(user.getId());
+
+        for (Scheduler scheduler : schedulers) {
+            SchedulerParticipant participant = scheduler.getParticipants().stream()
+                    .filter(p -> p.getPlayer().getId().equals(user.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (participant != null) {
+                scheduler.getParticipants().remove(participant);
+                participant.setScheduler(null); // unlink the participant from the scheduler
+            }
+        }
+
+        schedulerRepository.saveAll(schedulers);
     }
 
     /**

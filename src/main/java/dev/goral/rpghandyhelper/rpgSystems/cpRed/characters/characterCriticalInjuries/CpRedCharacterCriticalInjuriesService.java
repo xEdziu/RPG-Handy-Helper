@@ -10,6 +10,8 @@ import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepos
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCriticalInjuries.CpRedCharacterCriticalInjuries;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCriticalInjuries.CpRedCharacterCriticalInjuriesRequest;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCriticalInjuries.CpRedCharacterCustomCriticalInjuries;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCriticalInjuries.CpRedCharacterCustomCriticalInjuriesRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.criticalInjuries.CpRedCriticalInjuries;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.criticalInjuries.CpRedCriticalInjuriesRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
@@ -21,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,6 +37,7 @@ public class CpRedCharacterCriticalInjuriesService {
     private  final GameUsersRepository gameUsersRepository;
     private final CpRedCharacterCriticalInjuriesRepository cpRedCharacterCriticalInjuriesRepository;
     private final CpRedCriticalInjuriesRepository cpRedCriticalInjuriesRepository;
+    private final CpRedCharacterCustomCriticalInjuriesRepository cpRedCharacterCustomCriticalInjuriesRepository;
 
     public Map<String, Object> getAllCriticalInjuries() {
         List<CpRedCharacterCriticalInjuries> injuries = CpRedCharacterCriticalInjuriesRepository.findAll();
@@ -233,5 +237,32 @@ public class CpRedCharacterCriticalInjuriesService {
         return CustomReturnables.getOkResponseMap("Rana krytyczna została zaktualizowana.");
     }
 
-
+    public List<CpRedCharacterCriticalInjuriesSheetDTO> getCharacterCriticalInjuriesForSheet(Long characterId){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        List<CpRedCharacterCriticalInjuries> characterManualCriticalInjuriesList = cpRedCharacterCriticalInjuriesRepository.findAllByCharacterId(character);
+        List<CpRedCharacterCustomCriticalInjuries> characterCustomCriticalInjuriesList = cpRedCharacterCustomCriticalInjuriesRepository.findAllByCharacter(character);
+        List<CpRedCharacterCriticalInjuriesSheetDTO> characterCriticalInjuriesDTO = new ArrayList<>();
+        for(CpRedCharacterCriticalInjuries criticalInjuries : characterManualCriticalInjuriesList){
+            CpRedCharacterCriticalInjuriesSheetDTO dto = new CpRedCharacterCriticalInjuriesSheetDTO(
+                    criticalInjuries.getId(),
+                    criticalInjuries.getInjuriesId().getId(),
+                    false,
+                    criticalInjuries.getInjuriesId().getName(),
+                    criticalInjuries.getStatus().toString()
+            );
+            characterCriticalInjuriesDTO.add(dto);
+        }
+        for(CpRedCharacterCustomCriticalInjuries customCriticalInjuries : characterCustomCriticalInjuriesList){
+            CpRedCharacterCriticalInjuriesSheetDTO dto = new CpRedCharacterCriticalInjuriesSheetDTO(
+                    customCriticalInjuries.getId(),
+                    customCriticalInjuries.getCustomInjuries().getId(),
+                    true,
+                    customCriticalInjuries.getCustomInjuries().getName(),
+                    customCriticalInjuries.getStatus().toString()
+            );
+            characterCriticalInjuriesDTO.add(dto);
+        }
+        return characterCriticalInjuriesDTO;
+    }
 }

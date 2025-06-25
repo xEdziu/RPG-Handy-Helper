@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Notatki</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
+    <script>
+        // ===== Ustawienia Tailwind CSS =====
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    },
+                },
+            },
+        };
+
+        // ===== Zmienne Globalne =====
+        var userInfo = [];
+        var gameId = null;
+        var userInGame = [];
+        var step = 0;
+        var scheduler = {
+            title: "",
+            deadline: "",
+            minimumSessionDurationMinutes: null,
+            gameId: gameId,
+            creatorId: userInfo.id,
+            dateRanges: [
+
+            ],
+            timeRanges: [
+
+            ],
+            participantIds: []
+        }
+        var dataRangeNumber = 1;
+        // ==== DOMContentLoaded ====
+        document.addEventListener("DOMContentLoaded", () => {
+            step1HTML();
+            getGameIdFromUrl();
+            getUserInfo();
+            setTimeout(() => {
+                getGameFromId();
+            }, 100);
+            initThemeToggle();
+            applyTheme(getSavedTheme());
+        });
+        // ==== Changing the theme ====
+        function initThemeToggle() {
+            const wrapper = document.getElementById("theme-toggle-wrapper");
+            const toggle = document.getElementById("switch-component");
+            if (!toggle) return;
+
+            const updateTheme = () => {
+                const theme = toggle.checked ? "dark" : "light";
+                applyTheme(theme);
+            };
+
+            toggle.addEventListener("change", updateTheme);
+            wrapper?.addEventListener("click", () => {
+                toggle.checked = !toggle.checked;
+                updateTheme();
+            });
+        }
+
+        function applyTheme(theme) {
+            document.body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+
+            const toggle = document.getElementById("switch-component");
+            if (toggle) {
+                toggle.checked = (theme === "dark");
+            }
+        }
+
+        function updateFavicon(theme) {
+            const favicon = document.getElementById("favicon");
+            if (favicon) {
+                favicon.href = `/img/logo/logo-${theme}.svg`;
+            }
+        }
+
+        function getSavedTheme() {
+            return localStorage.getItem("theme") ||
+                (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        }
+        // ==== CRF Token ====
+        function getCsrfToken() {
+            const name = "XSRF-TOKEN=";
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name)) {
+                    return decodeURIComponent(cookie.substring(name.length));
+                }
+            }
+            return null;
+        }
+        // ==== Get User Info ====
+        function getUserInfo() {
+            fetch('/api/v1/authorized/user', {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                userInfo = data;
+                scheduler.creatorId = userInfo.id;
+            }).catch(error => {
+                console.error('Error fetching user info:', error);
+            });
+        }
+        function getGameIdFromUrl() {
+            const parts = window.location.pathname.split('/');
+            const gameIdString = parts[parts.indexOf('games') + 1];
+            gameId = parseInt(gameIdString);
+            scheduler.gameId = gameId;
+        }
+        function getGameFromId() {
+            if (gameId === null) {
+                console.error("Game ID is not set.");
+                return;
+            }
+            fetch(`/api/v1/authorized/game/allPlayers/${gameId}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            }).then(data => {
+                userInGame = data.gameUsers;
+                userInGame.forEach(user => {
+                    if (user.role != "SPECTATOR") {
+                        scheduler.participantIds.push(user.userId);
+                    }
+                });
+            }).catch(error => {
+                console.error('Error fetching game:', error);
+            });
+        }
+        function limitDateInput(id, minData) {
+            const dateInput = document.getElementById(id);
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            const todayDate = `${year}-${month}-${day}`;
+            if (minData === 'Today') {
+                dateInput.setAttribute('min', todayDate);
+            } else {
+                dateInput.setAttribute('min', minData);
+            }
+        }
+        function validateStep1() {
+            const title = document.getElementById("titleScheduler").value.trim();
+            const date = document.getElementById("dateScheduler").value;
+            const minTime = document.getElementById("minTimeMeeting").value;
+            const validateInputs = {
+                title: { value: title.length > 0, message: "Tytuł jest wymagany!" },
+                date: { value: date, message: "Data jest wymagana!" },
+                minTime: { value: minTime > 0, message: "Czas minimalny jest wymagany!" }
+            };
+            for (const field in validateInputs) {
+                if (!validateInputs[field].value) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Błąd!',
+                        text: validateInputs[field].message,
+                    });
+                    return;
+                }
+            }
+            scheduler.title = title;
+            scheduler.deadline = date + "T23:59:59";
+            scheduler.minimumSessionDurationMinutes = parseInt(minTime);
+            step2HTML();
+        }
+        function validateStep2() {
+            const dateRangeBox = document.getElementById("dateRangeBox");
+            const dateRanges = dateRangeBox.querySelectorAll("div");
+            const count = Math.ceil(dateRanges.length / 3);
+            const newDateRanges = [];
+            for (let i = 1; i <= count; i++) {
+                const startDate = document.getElementById(`dateRangeFrom${i}`).value;
+                const endDate = document.getElementById(`dateRangeTo${i}`).value;
+                if (startDate && endDate) {
+                    newDateRanges.push({
+                        startDate: startDate,
+                        endDate: endDate
+                    });
+                }
+            }
+            if (newDateRanges.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Musisz dodać przynajmniej jeden zakres dat.`,
+                });
+                return;
+            }
+            scheduler.dateRanges = newDateRanges;
+            step3HTML();
+        }
+        function validateStep3() {
+            const timeRanges = [];
+            const timeRangeBox = document.getElementById("timeRangeBox");
+            const timeRangesDiv = timeRangeBox.querySelectorAll("div");
+            const count = timeRangesDiv.length;
+            for (let i = 1; i <= count; i++) {
+                const startInput = document.getElementById(`timeRangeStart${i}`);
+                const endInput = document.getElementById(`timeRangeEnd${i}`);
+                if (!startInput || !endInput) continue;
+                const startTime = startInput.value;
+                const endTime = endInput.value;
+
+                if (startTime && endTime) {
+                    timeRanges.push({
+                        startTime: startTime + ":00",
+                        endTime: endTime + ":00"
+                    });
+                }
+            }
+            if (timeRanges.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Musisz dodać przynajmniej jeden blok czasowy.`,
+                });
+                return;
+            }
+            scheduler.timeRanges = timeRanges;
+            step4HTML();
+        }
+
+        function saveScheduler() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Zapisywanie...',
+                text: `Trwa tworzenie schedulera...`,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            fetch('/api/v1/authorized/schedulers/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': getCsrfToken()
+                },
+                body: JSON.stringify(scheduler)
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            }).then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukces!',
+                    text: `Scheduler został pomyślnie zapisany.`,
+                }).then(() => {
+                    window.location.href = `/home/games/${gameId}/schedulers`;
+                });
+            }).catch(error => {
+                console.error('Error saving scheduler:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Wystąpił błąd podczas zapisywania schedulera.`,
+                });
+            });
+        }
+        function pluralizeMinutesDisplay(count) {
+            if (count === 1) return "minuta";
+            if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) return "minuty";
+            return "minut";
+        }
+    </script>
+</head>
+
+<body>
+    <nav
+        class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+        <a href="/home">
+            <div class="flex items-center">
+                <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+                <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+                <h1
+                    class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    RPG Handy Helper
+                </h1>
+            </div>
+        </a>
+        <div id="theme-toggle-wrapper" class="flex items-center justify-center">
+            <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+            <div class="relative inline-block w-12 h-6">
+                <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
+                       bg-light-accent dark:bg-dark-accent
+                       shadow-md transition-all duration-300 
+                       peer-checked:translate-x-[0.75rem] 
+                       peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                       cursor-pointer hover:shadow-lg">
+                </label>
+                <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                        bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary">
+                </div>
+            </div>
+            <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+        </div>
+    </nav>
+    <main
+        class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
+        <section id="create-sheduler" class="w-[80%] min-h-[50%] flex flex-col items-center justify-center">
+            <article id="scheduler-create-status"
+                class="w-full h-full flex flex-col items-center justify-center w-full max-w-3xl p-8 text-light-textPrimary dark:text-dark-textPrimary bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg">
+                <h1
+                    class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    Wybierz daty i godziny spotkania:
+                </h1>
+                <div class="">
+
+                </div>
+            </article>
+            <div id="buttons-controler"
+                class="flex flex-row-reverse justify-between items-center w-full max-w-3xl p-4 text-dark-textPrimary dark:text-light-textPrimary">
+
+            </div>
+        </section>
+    </main>
+    <footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+        <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+            class="text-light-accent dark:text-dark-accent">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </footer>
+</body>
+<script defer src="/scripts/footer.js"></script>
+
+</html>
+<script>
+    function addArrow(direction, destination) {
+        const box = document.getElementById("buttons-controler");
+        const boxArrow = document.createElement("div");
+        boxArrow.className = "flex items-center justify-center w-10 h-10 bg-light-accent dark:bg-dark-accent rounded-full cursor-pointer";
+        const arrow = document.createElement("i");
+        arrow.className = `fa-solid fa-arrow-${direction} text-dark-textPrimary dark:text-light-textPrimary cursor-pointer`;
+        arrow.addEventListener("click", destination);
+        boxArrow.appendChild(arrow);
+        box.appendChild(boxArrow);
+    }
+    function step1HTML() {
+        const box = document.getElementById("scheduler-create-status");
+        box.innerHTML = `
+            <h1
+                class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                Stwórz swój własny Scheduler:
+            </h1>
+            <div class="relative m-5 w-full">
+                <input type="text" id="titleScheduler" aria-describedby="titleScheduler" name="titleScheduler"
+                    required autocomplete="off"
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent  placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base"
+                    placeholder=" "/>
+                <label for="titleScheduler"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5  peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0  peer-focus:scale-90 peer-focus:-translate-y-4  rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Nazwa Schedulera
+                </label>
+            </div>
+            <div class="relative m-5 w-full">
+                <input type="date" id="dateScheduler" name="dateDeadline" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
+                <label for="dateDeadline"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Deadline Schedulera
+                </label>
+            </div>
+            <div class="relative m-5 w-full">
+                <input type="number" id="minTimeMeeting" aria-describedby="minTimeMeeting" name="minTimeMeeting"
+                    required autocomplete="off"
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent  placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base"
+                    placeholder=" " />
+                <label for="minTimeMeeting"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5  peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0  peer-focus:scale-90 peer-focus:-translate-y-4  rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Czas spotkania (w minutach)
+                </label>
+            </div>
+        `
+        if (scheduler.title) {
+            document.getElementById("titleScheduler").value = scheduler.title;
+        }
+        if (scheduler.deadline) {
+            document.getElementById("dateScheduler").value = scheduler.deadline;
+        }
+        if (scheduler.minimumSessionDurationMinutes) {
+            document.getElementById("minTimeMeeting").value = scheduler.minimumSessionDurationMinutes;
+        }
+        document.getElementById("buttons-controler").innerHTML = "";
+        limitDateInput("dateScheduler", "Today");
+        addArrow("right", validateStep1);
+    }
+    function validateDateRange(dateFromId, dateToId) {
+        const dateFrom = document.getElementById(dateFromId).value;
+        const dateTo = document.getElementById(dateToId).value;
+        if (dateFrom && dateTo) {
+            const fromDate = new Date(dateFrom);
+            const toDate = new Date(dateTo);
+            if (toDate < fromDate) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: 'Data "do" nie może być wcześniejsza niż data "od".',
+                });
+                return false;
+            }
+        }
+        return true;
+    }
+    function addDateRangeHTML(start, end) {
+        const dateRangeBox = document.getElementById("dateRangeBox");
+        const dateRanges = dateRangeBox.querySelectorAll("div");
+        const count = Math.max(Math.ceil(dateRanges.length / 3), 0);
+        const previousDataRangeFrom = document.getElementById(`dateRangeFrom${count}`);
+        const previousDataRangeTo = document.getElementById(`dateRangeTo${count}`);
+        if (previousDataRangeFrom && previousDataRangeTo) {
+            const previousStart = previousDataRangeFrom.value;
+            const previousEnd = previousDataRangeTo.value;
+            if (!previousStart || !previousEnd) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Musisz wypełnić poprzedni zakres dat przed dodaniem nowego.`,
+                });
+                return;
+            }
+        }
+        if (count + 1 > 5) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Informacja',
+                text: `Możesz dodać maksymalnie 5 zakresów dat.`,
+            });
+            return;
+        }
+        const box = document.getElementById("dateRangeBox");
+        const boxDateRange = document.createElement("div");
+        boxDateRange.className = "flex flex-row items-center justify-center w-full max-w-3xl p-4";
+        const dateRangeHTML = `
+            <div class="relative mx-5 my-2 w-full">
+                <input type="date" id="dateRangeFrom${count + 1}" name="dateRange${count + 1}" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary   bg-light-background   dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none  focus:ring-0   focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary  dark:placeholder-dark-textSecondary  text-base" />
+                <label for="dateRangeFrom${count + 1}"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90    top-4  z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent     peer-placeholder-shown:scale-100     peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4     rtl:peer-focus:translate-x-1/4   rtl:peer-focus:left-auto">
+                    Od
+                </label>
+            </div> 
+            <div class="relative mx-5 my-2 w-full">
+                <input type="date" id="dateRangeTo${count + 1}" name="dateRange${count + 1}" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary   bg-light-background   dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none  focus:ring-0   focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary  dark:placeholder-dark-textSecondary  text-base" />
+                <label for="dateRangeTo${count + 1}"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90    top-4  z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent     peer-placeholder-shown:scale-100     peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4     rtl:peer-focus:translate-x-1/4   rtl:peer-focus:left-auto">
+                    do
+                </label>
+            </div>
+        `;
+        boxDateRange.innerHTML = dateRangeHTML;
+        box.appendChild(boxDateRange);
+        const prewDateRangeFrom = document.getElementById(`dateRangeFrom${count + 1}`);
+        const prewDateRangeTo = document.getElementById(`dateRangeTo${count + 1}`);
+        if ((start && end)) {
+            prewDateRangeFrom.value = start;
+            prewDateRangeTo.value = end;
+        }
+        limitDateInput(`dateRangeFrom${count + 1}`, "Today");
+        const dateRangeFrom = document.getElementById(`dateRangeFrom${count + 1}`);
+        const dateRangeTo = document.getElementById(`dateRangeTo${count + 1}`);
+        dateRangeFrom.addEventListener('change', () => {
+            limitDateInput(`dateRangeTo${count + 1}`, dateRangeFrom.value || "Today");
+        });
+        dateRangeTo.addEventListener('change', () => {
+            if (!validateDateRange(`dateRangeFrom${count + 1}`, `dateRangeTo${count + 1}`)) {
+                dateRangeTo.value = "";
+            }
+        });
+        dateRangeFrom.addEventListener('change', () => {
+            if (!validateDateRange(`dateRangeFrom${count + 1}`, `dateRangeTo${count + 1}`)) {
+                dateRangeTo.value = "";
+            }
+        });
+    }
+    function step2HTML() {
+        const box = document.getElementById("scheduler-create-status");
+        box.innerHTML = `
+            <h1 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                Wybierz daty możliwych spotkań:
+            </h1>
+            <div id="dateRangeBox" class="flex flex-col items-center justify-center w-full">
+                
+            </div>
+        `;
+        if (scheduler.dateRanges.length > 0) {
+            for (let i = 0; i < scheduler.dateRanges.length; i++) {
+                const range = scheduler.dateRanges[i];
+                addDateRangeHTML(range.startDate, range.endDate);
+            }
+        } else {
+            addDateRangeHTML();
+        }
+        document.getElementById("buttons-controler").innerHTML = "";
+        addArrow("right", validateStep2);
+        const divAddDateRange = document.createElement("div");
+        divAddDateRange.className = "flex items-center justify-center w-10 h-10 bg-light-accent dark:bg-dark-accent rounded-full cursor-pointer";
+        const addDateRangeIcon = document.createElement("i");
+        addDateRangeIcon.className = "fa-solid fa-plus text-dark-textPrimary dark:text-light-textPrimary cursor-pointer";
+        divAddDateRange.appendChild(addDateRangeIcon);
+        divAddDateRange.addEventListener("click", () => {
+            addDateRangeHTML();
+        });
+        document.getElementById("buttons-controler").appendChild(divAddDateRange);
+        addArrow("left", step1HTML);
+    }
+    function roundingTime(time) {
+        const [hours, minutes] = time.split(':').map(Number);
+        if (hours === 23 && minutes >= 53) {
+            return "23:45";
+        }
+        const totalMinutes = hours * 60 + minutes;
+        const roundedMinutes = Math.round(totalMinutes / 15) * 15;
+        const newHours = Math.floor(roundedMinutes / 60) % 24;
+        const newMinutes = roundedMinutes % 60;
+        return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
+    }
+    function addTimeRangeHTML(startTime = "", endTime = "") {
+        const dateRangeBox = document.getElementById("timeRangeBox");
+        const timeRanges = dateRangeBox.querySelectorAll("div");
+        const count = Math.max(Math.ceil(timeRanges.length / 3), 0);
+        if (count !== 0) {
+            const previousTimeRangeStart = document.getElementById(`timeRangeStart${count}`);
+            const previousTimeRangeEnd = document.getElementById(`timeRangeEnd${count}`);
+            if (previousTimeRangeStart && previousTimeRangeEnd) {
+                const previousStart = previousTimeRangeStart.value;
+                const previousEnd = previousTimeRangeEnd.value;
+                if (!previousStart || !previousEnd) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Błąd!',
+                        text: `Musisz wypełnić poprzedni blok czasowy przed dodaniem nowego.`,
+                    });
+                    return;
+                }
+            }
+        }
+        if (count >= 3) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Informacja',
+                text: `Możesz dodać maksymalnie 3 bloki czasowe.`,
+            });
+            return;
+        }
+        const boxDateRange = document.createElement("div");
+        boxDateRange.className = "flex flex-row items-center justify-center w-full max-w-3xl p-4";
+        const timeRangeHTML = `
+            <div class="relative mx-5 my-2 w-full">
+                <input type="time" id="timeRangeStart${count + 1}" name="timeRangeStart${count + 1}" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
+                <label for="timeRangeStart${count + 1}"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Od
+                </label>
+            </div> 
+            <div class="relative mx-5 my-2 w-full">
+                <input type="time" id="timeRangeEnd${count + 1}" name="timeRangeEnd${count + 1}" required
+                    class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-light-textPrimary dark:text-dark-textPrimary bg-light-background dark:bg-dark-background border-0 border-b-2 border-light-border dark:border-dark-border focus:outline-none focus:ring-0 focus:border-light-accent peer dark:focus:border-dark-accent placeholder-light-textSecondary dark:placeholder-dark-textSecondary text-base" />
+                <label for="timeRangeEnd${count + 1}"
+                    class="absolute text-lg text-light-textSecondary dark:text-dark-textSecondary duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-focus:text-light-accent peer-focus:dark:text-dark-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
+                    Do
+                </label>
+            </div>
+        `;
+        boxDateRange.innerHTML = timeRangeHTML;
+        dateRangeBox.appendChild(boxDateRange);
+        const timeStart = document.getElementById(`timeRangeStart${count + 1}`);
+        const timeEnd = document.getElementById(`timeRangeEnd${count + 1}`);
+        if (startTime && endTime) {
+            timeStart.value = roundingTime(startTime);
+            timeEnd.value = roundingTime(endTime);
+        }
+        timeStart.addEventListener('change', () => {
+            timeStart.value = roundingTime(timeStart.value);
+        });
+        timeEnd.addEventListener('change', () => {
+            timeEnd.value = roundingTime(timeEnd.value);
+            const startVal = timeStart.value;
+            const endVal = timeEnd.value;
+            if (startVal && endVal && new Date(`1970-01-01T${startVal}:00`) >= new Date(`1970-01-01T${endVal}:00`)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd!',
+                    text: `Godzina zakończenia nie może być przed godziną rozpoczęcia.`,
+                });
+                timeEnd.value = "";
+            }
+        });
+    }
+    // Krok 3 - Dodawanie bloków czasowych
+    function step3HTML() {
+        const box = document.getElementById("scheduler-create-status");
+        box.innerHTML = `
+            <h1 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                Wybierz godziny możliwych spotkań:
+            </h1>
+            <div id="timeRangeBox" class="flex flex-col items-center justify-center w-full"> 
+                
+            </div>
+        `;
+        if (scheduler.timeRanges.length > 0) {
+            scheduler.timeRanges.forEach((range, index) => {
+                addTimeRangeHTML(range.startTime, range.endTime);
+            });
+        } else {
+            addTimeRangeHTML();
+        }
+        document.getElementById("buttons-controler").innerHTML = "";
+        addArrow("right", validateStep3);
+        const divAddDateRange = document.createElement("div");
+        divAddDateRange.className = "flex items-center justify-center w-10 h-10 bg-light-accent dark:bg-dark-accent rounded-full cursor-pointer";
+        const addDateRangeIcon = document.createElement("i");
+        addDateRangeIcon.className = "fa-solid fa-plus text-dark-textPrimary dark:text-light-textPrimary cursor-pointer";
+        divAddDateRange.appendChild(addDateRangeIcon);
+        divAddDateRange.addEventListener("click", () => {
+            addTimeRangeHTML();
+        });
+        document.getElementById("buttons-controler").appendChild(divAddDateRange);
+        addArrow("left", step2HTML);
+    }
+    function step4HTML() {
+        const box = document.getElementById("scheduler-create-status");
+        box.innerHTML = `
+            <h1 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                Podsumowanie Schedulera:
+            </h1>
+            <div id="summaryBox" class="flex flex-col items-center justify-center w-full">
+                <div class="flex flex-col items-start justify-center w-full mb-4">
+                    <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary"><span class="font-bold"> Tytuł: </span> ${scheduler.title}</p>
+                    <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary"><span class="font-bold">Deadline:</span> ${scheduler.deadline}</p>
+                    <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary"><span class="font-bold">Minimalny czas trwania:</span> ${scheduler.minimumSessionDurationMinutes} ${pluralizeMinutesDisplay(scheduler.minimumSessionDurationMinutes)}</p>
+                    <p class="text-lg text-light-textPrimary dark:text-dark-textPrimary"><span class="font-bold">Liczba uczestników:</span> ${scheduler.participantIds.length}</p>
+                </div>
+                <div class="flex flex-row items-center justify-between w-full mb-4">
+                    <div class="w-[50%] flex flex-col items-center justify-center">
+                        <h2 class="text-lg font-bold mt-4 text-light-textPrimary dark:text-dark-textPrimary">Zakresy dat:</h2>
+                        <ul class="list-disc pl-5">
+                            ${scheduler.dateRanges.map(range => `<li>${range.startDate} - ${range.endDate}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="w-[50%] flex flex-col items-center justify-center"> 
+                        <h2 class="text-lg font-bold mt-4 text-light-textPrimary dark:text-dark-textPrimary">Bloki czasowe:</h2>
+                        <ul class="list-disc pl-5">
+                            ${scheduler.timeRanges.map(range => `<li>${range.startTime} - ${range.endTime}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        `;
+        // Tutaj możesz dodać kod do wyświetlenia podsumowania schedulera
+        document.getElementById("buttons-controler").innerHTML = "";
+        const divAddDateRange = document.createElement("div");
+        divAddDateRange.className = "flex items-center justify-center w-10 h-10 bg-light-accent dark:bg-dark-accent rounded-full cursor-pointer";
+        const addDateRangeIcon = document.createElement("i");
+        addDateRangeIcon.className = "fa-solid fa-floppy-disk text-dark-textPrimary dark:text-light-textPrimary cursor-pointer";
+        divAddDateRange.appendChild(addDateRangeIcon);
+        divAddDateRange.addEventListener("click", () => {
+            saveScheduler();
+        });
+        document.getElementById("buttons-controler").appendChild(divAddDateRange);
+        addArrow("left", step3HTML);
+    }
+</script>

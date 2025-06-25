@@ -12,4 +12,5 @@ public interface CpRedCharacterEnemiesRepository extends JpaRepository<CpRedChar
     Boolean existsByNameAndCharacterId(String name, CpRedCharacters character);
 
 
+    List<CpRedCharacterEnemies> findAllByCharacterId(CpRedCharacters character);
 }
