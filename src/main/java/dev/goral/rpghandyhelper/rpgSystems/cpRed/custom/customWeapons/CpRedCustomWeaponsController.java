@@ -43,18 +43,6 @@ public class CpRedCustomWeaponsController {
         return cpRedCustomWeaponsService.updateCustomWeapon(customWeaponId, cpRedCustomWeapons);
     }
 
-    // Modyfikuj ukrywalność broni
-    @PutMapping(path = "/rpgSystems/cpRed/customWeapons/changeHide/{customWeaponId}")
-    public Map<String, Object> changeHide(@PathVariable("customWeaponId") Long customWeaponId) {
-        return cpRedCustomWeaponsService.changeHide(customWeaponId);
-    }
-
-    // Modyfikuj modyfikowalność broni
-    @PutMapping(path = "/rpgSystems/cpRed/customWeapons/changeModifiable/{customWeaponId}")
-    public Map<String, Object> changeModifiable(@PathVariable("customWeaponId") Long customWeaponId) {
-        return cpRedCustomWeaponsService.changeModifiable(customWeaponId);
-    }
-
     // ============ Admin methods ============
     // Pobierz wszystkie customowe bronie dla admina
     @GetMapping(path = "/admin/rpgSystems/cpRed/customWeapons/all")
