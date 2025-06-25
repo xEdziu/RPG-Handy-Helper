@@ -121,11 +121,12 @@
            flex flex-col items-center justify-center gap-4 p-4 bg-light-surface dark:bg-dark-surface
            transition-transform duration-300 z-10">
         <nav class="flex flex-col w-full items-center gap-8">
-            <div class="w-24 h-24 bg-light-border dark:bg-dark-border rounded-full flex items-center justify-center text-3xl">
-                <i class="fa-regular fa-user"></i>
+            <div class="w-24 h-24 bg-light-border dark:bg-dark-border rounded-full overflow-hidden flex items-center justify-center">
+                <img id="profile-picture" class="object-cover w-full h-full" alt="Profilowe" src="/img/default.png">
             </div>
-            <a href="home/profile" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MÓJ PROFIL</a>
-            <a href="/home/gameList" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE GRY</a>
+
+            <a href="/profile" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MÓJ PROFIL</a>
+            <a href="/home/games" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE GRY</a>
             <a href="/home/notes" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE NOTATKI</a>
             <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE SPOTKANIA</a>
             <a href="#" class="border border-light-border dark:border-dark-border px-4 py-2 rounded text-center w-3/4">WYLOGUJ SIĘ</a>
@@ -139,7 +140,11 @@
         </div>
 
         <div class="col-span-1 grid grid-cols-1 md:grid-cols-3 grid-rows-1 md:grid-rows-2 gap-6 h-full">
-            <div class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+            <div id="user-games" class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-4">Moje Gry</h3>
+                <div id="user-games-list" class="space-y-2"></div>
+            </div>
+
 
             <div class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
                 <h3 class="text-xl font-bold mb-4">Moje Notatki</h3>
@@ -156,7 +161,11 @@
             </div>
 
 
-            <div class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+            <div id="discord-user-info" class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-4">Profil</h3>
+                <div id="discord-info-content" class="text-sm text-light-textPrimary dark:text-dark-textPrimary space-y-2"></div>
+            </div>
+
         </div>
     </section>
 </main>
@@ -167,8 +176,131 @@
 </footer>
 </body>
 <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const profileImg = document.getElementById("profile-picture");
 
-        document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const res = await fetch("/api/v1/authorized/user", { credentials: "include" });
+            const user = await res.json();
+
+            if (!user.userPhotoPath) return;
+
+            profileImg.src = `/api/v1/authorized/user/photo/${user.userPhotoPath}`;
+        } catch (e) {
+            console.error("Nie udało się załadować zdjęcia profilowego:", e);
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const infoContainer = document.getElementById("discord-info-content");
+
+        try {
+            // 1. Sprawdź, czy użytkownik zalogowany przez Discorda
+            const resDiscord = await fetch("/api/v1/authorized/user/isPasswordSetForDiscordUser", {
+                credentials: "include"
+            });
+            const discordData = await resDiscord.json();
+
+            const isDiscord = discordData.message.includes("OAuth2");
+            const isPasswordSet = discordData.isPasswordSet === true;
+
+            if (!isDiscord) {
+                // Użytkownik standardowy – brak informacji o Discordzie
+                infoContainer.innerHTML = `
+                <p>Nie jesteś zalogowany przez Discorda.</p>
+            `;
+                return;
+            }
+
+            // 2. Użytkownik Discord → pobierz dane użytkownika
+            const resUser = await fetch("/api/v1/authorized/user", {
+                credentials: "include"
+            });
+            const user = await resUser.json();
+            const userPhoto = user.userPhotoPath;
+
+            // 3. Pobierz listę domyślnych zdjęć
+            const resDefaults = await fetch("/api/v1/authorized/user/photo/defaults", {
+                credentials: "include"
+            });
+            const defaults = await resDefaults.json();
+            const defaultPaths = defaults.defaultPics || [];
+
+            const usesDefaultPhoto = !userPhoto || defaultPaths.includes(userPhoto);
+
+            // 4. Zbuduj komunikat
+            let html = `
+            <p>Jesteś zalogowany przez <strong>Discorda</strong>.</p>
+        `;
+
+            if (!isPasswordSet) {
+                html += `
+                <p class="text-yellow-600">Nie masz jeszcze ustawionego hasła – możesz je ustawić w zakładce <a href="/home/profile" class="underline text-light-accent dark:text-dark-accent">Profil</a>.</p>
+            `;
+            }
+
+            if (usesDefaultPhoto) {
+                html += `
+                <p class="text-yellow-600">Używasz domyślnego zdjęcia profilowego – możesz dodać własne w zakładce <a href="/home/profile" class="underline text-light-accent dark:text-dark-accent">Profil</a>.</p>
+            `;
+            } else {
+                html += `
+                <p>Masz ustawione własne zdjęcie profilowe ✅</p>
+            `;
+            }
+
+            infoContainer.innerHTML = html;
+
+        } catch (err) {
+            console.error("Błąd przy pobieraniu informacji o Discordzie:", err);
+            infoContainer.innerHTML = `
+            <p class="text-red-500">Nie udało się pobrać informacji o użytkowniku.</p>
+        `;
+        }
+    });
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const gamesListEl = document.getElementById("user-games-list");
+
+        const csrfToken = getCookie("XSRF-TOKEN");
+
+        fetch('/api/v1/authorized/game/userGames', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': csrfToken
+            },
+            credentials: 'include'
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Nie udało się pobrać gier.");
+                return res.json();
+            })
+            .then(data => {
+                const games = data.userGames; // poprawione
+                if (!games || games.length === 0) {
+                    gamesListEl.innerHTML = '<p class="text-gray-500">Nie należysz jeszcze do żadnej gry.</p>';
+                    return;
+                }
+
+                const html = games.map(game => `
+                <div class="p-3 border border-light-border dark:border-dark-border rounded-lg">
+                    <p class="font-semibold">${game.name || 'Bez nazwy'}</p>
+                    <p class="text-sm text-gray-500">${game.description || 'Brak opisu'}</p>
+                </div>
+            `).join("");
+                gamesListEl.innerHTML = html;
+            })
+
+                .catch(err => {
+                console.error("Błąd:", err);
+                gamesListEl.innerHTML = '<p class="text-red-500">Wystąpił problem przy ładowaniu gier.</p>';
+            });
+    });
+
+
+    document.addEventListener("DOMContentLoaded", async () => {
         const contentEl = document.getElementById("scheduler-content");
 
         const renderError = (msg) => {
