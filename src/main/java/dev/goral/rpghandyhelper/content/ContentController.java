@@ -107,6 +107,7 @@ public class ContentController {
     public String getAdminUserMyPassword() {
         System.out.println("ContentController: getAdminUserMyPassword()");
         return "admin/changePasswordAdmin";
+    }
 
     @GetMapping("/home/games")
     public String getgames() {
