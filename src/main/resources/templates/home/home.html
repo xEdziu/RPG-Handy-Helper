@@ -124,8 +124,9 @@
             <div class="w-24 h-24 bg-light-border dark:bg-dark-border rounded-full flex items-center justify-center text-3xl">
                 <i class="fa-regular fa-user"></i>
             </div>
-            <a href="home/profile" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MÓJ PROFIL</a>
-            <a href="/home/gameList" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE GRY</a>
+
+            <a href="/profile" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MÓJ PROFIL</a>
+            <a href="/home/games" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE GRY</a>
             <a href="/home/notes" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE NOTATKI</a>
             <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE SPOTKANIA</a>
             <a href="#" class="border border-light-border dark:border-dark-border px-4 py-2 rounded text-center w-3/4">WYLOGUJ SIĘ</a>
@@ -139,7 +140,11 @@
         </div>
 
         <div class="col-span-1 grid grid-cols-1 md:grid-cols-3 grid-rows-1 md:grid-rows-2 gap-6 h-full">
-            <div class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+            <div id="user-games" class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-4">Moje Gry</h3>
+                <div id="user-games-list" class="space-y-2"></div>
+            </div>
+
 
             <div class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
                 <h3 class="text-xl font-bold mb-4">Moje Notatki</h3>
@@ -156,7 +161,11 @@
             </div>
 
 
-            <div class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4"></div>
+            <div id="discord-user-info" class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-4">Profil</h3>
+                <div id="discord-info-content" class="text-sm text-light-textPrimary dark:text-dark-textPrimary space-y-2"></div>
+            </div>
+
         </div>
     </section>
 </main>
@@ -168,12 +177,121 @@
 </body>
 <script>
 
-        document.addEventListener("DOMContentLoaded", async () => {
+    document.addEventListener("DOMContentLoaded", async () => {
+        const infoContainer = document.getElementById("discord-info-content");
+
+        try {
+            // 1. Sprawdź, czy użytkownik zalogowany przez Discorda
+            const resDiscord = await fetch("/api/v1/authorized/user/isPasswordSetForDiscordUser", {
+                credentials: "include"
+            });
+            const discordData = await resDiscord.json();
+
+            const isDiscord = discordData.message.includes("OAuth2");
+            const isPasswordSet = discordData.isPasswordSet === true;
+
+            if (!isDiscord) {
+                // Użytkownik standardowy – brak informacji o Discordzie
+                infoContainer.innerHTML = `
+                <p>Nie jesteś zalogowany przez Discorda.</p>
+            `;
+                return;
+            }
+
+            // 2. Użytkownik Discord → pobierz dane użytkownika
+            const resUser = await fetch("/api/v1/authorized/user", {
+                credentials: "include"
+            });
+            const user = await resUser.json();
+            const userPhoto = user.userPhotoPath;
+
+            // 3. Pobierz listę domyślnych zdjęć
+            const resDefaults = await fetch("/api/v1/authorized/user/photo/defaults", {
+                credentials: "include"
+            });
+            const defaults = await resDefaults.json();
+            const defaultPaths = defaults.defaultPics || [];
+
+            const usesDefaultPhoto = !userPhoto || defaultPaths.includes(userPhoto);
+
+            // 4. Zbuduj komunikat
+            let html = `
+            <p>Jesteś zalogowany przez <strong>Discorda</strong>.</p>
+        `;
+
+            if (!isPasswordSet) {
+                html += `
+                <p class="text-yellow-600">Nie masz jeszcze ustawionego hasła – możesz je ustawić w zakładce <a href="/home/profile" class="underline text-light-accent dark:text-dark-accent">Profil</a>.</p>
+            `;
+            }
+
+            if (usesDefaultPhoto) {
+                html += `
+                <p class="text-yellow-600">Używasz domyślnego zdjęcia profilowego – możesz dodać własne w zakładce <a href="/home/profile" class="underline text-light-accent dark:text-dark-accent">Profil</a>.</p>
+            `;
+            } else {
+                html += `
+                <p>Masz ustawione własne zdjęcie profilowe ✅</p>
+            `;
+            }
+
+            infoContainer.innerHTML = html;
+
+        } catch (err) {
+            console.error("Błąd przy pobieraniu informacji o Discordzie:", err);
+            infoContainer.innerHTML = `
+            <p class="text-red-500">Nie udało się pobrać informacji o użytkowniku.</p>
+        `;
+        }
+    });
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const gamesListEl = document.getElementById("user-games-list");
+
+        const csrfToken = getCookie("XSRF-TOKEN");
+
+        fetch('/api/v1/authorized/game/userGames', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': csrfToken
+            },
+            credentials: 'include'
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Nie udało się pobrać gier.");
+                return res.json();
+            })
+            .then(data => {
+                const games = data.userGames; // poprawione
+                if (!games || games.length === 0) {
+                    gamesListEl.innerHTML = '<p class="text-gray-500">Nie należysz jeszcze do żadnej gry.</p>';
+                    return;
+                }
+
+                const html = games.map(game => `
+                <div class="p-3 border border-light-border dark:border-dark-border rounded-lg">
+                    <p class="font-semibold">${game.name || 'Bez nazwy'}</p>
+                    <p class="text-sm text-gray-500">${game.description || 'Brak opisu'}</p>
+                </div>
+            `).join("");
+                gamesListEl.innerHTML = html;
+            })
+
+            .catch(err => {
+                console.error("Błąd:", err);
+                gamesListEl.innerHTML = '<p class="text-red-500">Wystąpił problem przy ładowaniu gier.</p>';
+            });
+    });
+
+
+    document.addEventListener("DOMContentLoaded", async () => {
         const contentEl = document.getElementById("scheduler-content");
 
         const renderError = (msg) => {
-        contentEl.innerHTML = `<p class="text-red-500">${msg}</p>`;
-    };
+            contentEl.innerHTML = `<p class="text-red-500">${msg}</p>`;
+        };
 
         const createCard = (title, bodyHTML) => `
         <div class="p-4 border rounded bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary space-y-1">
@@ -183,32 +301,32 @@
     `;
 
         try {
-        // 1. Pobierz gry użytkownika
-        const gamesRes = await fetch("http://localhost:8888/api/v1/authorized/game/userGames");
-        const gamesData = await gamesRes.json();
+            // 1. Pobierz gry użytkownika
+            const gamesRes = await fetch("http://localhost:8888/api/v1/authorized/game/userGames");
+            const gamesData = await gamesRes.json();
 
-        if (!gamesData.games || gamesData.games.length === 0) {
-        contentEl.innerHTML = `<p>Nie masz jeszcze przypisanej żadnej gry.</p>`;
-        return;
-    }
+            if (!gamesData.games || gamesData.games.length === 0) {
+                contentEl.innerHTML = `<p>Nie masz jeszcze przypisanej żadnej gry.</p>`;
+                return;
+            }
 
-        // 2. Pobierz wszystkie pending schedulery
-        const pendingRes = await fetch("http://localhost:8888/api/v1/authorized/schedulers/pendingSchedulers");
-        const pendingData = await pendingRes.json();
-        const pendingSchedulers = pendingData.pendingSchedulers || [];
+            // 2. Pobierz wszystkie pending schedulery
+            const pendingRes = await fetch("http://localhost:8888/api/v1/authorized/schedulers/pendingSchedulers");
+            const pendingData = await pendingRes.json();
+            const pendingSchedulers = pendingData.pendingSchedulers || [];
 
-        // 3. Przetwórz każdą grę osobno
-        let htmlOutput = "";
+            // 3. Przetwórz każdą grę osobno
+            let htmlOutput = "";
 
-        for (const game of gamesData.games) {
-        const gameId = game.id;
-        const gameName = game.name || "Gra bez nazwy";
+            for (const game of gamesData.games) {
+                const gameId = game.id;
+                const gameName = game.name || "Gra bez nazwy";
 
-        // 🔸 Filtruj schedulery do tej gry
-        const schedulers = pendingSchedulers.filter(s => s.gameId === gameId);
+                // 🔸 Filtruj schedulery do tej gry
+                const schedulers = pendingSchedulers.filter(s => s.gameId === gameId);
 
-        if (schedulers.length > 0) {
-        const schedHTML = schedulers.map(s => `
+                if (schedulers.length > 0) {
+                    const schedHTML = schedulers.map(s => `
                     <div class="text-sm">
                         <p class="font-semibold">${s.title}</p>
                         <p class="text-xs text-gray-500">Deadline: ${new Date(s.deadline).toLocaleDateString()}</p>
@@ -216,35 +334,35 @@
                     </div>
                 `).join("<hr class='my-2 border-gray-300'>");
 
-        htmlOutput += createCard(`Gra: ${gameName}`, schedHTML);
-        continue;
-    }
+                    htmlOutput += createCard(`Gra: ${gameName}`, schedHTML);
+                    continue;
+                }
 
-        // 🔸 Brak schedulerów → spróbuj pobrać next session
-        const nextSessionRes = await fetch(`http://localhost:8888/api/v1/authorized/schedulers/nextSession/${gameId}`);
-        const nextSessionData = await nextSessionRes.json();
+                // 🔸 Brak schedulerów → spróbuj pobrać next session
+                const nextSessionRes = await fetch(`http://localhost:8888/api/v1/authorized/schedulers/nextSession/${gameId}`);
+                const nextSessionData = await nextSessionRes.json();
 
-        if (nextSessionData.nextSession) {
-        const session = nextSessionData.nextSession;
-        const sessionHTML = `
+                if (nextSessionData.nextSession) {
+                    const session = nextSessionData.nextSession;
+                    const sessionHTML = `
                     <p class="text-sm"><span class="font-semibold">Sesja:</span> ${session.sessionName}</p>
                     <p class="text-xs text-gray-500">Godzina: ${session.startTime}</p>
                 `;
-        htmlOutput += createCard(`Gra: ${session.gameName}`, sessionHTML);
-    } else {
-        htmlOutput += createCard(`Gra: ${gameName}`, `<p class="text-sm">Umów się na następną sesję!</p>`);
-    }
-    }
+                    htmlOutput += createCard(`Gra: ${session.gameName}`, sessionHTML);
+                } else {
+                    htmlOutput += createCard(`Gra: ${gameName}`, `<p class="text-sm">Umów się na następną sesję!</p>`);
+                }
+            }
 
-        contentEl.innerHTML = htmlOutput;
+            contentEl.innerHTML = htmlOutput;
 
-    } catch (err) {
-        console.error("Błąd:", err);
-        renderError("Nie udało się załadować danych.");
-    }
+        } catch (err) {
+            console.error("Błąd:", err);
+            renderError("Nie udało się załadować danych.");
+        }
     });
 
-const sidebar = document.getElementById('sidebar');
+    const sidebar = document.getElementById('sidebar');
     const toggle = document.getElementById('sidebarToggle');
 
     toggle.addEventListener('click', () => {
@@ -335,7 +453,7 @@ const sidebar = document.getElementById('sidebar');
                 });
             })
 
-                .catch(error => {
+            .catch(error => {
                 console.error('Wystąpił błąd:', error);
                 notesList.innerHTML = '<li class="text-red-500">Nie udało się załadować notatek.</li>';
             });
