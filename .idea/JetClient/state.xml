@@ -3198,6 +3198,14 @@
                                   <option name="sortWeight" value="6000000" />
                                   <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/changeAlive/3" />
                                 </requestState>
+                                <requestState>
+                                  <option name="description" value="Pobiera całą karte postaci o podanym id" />
+                                  <option name="id" value="f1d5c0f5-c33e-4a52-89bb-32e3cbbdb0a0" />
+                                  <option name="method" value="GET" />
+                                  <option name="name" value="Pobierz karte postaci" />
+                                  <option name="sortWeight" value="7000000" />
+                                  <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/sheet/1" />
+                                </requestState>
                               </list>
                             </option>
                             <option name="sortWeight" value="4000000" />
