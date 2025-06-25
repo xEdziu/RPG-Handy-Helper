@@ -458,6 +458,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         return CustomReturnables.getOkResponseMap("Twoje hasło zostało zmienione.");
+    }
     public Map<String, Object> isPasswordSetForDiscordUser(Object user) {
 
         if (user instanceof User) {
