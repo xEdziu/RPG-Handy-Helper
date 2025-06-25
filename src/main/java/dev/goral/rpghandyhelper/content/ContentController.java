@@ -83,7 +83,7 @@ public class ContentController {
         return "home/notes";
     }
 
-    // ADMIN PAGES
+   // ADMIN PAGES
 
     @GetMapping("/admin")
     public String getAdmin() {
@@ -107,5 +107,10 @@ public class ContentController {
     public String getAdminUserMyPassword() {
         System.out.println("ContentController: getAdminUserMyPassword()");
         return "admin/changePasswordAdmin";
+
+    @GetMapping("/home/games")
+    public String getgames() {
+        System.out.println("ContentController: getgames()");
+        return "home/games";
     }
 }

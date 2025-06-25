@@ -8,6 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class CpRedCharacterCriticalInjuriesDTO {
+    private Long id;
     private String status;
     private Long characterId;
     private Long injuriesId;

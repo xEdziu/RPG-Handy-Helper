@@ -25,18 +25,18 @@ public class CpRedCharacterCustomCriticalInjuries {
             generator = "cpRedCharacterCustomCriticalInjuries_sequence"
     )
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private CpRedCharacterCriticalInjuriesStatus status;
     @ManyToOne
     @JoinColumn(
             name = "character_id",
             referencedColumnName = "id"
     )
-    private CpRedCharacters characterId;
+    private CpRedCharacters character;
     @ManyToOne
     @JoinColumn(
             name = "custom_injuries_id",
             referencedColumnName = "id"
     )
-    private CpRedCustomCriticalInjuries customInjuriesId;
+    private CpRedCustomCriticalInjuries customInjuries;
+    @Enumerated(EnumType.STRING)
+    private CpRedCharacterCriticalInjuriesStatus status;
 }

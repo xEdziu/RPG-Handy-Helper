@@ -25,8 +25,7 @@ public class CpRedCharacterCriticalInjuries {
             generator = "cpRedCharacterCriticalInjuries_sequence"
     )
     private Long id;
-    @Enumerated(EnumType.STRING)
-    CpRedCharacterCriticalInjuriesStatus status;
+
     @ManyToOne
     @JoinColumn(
             name = "character_id",
@@ -39,4 +38,7 @@ public class CpRedCharacterCriticalInjuries {
             referencedColumnName = "id"
     )
     private CpRedCriticalInjuries injuriesId;
+
+    @Enumerated(EnumType.STRING)
+    CpRedCharacterCriticalInjuriesStatus status;
 }

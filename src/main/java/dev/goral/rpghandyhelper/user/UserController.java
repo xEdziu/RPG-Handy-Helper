@@ -21,6 +21,11 @@ public class UserController {
         return userService.getAuthorizedUser();
     }
 
+    @GetMapping("/user/isPasswordSetForDiscordUser")
+    public Map<String, Object> isPasswordSetForDiscordUser(@AuthenticationPrincipal Object user) {
+        return userService.isPasswordSetForDiscordUser(user);
+    }
+
     @PostMapping("/setPassword")
     public Map<String, Object> setPassword(@RequestBody PasswordRequest passwordRequest) {
         return userService.setPassword(passwordRequest.getPassword());

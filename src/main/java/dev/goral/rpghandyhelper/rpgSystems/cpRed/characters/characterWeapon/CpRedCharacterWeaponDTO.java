@@ -17,6 +17,7 @@ public class CpRedCharacterWeaponDTO {
     private Short handType;
     private Boolean isHidden;
     private String quality;
+    private Short freeModSlots;
     private String status;
     private String description;
 }

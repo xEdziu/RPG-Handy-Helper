@@ -167,6 +167,7 @@ public class CpRedModCompatibilityService {
             if (!customWeaponRepository.existsById(addRequest.getWeaponId())) {
                 throw new ResourceNotFoundException("Podana broń nie istnieje.");
             }
+
         } else {
             if (!weaponRepository.existsById(addRequest.getWeaponId())) {
                 throw new ResourceNotFoundException("Podana broń nie istnieje.");
@@ -212,9 +213,17 @@ public class CpRedModCompatibilityService {
                 if (weaponGame.getStatus() != GameStatus.ACTIVE) {
                     throw new IllegalStateException("Gra, do której należy broń, nie jest aktywna.");
                 }
+                // Czy broń można modyfikować
+                if (!customWeapon.getIsModifiable()){
+                    throw new IllegalStateException("Ta broń nie może być modyfikowana");
+                }
             } else {
                 CpRedWeapons weapon = weaponRepository.findById(addRequest.getWeaponId())
                         .orElseThrow(() -> new ResourceNotFoundException("Podana broń nie istnieje."));
+                // Czy broń można modyfikować
+                if (!weapon.getIsModifiable()){
+                    throw new IllegalStateException("Ta broń nie może być modyfikowana");
+                }
             }
             if (addRequest.isModCustom()){
                 CpRedCustomWeaponMods customMod = customWeaponModsRepository.findById(addRequest.getModId())

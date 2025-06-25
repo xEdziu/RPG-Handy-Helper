@@ -13,19 +13,20 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddCustomWeaponRequest {
-    private Long gameId = -1L;
-    private Long requiredSkillId = -1L;
+    private Long gameId;
+    private Long requiredSkillId;
     private String name;
     private String type; //enum from weapons
-    private int damage = -1; //quantity of d6
-    private int magazineCapacity = -1;
-    private short numberOfAttacks = -1;
-    private short handType = -1;
-    private boolean isHidden;
+    private Integer damage ; //quantity of d6
+    private Integer magazineCapacity;
+    private Short numberOfAttacks;
+    private Short handType;
+    private Boolean isHidden;
     private CpRedItemsQuality quality;
-    private int price = -1;
+    private Integer price;
     private CpRedItemsAvailability availability;
-    private boolean isModifiable;
+    private Boolean isModifiable;
+    private Short modSlots;
 
     @Column(length = 500)
     private String description;

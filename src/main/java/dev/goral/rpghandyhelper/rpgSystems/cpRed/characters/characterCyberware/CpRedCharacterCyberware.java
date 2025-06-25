@@ -1,6 +1,6 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCyberware;
 
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterItem.CpRedCharacterItemStatus;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.cyberwares.CpRedCyberwares;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,15 +31,14 @@ public class CpRedCharacterCyberware {
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCyberwares cyberwareId;
+    private CpRedCyberwares baseCyberware;
     @ManyToOne
     @JoinColumn(
             name="character_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private CpRedCharacterCyberware characterId;
-    @Enumerated(EnumType.STRING)
-    private CpRedCharacterItemStatus status;
+    private CpRedCharacters character;
+    @Column(length = 1000)
     private String description;
 }
