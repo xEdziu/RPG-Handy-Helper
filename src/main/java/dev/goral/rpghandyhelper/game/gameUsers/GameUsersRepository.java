@@ -38,8 +38,8 @@ public interface GameUsersRepository extends JpaRepository<GameUsers, Long> {
 
     GameUsers findByUserId(Long userId);
 
+    List<GameUsers> findByGameIdAndRole(Long gameId, GameUsersRole gameUsersRole);
+  
     GameUsers findFirstByGameIdAndRole(Long id, GameUsersRole gameUsersRole);
-
-    List<GameUsers> findAllByGameIdAndRole(Long id, GameUsersRole gameUsersRole);
 }
 

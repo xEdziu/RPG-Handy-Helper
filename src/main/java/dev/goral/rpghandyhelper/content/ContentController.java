@@ -83,6 +83,23 @@ public class ContentController {
         return "home/notes";
     }
 
+    @GetMapping("/home/games/{gameId}/schedulers")
+    public String getSchedulers() {
+        System.out.println("ContentController: getSchedulers()");
+        return "home/scheduler/list";
+    }
+
+    @GetMapping("/home/games/{gameId}/schedulers/create")
+    public String getCreateScheduler() {
+        System.out.println("ContentController: getCreateScheduler()");
+        return "home/scheduler/create";
+    }
+
+    @GetMapping("/home/games/{gameId}/schedulers/{schedulerId}")
+    public String getScheduler() {
+        System.out.println("ContentController: getScheduler()");
+        return "home/scheduler/details";
+    }
     @GetMapping("/home/create-game")
     public String getCreateGame() {
         System.out.println("ContentController: getCreateGame()");

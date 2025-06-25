@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Notatki</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
+    <script>
+        // ===== Ustawienia Tailwind CSS =====
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    },
+                },
+            },
+        };
+
+        // ===== Zmienne Globalne =====
+        var userInfo = {};
+        var gameId = null;
+        var userInGame = [];
+
+        // ==== DOMContentLoaded ====
+        document.addEventListener("DOMContentLoaded", () => {
+            getGameIdFromUrl();
+            getUserInfo();
+            setTimeout(() => {
+                getGameFromId();
+                setTimeout(() => {
+                    loadSchedulersForGame();
+                }, 100);
+            }, 100);
+            initThemeToggle();
+            applyTheme(getSavedTheme());
+        });
+        // ==== Changing the theme ====
+        function initThemeToggle() {
+            const wrapper = document.getElementById("theme-toggle-wrapper");
+            const toggle = document.getElementById("switch-component");
+            if (!toggle) return;
+            const updateTheme = () => {
+                const theme = toggle.checked ? "dark" : "light";
+                applyTheme(theme);
+            }
+            toggle.addEventListener("change", updateTheme);
+            wrapper?.addEventListener("click", () => {
+                toggle.checked = !toggle.checked;
+                updateTheme();
+            });
+        }
+        function applyTheme(theme) {
+            document.body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+            const toggle = document.getElementById("switch-component");
+            if (toggle) {
+                toggle.checked = (theme === "dark");
+            }
+        }
+        function updateFavicon(theme) {
+            const favicon = document.getElementById("favicon");
+            if (favicon) {
+                favicon.href = `/img/logo/logo-${theme}.svg`;
+            }
+        }
+        function getSavedTheme() {
+            return localStorage.getItem("theme") ||
+                (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        }
+        // ==== CRF Token ====
+        function getCsrfToken() {
+            const name = "XSRF-TOKEN=";
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name)) {
+                    return decodeURIComponent(cookie.substring(name.length));
+                }
+            }
+            return null;
+        }
+        // ==== Get User Info ====
+        function getUserInfo() {
+            fetch('/api/v1/authorized/user', {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                userInfo = data;
+            }).catch(error => {
+                console.error('Error fetching user info:', error);
+            });
+        }
+        function getGameIdFromUrl() {
+            const parts = window.location.pathname.split('/');
+            const gameIdString = parts[parts.indexOf('games') + 1];
+            gameId = parseInt(gameIdString);
+        }
+        function getGameFromId() {
+            if (gameId === null) {
+                console.error("Game ID is not set.");
+                return;
+            }
+            fetch(`/api/v1/authorized/game/allPlayers/${gameId}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            }).then(data => {
+                userInGame = data.gameUsers;
+                userInfo
+                if (userInGame.some(user => user.userId === userInfo.id && user.role == "GAMEMASTER")) {
+                    userInfo.isGmForThisGame = true;
+                    AddForGM();
+                } else {
+                    userInfo.isGmForThisGame = false;
+                }
+            }).catch(error => {
+                console.error('Error fetching game:', error);
+            });
+        }
+        function AddForGM() {
+            const gmActions = document.getElementById("game-scheduler-actions");
+            gmActions.innerHTML = `
+                <button id="add-scheduler" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded hover:bg-light-accent-hover dark:hover:bg-dark-accent-hover" onclick="location.href='/home/games/${gameId}/schedulers/create'">
+                    Dodaj Harmonogram
+                </button>
+            `;
+        }
+        function loadSchedulersForGame() {
+            if (gameId === null) {
+                console.error("Game ID is not set.");
+                return;
+            }
+            fetch(`/api/v1/authorized/schedulers/forGame/${gameId}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            }).then(data => {
+                if (data.schedulers.length === 0) {
+                    const schedulerContainer = document.getElementById("scheduler-info");
+                    schedulerContainer.innerHTML = getEmptySchedulerHTML();
+                } else {
+                    const schedulerContainer = document.getElementById("scheduler-info");
+                    data.schedulers.forEach(scheduler => {
+                        schedulerContainer.innerHTML += addScheduleHTML(scheduler);
+                    });
+                }
+            }).catch(error => {
+                console.error('Error fetching game schedulers:', error);
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <nav
+        class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+        <a href="/home">
+            <div class="flex items-center">
+                <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+                <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+                <h1
+                    class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    RPG Handy Helper
+                </h1>
+            </div>
+        </a>
+        <div id="theme-toggle-wrapper" class="flex items-center justify-center">
+            <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+            <div class="relative inline-block w-12 h-6">
+                <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
+                       bg-light-accent dark:bg-dark-accent
+                       shadow-md transition-all duration-300 
+                       peer-checked:translate-x-[0.75rem] 
+                       peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                       cursor-pointer hover:shadow-lg">
+                </label>
+                <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                        bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary">
+                </div>
+            </div>
+            <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+        </div>
+    </nav>
+    <main
+        class="min-h-[86.75vh] flex-grow flex flex-col items-center justify-center bg-light-background dark:bg-dark-background w-full">
+        <aside
+            class="w-[80%] p-6 flex flex-row justify-between items-center bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+            <div id="game-scheduler">
+                <h2 class="text-3xl text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    Harmonogramy Gry
+                </h2>
+            </div>
+            <div id="game-scheduler-actions" class="flex items-center space-x-4">
+
+            </div>
+        </aside>
+        <section id="scheduler-info" class="w-[80%] p-6">
+            <!-- TABELA HARMONOGRAMÓW -->
+        </section>
+    </main>
+    <footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+        <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+            class="text-light-accent dark:text-dark-accent">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </footer>
+</body>
+<script defer src="/scripts/footer.js"></script>
+
+</html>
+<script>
+    function getEmptySchedulerHTML() {
+        if (userInfo.isGmForThisGame) {
+            return `
+                <div class="text-center text-light-textSecondary dark:text-dark-textSecondary">
+                    <h3 class="text-2xl font-jetbrains-mono">Brak Harmonogramów</h3>
+                    <p class="mt-2">Nie masz jeszcze żadnych harmonogramów. Dodaj nowy, aby rozpocząć planowanie!</p>
+                    <button id="add-scheduler" class="mt-4 px-4 py-2 bg-light-accent dark:bg-dark-accent text-white rounded hover:bg-light-accent-hover dark:hover:bg-dark-accent-hover" onclick="location.href='/home/games/${gameId}/schedulers/create'">
+                        Dodaj Harmonogram
+                    </button>
+                </div>
+            `;
+        }
+        return `
+            <div class="text-center text-light-textSecondary dark:text-dark-textSecondary">
+                <h3 class="text-2xl font-jetbrains-mono">Brak Harmonogramów</h3>
+                <p class="mt-2">Nie masz jeszcze żadnych harmonogramów. Poproś GM o stworzenie. </p>
+            </div>
+        `;
+    }
+    function parseStatus(status) {
+        switch (status) {
+            case "AWAITING_AVAILABILITY":
+                return "Oczekiwanie na odpowiedzi";
+            case "READY_TO_DECIDE":
+                return "Gotowy do podjęcia decyzji";
+            case "FINALIZED":
+                return "Zakończony";
+            default:
+                return "Nieznany status";
+        }
+    }
+    function addScheduleHTML(scheduler) {
+        console.log(scheduler);
+        return `
+        <a href="/home/games/${gameId}/schedulers/${scheduler.id}" class="no-underline">
+            <div class="flex flex-row bg-light-surface justify-between items-center dark:bg-dark-surface p-4 mb-4 rounded-lg shadow-md cursor-pointer   hover:bg-light-backgroundSecondary dark:hover:bg-dark-backgroundTertiary transition-colors duration-300">
+                <div> 
+                    <h3 class="text-xl font-jetbrains-mono text-light-textPrimary dark:text-dark-textPrimary">${scheduler.title}</h3>
+                    <p class="text-light-textPrimary dark:text-dark-textPrimary">Deadline: ${scheduler.deadline.substring(0, scheduler.deadline.indexOf("T"))}  </p>
+                </div>
+                <div class="flex flex-col items-end">
+                    <p class="text-light-textSecondary dark:text-dark-textSecondary">
+                        Ile osób nie odpowiedziało: ${scheduler.missingAvailabilitiesCount}
+                    </p>
+                </div>
+                <div id="scheduler-status" class="flex flex-row items-end">
+                    <p class="text-light-textSecondary dark:text-dark-textSecondary">Status: ${parseStatus(scheduler.status)}</p>
+                </div>
+            </div>
+        </a>
+    `;
+    }
+
+</script>

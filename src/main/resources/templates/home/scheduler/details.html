@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmonogramy</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
+    <script>
+        // ===== Ustawienia Tailwind CSS =====
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    },
+                },
+            },
+        };
+
+        // ===== Zmienne Globalne =====
+        var userInfo = [];
+
+        var gameId = null;
+        var schedulerId = null;
+        var schedulerInfo = null;
+        var playersInfo = [];
+        var allPlayerAvailable = [];
+        var isAovnerOfScheduler = false;
+        const accentShades = {
+            dark: {
+                0: "dark:accent-dark-40",
+                1: "dark:accent-dark-60",
+                2: "dark:accent-dark-80",
+                3: "dark:accent-dark-100"
+            },
+            light: {
+                0: "accent-light-40",
+                1: "accent-light-60",
+                2: "accent-light-80",
+                3: "accent-light-100"
+            }
+        };
+
+        // ==== DOMContentLoaded ====
+        document.addEventListener("DOMContentLoaded", () => {
+            getUserInfo();
+            getSchedulerIdFromUrl();
+            getGameIdFromUrl();
+            getAllPlayerAvailableSchedulers();
+            getPlayerForGame()
+            initThemeToggle();
+            applyTheme(getSavedTheme());
+            setTimeout(() => {
+                loadSchedulerForGame();
+            }, 100);
+        });
+        // ==== Changing the theme ====
+        function initThemeToggle() {
+            const wrapper = document.getElementById("theme-toggle-wrapper");
+            const toggle = document.getElementById("switch-component");
+            if (!toggle) return;
+
+            const updateTheme = () => {
+                const theme = toggle.checked ? "dark" : "light";
+                applyTheme(theme);
+            };
+
+            toggle.addEventListener("change", updateTheme);
+            wrapper?.addEventListener("click", () => {
+                toggle.checked = !toggle.checked;
+                updateTheme();
+            });
+        }
+
+        function applyTheme(theme) {
+            document.body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+
+            const toggle = document.getElementById("switch-component");
+            if (toggle) {
+                toggle.checked = (theme === "dark");
+            }
+        }
+
+        function updateFavicon(theme) {
+            const favicon = document.getElementById("favicon");
+            if (favicon) {
+                favicon.href = `/img/logo/logo-${theme}.svg`;
+            }
+        }
+
+        function getSavedTheme() {
+            return localStorage.getItem("theme") ||
+                (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        }
+        // ==== CRF Token ====
+        function getCsrfToken() {
+            const name = "XSRF-TOKEN=";
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name)) {
+                    return decodeURIComponent(cookie.substring(name.length));
+                }
+            }
+            return null;
+        }
+        // ==== Get User Info ====
+        function getUserInfo() {
+            fetch('/api/v1/authorized/user', {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(
+                response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }
+            ).then(data => {
+                userInfo = data;
+            }).catch(error => {
+                console.error('Error fetching user info:', error);
+            });
+        }
+        function getGameIdFromUrl() {
+            const parts = window.location.pathname.split('/');
+            const gameIdString = parts[parts.indexOf('games') + 1];
+            gameId = parseInt(gameIdString);
+        }
+        function getSchedulerIdFromUrl() {
+            const parts = window.location.pathname.split('/');
+            const schedulerIdString = parts[parts.indexOf('schedulers') + 1];
+            schedulerId = parseInt(schedulerIdString);
+        }
+        function loadSchedulerForGame() {
+            if (gameId === null) {
+                console.error("Game ID is not set.");
+                return;
+            }
+            fetch(`/api/v1/authorized/schedulers/${schedulerId}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            }).then(data => {
+                schedulerInfo = data.scheduler;
+                console.log("User Info: ", userInfo.id);
+                console.log("Sheduler creator ID: ", schedulerInfo.creatorId);
+                if (schedulerInfo.creatorId == userInfo.id) {
+                    isAovnerOfScheduler = true;
+                }
+                generateSchedulerDetailsHTML(schedulerInfo);
+            }).catch(error => {
+                console.error('Error fetching game schedulers:', error);
+            });
+        }
+        function getPlayerForGame() {
+            if (gameId === null) {
+                console.error("Game ID is not set.");
+                return;
+            }
+            fetch(`/api/v1/authorized/game/allPlayers/${gameId}`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            }).then(data => {
+                playersInfo = data.gameUsers;
+            }).catch(error => {
+                console.error('Error fetching game:', error);
+            });
+        }
+        function getAllPlayerAvailableSchedulers() {
+            if (gameId === null) {
+                console.error("Game ID is not set.");
+                return;
+            }
+            fetch(`/api/v1/authorized/schedulers/availability/${schedulerId}/all`, {
+                method: 'GET',
+                headers: {
+                    'X-XSRF-TOKEN': getCsrfToken()
+                }
+            }).then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            }).then(data => {
+                data.availability.forEach(PlayerAvailability => {
+                    allPlayerAvailable.push({
+                        playerId: PlayerAvailability.playerId,
+                        availability: PlayerAvailability.availability
+                    });
+                });
+            }).catch(error => {
+                console.error('Error fetching game schedulers:', error);
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <nav
+        class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+        <a href="/home">
+            <div class="flex items-center">
+                <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+                <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+                <h1
+                    class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    RPG Handy Helper
+                </h1>
+            </div>
+        </a>
+        <div id="theme-toggle-wrapper" class="flex items-center justify-center">
+            <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+            <div class="relative inline-block w-12 h-6">
+                <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
+                       bg-light-accent dark:bg-dark-accent
+                       shadow-md transition-all duration-300 
+                       peer-checked:translate-x-[0.75rem] 
+                       peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                       cursor-pointer hover:shadow-lg">
+                </label>
+                <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                        bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary">
+                </div>
+            </div>
+            <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+        </div>
+    </nav>
+    <main
+        class="min-h-[86.75vh] flex-grow flex flex-row items-center justify-center bg-light-background dark:bg-dark-background w-full">
+        <div class="flex justify-center items-center h-32">
+            <div class="w-12 h-12 border-4 border-light-accent dark:border-dark-accent rounded-full animate-ping"
+                role="status" aria-label="Ładowanie"></div>
+        </div>
+    </main>
+    <footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+        <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+            class="text-light-accent dark:text-dark-accent">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </footer>
+</body>
+<script defer src="/scripts/footer.js"></script>
+
+</html>
+<script>
+    function getUniqueDates(schedulerData) {
+        const uniqueDates = new Set();
+        if (schedulerData && schedulerData.length > 0) {
+            schedulerData.forEach(dateRange => {
+                const startDate = new Date(dateRange.startDate);
+                const endDate = new Date(dateRange.endDate);
+                const timeDiff = endDate - startDate;
+                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1; // +1 to include the end date
+                for (let i = 0; i < daysDiff; i++) {
+                    const currentDate = new Date(startDate);
+                    currentDate.setDate(currentDate.getDate() + i);
+                    uniqueDates.add(currentDate.toISOString().split('T')[0]); // Add only the date part
+                }
+            });
+        }
+        return Array.from(uniqueDates); // Return as an array of unique dates
+    }
+    function getUniqueTimes(schedulerData) {
+        const uniqueTimes = new Set();
+        if (schedulerData && schedulerData.length > 0) {
+            schedulerData.forEach(dateRange => {
+                const { startTime, endTime } = dateRange;
+                const todayDate = new Date().toISOString().split('T')[0];
+                const startDateTime = new Date(`${todayDate}T${startTime}`);
+                const endDateTime = new Date(`${todayDate}T${endTime}`);
+                if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
+                    console.error('Invalid time(s) encountered:', startTime, endTime);
+                    return;
+                }
+                let currentTime = new Date(startDateTime);
+                while (currentTime <= endDateTime) {
+                    const timeString = currentTime.toTimeString().slice(0, 8); // "HH:MM:SS"
+                    uniqueTimes.add(timeString);
+                    currentTime = new Date(currentTime.getTime() + 30 * 60 * 1000); // +30 min
+                }
+            });
+        } else {
+            console.warn("No scheduler data available.");
+        }
+        return Array.from(uniqueTimes).sort();
+    }
+    function generateHourlyBlocks(uniqueTimesSet) {
+        const uniqueTimes = Array.from(uniqueTimesSet).sort();
+        const logicalBlocks = [];
+        if (uniqueTimes.length === 0) return [];
+        let currentStartTime = uniqueTimes[0];
+        let previousTime = uniqueTimes[0];
+        let blockNumber = 1;
+        for (let i = 1; i < uniqueTimes.length; i++) {
+            const prev = new Date(`1970-01-01T${previousTime}`);
+            const curr = new Date(`1970-01-01T${uniqueTimes[i]}`);
+            const diffMinutes = (curr - prev) / 60000;
+            if (diffMinutes > 30) {
+                logicalBlocks.push({
+                    start: currentStartTime,
+                    end: previousTime,
+                    blockNumber
+                });
+                blockNumber++;
+                currentStartTime = uniqueTimes[i];
+            }
+            previousTime = uniqueTimes[i];
+        }
+        logicalBlocks.push({
+            start: currentStartTime,
+            end: uniqueTimes[uniqueTimes.length - 1],
+            blockNumber
+        });
+        const finalBlocks = [];
+        for (const block of logicalBlocks) {
+            const start = new Date(`1970-01-01T${block.start}`);
+            const end = new Date(`1970-01-01T${block.end}`);
+            let segmentStart = new Date(start);
+            while (segmentStart < end) {
+                const segmentEnd = new Date(segmentStart.getTime() + 30 * 60000); // +30 min
+                finalBlocks.push({
+                    start: segmentStart.toTimeString().slice(0, 8),
+                    end: segmentEnd > end ? block.end : segmentEnd.toTimeString().slice(0, 8),
+                    blockNumber: block.blockNumber
+                });
+                segmentStart = segmentEnd;
+            }
+        }
+        return finalBlocks;
+    }
+    function generateSchedulerDetailsHTML(scheduler) {
+        if (!scheduler) {
+            console.error("Scheduler data is not available.");
+            return;
+        }
+        const mainContainer = document.getElementsByTagName("main")[0];
+        const hasAnyoneVotedYet = allPlayerAvailable.some(player => player.availability && player.availability.length > 0);
+        if (!hasAnyoneVotedYet) {
+            const boxMain = document.createElement("div");
+            boxMain.className = "w-auto flex flex-col justify-between items-center max-w-4xl p-6 bg-light-surface dark:bg-dark-surface rounded-lg shadow-md";
+            mainContainer.innerHTML = ""
+            boxMain.innerHTML = `
+                <h2 class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary">
+                    Nikt jeszcze nie dodał swojej dostępności. </br>
+                    Zacznij pierwszy i daj znać, kiedy Ci pasuje!
+                </h2>
+                <button onclick="generateYourAvailabilityHTML(scheduler)"
+                        class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold">
+                        Dodaj dostępność</button>
+                </article>
+            `;
+            mainContainer.appendChild(boxMain);
+        } else {
+            const youAreVoted = allPlayerAvailable.some(player => (player.playerId === userInfo.id && player.availability.length > 0));
+            mainContainer.innerHTML = `
+                <article id="player-availability-box" class="flex flex-row-reverse items-center justify-center">
+                    <div class="flex flex-col m-4 w-[30%]">
+                    ${!youAreVoted ? `
+                        <h2 class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary">
+                            Dodaj swoją dostępność, aby inni mogli zobaczyć, kiedy jesteś dostępny.
+                        </h2>
+                        <button onclick="generateYourAvailabilityHTML(schedulerInfo)" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold"> Dodaj dostępność</button>
+                    ` : `
+                        <button onclick="generateEditYourAvailabilityHTML(schedulerInfo)" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg   hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold"> Edytuj swoją dostępność</button>
+                        ${isAovnerOfScheduler ? `
+                            <button onclick="" class="mt-3 px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold">Zakończ głosowanie</button>
+                        ` : ``}
+                    `}
+
+                    </div>
+                    <div id="player-availability" class="w-auto flex flex-col justify-between items-center max-w-4xl p-6 bg-light-surface dark:bg-dark-surface rounded-lg shadow-md">
+
+                    </div>
+                </article>
+            `
+            allPlayerAvailable.forEach(player => {
+                if (!player.availability || player.availability.length === 0) {
+                    console.warn(`Player ${player.playerId} has no availability data.`);
+                } else {
+                    generateListOfAvailabityOtherPlayers(player);
+                }
+
+            });
+        }
+    }
+    function generateListOfAvailabityOtherPlayers(player) {
+        const mainContainer = document.getElementById("player-availability");
+        const boxMain = document.createElement("div");
+        boxMain.className = "w-auto flex flex-col justify-between items-center max-w-4xl p-6 bg-light-surface dark:bg-dark-surface rounded-lg shadow-md";
+        const availabilityItems = player.availability.map(avail => {
+            const start = new Date(avail.startDateTime);
+            const end = new Date(avail.endDateTime);
+            const dateStart = start.toLocaleDateString('pl-PL');
+            const dateEnd = end.toLocaleDateString('pl-PL');
+            const startTime = start.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+            const endTime = end.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+            const statusIcons = {
+                YES: "✅",
+                MAYBE: "❓",
+                NO: "❌"
+            };
+            if (dateStart !== dateEnd) {
+                return `<li><strong>${dateStart} – ${dateEnd}</strong>, ${startTime} – ${endTime} ${statusIcons[avail.availabilityType] || ""}</li>`;
+            }
+            return `<li><strong>${dateEnd}</strong>, ${startTime} – ${endTime} ${statusIcons[avail.availabilityType] || ""}</li>`;
+        }).join('');
+        const username = playersInfo.find(p => p.userId === player.playerId)?.username
+        boxMain.innerHTML = `
+            <h2 class="m-5 text-2xl font-bold m-4 text-light-textPrimary dark:text-dark-textPrimary">
+                Dostępność gracza: ${username}
+            </h2>
+            <ul class="list-disc list-inside text-light-textSecondary dark:text-dark-textSecondary">
+                ${availabilityItems}
+            </ul>
+        `;
+        mainContainer.appendChild(boxMain);
+    }
+    function generateYourAvailabilityHTML(scheduler) {
+        const dataFrame = getUniqueDates(scheduler.dateRanges);
+        const timeFrame = getUniqueTimes(scheduler.timeRanges);
+        const hourlyBlocks = generateHourlyBlocks(new Set(timeFrame));
+        const mainContainer = document.getElementsByTagName("main")[0];
+        mainContainer.innerHTML = "";
+        mainContainer.innerHTML = `
+            <div class="w-[75%] flex flex-col justify-between items-center max-w-4xl p-6 bg-light-surface dark:bg-dark-surface rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary">
+                    Dodaj swoją dostępność
+                </h2>
+
+                <!-- Sekcja: Daty w których chcesz grać -->
+                <div class="w-full mb-6"> 
+                    <h2 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary">
+                        Daty w których chcesz grać:
+                    </h2>
+                    <div class="mb-4 flex flex-row">
+                        <label for="date-yes" class="block w-[30%] text-sm font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybierz daty:</label>
+                        <select id="date-yes" name="date-yes" class="mt-1 block w-full bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border rounded-md shadow-sm focus:ring-light-accent dark:focus:ring-dark-accent focus:border-light-accent dark:focus:border-dark-accent" multiple>
+                            ${dataFrame.map(date => `<option value="${date}" class="text-light-textPrimary dark:text-dark-textPrimary">${date}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div id="selected-dates-yes" class="mt-6">
+                        <h3 class="text-lg font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybrane daty:</h3>
+                        <p id="dates-list-yes" class="text-light-textPrimary dark:text-dark-textPrimary"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label for="time-yes" class="block text-sm font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybierz godziny:</label>
+                        <select id="time-yes" name="time-yes" class="mt-1 block w-full bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border rounded-md shadow-sm focus:ring-light-accent dark:focus:ring-dark-accent focus:border-light-accent dark:focus:border-dark-accent" multiple>
+                            ${hourlyBlocks.map(block => `<option value="${block.start}" class="text-light-textPrimary dark:text-dark-textPrimary">${block.start} - ${block.end}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sekcja: Daty w których nie wiesz, czy chcesz grać -->
+                <div> 
+                    <h2 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary">
+                        Daty w których nie wiesz czy chcesz grać:
+                    </h2>
+                    <div class="mb-4 flex flex-row">
+                        <label for="date-maybe" class="block w-[30%] text-sm font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybierz daty:</label>
+                        <select id="date-maybe" name="date-maybe" class="mt-1 block w-full bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border rounded-md shadow-sm focus:ring-light-accent dark:focus:ring-dark-accent focus:border-light-accent dark:focus:border-dark-accent" multiple>
+                            ${dataFrame.map(date => `<option value="${date}" class="text-light-textPrimary dark:text-dark-textPrimary">${date}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div id="selected-dates-maybe" class="mt-6">
+                        <h3 class="text-lg font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybrane daty:</h3>
+                        <p id="dates-list-maybe" class="text-light-textPrimary dark:text-dark-textPrimary"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label for="time-maybe" class="block text-sm font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybierz godziny:</label>
+                        <select id="time-maybe" name="time-maybe" class="mt-1 block w-full bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border rounded-md shadow-sm focus:ring-light-accent dark:focus:ring-dark-accent focus:border-light-accent dark:focus:border-dark-accent" multiple>
+                            ${hourlyBlocks.map(block => `<option value="${block.start}" class="text-light-textPrimary dark:text-dark-textPrimary">${block.start} - ${block.end}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sekcja: Daty w których nie możesz grać -->
+                <div> 
+                    <h2 class="text-xl font-bold mb-4 text-light-textPrimary dark:text-dark-textPrimary">
+                        Daty w których nie mozesz grać:
+                    </h2>
+                    <div class="mb-4 flex flex-row">
+                        <label for="date-no" class="block w-[30%] text-sm font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybierz daty:</label>
+                        <select id="date-no" name="date-no" class="mt-1 block w-full bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border rounded-md shadow-sm focus:ring-light-accent dark:focus:ring-dark-accent focus:border-light-accent dark:focus:border-dark-accent" multiple>
+                            ${dataFrame.map(date => `<option value="${date}" class="text-light-textPrimary dark:text-dark-textPrimary">${date}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div id="selected-dates-no" class="mt-6">
+                        <h3 class="text-lg font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybrane daty:</h3>
+                        <p id="dates-list-no" class="text-light-textPrimary dark:text-dark-textPrimary"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label for="time-no" class="block text-sm font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybierz godziny:</label>
+                        <select id="time-no" name="time-no" class="mt-1 block w-full bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border rounded-md shadow-sm focus:ring-light-accent dark:focus:ring-dark-accent focus:border-light-accent dark:focus:border-dark-accent" multiple>
+                            ${hourlyBlocks.map(block => `<option value="${block.start}" class="text-light-textPrimary dark:text-dark-textPrimary">${block.start} - ${block.end}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Wybrane godziny -->
+                <div id="selected-times" class="mt-6">
+                    <h3 class="text-lg font-medium text-light-textPrimary dark:text-dark-textPrimary">Wybrane godziny:</h3>
+                    <p id="times-list" class="text-light-textPrimary dark:text-dark-textPrimary"></p>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="px-4 py-2 bg-light-accent dark:bg-dark-accent text-dark-textPrimary dark:text-light-textPrimary rounded-lg hover:bg-light-accentDark dark:hover:bg-dark-accentDark transition duration-300 text-bold">
+                        Dodaj dostępność
+                    </button>
+                    <button type="button" onclick="loadSchedulerForGame()" class="ml-4 px-4 py-2 bg-light-border dark:bg-dark-border text-dark-textPrimary dark:text-light-textPrimary rounded-lg hover:bg-light-borderDark dark:hover:bg-dark-borderDark transition duration-300 text-bold">
+                        Anuluj
+                    </button>
+                </div>
+            </div>
+    `;
+
+        // Nasłuchiwanie na zmiany w polu wyboru dat
+        const dateSelectYes = document.getElementById('date-yes');
+        const dateSelectMaybe = document.getElementById('date-maybe');
+        const dateSelectNo = document.getElementById('date-no');
+
+        // Nasłuchiwanie na zmiany w polu wyboru godzin
+        const timeSelectYes = document.getElementById('time-yes');
+        const timeSelectMaybe = document.getElementById('time-maybe');
+        const timeSelectNo = document.getElementById('time-no');
+
+        // Funkcja do aktualizacji dostępnych dat w zależności od tego, co zostało już wybrane
+        const updateAvailableDates = () => {
+            const selectedYes = Array.from(dateSelectYes.selectedOptions).map(option => option.value);
+            const selectedMaybe = Array.from(dateSelectMaybe.selectedOptions).map(option => option.value);
+            const selectedNo = Array.from(dateSelectNo.selectedOptions).map(option => option.value);
+
+            // Pobieranie wszystkich wybranych dat
+            const selectedDates = new Set([...selectedYes, ...selectedMaybe, ...selectedNo]);
+
+            // Funkcja do aktualizacji dostępnych opcji w select
+            const updateSelect = (selectElement) => {
+                const options = selectElement.querySelectorAll('option');
+                options.forEach(option => {
+                    if (selectedDates.has(option.value)) {
+                        option.style.display = 'none'; // Ukrywamy wybraną datę
+                    } else {
+                        option.style.display = 'block'; // Wyświetlamy pozostałe daty
+                    }
+                });
+            };
+
+            // Aktualizacja każdego selecta
+            updateSelect(dateSelectYes);
+            updateSelect(dateSelectMaybe);
+            updateSelect(dateSelectNo);
+        };
+
+        // Nasłuchiwanie na zmiany dat
+        dateSelectYes.addEventListener('change', updateAvailableDates);
+        dateSelectMaybe.addEventListener('change', updateAvailableDates);
+        dateSelectNo.addEventListener('change', updateAvailableDates);
+
+        // Funkcja do aktualizacji wybranych dat
+        const updateDates = (selectElement, listElement) => {
+            selectElement.addEventListener('change', () => {
+                const selectedDates = Array.from(selectElement.selectedOptions).map(option => option.value);
+                listElement.textContent = selectedDates.join(', ');
+                updateAvailableDates();  // Zaktualizuj dostępność dat po każdej zmianie
+            });
+        };
+
+        // Nasłuchujemy zmian dla każdej sekcji dat
+        updateDates(dateSelectYes, document.getElementById('dates-list-yes'));
+        updateDates(dateSelectMaybe, document.getElementById('dates-list-maybe'));
+        updateDates(dateSelectNo, document.getElementById('dates-list-no'));
+
+        // Funkcja do aktualizacji wybranych godzin
+        const updateTimes = (selectElement, listElement) => {
+            selectElement.addEventListener('change', () => {
+                const selectedTimes = Array.from(selectElement.selectedOptions).map(option => option.value);
+                listElement.textContent = selectedTimes.join(', ');
+            });
+        };
+
+        // Nasłuchujemy zmian dla każdej sekcji godzin
+        updateTimes(timeSelectYes, document.getElementById('times-list-yes'));
+        updateTimes(timeSelectMaybe, document.getElementById('times-list-maybe'));
+        updateTimes(timeSelectNo, document.getElementById('times-list-no'));
+    }
+
+    function generateEditYourAvailabilityHTML(scheduler) {
+
+    }
+</script>
