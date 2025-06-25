@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admina | RPG Handy Helper</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
+    <script>
+        // ===== Ustawienia Tailwind CSS =====
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    },
+                },
+            },
+        };
+        document.addEventListener("DOMContentLoaded", () => {
+            initThemeToggle();
+            applyTheme(getSavedTheme());
+        });
+        function initThemeToggle() {
+            const wrapper = document.getElementById("theme-toggle-wrapper");
+            const toggle = document.getElementById("switch-component");
+            if (!toggle) return;
+
+            const updateTheme = () => {
+                const theme = toggle.checked ? "dark" : "light";
+                applyTheme(theme);
+            };
+
+            toggle.addEventListener("change", updateTheme);
+            wrapper?.addEventListener("click", () => {
+                toggle.checked = !toggle.checked;
+                updateTheme();
+            });
+        }
+
+        function applyTheme(theme) {
+            document.body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+
+            const toggle = document.getElementById("switch-component");
+            if (toggle) {
+                toggle.checked = (theme === "dark");
+            }
+        }
+
+        function updateFavicon(theme) {
+            const favicon = document.getElementById("favicon");
+            if (favicon) {
+                favicon.href = `/img/logo/logo-${theme}.svg`;
+            }
+        }
+
+        function getSavedTheme() {
+            return localStorage.getItem("theme") ||
+                (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        }
+    </script>
+</head>
+
+<body>
+    <nav
+        class="flex justify-around w-full p-6 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border">
+        <a href="/home">
+            <div class="flex items-center">
+                <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+                <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+                <h1
+                    class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                    RPG Handy Helper
+                </h1>
+            </div>
+        </a>
+        <div id="theme-toggle-wrapper" class="flex items-center justify-center">
+            <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+            <div class="relative inline-block w-12 h-6">
+                <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+                <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
+                       bg-light-accent dark:bg-dark-accent
+                       shadow-md transition-all duration-300 
+                       peer-checked:translate-x-[0.75rem] 
+                       peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                       cursor-pointer hover:shadow-lg">
+                </label>
+                <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                        bg-light-backgroundSecondary dark:bg-dark-backgroundTertiary">
+                </div>
+            </div>
+            <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+        </div>
+    </nav>
+    <main
+        class="min-h-[86.75vh] flex-grow flex flex-row items-center justify-center bg-light-background dark:bg-dark-background w-full">
+        <div class="flex flex-col items-center justify-center w-full h-full">
+            <header class="font-bold text-light-textPrimary dark:text-dark-textPrimary mb-8 flex flex-col items-center justify-center text-center gap-4">
+                <h1 class="text-5xl md:text-6xl tracking-widest leading-tight">Panel Administratora </h1>
+                <h1 id="helloAdmin" class="text-5xl md:text-6xl tracking-widest leading-tight"></h1>
+                <div class="text-3xl font-medium pt-4">
+                    Opcje administracyjne:
+                </div>
+            </header>
+            <div class="flex flex-col space-y-4 w-full max-w-md">
+                <div class="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
+                    <button
+                        class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                        onclick="location.href='/admin/users'">Użytkownicy</button>
+                    <button
+                        class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                        onclick="location.href='/admin/user/myPassword'">Moje Hasło</button>
+                </div>
+                <div class="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
+                    <button
+                        class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                        onclick="location.href='/home'">Strona Domowa</button>
+                    <button
+                        class="w-full md:w-64 px-4 py-3 text-lg font-semibold rounded-2xl transition-all duration-300 border-2
+                border-light-accent dark:border-dark-accent text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-accent
+                hover:text-light-background dark:hover:bg-dark-accent dark:hover:text-dark-background shadow-md hover:shadow-lg"
+                        onclick="location.href='/logout'">
+                        Wyloguj się</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer
+        class="w-full text-center p-4 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border">
+        <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Od Graczy dla Graczy © 2025 RPG Handy Helper</h3>
+        <a href="https://github.com/xEdziu/RPG-Handy-Helper" target="_blank"
+            class="text-light-accent dark:text-dark-accent">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </footer>
+</body>
+<script defer src="/scripts/footer.js"></script>
+</html>
+<script>
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith('XSRF-TOKEN=')) {
+                return cookie.substring('XSRF-TOKEN='.length);
+            }
+        }
+        return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/v1/authorized/user', {
+            method: 'GET',
+            headers: {
+                'X-XSRF-TOKEN': getCsrfToken()
+            }
+        }).then(res => res.json())
+            .then(data => {
+                const userSection = document.getElementById('helloAdmin');
+                userSection.textContent = `Witaj, ${data.username}!`;
+            }).catch(err => {
+                console.error('Błąd podczas pobierania danych użytkownika:', err);
+            });
+    });
+</script>

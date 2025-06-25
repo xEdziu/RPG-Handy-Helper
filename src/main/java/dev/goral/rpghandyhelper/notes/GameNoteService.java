@@ -3,6 +3,7 @@ package dev.goral.rpghandyhelper.notes;
 import dev.goral.rpghandyhelper.game.Game;
 import dev.goral.rpghandyhelper.game.GameStatus;
 import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRepository;
+import dev.goral.rpghandyhelper.logs.LoggerService;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
 import dev.goral.rpghandyhelper.user.User;
@@ -318,5 +319,21 @@ public class GameNoteService {
         response.put("gameNotes", gameNoteDtos);
 
         return response;
+    }
+
+    public void deleteAllByUserId(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o id " + id + " nie istnieje."));
+
+        List<GameNote> gameNotes = gameNoteRepository.findByUserId(user.getId());
+        if (gameNotes.isEmpty()) {
+            return;
+        }
+        for (GameNote gameNote : gameNotes) {
+            if (gameNote.getUser().getId().equals(user.getId())) {
+                gameNoteRepository.delete(gameNote);
+            }
+        }
+        LoggerService.logInfo("Usunięto wszystkie notatki użytkownika: " + user.getUsername() + " (ID: " + user.getId() + ")");
     }
 }
