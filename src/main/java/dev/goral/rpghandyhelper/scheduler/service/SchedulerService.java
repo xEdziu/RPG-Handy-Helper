@@ -1070,6 +1070,28 @@ public class SchedulerService {
         return response;
     }
 
+
+    public void removePlayerFromAllSchedulersById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Nie znaleziono użytkownika o id: " + id));
+
+        List<Scheduler> schedulers = schedulerRepository.findAllByParticipants_Player_Id(user.getId());
+
+        for (Scheduler scheduler : schedulers) {
+            SchedulerParticipant participant = scheduler.getParticipants().stream()
+                    .filter(p -> p.getPlayer().getId().equals(user.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (participant != null) {
+                scheduler.getParticipants().remove(participant);
+                participant.setScheduler(null); // unlink the participant from the scheduler
+            }
+        }
+
+        schedulerRepository.saveAll(schedulers);
+    }
+
     /**
      * A helper class to represent a time point on the timeline with its weight (delta).
      */

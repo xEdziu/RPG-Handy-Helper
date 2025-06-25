@@ -82,6 +82,33 @@ public class ContentController {
         System.out.println("ContentController: getNotes()");
         return "home/notes";
     }
+
+   // ADMIN PAGES
+
+    @GetMapping("/admin")
+    public String getAdmin() {
+        System.out.println("ContentController: getAdmin()");
+        return "admin/admin";
+    }
+
+    @GetMapping("/admin/users")
+    public String getAdminUsers() {
+        System.out.println("ContentController: getAdminUsers()");
+        return "admin/users";
+    }
+
+    @GetMapping("/admin/user/edit")
+    public String getAdminUserEdit() {
+        System.out.println("ContentController: getAdminUserEdit()");
+        return "admin/userEdit";
+    }
+
+    @GetMapping("/admin/user/myPassword")
+    public String getAdminUserMyPassword() {
+        System.out.println("ContentController: getAdminUserMyPassword()");
+        return "admin/changePasswordAdmin";
+    }
+
     @GetMapping("/home/games")
     public String getgames() {
         System.out.println("ContentController: getgames()");

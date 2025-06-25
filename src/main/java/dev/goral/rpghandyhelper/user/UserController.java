@@ -61,6 +61,13 @@ public class UserController {
         return userService.getDefaultProfilePics();
     }
 
+    // Admin endpoints
+
+    @GetMapping("/admin/user/{id}")
+    public Map<String, Object> getUserById(@PathVariable Long id) {
+        return userService.getAdminUserById(id);
+    }
+
     @GetMapping("/admin/user/all")
     public Map<String, Object> getAllUsers() {
         return userService.getAllUsers();
@@ -71,5 +78,19 @@ public class UserController {
         return userService.createUserAdmin(user);
     }
 
+    @PutMapping("/admin/user/update/{id}")
+    public Map<String, Object> updateUserAdmin(@PathVariable Long id, @RequestBody UserUpdateAdminRequest updateRequest) {
+        return userService.updateUserAdmin(id, updateRequest);
+    }
+
+    @PutMapping("/admin/user/changePassword/{id}")
+    public Map<String, Object> changeUserPasswordAdmin(@PathVariable Long id, @RequestBody PasswordRequest passwordRequest) {
+        return userService.changeUserPasswordAdmin(id, passwordRequest.getPassword());
+    }
+
+    @DeleteMapping("/admin/user/delete/{id}")
+    public Map<String, Object> deleteUserAdmin(@PathVariable Long id) {
+        return userService.deleteUserAdmin(id);
+    }
 
 }
