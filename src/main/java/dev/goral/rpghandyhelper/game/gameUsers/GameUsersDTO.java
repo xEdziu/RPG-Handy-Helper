@@ -10,6 +10,7 @@ import lombok.*;
 public class GameUsersDTO {
     private Long id;
     private Long userId;
+    private String username;
     private Long gameId;
     private String role;
 }

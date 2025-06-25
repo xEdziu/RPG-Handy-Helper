@@ -9,7 +9,10 @@ import dev.goral.rpghandyhelper.game.gameUsers.GameUsersRole;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCyberware.CpRedCharacterCustomCyberware;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterCustomCyberware.CpRedCharacterCustomCyberwareRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.cyberwares.CpRedCyberwares;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.cyberwares.CpRedCyberwaresMountPlace;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.cyberwares.CpRedCyberwaresRepository;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
@@ -20,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +37,7 @@ public class CpRedCharacterCyberwareService {
     private final GameRepository gameRepository;
     private final GameUsersRepository gameUsersRepository;
     private final CpRedCyberwaresRepository cpRedCyberwaresRepository;
+    private final CpRedCharacterCustomCyberwareRepository cpRedCharacterCustomCyberwareRepository;
 
     public Map<String, Object> getCharacterCyberwares(Long characterId) {
         CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
@@ -212,4 +217,38 @@ public class CpRedCharacterCyberwareService {
         return response;
     }
 
+    public List<CpRedCharacterCyberwareSheetDTO> getCharacterCyberwareForSheet(Long characterId, CpRedCyberwaresMountPlace mountPlace){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        List<CpRedCharacterCyberware> characterManualCyberwareList = cpRedCharacterCyberwareRepository.findAllByCharacter(character);
+        List<CpRedCharacterCustomCyberware> characterCustomCyberwareList = cpRedCharacterCustomCyberwareRepository.findAllByCharacterId(character);
+        List<CpRedCharacterCyberwareSheetDTO> characterCyberwareDTO = new ArrayList<>();
+        for(CpRedCharacterCyberware cyberware : characterManualCyberwareList){
+            if(cyberware.getBaseCyberware().getMountPlace() == mountPlace){
+                CpRedCharacterCyberwareSheetDTO dto = new CpRedCharacterCyberwareSheetDTO(
+                        cyberware.getId(),
+                        cyberware.getBaseCyberware().getId(),
+                        false,
+                        cyberware.getBaseCyberware().getName(),
+                        cyberware.getDescription(),
+                        cyberware.getBaseCyberware().getMountPlace().toString()
+                );
+                characterCyberwareDTO.add(dto);
+            }
+        }
+        for(CpRedCharacterCustomCyberware customCyberware : characterCustomCyberwareList){
+            if(customCyberware.getCyberwareId().getMountPlace() == mountPlace){
+                CpRedCharacterCyberwareSheetDTO dto = new CpRedCharacterCyberwareSheetDTO(
+                        customCyberware.getId(),
+                        customCyberware.getCyberwareId().getId(),
+                        true,
+                        customCyberware.getCyberwareId().getName(),
+                        customCyberware.getDescription(),
+                        customCyberware.getCyberwareId().getMountPlace().toString()
+                );
+                characterCyberwareDTO.add(dto);
+            }
+        }
+        return characterCyberwareDTO;
+    }
 }

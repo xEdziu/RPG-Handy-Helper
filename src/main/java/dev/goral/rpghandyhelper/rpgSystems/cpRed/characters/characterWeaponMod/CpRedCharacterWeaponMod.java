@@ -1,7 +1,5 @@
 package dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeaponMod;
 
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.characterWeapon.CpRedCharacterWeapon;
-import dev.goral.rpghandyhelper.rpgSystems.cpRed.manual.weaponMods.CpRedWeaponMods;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,17 +23,14 @@ public class CpRedCharacterWeaponMod {
             generator = "cpRedCharacterWeaponMod_sequence"
     )
     private Long id;
-    @ManyToOne
-    @JoinColumn(
-            name = "character_weapon_id",
-            referencedColumnName = "id",
-            nullable = false
-    )
-    private CpRedCharacterWeapon characterWeaponId;
-    @ManyToOne
-    @JoinColumn(
-            name = "weapon_mod_id",
-            referencedColumnName = "id"
-    )
-    private CpRedWeaponMods weaponModId;
+
+    private Long characterId;
+
+    private Long characterWeaponId;
+    private Boolean isCharacterWeaponCustom;
+
+    private Long weaponModId;
+    private Boolean isWeaponModCustom;
+
+    private Integer sizeTaken;
 }

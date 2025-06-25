@@ -46,6 +46,7 @@ public class CpRedCharacterWeapon {
     private Boolean isHidden;
     @Enumerated(EnumType.STRING)
     private CpRedItemsQuality quality;
+    private Short freeModSlots;
     private CpRedCharacterItemStatus status;
     @Column(length = 500)
     private String description;

@@ -3,26 +3,499 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel użytkownika</title>
+    <title>Mój Profil</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/img/logo/logo-light.svg">
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
+    <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=League+Spartan:wght@100..900&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Dodanie SweetAlert2 -->
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <!-- Dodanie Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- Dodanie Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Dodanie Marked.js -->
+    <script>// Ustawienia Tailwind CSS
+    <script src="https://kit.fontawesome.com/0a5e3ca64c.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            background: "#1E1E1E",
+                            backgroundSecondary: "#181818",
+                            backgroundTertiary: "#101010",
+                            textPrimary: "#E1E1E1",
+                            textSecondary: "#AFAFAF",
+                            accent: "#12e1b9",
+                            border: "#333333",
+                            surface: "#1E1E1E",
+                            accentDark: "#00B189",
+                            success: "#00EE00",
+                            error: "#D00000",
+                            warning: "#FF9831",
+                        },
+                        light: {
+                            background: "#E1E1E1",
+                            backgroundSecondary: "#C1C1C1",
+                            backgroundTertiary: "#818181",
+                            textPrimary: "#252525",
+                            surface: "#F5F5F5",
+                            border: "#CCCCCC",
+                            textSecondary: "#505050",
+                            accent: "#ED1E46",
+                            accentDark: "#BD0016",
+                            success: "#009688",
+                            error: "#b388FF",
+                            warning: "#FF6F00",
+                        },
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=League+Spartan&display=swap');
+
+        .font-league-spartan {
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
 </head>
-<body>
-<h1>Witaj na swoim koncie!</h1>
-<p>Zalogowałeś się pomyślnie.</p>
-<br>
-<a href="/profile">Mój profil</a>
-<p>UWAGA: Ten formularz jest do testowania ustawienia hasła, gdy użytkownik zarejestruje się poprzez Discord!</p>
-<p>Jest tutaj tymczasowo, w przyszłości będzie na to osobne miejsce na panelu użytkownika</p>
-<form>
-    <label for="password1">Hasło:</label><br>
-    <input type="password" id="password1" name="password" required><br>
-    <label for="password2">Powtórz Hasło:</label><br>
-    <input type="password" id="password2" name="password" required><br>
-    <button type="submit">Ustaw hasło</button>
-</form>
-<a href="/logout">Wyloguj się</a>
+
+<body class="md:h-screen overflow-hidden flex flex-col bg-light-background dark:bg-dark-background font-league-spartan text-light-textPrimary dark:text-dark-textPrimary relative">
+
+<nav class="flex justify-around w-full p-4 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border z-20">
+    <a href="/">
+        <div class="flex items-center">
+            <img id="logo-light" src="/img/logo/logo-light.svg" alt="RPG Manager" class="h-10 w-10 dark:hidden">
+            <img id="logo-dark" src="/img/logo/logo-dark.svg" alt="RPG Manager" class="h-10 w-10 hidden dark:block">
+            <h1 class="text-xl font-semibold ml-3 text-light-textPrimary dark:text-dark-textPrimary font-jetbrains-mono">
+                RPG Handy Helper
+            </h1>
+        </div>
+    </a>
+    <div class="flex items-center justify-center">
+        <i class="fa-solid fa-sun p-2 text-light-accent dark:text-dark-accent"></i>
+        <div class="relative inline-block w-12 h-6">
+            <input id="switch-component" type="checkbox" class="peer hidden m-1" />
+            <label for="switch-component" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full
+                       bg-light-accent dark:bg-dark-accent
+                       shadow-md transition-all duration-300
+                       peer-checked:translate-x-[0.75rem]
+                       peer-checked:dark:bg-dark-accent peer-checked:bg-light-accent
+                       cursor-pointer hover:shadow-lg">
+            </label>
+            <div class="w-12 h-6 rounded-full transition-all duration-300 cursor-pointer
+                        bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary">
+            </div>
+        </div>
+        <i class="fa-solid fa-moon p-2 text-light-accent dark:text-dark-accent"></i>
+    </div>
+</nav>
+
+
+<main class="flex flex-1 overflow-hidden">
+    <button id="sidebarToggle" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-light-accent text-white rounded">
+        <i class="fas fa-bars"></i>
+    </button>
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 transform -translate-x-full md:translate-x-0 md:static
+           flex flex-col items-center justify-center gap-4 p-4 bg-light-surface dark:bg-dark-surface
+           transition-transform duration-300 z-10">
+        <nav class="flex flex-col w-full items-center gap-8">
+            <div class="w-24 h-24 bg-light-border dark:bg-dark-border rounded-full flex items-center justify-center text-3xl">
+                <i class="fa-regular fa-user"></i>
+            </div>
+
+            <a href="/profile" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MÓJ PROFIL</a>
+            <a href="/home/games" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE GRY</a>
+            <a href="/home/notes" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE NOTATKI</a>
+            <a href="#" class="bg-light-accent dark:bg-dark-accent text-white px-4 py-2 rounded text-center w-3/4">MOJE SPOTKANIA</a>
+            <a href="#" class="border border-light-border dark:border-dark-border px-4 py-2 rounded text-center w-3/4">WYLOGUJ SIĘ</a>
+        </nav>
+    </aside>
+
+
+    <section class="flex-1 p-6 overflow-hidden flex flex-col">
+        <div class="flex items-center mb-6">
+            <h2 class="text-5xl font-bold">Cześć, <span id ="username" class="text-light-accent dark:text-dark-accent">[username]</span>!</h2>
+        </div>
+
+        <div class="col-span-1 grid grid-cols-1 md:grid-cols-3 grid-rows-1 md:grid-rows-2 gap-6 h-full">
+            <div id="user-games" class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-4">Moje Gry</h3>
+                <div id="user-games-list" class="space-y-2"></div>
+            </div>
+
+
+            <div class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-4">Moje Notatki</h3>
+                <ul id="notes-list" class="space-y-4">
+
+                </ul>
+            </div>
+
+            <div id="scheduler-info" class="col-span-1 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 min-h-64 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-4">Twoje Spotkania</h3>
+                <div id="scheduler-content" class="space-y-2 text-sm">
+                    <p>Ładowanie danych...</p>
+                </div>
+            </div>
+
+
+            <div id="discord-user-info" class="md:col-span-2 row-span-1 bg-white dark:bg-dark-surface rounded-lg shadow p-4 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-4">Profil</h3>
+                <div id="discord-info-content" class="text-sm text-light-textPrimary dark:text-dark-textPrimary space-y-2"></div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<footer class="w-full text-center pt-2 pb-1 bg-light-surface dark:bg-dark-surface font-jetbrains-mono text-light-text dark:text-dark-text border-t border-light-border dark:border-dark-border z-20">
+    <h3 class="text-light-textPrimary dark:text-dark-textPrimary">Z miłości do TTRPG 💙 © 2025 RPG Handy Helper</h3>
+    <a href="/home/notes" class="text-light-accent dark:text-dark-accent"><i class="fa-brands fa-github"></i></a>
+</footer>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const infoContainer = document.getElementById("discord-info-content");
+
+        try {
+            // 1. Sprawdź, czy użytkownik zalogowany przez Discorda
+            const resDiscord = await fetch("/api/v1/authorized/user/isPasswordSetForDiscordUser", {
+                credentials: "include"
+            });
+            const discordData = await resDiscord.json();
+
+            const isDiscord = discordData.message.includes("OAuth2");
+            const isPasswordSet = discordData.isPasswordSet === true;
+
+            if (!isDiscord) {
+                // Użytkownik standardowy – brak informacji o Discordzie
+                infoContainer.innerHTML = `
+                <p>Nie jesteś zalogowany przez Discorda.</p>
+            `;
+                return;
+            }
+
+            // 2. Użytkownik Discord → pobierz dane użytkownika
+            const resUser = await fetch("/api/v1/authorized/user", {
+                credentials: "include"
+            });
+            const user = await resUser.json();
+            const userPhoto = user.userPhotoPath;
+
+            // 3. Pobierz listę domyślnych zdjęć
+            const resDefaults = await fetch("/api/v1/authorized/user/photo/defaults", {
+                credentials: "include"
+            });
+            const defaults = await resDefaults.json();
+            const defaultPaths = defaults.defaultPics || [];
+
+            const usesDefaultPhoto = !userPhoto || defaultPaths.includes(userPhoto);
+
+            // 4. Zbuduj komunikat
+            let html = `
+            <p>Jesteś zalogowany przez <strong>Discorda</strong>.</p>
+        `;
+
+            if (!isPasswordSet) {
+                html += `
+                <p class="text-yellow-600">Nie masz jeszcze ustawionego hasła – możesz je ustawić w zakładce <a href="/home/profile" class="underline text-light-accent dark:text-dark-accent">Profil</a>.</p>
+            `;
+            }
+
+            if (usesDefaultPhoto) {
+                html += `
+                <p class="text-yellow-600">Używasz domyślnego zdjęcia profilowego – możesz dodać własne w zakładce <a href="/home/profile" class="underline text-light-accent dark:text-dark-accent">Profil</a>.</p>
+            `;
+            } else {
+                html += `
+                <p>Masz ustawione własne zdjęcie profilowe ✅</p>
+            `;
+            }
+
+            infoContainer.innerHTML = html;
+
+        } catch (err) {
+            console.error("Błąd przy pobieraniu informacji o Discordzie:", err);
+            infoContainer.innerHTML = `
+            <p class="text-red-500">Nie udało się pobrać informacji o użytkowniku.</p>
+        `;
+        }
+    });
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const gamesListEl = document.getElementById("user-games-list");
+
+        const csrfToken = getCookie("XSRF-TOKEN");
+
+        fetch('/api/v1/authorized/game/userGames', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': csrfToken
+            },
+            credentials: 'include'
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Nie udało się pobrać gier.");
+                return res.json();
+            })
+            .then(data => {
+                const games = data.userGames; // poprawione
+                if (!games || games.length === 0) {
+                    gamesListEl.innerHTML = '<p class="text-gray-500">Nie należysz jeszcze do żadnej gry.</p>';
+                    return;
+                }
+
+                const html = games.map(game => `
+                <div class="p-3 border border-light-border dark:border-dark-border rounded-lg">
+                    <p class="font-semibold">${game.name || 'Bez nazwy'}</p>
+                    <p class="text-sm text-gray-500">${game.description || 'Brak opisu'}</p>
+                </div>
+            `).join("");
+                gamesListEl.innerHTML = html;
+            })
+
+            .catch(err => {
+                console.error("Błąd:", err);
+                gamesListEl.innerHTML = '<p class="text-red-500">Wystąpił problem przy ładowaniu gier.</p>';
+            });
+    });
+
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const contentEl = document.getElementById("scheduler-content");
+
+        const renderError = (msg) => {
+            contentEl.innerHTML = `<p class="text-red-500">${msg}</p>`;
+        };
+
+        const createCard = (title, bodyHTML) => `
+        <div class="p-4 border rounded bg-light-backgroundSecondary dark:bg-dark-backgroundSecondary space-y-1">
+            <p class="font-bold">${title}</p>
+            ${bodyHTML}
+        </div>
+    `;
+
+        try {
+            // 1. Pobierz gry użytkownika
+            const gamesRes = await fetch("http://localhost:8888/api/v1/authorized/game/userGames");
+            const gamesData = await gamesRes.json();
+
+            if (!gamesData.games || gamesData.games.length === 0) {
+                contentEl.innerHTML = `<p>Nie masz jeszcze przypisanej żadnej gry.</p>`;
+                return;
+            }
+
+            // 2. Pobierz wszystkie pending schedulery
+            const pendingRes = await fetch("http://localhost:8888/api/v1/authorized/schedulers/pendingSchedulers");
+            const pendingData = await pendingRes.json();
+            const pendingSchedulers = pendingData.pendingSchedulers || [];
+
+            // 3. Przetwórz każdą grę osobno
+            let htmlOutput = "";
+
+            for (const game of gamesData.games) {
+                const gameId = game.id;
+                const gameName = game.name || "Gra bez nazwy";
+
+                // 🔸 Filtruj schedulery do tej gry
+                const schedulers = pendingSchedulers.filter(s => s.gameId === gameId);
+
+                if (schedulers.length > 0) {
+                    const schedHTML = schedulers.map(s => `
+                    <div class="text-sm">
+                        <p class="font-semibold">${s.title}</p>
+                        <p class="text-xs text-gray-500">Deadline: ${new Date(s.deadline).toLocaleDateString()}</p>
+                        <p class="text-xs text-gray-500">Brakuje odpowiedzi: ${s.missingAvailabilitiesCount}</p>
+                    </div>
+                `).join("<hr class='my-2 border-gray-300'>");
+
+                    htmlOutput += createCard(`Gra: ${gameName}`, schedHTML);
+                    continue;
+                }
+
+                // 🔸 Brak schedulerów → spróbuj pobrać next session
+                const nextSessionRes = await fetch(`http://localhost:8888/api/v1/authorized/schedulers/nextSession/${gameId}`);
+                const nextSessionData = await nextSessionRes.json();
+
+                if (nextSessionData.nextSession) {
+                    const session = nextSessionData.nextSession;
+                    const sessionHTML = `
+                    <p class="text-sm"><span class="font-semibold">Sesja:</span> ${session.sessionName}</p>
+                    <p class="text-xs text-gray-500">Godzina: ${session.startTime}</p>
+                `;
+                    htmlOutput += createCard(`Gra: ${session.gameName}`, sessionHTML);
+                } else {
+                    htmlOutput += createCard(`Gra: ${gameName}`, `<p class="text-sm">Umów się na następną sesję!</p>`);
+                }
+            }
+
+            contentEl.innerHTML = htmlOutput;
+
+        } catch (err) {
+            console.error("Błąd:", err);
+            renderError("Nie udało się załadować danych.");
+        }
+    });
+
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+
+    toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+    });
+
+    function getToken() {
+        const csrfToken = getCookie("XSRF-TOKEN");
+        console.log(csrfToken)
+        if (csrfToken == null) {
+            Swal.fire({
+                title: 'Błąd',
+                text: 'Nie udało się pobrać tokenu CSRF',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+        return csrfToken
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const csrfToken = getToken()
+        fetch('/api/v1/authorized/user', {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': csrfToken
+            },
+            credentials: 'include'
+        })
+            .then(response => {
+                if(!response.ok) {
+                    throw new Error("Błąd podczas pobierania nazwy użytkownika");
+                }
+                return response.json();
+            })
+            .then(user => {
+                const username = document.getElementById("username")
+                if (username) {
+                    username.textContent = user.username;
+                }
+            })
+
+    })
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const notesList = document.getElementById('notes-list');
+
+        const csrfToken = getToken()
+
+        fetch('/api/v1/authorized/gameNotes', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': csrfToken
+            },
+            credentials: 'include'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Błąd podczas pobierania notatek');
+                }
+                return response.json();
+            })
+            .then(notes => {
+                if (!notes.gameNotes || notes.gameNotes.length === 0) {
+                    notesList.innerHTML = '<li class="text-gray-500">Brak notatek do wyświetlenia.</li>';
+                    return;
+                }
+
+                notes.gameNotes.forEach(note => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'border border-light-border dark:border-dark-border rounded p-3';
+
+                    const title = document.createElement('h4');
+                    title.className = 'text-lg font-semibold';
+                    title.textContent = note.title;
+
+                    const content = document.createElement('p');
+                    content.className = 'text-sm text-light-textSecondary dark:text-dark-textSecondary mt-2';
+                    content.textContent = note.content;
+
+                    listItem.appendChild(title);
+                    listItem.appendChild(content);
+                    notesList.appendChild(listItem);
+                });
+            })
+
+            .catch(error => {
+                console.error('Wystąpił błąd:', error);
+                notesList.innerHTML = '<li class="text-red-500">Nie udało się załadować notatek.</li>';
+            });
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleSwitch = document.getElementById("switch-component");
+        const body = document.body;
+        const themeToggleDiv = document.querySelector(".flex.items-center.justify-center");
+        const favicon = document.getElementById("favicon");
+        function updateFavicon(theme) {
+            if (favicon) {
+                favicon.href = theme === "dark"
+                    ? "/img/logo/logo-dark.svg"
+                    : "/img/logo/logo-light.svg";
+            }
+        }
+        function applyTheme(theme) {
+            body.classList.toggle("dark", theme === "dark");
+            localStorage.setItem("theme", theme);
+            updateFavicon(theme);
+            if (toggleSwitch) toggleSwitch.checked = (theme === "dark");
+        }
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        applyTheme(savedTheme);
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener("change", function () {
+                const newTheme = toggleSwitch.checked ? "dark" : "light";
+                applyTheme(newTheme);
+            });
+        }
+        if (themeToggleDiv) {
+            themeToggleDiv.addEventListener("click", function (e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                const newTheme = body.classList.contains("dark") ? "light" : "dark";
+                applyTheme(newTheme);
+            });
+        }
+    });
+
+
 
     function getCookie(name) {
         const cookies = document.cookie.split('; ');
@@ -35,71 +508,7 @@
         return null;
     }
 
-    let form = document.querySelector('form');
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
 
-        let password1 = document.querySelector('#password1').value;
-        let password2 = document.querySelector('#password2').value;
-
-        if (password1 !== password2) {
-            Swal.fire({
-                title: 'Błąd',
-                text: 'Hasła nie są takie same',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            })
-        }
-
-        const csrfToken = getCookie("XSRF-TOKEN");
-        console.log(csrfToken)
-        if (csrfToken == null) {
-            Swal.fire({
-                title: 'Błąd',
-                text: 'Nie udało się pobrać tokenu CSRF',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        fetch('/api/v1/authorized/setPassword', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCookie("XSRF-TOKEN"),
-            },
-            body:JSON.stringify({
-                password: password1
-            })
-        })
-            .then(
-                Swal.fire({
-                    title: 'Proszę czekać...',
-                    didOpen: () => {
-                        Swal.showLoading()
-                    }
-                })
-            )
-            .then(response => response.json())
-            .then(data => {
-                if (data.error === 200) {
-                    Swal.fire({
-                        title: 'Sukces',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    })
-                } else {
-                    Swal.fire ({
-                        title: 'Błąd',
-                        text: data.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            });
-    });
 </script>
 <script defer src="/scripts/footer.js"></script>
 </html>

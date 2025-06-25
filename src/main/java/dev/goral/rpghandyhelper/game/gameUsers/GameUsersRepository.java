@@ -1,6 +1,7 @@
 package dev.goral.rpghandyhelper.game.gameUsers;
 
 import dev.goral.rpghandyhelper.game.Game;
+import dev.goral.rpghandyhelper.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,5 +37,11 @@ public interface GameUsersRepository extends JpaRepository<GameUsers, Long> {
     GameUsers findByGameIdAndUserId(Long gameId, Long id);
 
     GameUsers findByUserId(Long userId);
+
+    List<GameUsers> findByGameIdAndRole(Long gameId, GameUsersRole gameUsersRole);
+  
+    GameUsers findFirstByGameIdAndRole(Long id, GameUsersRole gameUsersRole);
+
+    List<GameUsers> findAllByGameIdAndRole(Long id, GameUsersRole gameUsersRole);
 }
 

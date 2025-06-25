@@ -22,5 +22,6 @@ public class CpRedClasses {
     )
     private Long id;
     private String name;
+    private String specialAbility;
     private String description;
 }

@@ -264,4 +264,17 @@ public class CpRedCharacterStatsService {
         return response;
     }
 
+    public List<CpRedCharacterStatsSheetDTO> getCharacterStatsForSheet(Long characterId){
+        CpRedCharacters character = cpRedCharactersRepository.findById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Postać o podanym ID nie została znaleziona."));
+        return cpRedCharacterStatsRepository.getCharacterStatsByCharacterId(character).stream()
+                .map(stats -> new CpRedCharacterStatsSheetDTO(
+                        stats.getId(),
+                        stats.getStatId().getId(),
+                        stats.getStatId().getTag(),
+                        stats.getMaxStatLevel(),
+                        stats.getCurrentStatLevel()))
+                .toList();
+    }
+
 }
