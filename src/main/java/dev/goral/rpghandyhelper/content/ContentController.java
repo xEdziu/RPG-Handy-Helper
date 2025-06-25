@@ -1,5 +1,6 @@
 package dev.goral.rpghandyhelper.content;
 
+import org.springframework.ui.Model;
 import dev.goral.rpghandyhelper.user.UserRole;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -83,7 +84,11 @@ public class ContentController {
         System.out.println("ContentController: getNotes()");
         return "home/notes";
     }
-
+    @GetMapping("/home/game/{gameId}")
+    public String getGamePage(@PathVariable Long gameId, Model model) {
+        model.addAttribute("gameId", gameId);
+        return "home/game";
+    }
 
     @GetMapping("/home/games/{gameId}/characters")
     public String getCharacters(@PathVariable String gameId) {
