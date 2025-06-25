@@ -347,4 +347,21 @@ public class UserService implements UserDetailsService {
         response.put("userPhotoPath", userPhotoPath);
         return response;
     }
+
+    public Map<String, Object> isPasswordSetForDiscordUser(Object user) {
+
+        if (user instanceof User) {
+            return CustomReturnables.getOkResponseMap("Użytkownik nie jest zalogowany przez OAuth2.");
+        } else if (user instanceof DefaultOAuth2User oauthUser) {
+            String email = oauthUser.getAttribute("email");
+            User userEntity = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika powiązanego z tym kontem Discord"));
+            boolean isPasswordSet = userEntity.getPassword() != null && !userEntity.getPassword().isEmpty();
+            Map<String, Object> response = CustomReturnables.getOkResponseMap("Sprawdzono, czy hasło jest ustawione dla użytkownika.");
+            response.put("isPasswordSet", isPasswordSet);
+            return response;
+        } else {
+            throw new IllegalStateException("Nie udało się pobrać zalogowanego użytkownika.");
+        }
+    }
 }
