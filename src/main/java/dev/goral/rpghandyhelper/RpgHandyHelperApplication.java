@@ -9,7 +9,7 @@ public class RpgHandyHelperApplication {
 
     public static void main(String[] args) {
         // Initialize the logger service
-        LoggerService.logInfo("Application is started");
+        LoggerService.logInfo("Application is starting");
         SpringApplication.run(RpgHandyHelperApplication.class, args);
         // Log the application start
         LoggerService.logInfo("Application has started successfully");

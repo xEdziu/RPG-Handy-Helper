@@ -118,6 +118,29 @@ public class SchedulerController {
      =========================== PLAYER AVAILABILITY ===========================
      */
 
+    @GetMapping("/pendingSchedulers")
+    public Map<String, Object> getPendingSchedulers(
+            @AuthenticationPrincipal User currentUser
+    ) {
+        List<SchedulerResponse> pendingSchedulers = schedulerService.getPendingSchedulers(currentUser);
+
+        if (pendingSchedulers.isEmpty()) {
+            return CustomReturnables.getOkResponseMap("Brak niewypełnionych schedulerów.");
+        }
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano listę niewypełnionych schedulerów.");
+        response.put("pendingSchedulers", pendingSchedulers);
+        return response;
+    }
+
+    @GetMapping("/nextSession/{gameId}")
+    public Map<String, Object> getNextSession(
+            @PathVariable Long gameId,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        return schedulerService.getNextSession(currentUser, gameId);
+    }
+
     @PostMapping("/submitAvailability")
     public Map<String, Object> submitAvailability(
             @RequestBody SubmitAvailabilityRequest request,

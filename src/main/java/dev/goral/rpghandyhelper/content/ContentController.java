@@ -84,9 +84,64 @@ public class ContentController {
         return "home/notes";
     }
 
+
     @GetMapping("/home/games/{gameId}/characters")
     public String getCharacters(@PathVariable String gameId) {
         System.out.println("ContentController: getCharacters()");
         return "home/characters";
+
+    @GetMapping("/home/games/{gameId}/schedulers")
+    public String getSchedulers() {
+        System.out.println("ContentController: getSchedulers()");
+        return "home/scheduler/list";
+    }
+
+    @GetMapping("/home/games/{gameId}/schedulers/create")
+    public String getCreateScheduler() {
+        System.out.println("ContentController: getCreateScheduler()");
+        return "home/scheduler/create";
+    }
+
+    @GetMapping("/home/games/{gameId}/schedulers/{schedulerId}")
+    public String getScheduler() {
+        System.out.println("ContentController: getScheduler()");
+        return "home/scheduler/details";
+    }
+    @GetMapping("/home/create-game")
+    public String getCreateGame() {
+        System.out.println("ContentController: getCreateGame()");
+        return "home/createGame";
+    }
+   // ADMIN PAGES
+
+    @GetMapping("/admin")
+    public String getAdmin() {
+        System.out.println("ContentController: getAdmin()");
+        return "admin/admin";
+    }
+
+    @GetMapping("/admin/users")
+    public String getAdminUsers() {
+        System.out.println("ContentController: getAdminUsers()");
+        return "admin/users";
+    }
+
+    @GetMapping("/admin/user/edit")
+    public String getAdminUserEdit() {
+        System.out.println("ContentController: getAdminUserEdit()");
+        return "admin/userEdit";
+    }
+
+    @GetMapping("/admin/user/myPassword")
+    public String getAdminUserMyPassword() {
+        System.out.println("ContentController: getAdminUserMyPassword()");
+        return "admin/changePasswordAdmin";
+    }
+
+    @GetMapping("/home/games")
+    public String getgames() {
+        System.out.println("ContentController: getgames()");
+        return "home/games";
+
     }
 }

@@ -163,6 +163,22 @@
                       <option name="url" value="http://localhost:8888/logout" />
                     </requestState>
                     <requestState>
+                      <option name="description" value="Pobierz użytkowników po wzorcu" />
+                      <option name="id" value="d3fddbeb-2bd5-4975-a75c-f5563c16fa00" />
+                      <option name="method" value="GET" />
+                      <option name="name" value="Get Usernames By Regex" />
+                      <option name="pathVariables">
+                        <list>
+                          <pathVariableState>
+                            <option name="key" value="regexUsername" />
+                            <option name="value" value="user" />
+                            </pathVariableState>
+                        </list>
+                      </option>
+                      <option name="sortWeight" value="8000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/user/find/{regexUsername}" />
+                    </requestState>
+                    <requestState>
                       <option name="description" value="Pobierz zdjęcie po username" />
                       <option name="id" value="dc05ba37-3be6-4154-82db-412bfc62f380" />
                       <option name="method" value="GET" />
@@ -177,6 +193,14 @@
                       </option>
                       <option name="sortWeight" value="8000000" />
                       <option name="url" value="http://localhost:8888/api/v1/authorized/user/photo/username/{username}" />
+                    </requestState>
+                    <requestState>
+                      <option name="description" value="Usuwa usera o wskazanym ID" />
+                      <option name="id" value="8175a312-36d8-47aa-8adc-9a72663785bc" />
+                      <option name="method" value="DELETE" />
+                      <option name="name" value="Delete user" />
+                      <option name="sortWeight" value="9000000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/admin/user/delete/2" />
                     </requestState>
                   </list>
                 </option>
@@ -204,7 +228,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 2,&#10;//  &quot;gameId&quot;: 1,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 3,&#10;  &quot;gameId&quot;: 1,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
+                          <option name="raw" value="{&#10;//  &quot;userId&quot;: 1,&#10;//  &quot;gameId&quot;: 2,&#10;//  &quot;role&quot;: &quot;GAMEMASTER&quot;,&#10;  &quot;userId&quot;: 2,&#10;  &quot;gameId&quot;: 3,&#10;  &quot;role&quot;: &quot;PLAYER&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
@@ -214,6 +238,20 @@
                       <option name="name" value="Dodaj użytkownika do gry" />
                       <option name="sortWeight" value="1500000" />
                       <option name="url" value="http://localhost:8888/api/v1/authorized/game/addUserToGame" />
+                    </requestState>
+                    <requestState>
+                      <option name="body">
+                        <bodyState>
+                          <option name="raw" value="[&#10;  {&#10;    &quot;userId&quot;: 4,&#10;    &quot;gameId&quot;: 1,&#10;    &quot;role&quot;: &quot;PLAYER&quot;&#10;  },&#10;    {&#10;        &quot;userId&quot;: 5,&#10;        &quot;gameId&quot;: 1,&#10;        &quot;role&quot;: &quot;PLAYER&quot;&#10;    }&#10;]" />
+                          <option name="type" value="JSON" />
+                        </bodyState>
+                      </option>
+                      <option name="description" value="Dodaje użytkowników do gry z odpowiednią rolą" />
+                      <option name="id" value="d5229378-dbb2-482a-916a-3894e1558cc4" />
+                      <option name="method" value="POST" />
+                      <option name="name" value="Dodaj użytkowników do gry" />
+                      <option name="sortWeight" value="1750000" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/addUsersToGame" />
                     </requestState>
                     <requestState>
                       <option name="description" value="Wyświatla wszystkie gry" />
@@ -229,7 +267,7 @@
                       <option name="method" value="GET" />
                       <option name="name" value="Gracze danej gry" />
                       <option name="sortWeight" value="3000000" />
-                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/allPlayers/1" />
+                      <option name="url" value="http://localhost:8888/api/v1/authorized/game/allPlayers/3" />
                     </requestState>
                     <requestState>
                       <option name="body">
@@ -2106,6 +2144,68 @@
                                   <option name="sortWeight" value="2000000" />
                                 </folderState>
                                 <folderState>
+                                  <option name="id" value="709a58b8-efe6-450f-9bc4-237c1dd205da" />
+                                  <option name="name" value="Classes" />
+                                  <option name="requests">
+                                    <list>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  classLevel: 1,&#10;  characterId: 1,&#10;  classId: 1&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Dodaje powiązanie klasy z daną postacią" />
+                                        <option name="id" value="4f041235-dbd7-4cd4-8c29-cab4755cdb25" />
+                                        <option name="method" value="POST" />
+                                        <option name="name" value="Dodaj klasę postaci" />
+                                        <option name="sortWeight" value="1000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/classes/create" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca wszystkie klasy wskazanej postaci po jej ID" />
+                                        <option name="id" value="fc056619-fa0c-40a2-89dc-971708765476" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz klasy postaci po ID postaci" />
+                                        <option name="sortWeight" value="2000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/classes/3" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Zwraca listę wszysktki powiązań postaci z klasą" />
+                                        <option name="id" value="338fb3e2-b7da-4b16-adeb-05f9c49d59d2" />
+                                        <option name="method" value="GET" />
+                                        <option name="name" value="Pobierz wszystkie klasy postaci dla Admina" />
+                                        <option name="sortWeight" value="3000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/admin/games/cpRed/characters/classes/all" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="body">
+                                          <bodyState>
+                                            <option name="raw" value="{&#10;  classLevel: 5&#10;}" />
+                                            <option name="type" value="JSON" />
+                                          </bodyState>
+                                        </option>
+                                        <option name="description" value="Pozwala zmienić level danej clasy postaci" />
+                                        <option name="id" value="8af763e5-f529-433d-9890-703c49055f71" />
+                                        <option name="method" value="PUT" />
+                                        <option name="name" value="Modyfikuj klasę danej postaci" />
+                                        <option name="sortWeight" value="4000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/classes/update/5" />
+                                      </requestState>
+                                      <requestState>
+                                        <option name="description" value="Usuwa klasę dla danej postaci" />
+                                        <option name="id" value="39fddd48-edcc-46a4-9ebc-9523cf75624c" />
+                                        <option name="method" value="DELETE" />
+                                        <option name="name" value="Usuń klasę danej postaci" />
+                                        <option name="sortWeight" value="5000000" />
+                                        <option name="url" value="http://localhost:8888/api/v1/authorized/games/cpRed/characters/classes/delete/6" />
+                                      </requestState>
+                                    </list>
+                                  </option>
+                                  <option name="sortWeight" value="1000000" />
+                                </folderState>
+
+                                <folderState>
                                   <option name="id" value="81470128-3c31-4765-b74f-ab9d6ff1a24e" />
                                   <option name="name" value="Stats" />
                                   <option name="requests">
@@ -3433,6 +3533,7 @@
                               <list>
                                 <pathVariableState>
                                   <option name="key" value="schedulerId" />
+                                  <option name="value" value="1" />
                                 </pathVariableState>
                               </list>
                             </option>
@@ -3512,7 +3613,7 @@
                     <requestState>
                       <option name="body">
                         <bodyState>
-                          <option name="raw" value="{&#10;  &quot;schedulerId&quot;: 2,&#10;  &quot;start&quot;: &quot;2025-12-20T18:00:00&quot;,&#10;  &quot;end&quot;: &quot;2025-12-20T22:00:00&quot;&#10;}" />
+                          <option name="raw" value="{&#10;  &quot;schedulerId&quot;: 1,&#10;  &quot;start&quot;: &quot;2025-12-20T18:00:00&quot;,&#10;  &quot;end&quot;: &quot;2025-12-20T22:00:00&quot;&#10;}" />
                           <option name="type" value="JSON" />
                         </bodyState>
                       </option>
