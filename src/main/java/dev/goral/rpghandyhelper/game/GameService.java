@@ -5,6 +5,7 @@ import dev.goral.rpghandyhelper.game.gameUsers.*;
 import dev.goral.rpghandyhelper.rpgSystems.RpgSystemsRepository;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharacters;
 import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersRepository;
+import dev.goral.rpghandyhelper.rpgSystems.cpRed.characters.CpRedCharactersType;
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ForbiddenActionException;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
@@ -38,7 +39,7 @@ public class GameService {
                         game.getId(),
                         game.getName(),
                         game.getDescription(),
-                        game.getOwner().getId(),
+                        game.getOwner() != null ? game.getOwner().getId() : null,
                         game.getRpgSystem().getId(),
                         game.getStatus().toString()
                 ))
@@ -58,7 +59,7 @@ public class GameService {
                         game.getId(),
                         game.getName(),
                         game.getDescription(),
-                        game.getOwner().getId(),
+                        game.getOwner() != null ? game.getOwner().getId() : null,
                         game.getRpgSystem().getId()
                 ))
                 .orElse(null);
@@ -181,8 +182,10 @@ public class GameService {
         gameUsers.setGame(game);
         gameUsers.setRole(GameUsersRole.GAMEMASTER);
         gameUsersRepository.save(gameUsers);
+        Map <String, Object> response = CustomReturnables.getOkResponseMap("Gra została utworzona.");
+        response.put("gameId", game.getId());
 
-        return CustomReturnables.getOkResponseMap("Gra została utworzona.");
+        return response;
     }
 
     public Map<String, Object> addUserToGame(AddUserToGameRequest request) {
@@ -225,6 +228,19 @@ public class GameService {
         return CustomReturnables.getOkResponseMap("Użytkownik został dodany do gry.");
     }
 
+    public Map<String, Object> addUsersToGame(List<AddUserToGameRequest> requests) {
+
+        if (requests == null || requests.isEmpty()) {
+            throw new IllegalArgumentException("Brak danych do dodania użytkowników do gry.");
+        }
+
+        for (AddUserToGameRequest request : requests) {
+            addUserToGame(request);
+        }
+
+        return CustomReturnables.getOkResponseMap("Użytkownicy zostali dodani do gry.");
+    }
+
     public Map<String, Object> deleteUserFromGame(DeleteUserFromGameRequest request) {
 
         if ( request.getGameId() == null || request.getUserId() == null) {
@@ -263,6 +279,7 @@ public class GameService {
 
         if(character!=null) {
             character.setUser(null);
+            character.setType(CpRedCharactersType.NPC);
         }
         gameUsersRepository.delete(delUser);
         return CustomReturnables.getOkResponseMap("Użytkownik został usunięty z gry.");
@@ -447,5 +464,83 @@ public class GameService {
 
         return CustomReturnables.getOkResponseMap("Rola użytkownika gry została zaktualizowana.");
 
+    }
+
+    public void deleteUserFromAllGames(Long id) {
+        System.out.println("Check 1");
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik o podanym ID nie istnieje."));
+
+        // Usuwanie postaci CP Red powiązanych z użytkownikiem
+        List<CpRedCharacters> userCharacters = cpRedCharactersRepository.findByUserId_Id(id);
+        for (CpRedCharacters character : userCharacters) {
+            character.setUser(null);
+            cpRedCharactersRepository.save(character);
+        }
+
+        System.out.println("Check 2");
+        List<GameUsers> userGames = gameUsersRepository.findAllByUserId(user.getId());
+        List<Game> userOwnedGames = gameRepository.findAllByOwner(user);
+        if (userGames.isEmpty() && userOwnedGames.isEmpty()) {
+            return;
+        }
+        System.out.println("Check 3");
+        if (!userGames.isEmpty()) {
+            System.out.println("Check 3.1");
+            for (GameUsers userGame : userGames) {
+                System.out.println("Check 3.2 - for start");
+                Game game = userGame.getGame();
+                if (userGame.getRole() == GameUsersRole.GAMEMASTER) {
+                    System.out.println("Check 3.3");
+                    // Sprawdź, czy są inni GM'owie w grze
+                    List<GameUsers> gameGameMasters = gameUsersRepository.findAllByGameIdAndRole(game.getId(), GameUsersRole.GAMEMASTER);
+                    if (gameGameMasters.size() == 1) {
+                        System.out.println("Check 3.4");
+                        GameUsers newGameMaster = gameUsersRepository.findFirstByGameIdAndRole(game.getId(), GameUsersRole.PLAYER);
+                        // Jeśli nie ma graczy, to zmień grę na DELETED
+                        if (newGameMaster == null) {
+                            System.out.println("Check 3.5");
+                            game.setStatus(GameStatus.DELETED);
+                        } else {
+                            System.out.println("Check 3.6");
+                            newGameMaster.setRole(GameUsersRole.GAMEMASTER);
+                            gameUsersRepository.save(newGameMaster);
+                        }
+                    }
+                }
+                System.out.println("Check 3.7");
+                gameRepository.save(game);
+                gameUsersRepository.delete(userGame);
+                System.out.println("Check 3.8 - for end");
+            }
+        }
+        System.out.println("Check 4");
+        if (!userOwnedGames.isEmpty()) {
+            System.out.println("Check 4.1");
+            for (Game ownedGame : userOwnedGames) {
+                System.out.println("Check 4.2 - for start");
+                if (ownedGame.getOwner().getId().equals(user.getId())) {
+                    System.out.println("Check 4.3");
+                    GameUsers newOwner = gameUsersRepository.findFirstByGameIdAndRole(ownedGame.getId(), GameUsersRole.GAMEMASTER);
+                    if (newOwner == null) {
+                        System.out.println("Check 4.4");
+                        newOwner = gameUsersRepository.findFirstByGameIdAndRole(ownedGame.getId(), GameUsersRole.PLAYER);
+                        if (newOwner == null) {
+                            System.out.println("Check 4.5");
+                            ownedGame.setOwner(null);
+                            ownedGame.setStatus(GameStatus.DELETED);
+                        }
+                    }
+                    System.out.println("Check 4.6");
+                    if (newOwner != null) {
+                        System.out.println("Check 4.7");
+                        ownedGame.setOwner(newOwner.getUser());
+                    }
+                }
+                gameRepository.save(ownedGame);
+                System.out.println("Check 4.8 - for end");
+            }
+        }
+        System.out.println("Check 5");
     }
 }

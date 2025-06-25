@@ -238,11 +238,11 @@ public class CpRedCharacterEnemiesService {
 
         if(character.getUser()==null){
             if( gameUsers.getRole() != GameUsersRole.GAMEMASTER) {
-                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do modyfikowania wrogów dla tej postaci.");
             }
         } else if (gameUsers.getRole()!= GameUsersRole.GAMEMASTER){
             if (!character.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalStateException("Nie masz uprawnień do dodawania wrogów dla tej postaci.");
+                throw new IllegalStateException("Nie masz uprawnień do modyfikowania wrogów dla tej postaci.");
             }
         }
 
@@ -293,6 +293,6 @@ public class CpRedCharacterEnemiesService {
             enemyToUpdate.setDescription(cpRedCharacterEnemies.getDescription());
         }
         cpRedCharacterEnemiesRepository.save(enemyToUpdate);
-        return CustomReturnables.getOkResponseMap("Wrog został zaktualizowany.");
+        return CustomReturnables.getOkResponseMap("Wróg został zaktualizowany.");
     }
 }
