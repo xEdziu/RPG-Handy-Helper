@@ -40,14 +40,4 @@ public class CpRedWeaponsController {
                                             @RequestBody AddWeaponRequest cpRedWeapons) {
         return cpRedWeaponsService.updateWeapon(weaponId, cpRedWeapons);
     }
-    // Zmienić ukrywalność broni
-    @PutMapping(path = "/admin/rpgSystems/cpRed/weapons/update/hide/{weaponId}")
-    public Map<String, Object> hideWeapon(@PathVariable("weaponId") Long weaponId) {
-        return cpRedWeaponsService.hideWeapon(weaponId);
-    }
-    // Zmienić modyfikowalność broni
-    @PutMapping(path = "/admin/rpgSystems/cpRed/weapons/update/modifiable/{weaponId}")
-    public Map<String, Object> modifiableWeapon(@PathVariable("weaponId") Long weaponId) {
-        return cpRedWeaponsService.modifiableWeapon(weaponId);
-    }
 }

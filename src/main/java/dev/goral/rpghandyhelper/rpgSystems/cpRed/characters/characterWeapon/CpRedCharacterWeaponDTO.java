@@ -8,14 +8,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CpRedCharacterWeaponDTO {
+    private Long id;
     private Long baseWeaponId;
     private Long characterId;
-    private int dmg;
-    private int magazineCapacity;
-    private short numberOfAttacks;
-    private String handType;
-    private boolean isHidden;
+    private Integer dmg;
+    private Integer magazineCapacity;
+    private Short numberOfAttacks;
+    private Short handType;
+    private Boolean isHidden;
     private String quality;
+    private Short freeModSlots;
     private String status;
     private String description;
 }

@@ -15,16 +15,17 @@ import lombok.Setter;
 public class AddWeaponRequest {
     private Long requiredSkillId;
     private String name;
-    private int damage = -1; //quantity of d6
-    private int magazineCapacity = -1;
+    private Integer damage; //quantity of d6
+    private Integer magazineCapacity;
     private Long standardAmmunitionId;
-    private short numberOfAttacks = -1;
-    private short handType = -1;
-    private boolean isHidden;
+    private Short numberOfAttacks;
+    private Short handType;
+    private Boolean isHidden;
     private CpRedItemsQuality quality;
-    private int price = -1;
+    private Integer price;
     private CpRedItemsAvailability availability;
-    private boolean isModifiable;
+    private Boolean isModifiable;
+    private Short modSlots;
 
     @Column(length = 500)
     private String description;

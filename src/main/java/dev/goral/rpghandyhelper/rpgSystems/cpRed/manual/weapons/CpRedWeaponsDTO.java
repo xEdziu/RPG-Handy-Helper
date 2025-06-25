@@ -10,15 +10,16 @@ import lombok.ToString;
 public class CpRedWeaponsDTO {
     private Long requiredSkillId;
     private String type;
-    private int damage;
-    private int magazineCapacity;
+    private Integer damage;
+    private Integer magazineCapacity;
     private Long standardAmmunitionId;
-    private short numberOfAttacks;
-    private short handType;
-    private boolean isHidden;
+    private Short numberOfAttacks;
+    private Short handType;
+    private Boolean isHidden;
     private String quality;
-    private int price;
+    private Integer price;
     private String availability;
-    private boolean isModifiable;
+    private Boolean isModifiable;
+    private Short modSlots;
     private String description;
 }
