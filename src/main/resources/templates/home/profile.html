@@ -393,12 +393,13 @@
                         const formData = new FormData();
                         formData.append("file", file);
 
-                        const uploadResponse = await fetch("/api/v1/authorized/user/photo", {
+                        const uploadResponse = await fetch("/api/v1/authorized/user/setUserPhotoPath", {
                             method: "POST",
                             headers: {
+                                "Content-Type": "application/json",
                                 "X-XSRF-TOKEN": getCookie("XSRF-TOKEN")
                             },
-                            body: formData
+                            body: path
                         });
 
                         const result = await uploadResponse.json();
