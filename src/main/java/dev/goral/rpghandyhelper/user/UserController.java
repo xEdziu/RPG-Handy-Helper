@@ -1,7 +1,7 @@
 package dev.goral.rpghandyhelper.user;
 
 import dev.goral.rpghandyhelper.user.additional.PasswordRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/authorized")
 public class UserController {
     private final UserService userService;
@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/user/photo/username/{username}")
-    public Map<String, Object> getUserPhotoByUsername(@PathVariable String username) throws IOException {
+    public Map<String, Object> getUserPhotoByUsername(@PathVariable String username) {
         return userService.getUserPhotoByUsername(username);
     }
   
