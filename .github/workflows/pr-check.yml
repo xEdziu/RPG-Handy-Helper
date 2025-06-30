@@ -77,6 +77,7 @@ jobs:
         echo "spring.security.oauth2.client.provider.discord.user-info-uri=https://discord.com/api/users/@me" >> src/main/resources/application.properties
         echo "spring.security.oauth2.client.provider.discord.user-name-attribute=id" >> src/main/resources/application.properties
         echo "baseUrl=http://localhost:8080" >> src/main/resources/application.properties
+        echo "userUploads=/opt/rpghh/uploads" >> src/main/resources/application.properties
         echo "server.port=8080" >> src/main/resources/application.properties
         echo "recaptcha.secret-key= ${{ secrets.RECAPTCHA_SECRET }}" >> src/main/resources/application.properties
         echo "jwt.secret=${{ secrets.JWT_SECRET }}" >> src/main/resources/application.properties
