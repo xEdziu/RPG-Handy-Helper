@@ -125,6 +125,23 @@ public class UserService implements UserDetailsService {
 
     public Map<String, Object> setUserPhotoPath(String userPhotoPath) {
         User user = (User) getAuthentication().getPrincipal();
+        String oldPhotoPath = user.getUserPhotoPath();
+
+        // Usuń poprzednie zdjęcie, jeśli istnieje i nie jest domyślne
+        if (oldPhotoPath != null && !oldPhotoPath.startsWith("/img/profilePics/defaultProfilePic")) {
+            Path uploadsDir = Paths.get(userUploads).normalize().toAbsolutePath();
+            Path oldFile = uploadsDir.resolve(Paths.get(oldPhotoPath).getFileName().toString()).normalize();
+
+            if (Files.exists(oldFile) && oldFile.startsWith(uploadsDir)) {
+                try {
+                    Files.delete(oldFile);
+                } catch (IOException e) {
+                    throw new IllegalStateException("Nie udało się usunąć poprzedniego zdjęcia profilowego.", e);
+                }
+            }
+        }
+
+        // Ustaw nowe zdjęcie
         user.setUserPhotoPath(userPhotoPath);
         userRepository.save(user);
         return CustomReturnables.getOkResponseMap("Zdjęcie profilowe zostało ustawione.");
@@ -247,11 +264,11 @@ public class UserService implements UserDetailsService {
             // Usuń poprzednie zdjęcie, jeśli nie jest domyślne
             String oldPath = user.getUserPhotoPath();
             if (oldPath != null && !oldPath.startsWith("/img/profilePics/defaultProfilePic")) {
-                Path baseDir = Paths.get("src/main/resources/static/img/profilePics").normalize().toAbsolutePath();
+                Path uploadsDir = Paths.get(userUploads).normalize().toAbsolutePath();
                 String oldFilename = Paths.get(oldPath).getFileName().toString();
-                Path oldFile = baseDir.resolve(oldFilename).normalize().toAbsolutePath();
+                Path oldFile = uploadsDir.resolve(oldFilename).normalize().toAbsolutePath();
 
-                if (!oldFile.startsWith(baseDir)) {
+                if (!oldFile.startsWith(uploadsDir)) {
                     throw new IllegalStateException("Invalid file path");
                 }
 
