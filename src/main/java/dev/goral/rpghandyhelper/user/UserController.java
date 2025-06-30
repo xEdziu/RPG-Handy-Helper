@@ -46,6 +46,11 @@ public class UserController {
         return userService.getUserPhoto(filename);
     }
 
+    @GetMapping("/user/photo")
+    public Map<String, Object> getUserActualPhotoPath() {
+        return userService.getUserActualPhotoPath();
+    }
+
     @GetMapping("/user/photo/username/{username}")
     public Map<String, Object> getUserPhotoByUsername(@PathVariable String username) {
         return userService.getUserPhotoByUsername(username);

@@ -355,4 +355,17 @@ public class UserService implements UserDetailsService {
         response.put("userPhotoPath", userPhotoPath);
         return response;
     }
+
+    public Map<String, Object> getUserActualPhotoPath() {
+        User user = (User) getAuthentication().getPrincipal();
+        String userPhotoPath = user.getUserPhotoPath();
+
+        if (userPhotoPath == null || userPhotoPath.isEmpty()) {
+            throw new ResourceNotFoundException("Użytkownik nie ma ustawionego zdjęcia profilowego.");
+        }
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano aktualną ścieżkę zdjęciową użytkownika.");
+        response.put("userPhotoPath", userPhotoPath);
+        return response;
+    }
 }
