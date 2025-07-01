@@ -3,7 +3,8 @@ package dev.goral.rpghandyhelper.security;
 import dev.goral.rpghandyhelper.config.jwt.JwtAuthenticationFilter;
 import dev.goral.rpghandyhelper.config.jwt.JwtTokenProvider;
 import dev.goral.rpghandyhelper.user.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -24,14 +25,16 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class WebSecurityConfig implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
@@ -39,9 +42,18 @@ public class WebSecurityConfig {
     private final AuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
 
+    @Value("${userUploads}")
+    private String userUploads;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:" + userUploads + "/");
     }
 
     @Bean

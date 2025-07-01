@@ -2,7 +2,8 @@ package dev.goral.rpghandyhelper.user;
 
 import dev.goral.rpghandyhelper.security.CustomReturnables;
 import dev.goral.rpghandyhelper.security.exceptions.ResourceNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +30,15 @@ import java.util.List;
 import static dev.goral.rpghandyhelper.user.register.RegisterService.validatePassword;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final static String USER_NOT_FOUND_MSG = "Nie znaleziono użytkownika o nicku %s";
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Value("${userUploads}")
+    private String userUploads;
 
     /**
      * Logowanie użytkowników przez Spring Security
@@ -121,6 +125,23 @@ public class UserService implements UserDetailsService {
 
     public Map<String, Object> setUserPhotoPath(String userPhotoPath) {
         User user = (User) getAuthentication().getPrincipal();
+        String oldPhotoPath = user.getUserPhotoPath();
+
+        // Usuń poprzednie zdjęcie, jeśli istnieje i nie jest domyślne
+        if (oldPhotoPath != null && !oldPhotoPath.startsWith("/img/profilePics/defaultProfilePic")) {
+            Path uploadsDir = Paths.get(userUploads).normalize().toAbsolutePath();
+            Path oldFile = uploadsDir.resolve(Paths.get(oldPhotoPath).getFileName().toString()).normalize();
+
+            if (Files.exists(oldFile) && oldFile.startsWith(uploadsDir)) {
+                try {
+                    Files.delete(oldFile);
+                } catch (IOException e) {
+                    throw new IllegalStateException("Nie udało się usunąć poprzedniego zdjęcia profilowego.", e);
+                }
+            }
+        }
+
+        // Ustaw nowe zdjęcie
         user.setUserPhotoPath(userPhotoPath);
         userRepository.save(user);
         return CustomReturnables.getOkResponseMap("Zdjęcie profilowe zostało ustawione.");
@@ -243,12 +264,11 @@ public class UserService implements UserDetailsService {
             // Usuń poprzednie zdjęcie, jeśli nie jest domyślne
             String oldPath = user.getUserPhotoPath();
             if (oldPath != null && !oldPath.startsWith("/img/profilePics/defaultProfilePic")) {
-
-                Path baseDir = Paths.get("src/main/resources/static/img/profilePics").normalize().toAbsolutePath();
+                Path uploadsDir = Paths.get(userUploads).normalize().toAbsolutePath();
                 String oldFilename = Paths.get(oldPath).getFileName().toString();
-                Path oldFile = baseDir.resolve(oldFilename).normalize().toAbsolutePath();
+                Path oldFile = uploadsDir.resolve(oldFilename).normalize().toAbsolutePath();
 
-                if (!oldFile.startsWith(baseDir)) {
+                if (!oldFile.startsWith(uploadsDir)) {
                     throw new IllegalStateException("Invalid file path");
                 }
 
@@ -257,7 +277,7 @@ public class UserService implements UserDetailsService {
 
             // Nowa nazwa pliku
             String filename = UUID.randomUUID() + extension;
-            Path filepath = Paths.get("src/main/resources/static/img/profilePics", filename);
+            Path filepath = Paths.get(userUploads).resolve(filename);
             Files.createDirectories(filepath.getParent());
 
             // Przetwarzanie obrazu
@@ -265,7 +285,7 @@ public class UserService implements UserDetailsService {
             BufferedImage resized = resizeImage(image, formatName);
             ImageIO.write(resized, formatName, filepath.toFile());
 
-            user.setUserPhotoPath("/img/profilePics/" + filename);
+            user.setUserPhotoPath("/uploads/" + filename);
             userRepository.save(user);
 
             return CustomReturnables.getOkResponseMap("Zdjęcie profilowe zaktualizowane.");
@@ -313,6 +333,7 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("Invalid filename");
         }
 
+
         Path path = Paths.get("src/main/resources/static/img/profilePics").toAbsolutePath().normalize();
         Path photoPath = path.resolve(filename).normalize();
 
@@ -321,7 +342,11 @@ public class UserService implements UserDetailsService {
         }
 
         if (!Files.exists(photoPath)) {
-            throw new FileNotFoundException("Nie znaleziono pliku: " + filename);
+            // check if it is in userUploads directory
+            if (!Files.exists(Paths.get(userUploads).resolve(filename))) {
+                throw new FileNotFoundException("Nie znaleziono pliku: " + filename);
+            }
+            photoPath = Paths.get(userUploads).resolve(filename).normalize();
         }
 
         byte[] image = Files.readAllBytes(photoPath);
@@ -344,6 +369,19 @@ public class UserService implements UserDetailsService {
         }
 
         Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano ścieżkę zdjęciową do profilu użytkownika.");
+        response.put("userPhotoPath", userPhotoPath);
+        return response;
+    }
+
+    public Map<String, Object> getUserActualPhotoPath() {
+        User user = (User) getAuthentication().getPrincipal();
+        String userPhotoPath = user.getUserPhotoPath();
+
+        if (userPhotoPath == null || userPhotoPath.isEmpty()) {
+            throw new ResourceNotFoundException("Użytkownik nie ma ustawionego zdjęcia profilowego.");
+        }
+
+        Map<String, Object> response = CustomReturnables.getOkResponseMap("Pobrano aktualną ścieżkę zdjęciową użytkownika.");
         response.put("userPhotoPath", userPhotoPath);
         return response;
     }
