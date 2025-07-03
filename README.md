@@ -15,6 +15,7 @@ This project is still in development. We are finishing up on the alpha version o
 - scroll through Your exisiting notes, edit them and create new ones
 - participate in game schedulers in which all designated players can put there time in for Game Master to get the optimal time frame for next game with just one click
 - play Your first campaign on a demo as a warmup before joining any games
+- access dice rolling, game schedulers and partial game informations in the [mobile app](https://github.com/Kosiorny/RPG-Handy-Helper_App.git).
 
 There is more features coming, such as full character sheet management, automation of NPC creation, battle map and more! The ones we are working on currently or in the near future can be seen in the [Issues](https://github.com/xEdziu/RPG-Handy-Helper/issues) tab.
 
