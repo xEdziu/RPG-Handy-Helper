@@ -181,8 +181,10 @@ public class GameService {
         gameUsers.setGame(game);
         gameUsers.setRole(GameUsersRole.GAMEMASTER);
         gameUsersRepository.save(gameUsers);
+        Map <String, Object> response = CustomReturnables.getOkResponseMap("Gra została utworzona.");
+        response.put("gameId", game.getId());
 
-        return CustomReturnables.getOkResponseMap("Gra została utworzona.");
+        return response;
     }
 
     public Map<String, Object> addUserToGame(AddUserToGameRequest request) {
@@ -223,6 +225,19 @@ public class GameService {
 
         gameUsersRepository.save(gameUsers);
         return CustomReturnables.getOkResponseMap("Użytkownik został dodany do gry.");
+    }
+
+    public Map<String, Object> addUsersToGame(List<AddUserToGameRequest> requests) {
+
+        if (requests == null || requests.isEmpty()) {
+            throw new IllegalArgumentException("Brak danych do dodania użytkowników do gry.");
+        }
+
+        for (AddUserToGameRequest request : requests) {
+            addUserToGame(request);
+        }
+
+        return CustomReturnables.getOkResponseMap("Użytkownicy zostali dodani do gry.");
     }
 
     public Map<String, Object> deleteUserFromGame(DeleteUserFromGameRequest request) {
